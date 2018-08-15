@@ -1,0 +1,7 @@
+Usage: qvs <filaname> [option]
+Option:
+-h:    show this help dialog.
+-cp:   copy file path to clipboard.
+-cup:  copy file unix path to clipboard.
+-cpp:  copy file python path to clipboard.
+-info: show file mediainfo.
