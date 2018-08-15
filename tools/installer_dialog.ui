@@ -1,0 +1,265 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>InstallerDialog</class>
+ <widget class="QDialog" name="InstallerDialog">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>413</width>
+    <height>370</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Qvs Installer</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <item>
+    <widget class="QLabel" name="labelTitle">
+     <property name="text">
+      <string>Choose a module</string>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QTreeWidget" name="treeWidgetModule">
+     <attribute name="headerVisible">
+      <bool>true</bool>
+     </attribute>
+     <attribute name="headerCascadingSectionResizes">
+      <bool>false</bool>
+     </attribute>
+     <attribute name="headerHighlightSections">
+      <bool>false</bool>
+     </attribute>
+     <column>
+      <property name="text">
+       <string>Module</string>
+      </property>
+      <property name="icon">
+       <iconset resource="../res/resources.qrc">
+        <normaloff>:/buttons/python_module.png</normaloff>:/buttons/python_module.png</iconset>
+      </property>
+     </column>
+     <item>
+      <property name="text">
+       <string>Pismo File Mount 32-bit</string>
+      </property>
+      <property name="checkState">
+       <enum>Unchecked</enum>
+      </property>
+      <property name="icon">
+       <iconset resource="../res/resources.qrc">
+        <normaloff>:/buttons/pismo.png</normaloff>:/buttons/pismo.png</iconset>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>VapourSynth 64-bit</string>
+      </property>
+      <property name="font">
+       <font>
+        <stylestrategy>PreferDefault</stylestrategy>
+       </font>
+      </property>
+      <property name="checkState">
+       <enum>Unchecked</enum>
+      </property>
+      <property name="icon">
+       <iconset resource="../res/resources.qrc">
+        <normaloff>:/buttons/python_module.png</normaloff>:/buttons/python_module.png</iconset>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Avisynth 32-bit</string>
+      </property>
+      <property name="checkState">
+       <enum>Unchecked</enum>
+      </property>
+      <property name="icon">
+       <iconset resource="../res/resources.qrc">
+        <normaloff>:/buttons/python_module.png</normaloff>:/buttons/python_module.png</iconset>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>LAV Filters 64-bit and 32-bit</string>
+      </property>
+      <property name="checkState">
+       <enum>Unchecked</enum>
+      </property>
+      <property name="icon">
+       <iconset resource="../res/resources.qrc">
+        <normaloff>:/buttons/ffmpeg.png</normaloff>:/buttons/ffmpeg.png</iconset>
+      </property>
+     </item>
+     <item>
+      <property name="text">
+       <string>Mediainfo/CopyPath menu</string>
+      </property>
+      <property name="checkState">
+       <enum>Unchecked</enum>
+      </property>
+      <property name="icon">
+       <iconset resource="../res/resources.qrc">
+        <normaloff>:/buttons/page_menu.png</normaloff>:/buttons/page_menu.png</iconset>
+      </property>
+     </item>
+    </widget>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" name="horizontalLayout_4">
+     <item>
+      <widget class="QPushButton" name="buttonDefault">
+       <property name="minimumSize">
+        <size>
+         <width>95</width>
+         <height>0</height>
+        </size>
+       </property>
+       <property name="text">
+        <string>Default</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="buttonSecletAll">
+       <property name="minimumSize">
+        <size>
+         <width>95</width>
+         <height>0</height>
+        </size>
+       </property>
+       <property name="text">
+        <string>Select All</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="buttonSelectNone">
+       <property name="minimumSize">
+        <size>
+         <width>95</width>
+         <height>0</height>
+        </size>
+       </property>
+       <property name="text">
+        <string>Select None</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <spacer name="horizontalSpacer_4">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" name="horizontalLayout_2">
+     <item>
+      <widget class="QCheckBox" name="checkBoxUninstall">
+       <property name="text">
+        <string>Uninstall only</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <spacer name="horizontalSpacer">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" name="horizontalLayout">
+     <item>
+      <spacer name="horizontalSpacer_2">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item>
+      <widget class="QPushButton" name="buttonInstall">
+       <property name="minimumSize">
+        <size>
+         <width>100</width>
+         <height>0</height>
+        </size>
+       </property>
+       <property name="text">
+        <string>Install</string>
+       </property>
+       <property name="icon">
+        <iconset resource="../res/resources.qrc">
+         <normaloff>:/buttons/shield_admin.png</normaloff>:/buttons/shield_admin.png</iconset>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="buttonCancel">
+       <property name="minimumSize">
+        <size>
+         <width>100</width>
+         <height>0</height>
+        </size>
+       </property>
+       <property name="text">
+        <string>Cancel</string>
+       </property>
+       <property name="icon">
+        <iconset resource="../res/resources.qrc">
+         <normaloff>:/buttons/cross.png</normaloff>:/buttons/cross.png</iconset>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+  </layout>
+ </widget>
+ <resources>
+  <include location="../res/resources.qrc"/>
+ </resources>
+ <connections>
+  <connection>
+   <sender>buttonCancel</sender>
+   <signal>clicked()</signal>
+   <receiver>InstallerDialog</receiver>
+   <slot>reject()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>354</x>
+     <y>343</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>206</x>
+     <y>184</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+</ui>

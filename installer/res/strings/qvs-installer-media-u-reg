@@ -1,0 +1,30 @@
+Windows Registry Editor Version 5.00
+
+[-HKEY_CLASSES_ROOT\*\shell\MediaInfo]
+"MUIVerb"="MediaInfo"
+"SubCommands"="MediaInfoItem1;MediaInfoItem2;MediaInfoItem3;MediaInfoItem4"
+
+[-HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\CommandStore\shell\MediaInfoItem1]
+@="MediaInfo"
+
+[-HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\CommandStore\shell\MediaInfoItem1\command]
+@="\"$(MEDIAINFO_PATH)\" \"%1\" -info"
+
+[-HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\CommandStore\shell\MediaInfoItem2]
+@="Copy Path"
+
+[-HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\CommandStore\shell\MediaInfoItem2\command]
+@="\"$(MEDIAINFO_PATH)\" \"%1\" -cp"
+
+[-HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\CommandStore\shell\MediaInfoItem3]
+@="Copy Unix Path"
+
+[-HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\CommandStore\shell\MediaInfoItem3\command]
+@="\"$(MEDIAINFO_PATH)\" \"%1\" -cup"
+
+[-HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\CommandStore\shell\MediaInfoItem4]
+@="Copy Python Path"
+
+[-HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\CommandStore\shell\MediaInfoItem4\command]
+@="\"$(MEDIAINFO_PATH)\" \"%1\" -cpp"
+

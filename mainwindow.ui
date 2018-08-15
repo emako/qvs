@@ -1,0 +1,1287 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>720</width>
+    <height>640</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Qvs</string>
+  </property>
+  <widget class="QWidget" name="centralWidget">
+   <layout class="QVBoxLayout" name="verticalLayout_3">
+    <property name="spacing">
+     <number>0</number>
+    </property>
+    <property name="leftMargin">
+     <number>0</number>
+    </property>
+    <property name="topMargin">
+     <number>0</number>
+    </property>
+    <property name="rightMargin">
+     <number>0</number>
+    </property>
+    <property name="bottomMargin">
+     <number>0</number>
+    </property>
+    <item>
+     <widget class="QTabWidget" name="tabWidget">
+      <property name="currentIndex">
+       <number>0</number>
+      </property>
+      <widget class="QWidget" name="tab_main">
+       <attribute name="title">
+        <string>Main</string>
+       </attribute>
+       <layout class="QVBoxLayout" name="verticalLayout">
+        <property name="spacing">
+         <number>2</number>
+        </property>
+        <property name="leftMargin">
+         <number>2</number>
+        </property>
+        <property name="topMargin">
+         <number>2</number>
+        </property>
+        <property name="rightMargin">
+         <number>2</number>
+        </property>
+        <property name="bottomMargin">
+         <number>2</number>
+        </property>
+        <item>
+         <widget class="QSplitter" name="splitter">
+          <property name="orientation">
+           <enum>Qt::Vertical</enum>
+          </property>
+          <property name="opaqueResize">
+           <bool>false</bool>
+          </property>
+          <property name="handleWidth">
+           <number>8</number>
+          </property>
+          <property name="childrenCollapsible">
+           <bool>false</bool>
+          </property>
+          <widget class="QTableWidget" name="jobsView">
+           <property name="focusPolicy">
+            <enum>Qt::StrongFocus</enum>
+           </property>
+           <property name="contextMenuPolicy">
+            <enum>Qt::ActionsContextMenu</enum>
+           </property>
+           <property name="alternatingRowColors">
+            <bool>false</bool>
+           </property>
+           <property name="selectionMode">
+            <enum>QAbstractItemView::SingleSelection</enum>
+           </property>
+           <property name="selectionBehavior">
+            <enum>QAbstractItemView::SelectRows</enum>
+           </property>
+           <property name="wordWrap">
+            <bool>false</bool>
+           </property>
+           <property name="cornerButtonEnabled">
+            <bool>false</bool>
+           </property>
+           <attribute name="horizontalHeaderVisible">
+            <bool>false</bool>
+           </attribute>
+           <attribute name="horizontalHeaderHighlightSections">
+            <bool>false</bool>
+           </attribute>
+           <attribute name="verticalHeaderVisible">
+            <bool>false</bool>
+           </attribute>
+          </widget>
+          <widget class="QGroupBox" name="groupBoxJobDetails">
+           <property name="title">
+            <string> Job Details </string>
+           </property>
+           <layout class="QVBoxLayout" name="verticalLayout_2">
+            <property name="spacing">
+             <number>2</number>
+            </property>
+            <item>
+             <widget class="QProgressBar" name="progressBar">
+              <property name="font">
+               <font>
+                <family>Consolas</family>
+               </font>
+              </property>
+              <property name="mouseTracking">
+               <bool>false</bool>
+              </property>
+              <property name="focusPolicy">
+               <enum>Qt::StrongFocus</enum>
+              </property>
+              <property name="styleSheet">
+               <string notr="true">QProgressBar {
+	border: 1px solid grey;
+	border-radius: 0px;
+	background-color: #FFFFFF;
+}
+QProgressBar::chunk {
+	background-color: #FDCFE6;
+	width: 20px;
+}</string>
+              </property>
+              <property name="value">
+               <number>0</number>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignCenter</set>
+              </property>
+              <property name="format">
+               <string>%v%</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <spacer name="verticalSpacer">
+              <property name="orientation">
+               <enum>Qt::Vertical</enum>
+              </property>
+              <property name="sizeType">
+               <enum>QSizePolicy::Fixed</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>20</width>
+                <height>3</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+            <item>
+             <widget class="QTextEdit" name="logView">
+              <property name="font">
+               <font>
+                <family>Consolas</family>
+               </font>
+              </property>
+              <property name="contextMenuPolicy">
+               <enum>Qt::ActionsContextMenu</enum>
+              </property>
+              <property name="horizontalScrollBarPolicy">
+               <enum>Qt::ScrollBarAlwaysOff</enum>
+              </property>
+              <property name="readOnly">
+               <bool>true</bool>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLineEdit" name="editDetails">
+              <property name="font">
+               <font>
+                <family>Consolas</family>
+                <weight>50</weight>
+                <bold>false</bold>
+               </font>
+              </property>
+              <property name="readOnly">
+               <bool>true</bool>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+         </widget>
+        </item>
+        <item>
+         <widget class="QFrame" name="frame">
+          <property name="frameShape">
+           <enum>QFrame::HLine</enum>
+          </property>
+          <property name="frameShadow">
+           <enum>QFrame::Sunken</enum>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="horizontalLayout">
+          <item>
+           <widget class="QPushButton" name="buttonAddJob">
+            <property name="minimumSize">
+             <size>
+              <width>128</width>
+              <height>0</height>
+             </size>
+            </property>
+            <property name="text">
+             <string>Add New Job</string>
+            </property>
+            <property name="icon">
+             <iconset resource="res/resources.qrc">
+              <normaloff>:/buttons/add.png</normaloff>:/buttons/add.png</iconset>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <spacer name="horizontalSpacer">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>40</width>
+              <height>20</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+          <item>
+           <widget class="QPushButton" name="buttonStartJob">
+            <property name="enabled">
+             <bool>true</bool>
+            </property>
+            <property name="minimumSize">
+             <size>
+              <width>104</width>
+              <height>0</height>
+             </size>
+            </property>
+            <property name="text">
+             <string>Start Job</string>
+            </property>
+            <property name="icon">
+             <iconset resource="res/resources.qrc">
+              <normaloff>:/buttons/play.png</normaloff>:/buttons/play.png</iconset>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="buttonPauseJob">
+            <property name="enabled">
+             <bool>true</bool>
+            </property>
+            <property name="minimumSize">
+             <size>
+              <width>104</width>
+              <height>0</height>
+             </size>
+            </property>
+            <property name="text">
+             <string>Pause Job</string>
+            </property>
+            <property name="icon">
+             <iconset resource="res/resources.qrc">
+              <normaloff>:/buttons/pause_green.png</normaloff>:/buttons/pause_green.png</iconset>
+            </property>
+            <property name="checkable">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="buttonAbortJob">
+            <property name="enabled">
+             <bool>true</bool>
+            </property>
+            <property name="minimumSize">
+             <size>
+              <width>104</width>
+              <height>0</height>
+             </size>
+            </property>
+            <property name="text">
+             <string>Abort Job</string>
+            </property>
+            <property name="icon">
+             <iconset resource="res/resources.qrc">
+              <normaloff>:/buttons/cross.png</normaloff>:/buttons/cross.png</iconset>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="tab_audio">
+       <attribute name="title">
+        <string>Audio</string>
+       </attribute>
+       <layout class="QVBoxLayout" name="verticalLayout_7">
+        <property name="leftMargin">
+         <number>2</number>
+        </property>
+        <property name="topMargin">
+         <number>2</number>
+        </property>
+        <property name="rightMargin">
+         <number>2</number>
+        </property>
+        <property name="bottomMargin">
+         <number>2</number>
+        </property>
+        <item>
+         <widget class="QStackedWidget" name="stackedWidgetAudioEnc">
+          <property name="currentIndex">
+           <number>0</number>
+          </property>
+          <widget class="QWidget" name="page_AudioEnc"/>
+         </widget>
+        </item>
+        <item>
+         <widget class="QGroupBox" name="groupBoxAudioBatch">
+          <property name="title">
+           <string>AudioBatch</string>
+          </property>
+          <layout class="QHBoxLayout" name="horizontalLayout_3">
+           <property name="spacing">
+            <number>5</number>
+           </property>
+           <property name="leftMargin">
+            <number>5</number>
+           </property>
+           <property name="topMargin">
+            <number>5</number>
+           </property>
+           <property name="rightMargin">
+            <number>5</number>
+           </property>
+           <property name="bottomMargin">
+            <number>5</number>
+           </property>
+           <item>
+            <layout class="QHBoxLayout" name="horizontalLayout_2">
+             <property name="spacing">
+              <number>3</number>
+             </property>
+             <item>
+              <widget class="QListWidget" name="listViewAudioBatch"/>
+             </item>
+             <item>
+              <layout class="QVBoxLayout" name="verticalLayout_6">
+               <item>
+                <widget class="QPushButton" name="buttonAudioBatchAdd">
+                 <property name="enabled">
+                  <bool>true</bool>
+                 </property>
+                 <property name="minimumSize">
+                  <size>
+                   <width>104</width>
+                   <height>0</height>
+                  </size>
+                 </property>
+                 <property name="layoutDirection">
+                  <enum>Qt::LeftToRight</enum>
+                 </property>
+                 <property name="autoFillBackground">
+                  <bool>false</bool>
+                 </property>
+                 <property name="text">
+                  <string> Add </string>
+                 </property>
+                 <property name="icon">
+                  <iconset resource="res/resources.qrc">
+                   <normaloff>:/buttons/add.png</normaloff>:/buttons/add.png</iconset>
+                 </property>
+                 <property name="checkable">
+                  <bool>false</bool>
+                 </property>
+                 <property name="checked">
+                  <bool>false</bool>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QPushButton" name="buttonAudioBatchDelete">
+                 <property name="enabled">
+                  <bool>true</bool>
+                 </property>
+                 <property name="minimumSize">
+                  <size>
+                   <width>104</width>
+                   <height>0</height>
+                  </size>
+                 </property>
+                 <property name="text">
+                  <string> Del </string>
+                 </property>
+                 <property name="icon">
+                  <iconset resource="res/resources.qrc">
+                   <normaloff>:/buttons/delete.png</normaloff>:/buttons/delete.png</iconset>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QPushButton" name="buttonAudioBatchClear">
+                 <property name="enabled">
+                  <bool>true</bool>
+                 </property>
+                 <property name="minimumSize">
+                  <size>
+                   <width>104</width>
+                   <height>0</height>
+                  </size>
+                 </property>
+                 <property name="text">
+                  <string>Clear</string>
+                 </property>
+                 <property name="icon">
+                  <iconset resource="res/resources.qrc">
+                   <normaloff>:/buttons/cross.png</normaloff>:/buttons/cross.png</iconset>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <spacer name="verticalSpacer_3">
+                 <property name="orientation">
+                  <enum>Qt::Vertical</enum>
+                 </property>
+                 <property name="sizeHint" stdset="0">
+                  <size>
+                   <width>20</width>
+                   <height>40</height>
+                  </size>
+                 </property>
+                </spacer>
+               </item>
+               <item>
+                <widget class="QPushButton" name="buttonAudioBatchStart">
+                 <property name="enabled">
+                  <bool>true</bool>
+                 </property>
+                 <property name="minimumSize">
+                  <size>
+                   <width>104</width>
+                   <height>0</height>
+                  </size>
+                 </property>
+                 <property name="text">
+                  <string>Start</string>
+                 </property>
+                 <property name="icon">
+                  <iconset resource="res/resources.qrc">
+                   <normaloff>:/buttons/play.png</normaloff>:/buttons/play.png</iconset>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </item>
+            </layout>
+           </item>
+          </layout>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="tab_muxer">
+       <attribute name="title">
+        <string>Muxer</string>
+       </attribute>
+       <layout class="QVBoxLayout" name="verticalLayout_10">
+        <property name="spacing">
+         <number>7</number>
+        </property>
+        <property name="leftMargin">
+         <number>2</number>
+        </property>
+        <property name="topMargin">
+         <number>2</number>
+        </property>
+        <property name="rightMargin">
+         <number>2</number>
+        </property>
+        <property name="bottomMargin">
+         <number>2</number>
+        </property>
+        <item>
+         <widget class="QStackedWidget" name="stackedWidgetMuxer">
+          <property name="currentIndex">
+           <number>0</number>
+          </property>
+          <widget class="QWidget" name="page_Muxer"/>
+         </widget>
+        </item>
+        <item>
+         <widget class="QStackedWidget" name="stackedWidgetDemuxer">
+          <property name="currentIndex">
+           <number>0</number>
+          </property>
+          <widget class="QWidget" name="page_Demuxer"/>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="tab_mediainfo">
+       <attribute name="title">
+        <string>MediaInfo</string>
+       </attribute>
+       <layout class="QVBoxLayout" name="verticalLayout_4">
+        <property name="spacing">
+         <number>0</number>
+        </property>
+        <property name="leftMargin">
+         <number>0</number>
+        </property>
+        <property name="topMargin">
+         <number>0</number>
+        </property>
+        <property name="rightMargin">
+         <number>0</number>
+        </property>
+        <property name="bottomMargin">
+         <number>0</number>
+        </property>
+        <item>
+         <widget class="QStackedWidget" name="stackedWidgetMediaInfo">
+          <widget class="QWidget" name="page_MediaInfo"/>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>720</width>
+     <height>26</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menuFile">
+    <property name="title">
+     <string>Application</string>
+    </property>
+    <widget class="QMenu" name="menuRemove_Jobs">
+     <property name="title">
+      <string>Clean-Up</string>
+     </property>
+     <property name="icon">
+      <iconset resource="res/resources.qrc">
+       <normaloff>:/buttons/clean.png</normaloff>:/buttons/clean.png</iconset>
+     </property>
+     <addaction name="actionCleanupFinished"/>
+     <addaction name="actionCleanupAll"/>
+    </widget>
+    <widget class="QMenu" name="menuRemove_PostOperation">
+     <property name="title">
+      <string>On Completion</string>
+     </property>
+     <property name="icon">
+      <iconset resource="res/resources.qrc">
+       <normaloff>:/buttons/flag.png</normaloff>:/buttons/flag.png</iconset>
+     </property>
+     <addaction name="separator"/>
+     <addaction name="actionPostOp_PowerDown"/>
+     <addaction name="actionPostOp_Hibernate"/>
+     <addaction name="separator"/>
+     <addaction name="actionPostOp_DoNothing"/>
+    </widget>
+    <addaction name="actionOpen"/>
+    <addaction name="actionCreateJob"/>
+    <addaction name="separator"/>
+    <addaction name="menuRemove_Jobs"/>
+    <addaction name="menuRemove_PostOperation"/>
+    <addaction name="separator"/>
+    <addaction name="actionCommand_Line"/>
+    <addaction name="actionPython"/>
+    <addaction name="separator"/>
+    <addaction name="actionInstaller"/>
+    <addaction name="actionPreferences"/>
+    <addaction name="separator"/>
+    <addaction name="actionExit"/>
+   </widget>
+   <widget class="QMenu" name="menuHelp">
+    <property name="title">
+     <string>Help</string>
+    </property>
+    <widget class="QMenu" name="menuDownloadX264">
+     <property name="title">
+      <string>Download x264 Binaries</string>
+     </property>
+     <property name="icon">
+      <iconset resource="res/resources.qrc">
+       <normaloff>:/buttons/drive_web.png</normaloff>:/buttons/drive_web.png</iconset>
+     </property>
+     <addaction name="actionWebX264VideoLAN"/>
+     <addaction name="actionWebX264Komisar"/>
+     <addaction name="separator"/>
+     <addaction name="actionWebX264FreeCodecs"/>
+    </widget>
+    <widget class="QMenu" name="menuDownloadAvisynth">
+     <property name="title">
+      <string>Download Avisynth</string>
+     </property>
+     <property name="icon">
+      <iconset resource="res/resources.qrc">
+       <normaloff>:/buttons/drive_web.png</normaloff>:/buttons/drive_web.png</iconset>
+     </property>
+     <addaction name="actionWebAvisynth32"/>
+     <addaction name="actionWebAvisynth64"/>
+     <addaction name="separator"/>
+     <addaction name="actionWebAvisynthPlus"/>
+    </widget>
+    <widget class="QMenu" name="menuDownloadX265">
+     <property name="title">
+      <string>Download x265 Binaries</string>
+     </property>
+     <property name="icon">
+      <iconset resource="res/resources.qrc">
+       <normaloff>:/buttons/drive_web.png</normaloff>:/buttons/drive_web.png</iconset>
+     </property>
+     <addaction name="actionWebX265Fllear"/>
+     <addaction name="actionWebX265LigH"/>
+     <addaction name="actionWebX265Snowfag"/>
+     <addaction name="separator"/>
+     <addaction name="actionWebX265FreeCodecs"/>
+    </widget>
+    <addaction name="actionCheckForUpdates"/>
+    <addaction name="separator"/>
+    <addaction name="actionWebX264"/>
+    <addaction name="actionWebX265"/>
+    <addaction name="separator"/>
+    <addaction name="menuDownloadX264"/>
+    <addaction name="menuDownloadX265"/>
+    <addaction name="menuDownloadAvisynth"/>
+    <addaction name="actionWebVapourSynth"/>
+    <addaction name="separator"/>
+    <addaction name="actionOnlineDocX264"/>
+    <addaction name="actionOnlineDocX265"/>
+    <addaction name="actionWebAvsWiki"/>
+    <addaction name="actionWebVapourSynthDocs"/>
+    <addaction name="separator"/>
+    <addaction name="actionAbout"/>
+   </widget>
+   <widget class="QMenu" name="menuJob">
+    <property name="title">
+     <string>Job</string>
+    </property>
+    <addaction name="actionJob_Start"/>
+    <addaction name="actionJob_Pause"/>
+    <addaction name="actionJob_Abort"/>
+    <addaction name="separator"/>
+    <addaction name="actionJob_Explore"/>
+    <addaction name="actionJob_Delete"/>
+    <addaction name="actionJob_Edit"/>
+    <addaction name="actionJob_View"/>
+    <addaction name="actionJob_Reset"/>
+    <addaction name="separator"/>
+    <addaction name="actionJob_MoveUp"/>
+    <addaction name="actionJob_MoveDown"/>
+   </widget>
+   <widget class="QMenu" name="menuTools">
+    <property name="title">
+     <string>Tools</string>
+    </property>
+    <addaction name="actionScriptCreator"/>
+    <addaction name="actionScriptPlayer"/>
+    <addaction name="actionPreviewDialog"/>
+    <addaction name="separator"/>
+    <addaction name="actionVSedit"/>
+   </widget>
+   <addaction name="menuFile"/>
+   <addaction name="menuJob"/>
+   <addaction name="menuTools"/>
+   <addaction name="menuHelp"/>
+  </widget>
+  <action name="actionExit">
+   <property name="icon">
+    <iconset resource="res/resources.qrc">
+     <normaloff>:/buttons/door_in.png</normaloff>:/buttons/door_in.png</iconset>
+   </property>
+   <property name="text">
+    <string>Exit</string>
+   </property>
+  </action>
+  <action name="actionAbout">
+   <property name="icon">
+    <iconset resource="res/resources.qrc">
+     <normaloff>:/buttons/information.png</normaloff>:/buttons/information.png</iconset>
+   </property>
+   <property name="text">
+    <string>About...</string>
+   </property>
+  </action>
+  <action name="actionWebMulder">
+   <property name="icon">
+    <iconset resource="res/resources.qrc">
+     <normaloff>:/buttons/world_link.png</normaloff>:/buttons/world_link.png</iconset>
+   </property>
+   <property name="text">
+    <string>MuldeR's Web-Site</string>
+   </property>
+  </action>
+  <action name="actionWebX264">
+   <property name="icon">
+    <iconset resource="res/resources.qrc">
+     <normaloff>:/buttons/x264.png</normaloff>:/buttons/x264.png</iconset>
+   </property>
+   <property name="text">
+    <string>Official x264 Web-Site</string>
+   </property>
+  </action>
+  <action name="actionWebX264Komisar">
+   <property name="icon">
+    <iconset resource="res/resources.qrc">
+     <normaloff>:/buttons/world_link.png</normaloff>:/buttons/world_link.png</iconset>
+   </property>
+   <property name="text">
+    <string>x264 builds for Windows by Komisar</string>
+   </property>
+  </action>
+  <action name="actionWebX264VideoLAN">
+   <property name="icon">
+    <iconset resource="res/resources.qrc">
+     <normaloff>:/buttons/world_link.png</normaloff>:/buttons/world_link.png</iconset>
+   </property>
+   <property name="text">
+    <string>x264 builds for Windows by VideoLAN</string>
+   </property>
+  </action>
+  <action name="actionOnlineDocX264">
+   <property name="icon">
+    <iconset resource="res/resources.qrc">
+     <normaloff>:/buttons/book_open.png</normaloff>:/buttons/book_open.png</iconset>
+   </property>
+   <property name="text">
+    <string>x264 Online Documentation</string>
+   </property>
+  </action>
+  <action name="actionWebBluRay">
+   <property name="icon">
+    <iconset resource="res/resources.qrc">
+     <normaloff>:/buttons/book_open.png</normaloff>:/buttons/book_open.png</iconset>
+   </property>
+   <property name="text">
+    <string>BluRay Authoring Guide</string>
+   </property>
+  </action>
+  <action name="actionCreateJob">
+   <property name="icon">
+    <iconset resource="res/resources.qrc">
+     <normaloff>:/buttons/add.png</normaloff>:/buttons/add.png</iconset>
+   </property>
+   <property name="text">
+    <string>Create New Job</string>
+   </property>
+  </action>
+  <action name="actionJob_Start">
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="res/resources.qrc">
+     <normaloff>:/buttons/play.png</normaloff>:/buttons/play.png</iconset>
+   </property>
+   <property name="text">
+    <string>Start Job</string>
+   </property>
+  </action>
+  <action name="actionJob_Abort">
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="res/resources.qrc">
+     <normaloff>:/buttons/cross.png</normaloff>:/buttons/cross.png</iconset>
+   </property>
+   <property name="text">
+    <string>Abort Job</string>
+   </property>
+  </action>
+  <action name="actionJob_Pause">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="res/resources.qrc">
+     <normaloff>:/buttons/pause_green.png</normaloff>:/buttons/pause_green.png</iconset>
+   </property>
+   <property name="text">
+    <string>Pause Job</string>
+   </property>
+  </action>
+  <action name="actionPreferences">
+   <property name="icon">
+    <iconset resource="res/resources.qrc">
+     <normaloff>:/buttons/wrench.png</normaloff>:/buttons/wrench.png</iconset>
+   </property>
+   <property name="text">
+    <string>Preferences</string>
+   </property>
+  </action>
+  <action name="actionJob_Delete">
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="res/resources.qrc">
+     <normaloff>:/buttons/trash.png</normaloff>:/buttons/trash.png</iconset>
+   </property>
+   <property name="text">
+    <string>Delete Job</string>
+   </property>
+  </action>
+  <action name="actionJob_Explore">
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="res/resources.qrc">
+     <normaloff>:/buttons/folder_magnify.png</normaloff>:/buttons/folder_magnify.png</iconset>
+   </property>
+   <property name="text">
+    <string>Explore Job</string>
+   </property>
+  </action>
+  <action name="actionWebAvisynth32">
+   <property name="icon">
+    <iconset resource="res/resources.qrc">
+     <normaloff>:/buttons/world_link.png</normaloff>:/buttons/world_link.png</iconset>
+   </property>
+   <property name="text">
+    <string>32-Bit Avisynth (Stable)</string>
+   </property>
+  </action>
+  <action name="actionWebAvisynth64">
+   <property name="icon">
+    <iconset resource="res/resources.qrc">
+     <normaloff>:/buttons/world_link.png</normaloff>:/buttons/world_link.png</iconset>
+   </property>
+   <property name="text">
+    <string>64-Bit Avisynth (Deprecated)</string>
+   </property>
+  </action>
+  <action name="actionWebSecret">
+   <property name="icon">
+    <iconset resource="res/resources.qrc">
+     <normaloff>:/buttons/book_open.png</normaloff>:/buttons/book_open.png</iconset>
+   </property>
+   <property name="text">
+    <string>Secret Recipe - Confidential</string>
+   </property>
+  </action>
+  <action name="actionWebAvsWiki">
+   <property name="icon">
+    <iconset resource="res/resources.qrc">
+     <normaloff>:/buttons/book_open.png</normaloff>:/buttons/book_open.png</iconset>
+   </property>
+   <property name="text">
+    <string>Avisynth Usage Wiki</string>
+   </property>
+  </action>
+  <action name="actionJob_Reset">
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="res/resources.qrc">
+     <normaloff>:/buttons/restart.png</normaloff>:/buttons/restart.png</iconset>
+   </property>
+   <property name="text">
+    <string>Reset Job</string>
+   </property>
+  </action>
+  <action name="actionWebSupport">
+   <property name="icon">
+    <iconset>
+     <normaloff>:/buttons/group.png</normaloff>:/buttons/group.png</iconset>
+   </property>
+   <property name="text">
+    <string>Help and Support</string>
+   </property>
+  </action>
+  <action name="actionOpen">
+   <property name="icon">
+    <iconset resource="res/resources.qrc">
+     <normaloff>:/buttons/folder_add.png</normaloff>:/buttons/folder_add.png</iconset>
+   </property>
+   <property name="text">
+    <string>Open...</string>
+   </property>
+  </action>
+  <action name="actionDownload_Avisynth">
+   <property name="text">
+    <string>Download Avisynth</string>
+   </property>
+  </action>
+  <action name="actionUtz">
+   <property name="text">
+    <string>utz</string>
+   </property>
+  </action>
+  <action name="actionWebVapourSynth">
+   <property name="icon">
+    <iconset resource="res/resources.qrc">
+     <normaloff>:/buttons/drive_web.png</normaloff>:/buttons/drive_web.png</iconset>
+   </property>
+   <property name="text">
+    <string>Download VapourSynth</string>
+   </property>
+  </action>
+  <action name="actionWebVapourSynthDocs">
+   <property name="icon">
+    <iconset resource="res/resources.qrc">
+     <normaloff>:/buttons/book_open.png</normaloff>:/buttons/book_open.png</iconset>
+   </property>
+   <property name="text">
+    <string>VapourSynth Manual</string>
+   </property>
+  </action>
+  <action name="actionCheckForUpdates">
+   <property name="icon">
+    <iconset resource="res/resources.qrc">
+     <normaloff>:/buttons/github.png</normaloff>:/buttons/github.png</iconset>
+   </property>
+   <property name="text">
+    <string>Check for new Updates</string>
+   </property>
+  </action>
+  <action name="actionWebAvisynthPlus">
+   <property name="icon">
+    <iconset resource="res/resources.qrc">
+     <normaloff>:/buttons/world_link.png</normaloff>:/buttons/world_link.png</iconset>
+   </property>
+   <property name="text">
+    <string>Avisynth+ (32- and 64-Bit)</string>
+   </property>
+  </action>
+  <action name="actionWebX265">
+   <property name="icon">
+    <iconset resource="res/resources.qrc">
+     <normaloff>:/buttons/x265.png</normaloff>:/buttons/x265.png</iconset>
+   </property>
+   <property name="text">
+    <string>Official x265 Web-Site</string>
+   </property>
+  </action>
+  <action name="actionDownload_x265_Binaries">
+   <property name="text">
+    <string>Download x265 Binaries</string>
+   </property>
+  </action>
+  <action name="actionWebX265Fllear">
+   <property name="icon">
+    <iconset resource="res/resources.qrc">
+     <normaloff>:/buttons/world_link.png</normaloff>:/buttons/world_link.png</iconset>
+   </property>
+   <property name="text">
+    <string>x265 builds for Windows by Fllear</string>
+   </property>
+  </action>
+  <action name="actionWebX265FreeCodecs">
+   <property name="icon">
+    <iconset resource="res/resources.qrc">
+     <normaloff>:/buttons/world_link.png</normaloff>:/buttons/world_link.png</iconset>
+   </property>
+   <property name="text">
+    <string>Codecs.com Mirror (x265)</string>
+   </property>
+  </action>
+  <action name="actionWebX265Snowfag">
+   <property name="icon">
+    <iconset resource="res/resources.qrc">
+     <normaloff>:/buttons/world_link.png</normaloff>:/buttons/world_link.png</iconset>
+   </property>
+   <property name="text">
+    <string>x265 builds for Windows by Snowfag</string>
+   </property>
+  </action>
+  <action name="actionWebX265LigH">
+   <property name="icon">
+    <iconset resource="res/resources.qrc">
+     <normaloff>:/buttons/world_link.png</normaloff>:/buttons/world_link.png</iconset>
+   </property>
+   <property name="text">
+    <string>x265 builds for Windows by LigH</string>
+   </property>
+  </action>
+  <action name="actionWebX264FreeCodecs">
+   <property name="icon">
+    <iconset resource="res/resources.qrc">
+     <normaloff>:/buttons/world_link.png</normaloff>:/buttons/world_link.png</iconset>
+   </property>
+   <property name="text">
+    <string>Codecs.com Mirror (x264)</string>
+   </property>
+  </action>
+  <action name="actionJob_MoveUp">
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="res/resources.qrc">
+     <normaloff>:/buttons/arrow_up.png</normaloff>:/buttons/arrow_up.png</iconset>
+   </property>
+   <property name="text">
+    <string>Move Up</string>
+   </property>
+  </action>
+  <action name="actionJob_MoveDown">
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="res/resources.qrc">
+     <normaloff>:/buttons/arrow_down.png</normaloff>:/buttons/arrow_down.png</iconset>
+   </property>
+   <property name="text">
+    <string>Move Down</string>
+   </property>
+  </action>
+  <action name="actionOnlineDocX265">
+   <property name="icon">
+    <iconset resource="res/resources.qrc">
+     <normaloff>:/buttons/book_open.png</normaloff>:/buttons/book_open.png</iconset>
+   </property>
+   <property name="text">
+    <string>x265 Online Documentation</string>
+   </property>
+  </action>
+  <action name="actionRemove_Jobs">
+   <property name="text">
+    <string>Remove Jobs</string>
+   </property>
+  </action>
+  <action name="actionCleanupFinished">
+   <property name="icon">
+    <iconset resource="res/resources.qrc">
+     <normaloff>:/buttons/trash.png</normaloff>:/buttons/trash.png</iconset>
+   </property>
+   <property name="text">
+    <string>Remove Completed Jobs</string>
+   </property>
+  </action>
+  <action name="actionCleanupAll">
+   <property name="icon">
+    <iconset resource="res/resources.qrc">
+     <normaloff>:/buttons/trash.png</normaloff>:/buttons/trash.png</iconset>
+   </property>
+   <property name="text">
+    <string>Remove All Jobs</string>
+   </property>
+  </action>
+  <action name="actionDo_Nothing">
+   <property name="icon">
+    <iconset>
+     <normaloff>:/buttons/cup.png</normaloff>:/buttons/cup.png</iconset>
+   </property>
+   <property name="text">
+    <string>Do Nothing</string>
+   </property>
+  </action>
+  <action name="actionPostOp_PowerDown">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="res/resources.qrc">
+     <normaloff>:/buttons/power_off.png</normaloff>:/buttons/power_off.png</iconset>
+   </property>
+   <property name="text">
+    <string>Shutdown Computer</string>
+   </property>
+  </action>
+  <action name="actionPostOp_Hibernate">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="res/resources.qrc">
+     <normaloff>:/buttons/snow_flake.png</normaloff>:/buttons/snow_flake.png</iconset>
+   </property>
+   <property name="text">
+    <string>Hibernate Computer</string>
+   </property>
+  </action>
+  <action name="actionPostOp_DoNothing">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="checked">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="res/resources.qrc">
+     <normaloff>:/buttons/cross_grey.png</normaloff>:/buttons/cross_grey.png</iconset>
+   </property>
+   <property name="text">
+    <string>Do Nothing</string>
+   </property>
+  </action>
+  <action name="actionJob_Edit">
+   <property name="icon">
+    <iconset resource="res/resources.qrc">
+     <normaloff>:/buttons/sheduled_task.png</normaloff>:/buttons/sheduled_task.png</iconset>
+   </property>
+   <property name="text">
+    <string>Edit Job</string>
+   </property>
+  </action>
+  <action name="actionJob_View">
+   <property name="icon">
+    <iconset resource="res/resources.qrc">
+     <normaloff>:/buttons/date_task.png</normaloff>:/buttons/date_task.png</iconset>
+   </property>
+   <property name="text">
+    <string>View Job</string>
+   </property>
+  </action>
+  <action name="actionCommand_Line">
+   <property name="icon">
+    <iconset resource="res/resources.qrc">
+     <normaloff>:/buttons/application_xp_terminal.png</normaloff>:/buttons/application_xp_terminal.png</iconset>
+   </property>
+   <property name="text">
+    <string>Terminal CLI</string>
+   </property>
+  </action>
+  <action name="actionPython">
+   <property name="icon">
+    <iconset resource="res/resources.qrc">
+     <normaloff>:/buttons/python.png</normaloff>:/buttons/python.png</iconset>
+   </property>
+   <property name="text">
+    <string>Python CLI</string>
+   </property>
+  </action>
+  <action name="actionScriptPlayer">
+   <property name="icon">
+    <iconset resource="res/resources.qrc">
+     <normaloff>:/buttons/slideshow_next.png</normaloff>:/buttons/slideshow_next.png</iconset>
+   </property>
+   <property name="text">
+    <string>Script Player</string>
+   </property>
+  </action>
+  <action name="actionVSedit">
+   <property name="icon">
+    <iconset resource="res/resources.qrc">
+     <normaloff>:/buttons/vsedit.png</normaloff>:/buttons/vsedit.png</iconset>
+   </property>
+   <property name="text">
+    <string>VapourSynth Editor</string>
+   </property>
+  </action>
+  <action name="actionInstaller">
+   <property name="icon">
+    <iconset resource="res/resources.qrc">
+     <normaloff>:/buttons/package.png</normaloff>:/buttons/package.png</iconset>
+   </property>
+   <property name="text">
+    <string>Installer</string>
+   </property>
+  </action>
+  <action name="actionPreviewDialog">
+   <property name="icon">
+    <iconset resource="res/resources.qrc">
+     <normaloff>:/buttons/film.png</normaloff>:/buttons/film.png</iconset>
+   </property>
+   <property name="text">
+    <string>Preview Dialog</string>
+   </property>
+  </action>
+  <action name="actionScriptCreator">
+   <property name="icon">
+    <iconset resource="res/resources.qrc">
+     <normaloff>:/buttons/document_editing.png</normaloff>:/buttons/document_editing.png</iconset>
+   </property>
+   <property name="text">
+    <string>Script Creator</string>
+   </property>
+  </action>
+ </widget>
+ <tabstops>
+  <tabstop>buttonStartJob</tabstop>
+  <tabstop>tabWidget</tabstop>
+  <tabstop>buttonAbortJob</tabstop>
+  <tabstop>jobsView</tabstop>
+  <tabstop>logView</tabstop>
+  <tabstop>editDetails</tabstop>
+  <tabstop>buttonAddJob</tabstop>
+  <tabstop>progressBar</tabstop>
+  <tabstop>buttonPauseJob</tabstop>
+  <tabstop>listViewAudioBatch</tabstop>
+  <tabstop>buttonAudioBatchAdd</tabstop>
+  <tabstop>buttonAudioBatchDelete</tabstop>
+  <tabstop>buttonAudioBatchClear</tabstop>
+  <tabstop>buttonAudioBatchStart</tabstop>
+ </tabstops>
+ <resources>
+  <include location="res/resources.qrc"/>
+ </resources>
+ <connections>
+  <connection>
+   <sender>actionExit</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>close()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>399</x>
+     <y>299</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionCreateJob</sender>
+   <signal>triggered()</signal>
+   <receiver>buttonAddJob</receiver>
+   <slot>click()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>73</x>
+     <y>617</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionJob_Start</sender>
+   <signal>triggered()</signal>
+   <receiver>buttonStartJob</receiver>
+   <slot>click()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>490</x>
+     <y>632</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionJob_Abort</sender>
+   <signal>triggered()</signal>
+   <receiver>buttonAbortJob</receiver>
+   <slot>click()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>657</x>
+     <y>617</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+</ui>

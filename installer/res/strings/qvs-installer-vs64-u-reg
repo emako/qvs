@@ -1,0 +1,22 @@
+Windows Registry Editor Version 5.00
+
+[-HKEY_LOCAL_MACHINE\SOFTWARE\VapourSynth]
+"Version"="$(VS_VERSION)"
+"Path"="$(QVS_HOME)"
+"PythonPath"="$(QVS_HOME)"
+"CorePlugins"="$(QVS_HOME)\\vapoursynth64\\coreplugins"
+"Plugins"="$(QVS_HOME)\\vapoursynth64\\plugins"
+"VapourSynthDLL"="$(QVS_HOME)\\VapourSynth.dll"
+"VSScriptDLL"="$(QVS_HOME)\\VSScript.dll"
+
+[-HKEY_CLASSES_ROOT\vpyfile]
+
+[-HKEY_CLASSES_ROOT\vpyfile\DefaultIcon]
+@="\"$(QVS_HOME)\\vsedit\""
+
+[-HKEY_CLASSES_ROOT\vpyfile\shell]
+
+[-HKEY_CLASSES_ROOT\vpyfile\shell\open]
+
+[-HKEY_CLASSES_ROOT\vpyfile\shell\open\command]
+@="\"$(QVS_HOME)\\vsedit\" \"%1\""

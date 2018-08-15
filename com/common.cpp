@@ -1,0 +1,593 @@
+#include "common.h"
+#include "mainwindow.h"
+
+#include "../job/job_item.h"
+
+Config *g_pConfig = nullptr;
+const QString c_default_style = "Fusion";
+
+bool isFileExist(const QString &a_filename)
+{
+    QFileInfo info(a_filename);
+    if(info.isFile())
+    {
+        return true;
+    }
+    return false;
+}
+
+QString getFileExt(const QString &a_filename)
+{
+    QFileInfo file(a_filename);
+    return file.suffix();
+}
+
+QString chgFileExt(const QString &a_filename, QString a_ext)
+{
+    if(!a_ext.startsWith(QString(QT_EXT_SPLITE)))
+    {
+        a_ext = QString(QT_EXT_SPLITE) + a_ext;
+    }
+    return delFileExt(a_filename) + a_ext;
+}
+
+QString delFileExt(const QString &a_filename)
+{
+    QFileInfo file(a_filename);
+    QString filename = QDir::toNativeSeparators(file.absolutePath());
+
+    filename += ((filename.right(eINDEX_1) == QDir::separator()) ? QT_EMPTY : QString(QDir::separator())) + file.completeBaseName();
+    return filename;
+}
+
+QString getFileText(const QString &a_filename)
+{
+    QFile file(a_filename);
+    QTextStream in(&file);
+    QString text;
+
+    if (!file.open(QIODevice::ReadOnly))
+    {
+        return text;
+    }
+    text = in.readAll();
+    file.close();
+    return text;
+}
+
+bool setFileText(const QString &a_filename, const QString &a_text)
+{
+    QFile file(a_filename);
+    QTextStream in(&file);
+
+    if(!file.open(QIODevice::WriteOnly | QIODevice::Truncate))
+    {
+        return false;
+    }
+    in << a_text;
+    file.close();
+    return true;
+}
+
+Common::Common(QObject *parent) : QObject(parent)
+{
+    connect(&m_process, SIGNAL(readyReadStandardError()), this, SLOT(slotProcessReadyReadStandardError()));
+    connect(&m_process, SIGNAL(readyReadStandardOutput()), this, SLOT(slotProcessReadyReadStandardOutput()));
+}
+
+Common::~Common()
+{
+}
+
+QFileInfoList Common::getFileList(QString a_path)
+{
+    QDir dir(a_path);
+
+    QFileInfoList file_list = dir.entryInfoList(QDir::Files | QDir::Hidden | QDir::NoSymLinks);
+    QFileInfoList folder_list = dir.entryInfoList(QDir::Dirs | QDir::NoDotAndDotDot);
+    for(int i = 0; i != folder_list.size(); i++)
+    {
+        QString name = folder_list.at(i).absoluteFilePath();
+        QFileInfoList child_file_list = getFileList(name);
+        file_list.append(child_file_list);
+    }
+    return file_list;
+}
+
+QString Common::findFirstFilePath(QString a_filename, QString a_path)
+{
+    QString path;
+    QFileInfoList fileInfoList;
+
+    if(a_path == NULL)
+    {
+        a_path = QDir::currentPath();
+    }
+    if(a_path.isEmpty() || a_filename.isEmpty())
+    {
+        return path;
+    }
+
+    fileInfoList = getFileList(a_path);
+
+    for(QFileInfo fileInfo : fileInfoList)
+    {
+        if( (fileInfo.fileName().toLower() == a_filename.toLower())
+         || (fileInfo.baseName().toLower() == a_filename.toLower()) )
+        {
+            path = QString("\"%1\"").arg(QDir::toNativeSeparators(fileInfo.absoluteFilePath()));
+            break;
+        }
+    }
+    if(path.isEmpty())
+    {
+        path = a_filename;
+    }
+    return path;
+}
+
+QList<DWORD> Common::getProcessID(QString a_filename)
+{
+    QString cmd = QString("tasklist /FO CSV /FI \"IMAGENAME eq %1.exe\"").arg(a_filename);
+    QList<DWORD> processIdList;
+    QStringList out_csvs;
+
+    m_process_out.clear();
+    m_process.start(cmd);
+    m_process.waitForFinished();
+    out_csvs = m_process_out.split(QT_OTR_EOL);
+    for(int i = eINDEX_1; i < out_csvs.length(); i++)
+    {
+        QString out_csv = out_csvs.at(i);
+        QStringList out = out_csv.split(QT_CSV_SPLITE);
+        if(out.length() >= eINDEX_2)
+        {
+            QString processIdStr = out.at(eINDEX_1);
+            DWORD processId = processIdStr.replace("\"", QT_EMPTY).toInt();
+            processIdList << processId;
+        }
+    }
+    return processIdList;
+}
+
+QList<DWORD> Common::getProcessID(QStringList a_filename_list)
+{
+    QString cmd = QString("tasklist /FO CSV");
+    QList<DWORD> processIdList;
+    QStringList out_csvs;
+
+    m_process_out.clear();
+    m_process.start(cmd);
+    m_process.waitForFinished();
+    out_csvs = m_process_out.split(QT_OTR_EOL);
+    for(int i = eINDEX_1; i < out_csvs.length(); i++)
+    {
+        QString out_csv = out_csvs.at(i);
+        QStringList out = out_csv.split(QT_CSV_SPLITE);
+        if(out.length() >= eINDEX_2)
+        {
+            QString processName = out.at(eINDEX_0);
+            processName = processName.replace("\"", QT_EMPTY);
+            for(QString a_processName : a_filename_list)
+            {
+                if(processName.startsWith(a_processName))
+                {
+                    QString processIdStr = out.at(eINDEX_1);
+                    DWORD processId = processIdStr.replace("\"", QT_EMPTY).toInt();
+                    processIdList << processId;
+                }
+            }
+        }
+    }
+    return processIdList;
+}
+
+void Common::slotProcessReadyReadStandardError()
+{
+    QByteArray standardError = m_process.readAllStandardError();
+    QString standardErrorText = QString::fromUtf8(standardError);
+    standardErrorText = standardErrorText.trimmed();
+    if(!standardErrorText.isEmpty())
+    {
+       //m_process_out = standardErrorText;
+    }
+}
+
+void Common::slotProcessReadyReadStandardOutput()
+{
+    QByteArray standardOutput = m_process.readAllStandardOutput();
+    QString standardOutputText = QString::fromUtf8(standardOutput);
+    standardOutputText = standardOutputText.trimmed();
+    if(!standardOutputText.isEmpty())
+    {
+       m_process_out = standardOutputText;
+    }
+}
+
+void Common::moveRow(QList<JobItem> *a_list, int a_from, int a_to)
+{
+    int length = a_list->length();
+
+    if( (a_list->isEmpty()) || (a_from == a_to) || (a_from < 0) || (a_to < 0) || (a_from >= length) || (a_to > length) )
+    {
+        return;
+    }
+
+    JobItem job_item = a_list->at(a_from);
+
+    a_list->removeAt(a_from);
+    a_list->insert(a_to, job_item);
+}
+
+void Common::moveRow(QTableWidget *a_pTable, int a_from, int a_to)
+{
+    if(a_pTable == NULL)
+    {
+        return;
+    }
+
+    int rowCount = a_pTable->rowCount();
+    int colCount = a_pTable->columnCount();
+
+    if( (a_from == a_to) || (a_from < 0) || (a_to < 0) || (a_from >= rowCount) || (a_to > rowCount) )
+    {
+        return;
+    }
+
+    if( a_to < a_from )
+    {
+        a_from++;
+    }
+
+    a_pTable->insertRow(a_to);
+
+    for(int i=0; i < colCount; i++)
+    {
+        a_pTable->setItem( a_to, i, a_pTable->takeItem( a_from , i ) );
+    }
+
+    if(a_from < a_to)
+    {
+        a_to--;
+    }
+
+    a_pTable->removeRow(a_from);
+    a_pTable->selectRow(a_to);
+}
+
+QString Common::beautifyText(QString a_text, QString a_color)
+{
+    return QString("<p style=\"color:%1\">%2</p>").arg(a_color).arg(a_text);
+}
+
+QJsonObject Common::getJsonFromString(const QString a_string)
+{
+    QJsonDocument json_document = QJsonDocument::fromJson(a_string.toLocal8Bit().data());
+
+    if(json_document.isNull())
+    {
+        qDebug()<< "Illegal json string: "<< a_string.toLocal8Bit().data();
+    }
+
+    QJsonObject json = json_document.object();
+    return json;
+}
+
+QString Common::getStringFromJson(const QJsonObject& a_json)
+{
+    return QString(QJsonDocument(a_json).toJson());
+}
+
+int Common::hadNumber(QString a_text)
+{
+    int i = 0;
+    const char *s = a_text.toLocal8Bit().data();
+
+    while(*s++)
+    {
+        i++;
+        if('0' <= *s || '9' > *s)
+        {
+            return i;
+        }
+    }
+    return (int)eINDEX_NONE;
+}
+
+bool Common::isFile(QString a_filename)
+{
+    return QFileInfo(a_filename).isFile();
+}
+
+QString Common::getHashMd5(QString a_filename)
+{
+    QFile file(a_filename);
+
+    file.open(QIODevice::ReadOnly);
+    QByteArray byte_array = QCryptographicHash::hash(file.readAll(), QCryptographicHash::Md5);
+    file.close();
+    return QString(byte_array.toHex().constData());
+}
+
+QString Common::toUpperFirstStr(QString a_str)
+{
+    QString out;
+    switch(a_str.length())
+    {
+    case eINDEX_0:
+        break;
+    case  eINDEX_1:
+        out = a_str.toUpper();
+        break;
+    default:
+        out = a_str.at(eINDEX_0).toUpper() + a_str.mid(eINDEX_1).toLower();
+    }
+    return out;
+}
+
+QString Common::getAudioFileDelayValueString(QString a_filename)
+{
+    QString delay_val;
+
+    if(a_filename.isEmpty())
+    {
+        return delay_val;
+    }
+    a_filename = a_filename.toLower();
+
+    const QString key_word_left  = "delay";
+    const QString key_word_right = "ms";
+    if( (a_filename.indexOf(key_word_left) != eINDEX_NONE) && (a_filename.indexOf(key_word_right) != eINDEX_NONE) )
+    {
+        QString audio_delay_set = a_filename.mid(a_filename.indexOf(key_word_left)).remove(key_word_left).simplified();
+        delay_val = audio_delay_set.left(audio_delay_set.indexOf(key_word_right));
+    }
+
+    return delay_val;
+}
+
+int Common::getAudioFileDelayValue(QString a_filename)
+{
+    return getAudioFileDelayValueString(a_filename).toInt();
+}
+
+void Common::systemShutdown(ESHUTDOWN a_shotdown)
+{
+    if(a_shotdown == eSHUTDOWN_NOTHING)
+    {
+        return;
+    }
+
+    QProcess process;
+    process.startDetached("shutdown", QStringList() << c_shotdown2arg[a_shotdown]);
+
+    if( (a_shotdown == eSHUTDOWN_POWER_OFF) || (a_shotdown == eSHUTDOWN_REBOOT) )
+    {
+        mainUi->close();
+    }
+}
+
+void Common::systemInfoPrint(void)
+{
+    SYSTEM_INFO systemInfo;
+    MEMORYSTATUSEX statex;
+
+    GetSystemInfo(&systemInfo);
+    statex.dwLength = sizeof(statex);
+    GlobalMemoryStatusEx (&statex);
+
+    qDebug() << "numbers of CPUs:" << systemInfo.dwNumberOfProcessors;
+    qDebug() << "Physical memory usage: " << statex.dwMemoryLoad;
+    qDebug() << "Physical memory total: " << statex.ullTotalPhys/GB;
+    qDebug() << "Available physical memory: " << statex.ullAvailPhys/GB;
+    qDebug() << "BuildCpuArchitecture: " << QSysInfo::buildCpuArchitecture();
+    qDebug() << "CurrentCpuArchitecture: " << QSysInfo::currentCpuArchitecture();
+    qDebug() << "KernelType: " << QSysInfo::kernelType();
+    qDebug() << "KernelVersion: " << QSysInfo::kernelVersion();
+    qDebug() << "PrettyProductName: " << QSysInfo::prettyProductName();
+}
+
+void Common::openUrl(QString a_url)
+{
+    QDesktopServices::openUrl(QUrl(a_url));
+}
+
+void Common::openUrl(EURL a_url)
+{
+    openUrl(QString(c_urls[a_url]));
+}
+
+void Common::openUrlCheckForUpdates(void)
+{
+    openUrl(eURL_HOME_PAGE);
+}
+
+void Common::openUrlWebX264(void)
+{
+    openUrl(eURL_OFFICIAL_X264);
+}
+
+void Common::openUrlWebX265(void)
+{
+    openUrl(eURL_OFFICIAL_X265);
+}
+
+void Common::openUrlWebX264VideoLAN(void)
+{
+    openUrl(eURL_DL_X264_1);
+}
+
+void Common::openUrlWebX264Komisar(void)
+{
+    openUrl(eURL_DL_X264_2);
+}
+
+void Common::openUrlWebX264FreeCodecs(void)
+{
+    openUrl(eURL_DL_X264_3);
+}
+
+void Common::openUrlWebX265Fllear(void)
+{
+    openUrl(eURL_DL_X265_1);
+}
+
+void Common::openUrlWebX265LigH(void)
+{
+    openUrl(eURL_DL_X265_2);
+}
+
+void Common::openUrlWebX265Snowfag(void)
+{
+    openUrl(eURL_DL_X265_3);
+}
+
+void Common::openUrlWebX265FreeCodecs(void)
+{
+    openUrl(eURL_DL_X265_4);
+}
+
+void Common::openUrlWebAvisynth32(void)
+{
+    openUrl(eURL_DL_AVS_32);
+}
+
+void Common::openUrlWebAvisynth64(void)
+{
+    openUrl(eURL_DL_AVS_64);
+}
+
+void Common::openUrlWebAvisynthPlus(void)
+{
+    openUrl(eURL_DL_AVS_PLUS);
+}
+
+void Common::openUrlWebVapourSynth(void)
+{
+    openUrl(eURL_DL_VS);
+}
+
+void Common::openUrlOnlineDocX264(void)
+{
+    openUrl(eURL_DOC_X264);
+}
+
+void Common::openUrlOnlineDocX265(void)
+{
+    openUrl(eURL_DOC_X265);
+}
+
+void Common::openUrlWebAvsWiki(void)
+{
+    openUrl(eURL_DOC_AVS);
+}
+
+void Common::openUrlWebVapourSynthDocs(void)
+{
+    openUrl(eURL_DOC_VS);
+}
+
+bool Common::isVaildIndex(int a_length, int a_index)
+{
+    if( (a_index >= eINDEX_0) && (a_index < a_length) )
+    {
+        return true;
+    }
+    return false;
+}
+
+void Common::loadCommonConfig(void)
+{
+    EINDEX at_style_index = (EINDEX)g_pConfig->getConfig(Config::eCONFIG_COMMON_STYLE_FACTORY).toInt();
+    EINDEX at_style_index_def = eINDEX_NONE;
+
+    if(isVaildIndex(QStyleFactory::keys().length(), at_style_index))
+    {
+        QApplication::setStyle(QStyleFactory::keys().at(at_style_index));
+    }
+    else
+    {
+        at_style_index_def = (EINDEX)getStringListIndex(QStyleFactory::keys(), c_default_style);
+
+        if(at_style_index_def != eINDEX_NONE)
+        {
+            QApplication::setStyle(QStyleFactory::keys().at(at_style_index_def));
+            g_pConfig->setConfig(Config::eCONFIG_COMMON_STYLE_FACTORY, at_style_index_def);
+        }
+        else
+        {
+            g_pConfig->setConfig(Config::eCONFIG_COMMON_STYLE_FACTORY, (int)eINDEX_0);
+        }
+    }
+}
+
+int Common::getStringListIndex(QStringList a_list, QString a_string)
+{
+    int index = eINDEX_NONE;
+
+    for(int i = eINDEX_0; i < a_list.length(); i++)
+    {
+        if(a_list.at(i) == a_string)
+        {
+            index = i;
+            break;
+        }
+    }
+    return index;
+}
+
+BOOL Common::setPriortyClass(DWORD a_pid, DWORD a_priorityClass)
+{
+    HANDLE handle = OpenProcess(PROCESS_ALL_ACCESS, true, a_pid);
+    return SetPriorityClass(handle, a_priorityClass);
+}
+
+void Common::copyPath(void)
+{
+    QClipboard *board = QApplication::clipboard();
+    QString filename = QDir::toNativeSeparators(g_pConfig->m_config_first[Config::eCONFIG_FIRST_CLI_FILENAME].toString());
+
+    switch(g_pConfig->getLaunchMode())
+    {
+    case Config::eLAUNCH_MODE_COPY_PATH_DOS:
+        board->setText(filename);
+        break;
+    case Config::eLAUNCH_MODE_COPY_PATH_UNIX:
+        board->setText(filename.replace(QT_DOS_PATH_SPR, QT_NOR_PATH_SPR));
+        break;
+    case Config::eLAUNCH_MODE_COPY_PATH_PYTHON:
+        board->setText(QString("u'%1'").arg(filename.replace(QT_DOS_PATH_SPR, QT_NOR_PATH_SPR)));
+        break;
+    default:
+        break;
+    }
+    connect(board, SIGNAL(dataChanged()), mainUi, SLOT(close()));
+    mainUi->m_timer->start(Timer::ETIMER_TYPE_ONE_SHOT, Timer::ETIMER_SLOT_PROGURM_QUIT, HOUR * SECOND_TO_MILLISECOND_UNIT);
+}
+
+QString Common::convertFramesToTimecode(double a_frames, double a_fps)
+{
+    return convertSecondToTimecode(convertFramesToTime(a_frames, a_fps));
+}
+
+double Common::convertFramesToTime(double a_frames, double a_fps)
+{
+    return a_frames * (eINDEX_1 / a_fps);
+}
+
+QString Common::convertSecondToTimecode(double a_timeSec)
+{
+    QString timecode;
+    int h  = (int)a_timeSec / HOUR;
+    int m  = ((int)a_timeSec % HOUR) / MINUTE;
+    int s  = ((int)a_timeSec % HOUR) % MINUTE;
+    int ms = (int)((double)(a_timeSec - (int)a_timeSec) * SECOND_TO_MILLISECOND_UNIT);
+
+    timecode.sprintf("%02d:%02d:%02d.%03d", h, m, s, ms);
+    return timecode;
+}
+
+QString Common::fromStdWString(std::basic_string<wchar_t> a_string)
+{
+    return QString::fromStdWString((std::wstring)a_string);
+}

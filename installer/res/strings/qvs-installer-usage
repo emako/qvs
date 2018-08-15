@@ -1,0 +1,13 @@
+Usage: qvs-installer <option> [content, content, ...]
+Option:
+        -h/--help:       show this help.
+        -i/--install:    install contents. (default option)
+        -u/--uninstall:  uninstall contents.
+Content:
+        vs64:   vapoursynth 64-bit.
+        avs32:  avisynth 32-bit.
+        pfm:    pismo file mount for avsf 64-bit and 32-bit.
+        lav:    lavfilters 64-bit and 32-bit.
+        media:  mediainfo/copypath contextmenu.
+        vsedit-recovery:    delete file vsedit.config.
+        vsedit-template:    set template of vsedit.

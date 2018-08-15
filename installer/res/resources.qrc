@@ -1,0 +1,11 @@
+<RCC>
+    <qresource prefix="/">
+        <file>strings/qvs-installer-avs32-reg</file>
+        <file>strings/qvs-installer-avs32-u-reg</file>
+        <file>strings/qvs-installer-media-reg</file>
+        <file>strings/qvs-installer-media-u-reg</file>
+        <file>strings/qvs-installer-usage</file>
+        <file>strings/qvs-installer-vs64-reg</file>
+        <file>strings/qvs-installer-vs64-u-reg</file>
+    </qresource>
+</RCC>

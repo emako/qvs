@@ -1,0 +1,23 @@
+Windows Registry Editor Version 5.00
+
+[HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\AviSynth]
+"plugindir2_5"="$(QVS_HOME)\\avisynth32\\plugins"
+"initialplugindir"="$(QVS_HOME)\\avisynth32\\plugins"
+
+[HKEY_CLASSES_ROOT\.avs]
+@="avsfile"
+
+[HKEY_CLASSES_ROOT\.avsi]
+@="avsfile"
+
+[HKEY_CLASSES_ROOT\avsfile]
+
+[HKEY_CLASSES_ROOT\avsfile\DefaultIcon]
+@="\"$(QVS_HOME)\\tools\\AvsPmod\\AvsPmod\""
+
+[HKEY_CLASSES_ROOT\avsfile\shell]
+
+[HKEY_CLASSES_ROOT\avsfile\shell\open]
+
+[HKEY_CLASSES_ROOT\avsfile\shell\open\command]
+@="\"$(QVS_HOME)\\tools\\AvsPmod\\AvsPmod\" \"%1\""
