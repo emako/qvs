@@ -236,6 +236,7 @@ void MediaInfoDialog::on_checkBoxMediaInfoFull_stateChanged(int a_state)
 void MediaInfoDialog::setFFprobe(bool a_state)
 {
     m_isFFprobe = a_state;
+    m_fromCLI = a_state;
     reload();
 }
 
