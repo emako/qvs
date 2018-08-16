@@ -8,6 +8,7 @@
 #include "tools/installer_dialog.h"
 #include "preview/preview_dialog.h"
 #include "script/script_creator.h"
+#include "com/version.h"
 #include "ui_muxer.h"
 #include "ui_demuxer.h"
 #include "ui_mainwindow.h"
@@ -89,7 +90,7 @@ void MainWindow::setupUi(void)
     ui->stackedWidgetMediaInfo->setCurrentWidget(m_pMediaInfoDialog);
 
     /*Property*/
-    this->setWindowTitle("Qvs alpha1.0");
+    this->setWindowTitle(QString("Qvs %1").arg(QVS_VERSION));
     this->setWindowIcon(QIcon(":/icons/qvs.ico"));
     this->setAcceptDrops(true);
 
@@ -1420,7 +1421,7 @@ void MainWindow::slotAbout(void)
     QResource aboutResource(":/strings/about");
     QByteArray aboutData((const char *)aboutResource.data(), aboutResource.size());
     QString aboutString = QString::fromUtf8(aboutData);
-    QMessageBox::about(this, tr("About"), aboutString);
+    QMessageBox::about(this, tr("About"), aboutString.arg(QVS_VERSION));
 }
 
 void MainWindow::showPreferences(void)

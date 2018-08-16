@@ -211,7 +211,8 @@ HEADERS += \
     script/script_editor.h \
     script/syntax_highlighter.h \
     script/script_creator.h \
-    script/number_matcher.h
+    script/number_matcher.h \
+    com/version.h
 
 FORMS += \
     mainwindow.ui \

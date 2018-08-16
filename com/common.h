@@ -144,8 +144,8 @@ public:
 
     const char *c_shotdown2arg[eSHUTDOWN_MAX] = {QT_EMPTY, "-l", "-s", "-r", "-h", "-a", "-f"};
     const char *c_urls[Common::eURL_MAX] = {
-        "https://github.com/emako/qvs/release",                             /* eURL_HOME_PAGE */
-        "https://github.com/emako/qvs/release",                             /* eURL_GITHUB */
+        "https://github.com/emako/qvs/releases",                            /* eURL_HOME_PAGE */
+        "https://github.com/emako/qvs/releases",                            /* eURL_GITHUB */
         "http://www.videolan.org/developers/x264.html",                     /* eURL_OFFICIAL_X264 */
         "http://www.videolan.org/developers/x265.html",                     /* eURL_OFFICIAL_X265 */
         "http://download.videolan.org/pub/x264/binaries",                   /* eURL_DL_X264_1 */
