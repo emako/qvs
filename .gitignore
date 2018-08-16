@@ -34,3 +34,6 @@
 # MSVC
 *.ilk
 *.pdb
+
+# Qt
+*.user
