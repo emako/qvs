@@ -60,6 +60,8 @@ bool setFileText(const QString &a_filename, const QString &a_text)
     QFile file(a_filename);
     QTextStream in(&file);
 
+    in.setCodec("UTF-8");
+    in.setGenerateByteOrderMark(true);
     if(!file.open(QIODevice::WriteOnly | QIODevice::Truncate))
     {
         return false;

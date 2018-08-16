@@ -286,7 +286,7 @@
              <item>
               <widget class="QStackedWidget" name="stackedWidgetSourceFilter">
                <property name="currentIndex">
-                <number>2</number>
+                <number>0</number>
                </property>
                <widget class="QWidget" name="page_lwl">
                 <layout class="QVBoxLayout" name="verticalLayout_14">
@@ -2387,7 +2387,7 @@
         <string>Preview</string>
        </property>
        <property name="icon">
-        <iconset>
+        <iconset resource="../res/resources.qrc">
          <normaloff>:/buttons/film.png</normaloff>:/buttons/film.png</iconset>
        </property>
        <property name="checkable">
@@ -2410,7 +2410,7 @@
         <string>Save</string>
        </property>
        <property name="icon">
-        <iconset>
+        <iconset resource="../res/resources.qrc">
          <normaloff>:/buttons/disk.png</normaloff>:/buttons/disk.png</iconset>
        </property>
       </widget>
@@ -2427,6 +2427,8 @@
    <container>1</container>
   </customwidget>
  </customwidgets>
- <resources/>
+ <resources>
+  <include location="../res/resources.qrc"/>
+ </resources>
  <connections/>
 </ui>

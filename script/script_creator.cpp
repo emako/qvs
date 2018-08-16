@@ -584,7 +584,7 @@ inline bool ScriptCreator::isLsmash(void)
         do{
             QString ext = getFileExt(ui->editSource->text().toLower());
             if( (QStringList() << "mp4" << "3gp" << "mov" << "3g2" << "mj2" << "dvb" << "dcf" << "m21").contains(ext)
-             || (!m_videoInfo.isVFR) )
+             && (!m_videoInfo.isVFR) )
             {
                 isLsmash = true;
             }
@@ -1347,6 +1347,11 @@ void ScriptCreator::on_spinBoxResizeH_valueChanged(int)
 }
 
 void ScriptCreator::on_comboBoxResizeFilter_currentIndexChanged(int)
+{
+    createScript();
+}
+
+void ScriptCreator::on_checkBoxSourceFilterLSMASH_stateChanged(int)
 {
     createScript();
 }

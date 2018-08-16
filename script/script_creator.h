@@ -212,6 +212,7 @@ private slots:
     void on_spinBoxResizeW_valueChanged(int a_value);
     void on_spinBoxResizeH_valueChanged(int a_value);
     void on_comboBoxResizeFilter_currentIndexChanged(int a_index);
+    void on_checkBoxSourceFilterLSMASH_stateChanged(int a_state);
 
 private:
     Ui::ScriptCreator *ui;
