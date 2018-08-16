@@ -13,7 +13,8 @@ ScriptPlayer::ScriptPlayer(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::ScriptPlayer),
     m_isPlayOnMounted(false),
-    m_isPlayAvsWith32Bit(false)
+    m_isPlayAvsWith32Bit(false),
+    m_reloadTitleShown(true)
 {
     ui->setupUi(this);
     this->setupUi();
@@ -263,6 +264,11 @@ QString ScriptPlayer::getOutputFilename(void)
     return filename;
 }
 
+void ScriptPlayer::setReloadTitleShown(bool a_shown)
+{
+    m_reloadTitleShown = a_shown;
+}
+
 void ScriptPlayer::on_buttonPlay_clicked()
 {
     QString filename = getOutputFilename();
@@ -288,6 +294,7 @@ void ScriptPlayer::on_buttonPlay_clicked()
             m_uid_preview = QUuid::createUuid();
             at_pPreviewDialog->m_uid = m_uid_preview;
             at_pPreviewDialog->show();
+            at_pPreviewDialog->m_reloadTitleShown = m_reloadTitleShown;
             at_pPreviewDialog->reload(filename.toStdString());
             mainUi->m_pPreviewDialogs.insert(at_pPreviewDialog->m_uid, at_pPreviewDialog);
         }while(false);

@@ -144,6 +144,7 @@ void ScriptCreator::on_buttonPreview_clicked()
     at_pScriptPlayer->mainUi = mainUi;
     at_pScriptPlayer->m_uid_own = m_uid_preview_script;
     at_pScriptPlayer->show();
+    at_pScriptPlayer->setReloadTitleShown(false);
     at_pScriptPlayer->slotPlayOnMounted(true);
     at_pScriptPlayer->reload(script_filename);
     mainUi->m_pScriptPlayers.insert(at_pScriptPlayer->m_uid_own, at_pScriptPlayer);
@@ -340,7 +341,6 @@ bool ScriptCreator::eventFilter(QObject *o, QEvent *e)
             m_uid_preview_source = QUuid::createUuid();
             at_pPreviewDialog->m_uid = m_uid_preview_source;
             at_pPreviewDialog->show();
-            at_pPreviewDialog->m_reloadTitleShown = false;
             at_pPreviewDialog->reload(ui->editSource->text().toStdString());
             mainUi->m_pPreviewDialogs.insert(at_pPreviewDialog->m_uid, at_pPreviewDialog);
         }

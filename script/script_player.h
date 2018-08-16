@@ -56,6 +56,7 @@ public:
     QString getErrorLogFilename(void);
     QString getScriptFilename(void);
     QString getOutputFilename(void);
+    void setReloadTitleShown(bool a_shown);
 
     QMenu *m_pContextMenu;
     QString m_filename;
@@ -85,6 +86,7 @@ private:
     Ui::ScriptPlayer *ui;
     bool m_isPlayOnMounted;
     bool m_isPlayAvsWith32Bit;
+    bool m_reloadTitleShown;
 };
 
 #endif // SCRIPT_PLAYER_H
