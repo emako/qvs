@@ -763,6 +763,7 @@ void MainWindow::dropEvent(QDropEvent* e)
                 if(ret.contains(e->pos()))
                 {
                     m_pAudioEnc->reload(filename);
+                    break;
                 }
                 /* Audio Batch Input */
                 pos = QPoint(ui->tabWidget->pos()
@@ -774,6 +775,7 @@ void MainWindow::dropEvent(QDropEvent* e)
                 {
                     QListWidgetItem *item = new QListWidgetItem(filename);
                     ui->listViewAudioBatch->addItem(item);
+                    break;
                 }
                 break;
             case eINDEX_2:/*Muxer*/
@@ -790,6 +792,7 @@ void MainWindow::dropEvent(QDropEvent* e)
                 if(ret.contains(e->pos()))
                 {
                     m_pMuxer->reload(Muxer::eRELOAD_TYPE_VIDEO, filename);
+                    break;
                 }
 
                 /* Audio Input */
@@ -804,6 +807,7 @@ void MainWindow::dropEvent(QDropEvent* e)
                 if(ret.contains(e->pos()))
                 {
                     m_pMuxer->reload(Muxer::eRELOAD_TYPE_AUDIO, filename);
+                    break;
                 }
                 /* Demuxer */
                 pos = QPoint(m_pDemuxer->ui->editDemuxerVideoInput->pos()
@@ -817,6 +821,7 @@ void MainWindow::dropEvent(QDropEvent* e)
                 if(ret.contains(e->pos()))
                 {
                     m_pDemuxer->reload((Demuxer::ERELOAD_TYPE)m_pDemuxer->ui->comboBoxDemuxerFormat->currentIndex(), filename);
+                    break;
                 }
                 break;
             case eINDEX_3:/*MediaInfo*/

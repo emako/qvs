@@ -39,6 +39,11 @@ void AudioEnc::reload(void)
 QString AudioEnc::getAudioOutputPath(EENCODE_TYPE a_type, QString a_filename)
 {
     QString filename = chgFileExt(a_filename, getAudioOutputExt(a_type));
+
+    if(filename == a_filename)
+    {
+        filename = chgFileExt(a_filename, "qvs" + QString(QT_EXT_SPLITE) + getAudioOutputExt(a_type));
+    }
     return filename;
 }
 
@@ -138,6 +143,33 @@ void AudioEnc::on_buttonAudioStart_clicked()
     QString input = ui->editAudioInput->text();
     QString output = ui->editAudioOutput->text();
     QString bitrate = ui->comboBoxAudioBitrate->currentText();
+
+    if(input.isEmpty())
+    {
+        QMessageBox::warning(this, tr("Warning"), tr("Input file is empty!"), QMessageBox::Ok);
+        return;
+    }
+    if(output.isEmpty())
+    {
+        QMessageBox::warning(this, tr("Warning"), tr("Output file is empty!"), QMessageBox::Ok);
+        return;
+    }
+    if(mainUi->m_com->isFile(output))
+    {
+        if(output == input)
+        {
+            QMessageBox::critical(this, tr("Are you BAKA?"), tr("Output file can't be the same as source file!"), QMessageBox::Cancel);
+            return;
+        }
+
+        int reply = QMessageBox::question(this, tr("Question"), tr("Output file already exists! Overwrite?"), QMessageBox::Yes | QMessageBox::Cancel);
+
+        if(reply == QMessageBox::Cancel)
+        {
+            return;
+        }
+    }
+
     StdWatcherCmd job_cmd = getEncodeCmd(input, output, bitrate);
 
     QUuid uid = StdManager::createStdWatch();
