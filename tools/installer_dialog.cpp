@@ -173,8 +173,11 @@ void InstallerDialog::on_buttonInstall_clicked()
         QMessageBox::information(this, tr("Warn"), tr("Please select the module!"), QMessageBox::Ok);
         return;
     }
+
+#ifdef QT_BRANCH_VS_RECOVERY
     arg << c_content_to_arg[(int)eINSTALLER_CONTENTS_VSEDIT_RECOVERY];
     arg << c_content_to_arg[(int)eINSTALLER_CONTENTS_VSEDIT_TEMPLATE];
+#endif
 
     saveCmd("qvs-installer", arg);
     m_process_installer.start(BAT_INSTALLER_FILENAME);

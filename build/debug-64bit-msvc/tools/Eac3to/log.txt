@@ -1,0 +1,14 @@
+eac3to v3.34
+command line: D:\Qt\GitHub\qvs\build\debug-64bit-msvc\tools\Eac3to\eac3to.exe  "F:\BaiduNetdiskDownload\180529 =LOVE - 手遅れcaution @ 月～金お昼のソングショーひるソン!.ts" 3: "F:\BaiduNetdiskDownload\180529 =LOVE - 手遅れcaution @ 月～金お昼のソングショーひるソン!_track3 DELAY 417ms.aac"
+------------------------------------------------------------------------------
+TS, 1 video track, 2 audio tracks, 0:03:03, 60i /1.001
+1: MPEG2, 1440x1080 60i /1.001 (16:9)
+2: AAC, 2.0 channels, 252kbps, 48kHz, -351ms
+3: Unknown audio track, unknown parameters, 417ms
+Bitstream parsing for track 3 failed.  <WARNING>
+Demuxing this track may still produce correct results - or not.  <WARNING>
+[a03] Extracting audio track number 3...
+[a03] Creating file "F:\BaiduNetdiskDownload\180529 =LOVE - 手遅れcaution @ 月～金お昼のソングショーひるソン!_track3 DELAY 417ms.aac"...
+Video track 1 contains 5474 frames.
+eac3to processing took 3 seconds.
+Done.
