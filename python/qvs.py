@@ -44,6 +44,7 @@ Scripts functions:
 	Crop
 	Diff
 	TrimMul
+	Trims
 ************************************************
 Source functions:
 	ImageSourceMul
@@ -144,6 +145,7 @@ Command functions:
 	AudioEnc
 	AudioTrimFF
 	AudioTrimFFSingle
+	AudioTrims
 	AudioTrimAVS
 	ExtractModule
 	Preview
