@@ -3934,6 +3934,7 @@ def AudioEnc(paths, bitrate=160, enc=1, enc_bin='qaac', enc_flac_bin='flac', enc
 ##################################################################################################
 ### Function  : AudioTrimFF
 ### Function  : AudioTrimFFSingle
+### Function  : AudioTrims
 ### Author    : ema
 ### Version   : v0.1
 ### Release   : 2018.02.04
@@ -4027,6 +4028,15 @@ def AudioTrimFFSingle(path, start_frame, end_frame, clip=None, codec='aac', dela
 	os.system('"%s"' % cmd)
 	return output
 
+def AudioTrims(clip=None, path=None, frame=[], codec=None, delay=None, fps=None, enc_bin='ffmpeg', ret_output=False):
+	if path is None:
+		raise ValueError(path)
+	temp_path, temp_basename, ext = PathSplit(path)
+	ext = ext.replace('.', '')
+	output = AudioTrimFF(path=path, frame=frame, clip=clip, codec=ext, delay=delay, fps=fps, enc_bin=enc_bin)
+	if ret_output:
+		return output
+	return clip
 
 ##################################################################################################
 ### Function  : AudioTrimAVS
