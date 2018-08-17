@@ -1134,6 +1134,7 @@ void ScriptCreator::on_checkBoxFPS_stateChanged(int a_state)
         ui->spinBoxFPSFilterFpsnum->setEnabled(true);
         ui->labelFPSFilterFPS2->setEnabled(true);
         ui->spinBoxFPSFilterFpsden->setEnabled(true);
+        emit ui->comboBoxFPSFilter->currentIndexChanged(ui->comboBoxFPSFilter->currentIndex());
     }
     else
     {
@@ -1141,6 +1142,8 @@ void ScriptCreator::on_checkBoxFPS_stateChanged(int a_state)
         ui->spinBoxFPSFilterFpsnum->setDisabled(true);
         ui->labelFPSFilterFPS2->setDisabled(true);
         ui->spinBoxFPSFilterFpsden->setDisabled(true);
+        ui->editTimeCodeFile->setDisabled(true);
+        ui->buttonBrowseTimeCodeFile->setDisabled(true);
     }
     createScript();
 }
