@@ -948,12 +948,18 @@ QList<JobCmdList> JobCreator::configToCommandGPU(QMap<EJOB_CONFIG, QVariant> a_j
         isFatalError = true;
     }
 
+    /*Custom Parameters*/
+    QString customParmeters = ui->editCustomEncoderParams->text();
+    if(!customParmeters.isEmpty())
+    {
+        cli << customParmeters;
+    }
+
     /*Input*/
     cli << "-i" << QString("\"%1\"").arg(a_job_config[eJOB_CONFIG_INPUT].toString());
 
     /*Output*/
     cli << "-o" << QString("\"%1\"").arg(a_job_config[eJOB_CONFIG_OUTPUT].toString());
-
 
     cmd.cmd = cli.join(QT_BLANK);
     cmd.type = JobCmdList::eJOB_CMD_TYPE_ENCODER;
