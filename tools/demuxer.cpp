@@ -125,7 +125,6 @@ void Demuxer::slotEncoderProcessStarted()
     if(!m_process_job_encoder.isReadable())
     {
         viewLog(JobChef::eJOB_LOG_TYPE_WARN, "Encoder process is not Writable.");
-        //abortJob();
         return;
     }
 }
@@ -147,7 +146,6 @@ void Demuxer::slotEncoderProcessReadyReadStandardError()
 {
     QByteArray standardError = m_process_job_encoder.readAllStandardError();
     QString standardErrorText = QString::fromUtf8(standardError);
-//    standardErrorText = standardErrorText.trimmed();
     if(!standardErrorText.isEmpty())
     {
         viewLog(JobChef::eJOB_LOG_TYPE_JOB_STD_ERROR, standardErrorText);
@@ -158,7 +156,6 @@ void Demuxer::slotEncoderProcessReadyReadStandardOutput()
 {
     QByteArray standardOutput = m_process_job_encoder.readAllStandardOutput();
     QString standardOutputText = QString::fromUtf8(standardOutput);
-//    standardOutputText = standardOutputText.trimmed();
     if(!standardOutputText.isEmpty())
     {
         viewLog(JobChef::eJOB_LOG_TYPE_JOB_STD_OUTPUT, standardOutputText);
@@ -503,7 +500,7 @@ QString Demuxer::getEac3toExt(QString a_track_info)
     int start_index = code.indexOf(QString(QT_COLON)) + eINDEX_1;
     int end_index   = code.indexOf(QString(QT_CSV_SPLITE));
 
-    code = code.mid(start_index, end_index - start_index).simplified();
+    code = code.mid(start_index, end_index - start_index).simplified().remove(QT_BLANK);
     if(code.startsWith("h264") || code.indexOf(".mpls") != eINDEX_NONE)
     {
         code = "h264";
@@ -520,25 +517,37 @@ QString Demuxer::getEac3toExt(QString a_track_info)
     {
         code = "txt";
     }
-    else if(code == "subtitle (ass)")
+    else if(code == "subtitle(ass)")
     {
         code = "ass";
     }
-    else if(code == "subtitle (srt)")
+    else if(code == "subtitle(srt)")
     {
         code = "srt";
     }
-    else if(code == "subtitle (ssa)")
+    else if(code == "subtitle(ssa)")
     {
         code = "ssa";
     }
-    else if(code == "subtitle (vobsub)")
+    else if(code == "subtitle(vobsub)")
     {
         code = "sub";
     }
-    else if(code == "subtitle (pgs)")
+    else if(code == "subtitle(pgs)")
     {
         code = "sup";
+    }
+    else if(code.startsWith("unknownaudio"))
+    {
+        code = "aac";
+    }
+    else if(code.startsWith("unknownvideo"))
+    {
+        code = "mkv";
+    }
+    else if(code.startsWith("unknown"))
+    {
+        code = "null";
     }
     return code;
 }
