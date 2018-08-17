@@ -39,6 +39,7 @@ public:
     QString getAudioOutputPath(EENCODE_TYPE a_type, QString a_filename);
     QString getAudioOutputExt(EENCODE_TYPE a_type);
     StdWatcherCmd getEncodeCmd(QString a_input, QString a_output, QString a_bitrate);
+    QString getPiperFilename(void);
 
 private slots:
     void on_buttonAudioStart_clicked();

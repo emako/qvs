@@ -83,7 +83,7 @@ QString AudioEnc::getAudioOutputExt(EENCODE_TYPE a_type)
 StdWatcherCmd AudioEnc::getEncodeCmd(QString a_input, QString a_output, QString a_bitrate)
 {
     StdWatcherCmd job_cmd;
-    QString pipe = QString("ffmpeg -i \"%1\" -vn -sn -v 0 -c:a pcm_s16le -f wav pipe: ").arg(a_input);
+    QString pipe = QString("%1 -i \"%2\" -vn -sn -v 0 -c:a pcm_s16le -f wav pipe: ").arg(mainUi->m_com->findFirstFilePath(getPiperFilename())).arg(a_input);
     QString cmd;
 
     switch((EENCODE_TYPE)ui->comboBoxAudioEncoder->currentIndex())
@@ -113,11 +113,11 @@ StdWatcherCmd AudioEnc::getEncodeCmd(QString a_input, QString a_output, QString 
         cmd = QString("%1 -q 3 -b %2 - \"%3\"").arg(mainUi->m_com->findFirstFilePath("lame")).arg(a_bitrate).arg(a_output);
         break;
     case eENCODE_TYPE_AC3:
-        cmd = QString("%1 -i \"%2\" -c:a ac3 -b:a %3k \"%4\" -y").arg(mainUi->m_com->findFirstFilePath("ffmpeg")).arg(a_input).arg(a_bitrate).arg(a_output);
+        cmd = QString("%1 -i \"%2\" -c:a ac3 -b:a %3k \"%4\" -y").arg(mainUi->m_com->findFirstFilePath(getPiperFilename())).arg(a_input).arg(a_bitrate).arg(a_output);
         pipe.clear();
         break;
     case eENCODE_TYPE_WAV:
-        cmd = QString("%1 -i \"%2\" -f wav \"%3\" -y").arg(mainUi->m_com->findFirstFilePath("ffmpeg")).arg(a_input).arg(a_output);
+        cmd = QString("%1 -i \"%2\" -f wav \"%3\" -y").arg(mainUi->m_com->findFirstFilePath(getPiperFilename())).arg(a_input).arg(a_output);
         pipe.clear();
         break;
     default:
@@ -185,4 +185,15 @@ void AudioEnc::on_buttonAudioOutput_clicked()
         filename = QDir::toNativeSeparators(filename);
         ui->editAudioOutput->setText(filename);
     }
+}
+
+QString AudioEnc::getPiperFilename(void)
+{
+    QString filename = "ffmpeg";
+
+    if(g_pConfig->getConfig(Config::eCONFIG_COMMON_PREFER_AVS_32BIT).toBool())
+    {
+        filename = "ffmpeg32";
+    }
+    return filename;
 }
