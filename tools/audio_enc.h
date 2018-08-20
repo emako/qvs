@@ -4,6 +4,7 @@
 #include <QWidget>
 
 class MainWindow;
+class AudioConfig;
 class StdWatcherCmd;
 
 namespace Ui {
@@ -18,6 +19,7 @@ public:
     explicit AudioEnc(QWidget *parent = 0);
     ~AudioEnc();
     friend class MainWindow;
+    friend class AudioConfig;
     class MainWindow *mainUi;
 
     enum EENCODE_TYPE {
@@ -41,11 +43,15 @@ public:
     StdWatcherCmd getEncodeCmd(QString a_input, QString a_output, QString a_bitrate);
     QString getPiperFilename(void);
 
+public slots:
+    void setMode(bool a_bitrateMode);
+
 private slots:
     void on_buttonAudioStart_clicked();
     void on_comboBoxAudioEncoder_activated(int a_index);
     void on_buttonAudioInput_clicked();
     void on_buttonAudioOutput_clicked();
+    void on_buttonAudioConfig_clicked();
 
 private:
     Ui::AudioEnc *ui;

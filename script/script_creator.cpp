@@ -845,7 +845,7 @@ void ScriptCreator::on_buttonBrowseSource_clicked()
 
 void ScriptCreator::on_buttonBrowseOutput_clicked()
 {
-    QString filename = QFileDialog::getSaveFileName(this, tr("Save Script file"), NULL, tr("Script (*.vpy)"));
+    QString filename = QFileDialog::getSaveFileName(this, tr("Save Script file"), ui->editOutput->text(), tr("Script (*.vpy)"));
 
     if(!filename.isEmpty())
     {

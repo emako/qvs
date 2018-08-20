@@ -1,7 +1,9 @@
 #include "audio_enc.h"
+#include "audio_config.h"
 #include "std_manager.h"
-#include "ui_audio_enc.h"
 #include "mainwindow.h"
+#include "ui_audio_enc.h"
+#include "ui_audio_config.h"
 #include "ui_mainwindow.h"
 
 extern QMap<QUuid, StdWatcher*> g_pStdWatch;
@@ -21,7 +23,27 @@ AudioEnc::~AudioEnc()
 
 void AudioEnc::setupUi(void)
 {
-    ui->buttonAudioConfig->hide();
+    setMode(true);
+}
+
+void AudioEnc::setMode(bool a_bitrateMode)
+{
+    if(a_bitrateMode)
+    {
+        ui->labelAudioBitrate->setVisible(true);
+        ui->comboBoxAudioBitrate->setVisible(true);
+        ui->labelAudioKbps->setVisible(true);
+        ui->labelAudioQuarity->setVisible(false);
+        ui->comboBoxAudioQuarity->setVisible(false);
+    }
+    else
+    {
+        ui->labelAudioBitrate->setVisible(false);
+        ui->comboBoxAudioBitrate->setVisible(false);
+        ui->labelAudioKbps->setVisible(false);
+        ui->labelAudioQuarity->setVisible(true);
+        ui->comboBoxAudioQuarity->setVisible(true);
+    }
 }
 
 void AudioEnc::reload(QString a_filename)
@@ -210,7 +232,7 @@ void AudioEnc::on_buttonAudioInput_clicked()
 
 void AudioEnc::on_buttonAudioOutput_clicked()
 {
-    QString filename = QFileDialog::getSaveFileName(this, tr("Save Audio file"), NULL, tr("Audio (*.*)"));
+    QString filename = QFileDialog::getSaveFileName(this, tr("Save Audio file"), ui->editAudioOutput->text(), tr("Audio (*.*)"));
 
     if(!filename.isEmpty())
     {
@@ -228,4 +250,22 @@ QString AudioEnc::getPiperFilename(void)
         filename = "ffmpeg32";
     }
     return filename;
+}
+
+void AudioEnc::on_buttonAudioConfig_clicked()
+{
+    AudioConfig audioConfig;
+
+    audioConfig.mainUi = mainUi;
+    audioConfig.ui->comboBoxAudioEncoder->setCurrentIndex(ui->comboBoxAudioEncoder->currentIndex());
+    emit audioConfig.ui->comboBoxAudioEncoder->currentIndexChanged(ui->comboBoxAudioEncoder->currentIndex());
+
+    switch(audioConfig.exec())
+    {
+    case QDialog::Accepted:
+        break;
+    case QDialog::Rejected:
+    default:
+        break;
+    }
 }

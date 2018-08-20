@@ -180,7 +180,8 @@ SOURCES += \
     script/script_editor.cpp \
     script/syntax_highlighter.cpp \
     script/script_creator.cpp \
-    script/number_matcher.cpp
+    script/number_matcher.cpp \
+    tools/audio_config.cpp
 
 HEADERS += \
     mainwindow.h \
@@ -212,7 +213,8 @@ HEADERS += \
     script/syntax_highlighter.h \
     script/script_creator.h \
     script/number_matcher.h \
-    com/version.h
+    com/version.h \
+    tools/audio_config.h
 
 FORMS += \
     mainwindow.ui \
@@ -228,7 +230,8 @@ FORMS += \
     tools/installer_dialog.ui \
     preview/preview_dialog.ui \
     tools/mediainfo_dialog.ui \
-    script/script_creator.ui
+    script/script_creator.ui \
+    tools/audio_config.ui
 
 RESOURCES += \
     res/resources.qrc

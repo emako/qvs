@@ -183,7 +183,7 @@ void Muxer::on_buttonMuxerAudioInput_clicked()
 
 void Muxer::on_buttonMuxerOutput_clicked()
 {
-    QString filename = QFileDialog::getSaveFileName(this, tr("Save Mediafile"), NULL, tr("Media (*.*)"));
+    QString filename = QFileDialog::getSaveFileName(this, tr("Save Mediafile"), ui->editMuxerOutput->text(), tr("Media (*.*)"));
 
     if(!filename.isEmpty())
     {

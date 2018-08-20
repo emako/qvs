@@ -27,9 +27,9 @@ QT_BEGIN_NAMESPACE
 class Ui_AudioEnc
 {
 public:
-    QVBoxLayout *verticalLayout;
+    QVBoxLayout *verticalLayout_2;
     QGroupBox *groupBoxAudio;
-    QVBoxLayout *verticalLayout_4;
+    QVBoxLayout *verticalLayout;
     QHBoxLayout *horizontalLayout_5;
     QLineEdit *editAudioInput;
     QPushButton *buttonAudioInput;
@@ -44,6 +44,8 @@ public:
     QLabel *labelAudioBitrate;
     QComboBox *comboBoxAudioBitrate;
     QLabel *labelAudioKbps;
+    QLabel *labelAudioQuarity;
+    QComboBox *comboBoxAudioQuarity;
     QSpacerItem *horizontalSpacer_3;
     QPushButton *buttonAudioConfig;
     QPushButton *buttonAudioStart;
@@ -52,16 +54,15 @@ public:
     {
         if (AudioEnc->objectName().isEmpty())
             AudioEnc->setObjectName(QStringLiteral("AudioEnc"));
-        AudioEnc->resize(582, 173);
-        AudioEnc->setMaximumSize(QSize(16777215, 175));
-        verticalLayout = new QVBoxLayout(AudioEnc);
-        verticalLayout->setObjectName(QStringLiteral("verticalLayout"));
-        verticalLayout->setContentsMargins(0, 0, 0, 0);
+        AudioEnc->resize(795, 175);
+        AudioEnc->setMaximumSize(QSize(16777215, 16777215));
+        verticalLayout_2 = new QVBoxLayout(AudioEnc);
+        verticalLayout_2->setObjectName(QStringLiteral("verticalLayout_2"));
+        verticalLayout_2->setContentsMargins(0, 0, 0, 0);
         groupBoxAudio = new QGroupBox(AudioEnc);
         groupBoxAudio->setObjectName(QStringLiteral("groupBoxAudio"));
-        verticalLayout_4 = new QVBoxLayout(groupBoxAudio);
-        verticalLayout_4->setObjectName(QStringLiteral("verticalLayout_4"));
-        verticalLayout_4->setContentsMargins(10, 10, 10, 10);
+        verticalLayout = new QVBoxLayout(groupBoxAudio);
+        verticalLayout->setObjectName(QStringLiteral("verticalLayout"));
         horizontalLayout_5 = new QHBoxLayout();
         horizontalLayout_5->setObjectName(QStringLiteral("horizontalLayout_5"));
         editAudioInput = new QLineEdit(groupBoxAudio);
@@ -79,7 +80,7 @@ public:
         horizontalLayout_5->addWidget(buttonAudioInput);
 
 
-        verticalLayout_4->addLayout(horizontalLayout_5);
+        verticalLayout->addLayout(horizontalLayout_5);
 
         horizontalLayout_6 = new QHBoxLayout();
         horizontalLayout_6->setObjectName(QStringLiteral("horizontalLayout_6"));
@@ -97,7 +98,7 @@ public:
         horizontalLayout_6->addWidget(buttonAudioOutput);
 
 
-        verticalLayout_4->addLayout(horizontalLayout_6);
+        verticalLayout->addLayout(horizontalLayout_6);
 
         horizontalLayout_2 = new QHBoxLayout();
         horizontalLayout_2->setObjectName(QStringLiteral("horizontalLayout_2"));
@@ -131,7 +132,7 @@ public:
         horizontalLayout_2->addItem(horizontalSpacer_2);
 
 
-        verticalLayout_4->addLayout(horizontalLayout_2);
+        verticalLayout->addLayout(horizontalLayout_2);
 
         horizontalLayout_3 = new QHBoxLayout();
         horizontalLayout_3->setObjectName(QStringLiteral("horizontalLayout_3"));
@@ -164,13 +165,29 @@ public:
 
         horizontalLayout_3->addWidget(labelAudioKbps);
 
+        labelAudioQuarity = new QLabel(groupBoxAudio);
+        labelAudioQuarity->setObjectName(QStringLiteral("labelAudioQuarity"));
+        labelAudioQuarity->setMinimumSize(QSize(80, 0));
+        labelAudioQuarity->setMaximumSize(QSize(80, 16777215));
+
+        horizontalLayout_3->addWidget(labelAudioQuarity);
+
+        comboBoxAudioQuarity = new QComboBox(groupBoxAudio);
+        comboBoxAudioQuarity->setObjectName(QStringLiteral("comboBoxAudioQuarity"));
+        comboBoxAudioQuarity->setMinimumSize(QSize(130, 22));
+        comboBoxAudioQuarity->setMaximumSize(QSize(120, 22));
+        comboBoxAudioQuarity->setAcceptDrops(false);
+        comboBoxAudioQuarity->setEditable(true);
+
+        horizontalLayout_3->addWidget(comboBoxAudioQuarity);
+
         horizontalSpacer_3 = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
 
         horizontalLayout_3->addItem(horizontalSpacer_3);
 
         buttonAudioConfig = new QPushButton(groupBoxAudio);
         buttonAudioConfig->setObjectName(QStringLiteral("buttonAudioConfig"));
-        buttonAudioConfig->setEnabled(false);
+        buttonAudioConfig->setEnabled(true);
         buttonAudioConfig->setMinimumSize(QSize(104, 0));
         QIcon icon;
         icon.addFile(QStringLiteral(":/buttons/cog.png"), QSize(), QIcon::Normal, QIcon::Off);
@@ -189,16 +206,17 @@ public:
         horizontalLayout_3->addWidget(buttonAudioStart);
 
 
-        verticalLayout_4->addLayout(horizontalLayout_3);
+        verticalLayout->addLayout(horizontalLayout_3);
 
 
-        verticalLayout->addWidget(groupBoxAudio);
+        verticalLayout_2->addWidget(groupBoxAudio);
 
 
         retranslateUi(AudioEnc);
 
         comboBoxAudioEncoder->setCurrentIndex(0);
         comboBoxAudioBitrate->setCurrentIndex(3);
+        comboBoxAudioQuarity->setCurrentIndex(-1);
 
 
         QMetaObject::connectSlotsByName(AudioEnc);
@@ -242,6 +260,8 @@ public:
 
         comboBoxAudioBitrate->setCurrentText(QApplication::translate("AudioEnc", "160", nullptr));
         labelAudioKbps->setText(QApplication::translate("AudioEnc", "Kbps", nullptr));
+        labelAudioQuarity->setText(QApplication::translate("AudioEnc", "Quality:", nullptr));
+        comboBoxAudioQuarity->setCurrentText(QString());
         buttonAudioConfig->setText(QApplication::translate("AudioEnc", "Config", nullptr));
         buttonAudioStart->setText(QApplication::translate("AudioEnc", "Start", nullptr));
     } // retranslateUi

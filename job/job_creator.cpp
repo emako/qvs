@@ -282,7 +282,22 @@ void JobCreator::on_buttonBrowseSource_clicked()
 
 void JobCreator::on_buttonBrowseOutput_clicked()
 {
-    QString fileName = QFileDialog::getSaveFileName(this, tr("Edit Filename"), NULL, getOutputFileSuffixSelected());
+    QList<QPair<QString, QString>> fileExtMap =
+    {
+        {"mp4",  "MPEG-4 (*.mp4)"},
+        {"mkv",  "Matroska (*.mkv)"},
+        {"h264", "AVC Raw (*.h264)"},
+        {"hevc", "HEVC Raw (*.hevc)"},
+    };
+
+    QStringList fileExtList;
+
+    for(int i = eINDEX_0; i < fileExtMap.length(); i++)
+    {
+        fileExtList << fileExtMap.at(i).second;
+    }
+
+    QString fileName = QFileDialog::getSaveFileName(this, tr("Edit Filename"), ui->editOutput->text(), fileExtList.join(";;"), &QString(fileExtMap.at(eINDEX_0).second));
 
     if(fileName.isEmpty())
     {

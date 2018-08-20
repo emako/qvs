@@ -839,7 +839,7 @@ void Demuxer::on_buttonDemuxerVideoInput_clicked()
 
 void Demuxer::on_buttonDemuxerOutput_clicked()
 {
-    QString filename = QFileDialog::getSaveFileName(this, tr("Save Mediafile"), NULL, tr("Media (*.*)"));
+    QString filename = QFileDialog::getSaveFileName(this, tr("Save Mediafile"), ui->editDemuxerOutput->text(), tr("Media (*.*)"));
 
     if(!filename.isEmpty())
     {
