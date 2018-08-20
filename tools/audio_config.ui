@@ -15,7 +15,7 @@
   </property>
   <layout class="QVBoxLayout" name="verticalLayout_2">
    <item>
-    <widget class="QGroupBox" name="groupBox">
+    <widget class="QGroupBox" name="groupBoxConfig">
      <property name="title">
       <string> Configuration </string>
      </property>
@@ -273,7 +273,7 @@
         <number>0</number>
        </property>
        <item>
-        <widget class="QGroupBox" name="groupBox_2">
+        <widget class="QGroupBox" name="groupBoxAacApple">
          <property name="title">
           <string>QAAC</string>
          </property>
@@ -297,7 +297,7 @@
              </spacer>
             </item>
             <item>
-             <widget class="QLabel" name="labelAudioEncoder_2">
+             <widget class="QLabel" name="labelAacAppleMode">
               <property name="minimumSize">
                <size>
                 <width>80</width>
@@ -316,7 +316,7 @@
              </widget>
             </item>
             <item>
-             <widget class="QComboBox" name="comboBoxAudioEncoder_2">
+             <widget class="QComboBox" name="comboBoxAacAppleMode">
               <property name="minimumSize">
                <size>
                 <width>130</width>
@@ -355,7 +355,7 @@
           <item>
            <layout class="QHBoxLayout" name="horizontalLayout_5">
             <item>
-             <widget class="QSlider" name="horizontalSlider">
+             <widget class="QSlider" name="horizontalSliderAacApple">
               <property name="orientation">
                <enum>Qt::Horizontal</enum>
               </property>
@@ -394,7 +394,7 @@
              </spacer>
             </item>
             <item>
-             <widget class="QLabel" name="labelAudioEncoder_3">
+             <widget class="QLabel" name="labelAacAppleProfile">
               <property name="minimumSize">
                <size>
                 <width>80</width>
@@ -413,7 +413,7 @@
              </widget>
             </item>
             <item>
-             <widget class="QComboBox" name="comboBoxAudioEncoder_3">
+             <widget class="QComboBox" name="comboBoxAacAppleProfile">
               <property name="minimumSize">
                <size>
                 <width>130</width>
@@ -445,7 +445,7 @@
              </widget>
             </item>
             <item>
-             <widget class="QCheckBox" name="checkBox">
+             <widget class="QCheckBox" name="checkBoxAacAppleNoDelay">
               <property name="text">
                <string>No Delay</string>
               </property>
@@ -486,7 +486,7 @@
         <number>0</number>
        </property>
        <item>
-        <widget class="QGroupBox" name="groupBox_3">
+        <widget class="QGroupBox" name="groupBoxAacFdk">
          <property name="title">
           <string>FDKAAC</string>
          </property>
@@ -510,7 +510,7 @@
              </spacer>
             </item>
             <item>
-             <widget class="QLabel" name="labelAudioEncoder_4">
+             <widget class="QLabel" name="labelAacFdkMode">
               <property name="minimumSize">
                <size>
                 <width>80</width>
@@ -529,7 +529,7 @@
              </widget>
             </item>
             <item>
-             <widget class="QComboBox" name="comboBoxAudioEncoder_9">
+             <widget class="QComboBox" name="comboBoxAacFdkMode">
               <property name="sizePolicy">
                <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
                 <horstretch>0</horstretch>
@@ -585,7 +585,7 @@
            </layout>
           </item>
           <item>
-           <widget class="QSlider" name="horizontalSlider_2">
+           <widget class="QSlider" name="horizontalSliderAacFdk">
             <property name="orientation">
              <enum>Qt::Horizontal</enum>
             </property>
@@ -622,7 +622,7 @@
              </spacer>
             </item>
             <item>
-             <widget class="QLabel" name="labelAudioEncoder_8">
+             <widget class="QLabel" name="labelAacFdkProfile">
               <property name="minimumSize">
                <size>
                 <width>80</width>
@@ -641,7 +641,7 @@
              </widget>
             </item>
             <item>
-             <widget class="QComboBox" name="comboBoxAudioEncoder_10">
+             <widget class="QComboBox" name="comboBoxAacFdkProfile">
               <property name="sizePolicy">
                <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
                 <horstretch>0</horstretch>
@@ -746,13 +746,13 @@
         <number>0</number>
        </property>
        <item>
-        <widget class="QGroupBox" name="groupBox_4">
+        <widget class="QGroupBox" name="groupBoxAacNero">
          <property name="title">
           <string>NeroAAC</string>
          </property>
          <layout class="QVBoxLayout" name="verticalLayout_8">
           <item>
-           <widget class="QSlider" name="horizontalSlider_3">
+           <widget class="QSlider" name="horizontalSliderAacNero">
             <property name="orientation">
              <enum>Qt::Horizontal</enum>
             </property>
@@ -789,7 +789,13 @@
              </spacer>
             </item>
             <item>
-             <widget class="QLabel" name="labelAudioEncoder_5">
+             <widget class="QLabel" name="labelAacNeroProfile">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
               <property name="minimumSize">
                <size>
                 <width>80</width>
@@ -808,7 +814,7 @@
              </widget>
             </item>
             <item>
-             <widget class="QComboBox" name="comboBoxAudioEncoder_6">
+             <widget class="QComboBox" name="comboBoxAacNeroProfile">
               <property name="minimumSize">
                <size>
                 <width>130</width>
@@ -879,7 +885,7 @@
         <number>0</number>
        </property>
        <item>
-        <widget class="QGroupBox" name="groupBox_5">
+        <widget class="QGroupBox" name="groupBoxAlac">
          <property name="title">
           <string>ALAC</string>
          </property>
@@ -902,13 +908,13 @@
         <number>0</number>
        </property>
        <item>
-        <widget class="QGroupBox" name="groupBox_6">
+        <widget class="QGroupBox" name="groupBoxFlac">
          <property name="title">
           <string>FLAC</string>
          </property>
          <layout class="QVBoxLayout" name="verticalLayout_11">
           <item>
-           <widget class="QSlider" name="horizontalSlider_4">
+           <widget class="QSlider" name="horizontalSliderFlac">
             <property name="orientation">
              <enum>Qt::Horizontal</enum>
             </property>
@@ -929,7 +935,7 @@
           <item>
            <layout class="QHBoxLayout" name="horizontalLayout_8">
             <item>
-             <widget class="QLabel" name="label">
+             <widget class="QLabel" name="labelFlacFast">
               <property name="sizePolicy">
                <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                 <horstretch>0</horstretch>
@@ -955,7 +961,7 @@
              </spacer>
             </item>
             <item>
-             <widget class="QLabel" name="label_2">
+             <widget class="QLabel" name="labelFlacSlow">
               <property name="sizePolicy">
                <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                 <horstretch>0</horstretch>
@@ -989,7 +995,7 @@
         <number>0</number>
        </property>
        <item>
-        <widget class="QGroupBox" name="groupBox_7">
+        <widget class="QGroupBox" name="groupBoxOpus">
          <property name="title">
           <string>OPUS</string>
          </property>
@@ -1013,7 +1019,13 @@
              </spacer>
             </item>
             <item>
-             <widget class="QLabel" name="labelAudioEncoder_6">
+             <widget class="QLabel" name="labelOpusMode">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
               <property name="minimumSize">
                <size>
                 <width>80</width>
@@ -1032,7 +1044,7 @@
              </widget>
             </item>
             <item>
-             <widget class="QComboBox" name="comboBoxAudioEncoder_7">
+             <widget class="QComboBox" name="comboBoxOpusMode">
               <property name="minimumSize">
                <size>
                 <width>130</width>
@@ -1084,7 +1096,7 @@
            </layout>
           </item>
           <item>
-           <widget class="QSlider" name="horizontalSlider_5">
+           <widget class="QSlider" name="horizontalSliderOpus">
             <property name="orientation">
              <enum>Qt::Horizontal</enum>
             </property>
@@ -1122,7 +1134,7 @@
         <number>0</number>
        </property>
        <item>
-        <widget class="QGroupBox" name="groupBox_8">
+        <widget class="QGroupBox" name="groupBoxOggVorbis">
          <property name="title">
           <string>Ogg Vorbis</string>
          </property>
@@ -1130,7 +1142,7 @@
           <item>
            <layout class="QHBoxLayout" name="horizontalLayout_10">
             <item>
-             <widget class="QLabel" name="label_3">
+             <widget class="QLabel" name="labelOggVorbisVariableBitrate">
               <property name="sizePolicy">
                <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                 <horstretch>0</horstretch>
@@ -1158,7 +1170,7 @@
            </layout>
           </item>
           <item>
-           <widget class="QSlider" name="horizontalSlider_6">
+           <widget class="QSlider" name="horizontalSliderOggVorbis">
             <property name="orientation">
              <enum>Qt::Horizontal</enum>
             </property>
@@ -1196,7 +1208,7 @@
         <number>0</number>
        </property>
        <item>
-        <widget class="QGroupBox" name="groupBox_9">
+        <widget class="QGroupBox" name="groupBoxMp3">
          <property name="title">
           <string>MP3</string>
          </property>
@@ -1220,7 +1232,13 @@
              </spacer>
             </item>
             <item>
-             <widget class="QLabel" name="labelAudioEncoder_7">
+             <widget class="QLabel" name="labelMp3Mode">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
               <property name="minimumSize">
                <size>
                 <width>80</width>
@@ -1239,7 +1257,7 @@
              </widget>
             </item>
             <item>
-             <widget class="QComboBox" name="comboBoxAudioEncoder_8">
+             <widget class="QComboBox" name="comboBoxMp3Mode">
               <property name="minimumSize">
                <size>
                 <width>130</width>
@@ -1291,7 +1309,7 @@
            </layout>
           </item>
           <item>
-           <widget class="QSlider" name="horizontalSlider_7">
+           <widget class="QSlider" name="horizontalSliderMp3">
             <property name="orientation">
              <enum>Qt::Horizontal</enum>
             </property>
@@ -1329,7 +1347,7 @@
         <number>0</number>
        </property>
        <item>
-        <widget class="QGroupBox" name="groupBox_10">
+        <widget class="QGroupBox" name="groupBoxAc3">
          <property name="title">
           <string>AC3</string>
          </property>
@@ -1337,7 +1355,7 @@
           <item>
            <layout class="QHBoxLayout" name="horizontalLayout_12">
             <item>
-             <widget class="QLabel" name="label_5">
+             <widget class="QLabel" name="labelAc3Bitrate">
               <property name="sizePolicy">
                <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                 <horstretch>0</horstretch>
@@ -1365,7 +1383,7 @@
            </layout>
           </item>
           <item>
-           <widget class="QSlider" name="horizontalSlider_8">
+           <widget class="QSlider" name="horizontalSliderAc3">
             <property name="orientation">
              <enum>Qt::Horizontal</enum>
             </property>
@@ -1403,7 +1421,7 @@
         <number>0</number>
        </property>
        <item>
-        <widget class="QGroupBox" name="groupBox_11">
+        <widget class="QGroupBox" name="groupBoxWav">
          <property name="title">
           <string>WAV</string>
          </property>
