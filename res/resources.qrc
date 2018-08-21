@@ -55,13 +55,7 @@
         <file>buttons/wrench.png</file>
         <file>buttons/x264.png</file>
         <file>buttons/x265.png</file>
-        <file>images/avisynth.png</file>
         <file>images/help.png</file>
-        <file>images/loading.gif</file>
-        <file>images/nvencc.png</file>
-        <file>images/python.png</file>
-        <file>images/x264.png</file>
-        <file>images/x265.png</file>
         <file>sounds/beep.wav</file>
         <file>buttons/benchmark.png</file>
         <file>buttons/cog.png</file>
@@ -92,7 +86,6 @@
         <file>buttons/zoom_actual.png</file>
         <file>buttons/zoom_fit.png</file>
         <file>buttons/zoom_in.png</file>
-        <file>images/command.png</file>
         <file>images/console.png</file>
         <file>buttons/terminal.png</file>
         <file>fonts/consola.ttf</file>
@@ -107,7 +100,6 @@
         <file>icons/mplayer.ico</file>
         <file>icons/qvs.ico</file>
         <file>buttons/github.png</file>
-        <file>images/splashscreen.png</file>
         <file>buttons/vsedit.png</file>
         <file>buttons/mediainfo.png</file>
         <file>buttons/python_module.png</file>
@@ -154,6 +146,7 @@
         <file>buttons/menu_item.png</file>
         <file>buttons/page_menu.png</file>
         <file>buttons/dot_grid.png</file>
-        <file>images/grid.png</file>
+        <file>images/splashscreen.png</file>
+        <file>images/splashscreen_cn.png</file>
     </qresource>
 </RCC>

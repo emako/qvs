@@ -44,7 +44,7 @@ public:
     QString getPiperFilename(void);
 
 public slots:
-    void setMode(bool a_bitrateMode);
+    void setMode(bool a_advancedMode);
 
 private slots:
     void on_buttonAudioStart_clicked();

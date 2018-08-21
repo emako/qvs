@@ -44,8 +44,6 @@ public:
     QLabel *labelAudioBitrate;
     QComboBox *comboBoxAudioBitrate;
     QLabel *labelAudioKbps;
-    QLabel *labelAudioQuarity;
-    QComboBox *comboBoxAudioQuarity;
     QSpacerItem *horizontalSpacer_3;
     QPushButton *buttonAudioConfig;
     QPushButton *buttonAudioStart;
@@ -165,22 +163,6 @@ public:
 
         horizontalLayout_3->addWidget(labelAudioKbps);
 
-        labelAudioQuarity = new QLabel(groupBoxAudio);
-        labelAudioQuarity->setObjectName(QStringLiteral("labelAudioQuarity"));
-        labelAudioQuarity->setMinimumSize(QSize(80, 0));
-        labelAudioQuarity->setMaximumSize(QSize(80, 16777215));
-
-        horizontalLayout_3->addWidget(labelAudioQuarity);
-
-        comboBoxAudioQuarity = new QComboBox(groupBoxAudio);
-        comboBoxAudioQuarity->setObjectName(QStringLiteral("comboBoxAudioQuarity"));
-        comboBoxAudioQuarity->setMinimumSize(QSize(130, 22));
-        comboBoxAudioQuarity->setMaximumSize(QSize(120, 22));
-        comboBoxAudioQuarity->setAcceptDrops(false);
-        comboBoxAudioQuarity->setEditable(true);
-
-        horizontalLayout_3->addWidget(comboBoxAudioQuarity);
-
         horizontalSpacer_3 = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
 
         horizontalLayout_3->addItem(horizontalSpacer_3);
@@ -216,7 +198,6 @@ public:
 
         comboBoxAudioEncoder->setCurrentIndex(0);
         comboBoxAudioBitrate->setCurrentIndex(3);
-        comboBoxAudioQuarity->setCurrentIndex(-1);
 
 
         QMetaObject::connectSlotsByName(AudioEnc);
@@ -260,8 +241,6 @@ public:
 
         comboBoxAudioBitrate->setCurrentText(QApplication::translate("AudioEnc", "160", nullptr));
         labelAudioKbps->setText(QApplication::translate("AudioEnc", "Kbps", nullptr));
-        labelAudioQuarity->setText(QApplication::translate("AudioEnc", "Quality:", nullptr));
-        comboBoxAudioQuarity->setCurrentText(QString());
         buttonAudioConfig->setText(QApplication::translate("AudioEnc", "Config", nullptr));
         buttonAudioStart->setText(QApplication::translate("AudioEnc", "Start", nullptr));
     } // retranslateUi

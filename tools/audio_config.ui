@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>548</width>
-    <height>322</height>
+    <height>324</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -317,16 +317,22 @@
             </item>
             <item>
              <widget class="QComboBox" name="comboBoxAacAppleMode">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
               <property name="minimumSize">
                <size>
-                <width>130</width>
-                <height>22</height>
+                <width>180</width>
+                <height>23</height>
                </size>
               </property>
               <property name="maximumSize">
                <size>
-                <width>90</width>
-                <height>22</height>
+                <width>16777215</width>
+                <height>16777215</height>
                </size>
               </property>
               <property name="editable">
@@ -342,9 +348,12 @@
               <property name="orientation">
                <enum>Qt::Horizontal</enum>
               </property>
+              <property name="sizeType">
+               <enum>QSizePolicy::Fixed</enum>
+              </property>
               <property name="sizeHint" stdset="0">
                <size>
-                <width>40</width>
+                <width>100</width>
                 <height>20</height>
                </size>
               </property>
@@ -414,16 +423,22 @@
             </item>
             <item>
              <widget class="QComboBox" name="comboBoxAacAppleProfile">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
               <property name="minimumSize">
                <size>
-                <width>130</width>
-                <height>22</height>
+                <width>180</width>
+                <height>23</height>
                </size>
               </property>
               <property name="maximumSize">
                <size>
-                <width>90</width>
-                <height>22</height>
+                <width>16777215</width>
+                <height>16777215</height>
                </size>
               </property>
               <property name="editable">
@@ -455,6 +470,9 @@
              <spacer name="horizontalSpacer_5">
               <property name="orientation">
                <enum>Qt::Horizontal</enum>
+              </property>
+              <property name="sizeType">
+               <enum>QSizePolicy::Fixed</enum>
               </property>
               <property name="sizeHint" stdset="0">
                <size>
@@ -531,7 +549,7 @@
             <item>
              <widget class="QComboBox" name="comboBoxAacFdkMode">
               <property name="sizePolicy">
-               <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
+               <sizepolicy hsizetype="Expanding" vsizetype="Maximum">
                 <horstretch>0</horstretch>
                 <verstretch>0</verstretch>
                </sizepolicy>
@@ -539,13 +557,13 @@
               <property name="minimumSize">
                <size>
                 <width>180</width>
-                <height>22</height>
+                <height>23</height>
                </size>
               </property>
               <property name="maximumSize">
                <size>
-                <width>180</width>
-                <height>22</height>
+                <width>16777215</width>
+                <height>16777215</height>
                </size>
               </property>
               <property name="editable">
@@ -572,11 +590,11 @@
                <enum>Qt::Horizontal</enum>
               </property>
               <property name="sizeType">
-               <enum>QSizePolicy::Expanding</enum>
+               <enum>QSizePolicy::Fixed</enum>
               </property>
               <property name="sizeHint" stdset="0">
                <size>
-                <width>40</width>
+                <width>100</width>
                 <height>20</height>
                </size>
               </property>
@@ -643,7 +661,7 @@
             <item>
              <widget class="QComboBox" name="comboBoxAacFdkProfile">
               <property name="sizePolicy">
-               <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
+               <sizepolicy hsizetype="Expanding" vsizetype="Maximum">
                 <horstretch>0</horstretch>
                 <verstretch>0</verstretch>
                </sizepolicy>
@@ -651,13 +669,13 @@
               <property name="minimumSize">
                <size>
                 <width>180</width>
-                <height>22</height>
+                <height>23</height>
                </size>
               </property>
               <property name="maximumSize">
                <size>
-                <width>180</width>
-                <height>22</height>
+                <width>16777215</width>
+                <height>16777215</height>
                </size>
               </property>
               <property name="editable">
@@ -714,11 +732,11 @@
                <enum>Qt::Horizontal</enum>
               </property>
               <property name="sizeType">
-               <enum>QSizePolicy::Expanding</enum>
+               <enum>QSizePolicy::Fixed</enum>
               </property>
               <property name="sizeHint" stdset="0">
                <size>
-                <width>40</width>
+                <width>100</width>
                 <height>20</height>
                </size>
               </property>
@@ -815,16 +833,22 @@
             </item>
             <item>
              <widget class="QComboBox" name="comboBoxAacNeroProfile">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
               <property name="minimumSize">
                <size>
-                <width>130</width>
-                <height>22</height>
+                <width>180</width>
+                <height>23</height>
                </size>
               </property>
               <property name="maximumSize">
                <size>
-                <width>90</width>
-                <height>22</height>
+                <width>16777215</width>
+                <height>16777215</height>
                </size>
               </property>
               <property name="editable">
@@ -855,9 +879,12 @@
               <property name="orientation">
                <enum>Qt::Horizontal</enum>
               </property>
+              <property name="sizeType">
+               <enum>QSizePolicy::Fixed</enum>
+              </property>
               <property name="sizeHint" stdset="0">
                <size>
-                <width>40</width>
+                <width>100</width>
                 <height>17</height>
                </size>
               </property>
@@ -1045,16 +1072,22 @@
             </item>
             <item>
              <widget class="QComboBox" name="comboBoxOpusMode">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
               <property name="minimumSize">
                <size>
-                <width>130</width>
-                <height>22</height>
+                <width>180</width>
+                <height>23</height>
                </size>
               </property>
               <property name="maximumSize">
                <size>
-                <width>90</width>
-                <height>22</height>
+                <width>16777215</width>
+                <height>16777215</height>
                </size>
               </property>
               <property name="editable">
@@ -1085,9 +1118,12 @@
               <property name="orientation">
                <enum>Qt::Horizontal</enum>
               </property>
+              <property name="sizeType">
+               <enum>QSizePolicy::Fixed</enum>
+              </property>
               <property name="sizeHint" stdset="0">
                <size>
-                <width>40</width>
+                <width>100</width>
                 <height>20</height>
                </size>
               </property>
@@ -1258,16 +1294,22 @@
             </item>
             <item>
              <widget class="QComboBox" name="comboBoxMp3Mode">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
               <property name="minimumSize">
                <size>
-                <width>130</width>
-                <height>22</height>
+                <width>180</width>
+                <height>23</height>
                </size>
               </property>
               <property name="maximumSize">
                <size>
-                <width>90</width>
-                <height>22</height>
+                <width>16777215</width>
+                <height>16777215</height>
                </size>
               </property>
               <property name="editable">
@@ -1298,9 +1340,12 @@
               <property name="orientation">
                <enum>Qt::Horizontal</enum>
               </property>
+              <property name="sizeType">
+               <enum>QSizePolicy::Fixed</enum>
+              </property>
               <property name="sizeHint" stdset="0">
                <size>
-                <width>40</width>
+                <width>100</width>
                 <height>20</height>
                </size>
               </property>
@@ -1443,6 +1488,13 @@
    </item>
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout">
+     <item>
+      <widget class="QCheckBox" name="checkBoxAdvancedOption">
+       <property name="text">
+        <string>Advanced Option</string>
+       </property>
+      </widget>
+     </item>
      <item>
       <spacer name="horizontalSpacer">
        <property name="orientation">

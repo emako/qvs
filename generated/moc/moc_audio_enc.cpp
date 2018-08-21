@@ -22,7 +22,7 @@ QT_WARNING_PUSH
 QT_WARNING_DISABLE_DEPRECATED
 struct qt_meta_stringdata_AudioEnc_t {
     QByteArrayData data[10];
-    char stringdata0[188];
+    char stringdata0[189];
 };
 #define QT_MOC_LITERAL(idx, ofs, len) \
     Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
@@ -34,16 +34,16 @@ static const qt_meta_stringdata_AudioEnc_t qt_meta_stringdata_AudioEnc = {
 QT_MOC_LITERAL(0, 0, 8), // "AudioEnc"
 QT_MOC_LITERAL(1, 9, 7), // "setMode"
 QT_MOC_LITERAL(2, 17, 0), // ""
-QT_MOC_LITERAL(3, 18, 13), // "a_bitrateMode"
-QT_MOC_LITERAL(4, 32, 27), // "on_buttonAudioStart_clicked"
-QT_MOC_LITERAL(5, 60, 33), // "on_comboBoxAudioEncoder_activ..."
-QT_MOC_LITERAL(6, 94, 7), // "a_index"
-QT_MOC_LITERAL(7, 102, 27), // "on_buttonAudioInput_clicked"
-QT_MOC_LITERAL(8, 130, 28), // "on_buttonAudioOutput_clicked"
-QT_MOC_LITERAL(9, 159, 28) // "on_buttonAudioConfig_clicked"
+QT_MOC_LITERAL(3, 18, 14), // "a_advancedMode"
+QT_MOC_LITERAL(4, 33, 27), // "on_buttonAudioStart_clicked"
+QT_MOC_LITERAL(5, 61, 33), // "on_comboBoxAudioEncoder_activ..."
+QT_MOC_LITERAL(6, 95, 7), // "a_index"
+QT_MOC_LITERAL(7, 103, 27), // "on_buttonAudioInput_clicked"
+QT_MOC_LITERAL(8, 131, 28), // "on_buttonAudioOutput_clicked"
+QT_MOC_LITERAL(9, 160, 28) // "on_buttonAudioConfig_clicked"
 
     },
-    "AudioEnc\0setMode\0\0a_bitrateMode\0"
+    "AudioEnc\0setMode\0\0a_advancedMode\0"
     "on_buttonAudioStart_clicked\0"
     "on_comboBoxAudioEncoder_activated\0"
     "a_index\0on_buttonAudioInput_clicked\0"

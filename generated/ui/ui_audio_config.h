@@ -139,6 +139,7 @@ public:
     QGroupBox *groupBoxWav;
     QFrame *frame;
     QHBoxLayout *horizontalLayout;
+    QCheckBox *checkBoxAdvancedOption;
     QSpacerItem *horizontalSpacer;
     QPushButton *buttonAccept;
     QPushButton *buttonCancel;
@@ -147,7 +148,7 @@ public:
     {
         if (AudioConfig->objectName().isEmpty())
             AudioConfig->setObjectName(QStringLiteral("AudioConfig"));
-        AudioConfig->resize(548, 322);
+        AudioConfig->resize(548, 324);
         verticalLayout_2 = new QVBoxLayout(AudioConfig);
         verticalLayout_2->setObjectName(QStringLiteral("verticalLayout_2"));
         groupBoxConfig = new QGroupBox(AudioConfig);
@@ -268,13 +269,15 @@ public:
 
         comboBoxAacAppleMode = new QComboBox(groupBoxAacApple);
         comboBoxAacAppleMode->setObjectName(QStringLiteral("comboBoxAacAppleMode"));
-        comboBoxAacAppleMode->setMinimumSize(QSize(130, 22));
-        comboBoxAacAppleMode->setMaximumSize(QSize(90, 22));
+        sizePolicy.setHeightForWidth(comboBoxAacAppleMode->sizePolicy().hasHeightForWidth());
+        comboBoxAacAppleMode->setSizePolicy(sizePolicy);
+        comboBoxAacAppleMode->setMinimumSize(QSize(180, 23));
+        comboBoxAacAppleMode->setMaximumSize(QSize(16777215, 16777215));
         comboBoxAacAppleMode->setEditable(true);
 
         horizontalLayout_4->addWidget(comboBoxAacAppleMode);
 
-        horizontalSpacer_4 = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
+        horizontalSpacer_4 = new QSpacerItem(100, 20, QSizePolicy::Fixed, QSizePolicy::Minimum);
 
         horizontalLayout_4->addItem(horizontalSpacer_4);
 
@@ -313,8 +316,10 @@ public:
         comboBoxAacAppleProfile->addItem(QString());
         comboBoxAacAppleProfile->addItem(QString());
         comboBoxAacAppleProfile->setObjectName(QStringLiteral("comboBoxAacAppleProfile"));
-        comboBoxAacAppleProfile->setMinimumSize(QSize(130, 22));
-        comboBoxAacAppleProfile->setMaximumSize(QSize(90, 22));
+        sizePolicy.setHeightForWidth(comboBoxAacAppleProfile->sizePolicy().hasHeightForWidth());
+        comboBoxAacAppleProfile->setSizePolicy(sizePolicy);
+        comboBoxAacAppleProfile->setMinimumSize(QSize(180, 23));
+        comboBoxAacAppleProfile->setMaximumSize(QSize(16777215, 16777215));
         comboBoxAacAppleProfile->setEditable(true);
 
         horizontalLayout_3->addWidget(comboBoxAacAppleProfile);
@@ -324,7 +329,7 @@ public:
 
         horizontalLayout_3->addWidget(checkBoxAacAppleNoDelay);
 
-        horizontalSpacer_5 = new QSpacerItem(40, 17, QSizePolicy::Expanding, QSizePolicy::Minimum);
+        horizontalSpacer_5 = new QSpacerItem(40, 17, QSizePolicy::Fixed, QSizePolicy::Minimum);
 
         horizontalLayout_3->addItem(horizontalSpacer_5);
 
@@ -361,18 +366,18 @@ public:
         comboBoxAacFdkMode->addItem(QString());
         comboBoxAacFdkMode->addItem(QString());
         comboBoxAacFdkMode->setObjectName(QStringLiteral("comboBoxAacFdkMode"));
-        QSizePolicy sizePolicy1(QSizePolicy::Preferred, QSizePolicy::Maximum);
+        QSizePolicy sizePolicy1(QSizePolicy::Expanding, QSizePolicy::Maximum);
         sizePolicy1.setHorizontalStretch(0);
         sizePolicy1.setVerticalStretch(0);
         sizePolicy1.setHeightForWidth(comboBoxAacFdkMode->sizePolicy().hasHeightForWidth());
         comboBoxAacFdkMode->setSizePolicy(sizePolicy1);
-        comboBoxAacFdkMode->setMinimumSize(QSize(180, 22));
-        comboBoxAacFdkMode->setMaximumSize(QSize(180, 22));
+        comboBoxAacFdkMode->setMinimumSize(QSize(180, 23));
+        comboBoxAacFdkMode->setMaximumSize(QSize(16777215, 16777215));
         comboBoxAacFdkMode->setEditable(true);
 
         horizontalLayout_6->addWidget(comboBoxAacFdkMode);
 
-        horizontalSpacer_7 = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
+        horizontalSpacer_7 = new QSpacerItem(100, 20, QSizePolicy::Fixed, QSizePolicy::Minimum);
 
         horizontalLayout_6->addItem(horizontalSpacer_7);
 
@@ -414,13 +419,13 @@ public:
         comboBoxAacFdkProfile->setObjectName(QStringLiteral("comboBoxAacFdkProfile"));
         sizePolicy1.setHeightForWidth(comboBoxAacFdkProfile->sizePolicy().hasHeightForWidth());
         comboBoxAacFdkProfile->setSizePolicy(sizePolicy1);
-        comboBoxAacFdkProfile->setMinimumSize(QSize(180, 22));
-        comboBoxAacFdkProfile->setMaximumSize(QSize(180, 22));
+        comboBoxAacFdkProfile->setMinimumSize(QSize(180, 23));
+        comboBoxAacFdkProfile->setMaximumSize(QSize(16777215, 16777215));
         comboBoxAacFdkProfile->setEditable(true);
 
         horizontalLayout_13->addWidget(comboBoxAacFdkProfile);
 
-        horizontalSpacer_10 = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
+        horizontalSpacer_10 = new QSpacerItem(100, 20, QSizePolicy::Fixed, QSizePolicy::Minimum);
 
         horizontalLayout_13->addItem(horizontalSpacer_10);
 
@@ -473,13 +478,15 @@ public:
         comboBoxAacNeroProfile->addItem(QString());
         comboBoxAacNeroProfile->addItem(QString());
         comboBoxAacNeroProfile->setObjectName(QStringLiteral("comboBoxAacNeroProfile"));
-        comboBoxAacNeroProfile->setMinimumSize(QSize(130, 22));
-        comboBoxAacNeroProfile->setMaximumSize(QSize(90, 22));
+        sizePolicy.setHeightForWidth(comboBoxAacNeroProfile->sizePolicy().hasHeightForWidth());
+        comboBoxAacNeroProfile->setSizePolicy(sizePolicy);
+        comboBoxAacNeroProfile->setMinimumSize(QSize(180, 23));
+        comboBoxAacNeroProfile->setMaximumSize(QSize(16777215, 16777215));
         comboBoxAacNeroProfile->setEditable(true);
 
         horizontalLayout_7->addWidget(comboBoxAacNeroProfile);
 
-        horizontalSpacer_12 = new QSpacerItem(40, 17, QSizePolicy::Expanding, QSizePolicy::Minimum);
+        horizontalSpacer_12 = new QSpacerItem(100, 17, QSizePolicy::Fixed, QSizePolicy::Minimum);
 
         horizontalLayout_7->addItem(horizontalSpacer_12);
 
@@ -579,13 +586,15 @@ public:
         comboBoxOpusMode->addItem(QString());
         comboBoxOpusMode->addItem(QString());
         comboBoxOpusMode->setObjectName(QStringLiteral("comboBoxOpusMode"));
-        comboBoxOpusMode->setMinimumSize(QSize(130, 22));
-        comboBoxOpusMode->setMaximumSize(QSize(90, 22));
+        sizePolicy.setHeightForWidth(comboBoxOpusMode->sizePolicy().hasHeightForWidth());
+        comboBoxOpusMode->setSizePolicy(sizePolicy);
+        comboBoxOpusMode->setMinimumSize(QSize(180, 23));
+        comboBoxOpusMode->setMaximumSize(QSize(16777215, 16777215));
         comboBoxOpusMode->setEditable(true);
 
         horizontalLayout_9->addWidget(comboBoxOpusMode);
 
-        horizontalSpacer_15 = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
+        horizontalSpacer_15 = new QSpacerItem(100, 20, QSizePolicy::Fixed, QSizePolicy::Minimum);
 
         horizontalLayout_9->addItem(horizontalSpacer_15);
 
@@ -674,13 +683,15 @@ public:
         comboBoxMp3Mode->addItem(QString());
         comboBoxMp3Mode->addItem(QString());
         comboBoxMp3Mode->setObjectName(QStringLiteral("comboBoxMp3Mode"));
-        comboBoxMp3Mode->setMinimumSize(QSize(130, 22));
-        comboBoxMp3Mode->setMaximumSize(QSize(90, 22));
+        sizePolicy.setHeightForWidth(comboBoxMp3Mode->sizePolicy().hasHeightForWidth());
+        comboBoxMp3Mode->setSizePolicy(sizePolicy);
+        comboBoxMp3Mode->setMinimumSize(QSize(180, 23));
+        comboBoxMp3Mode->setMaximumSize(QSize(16777215, 16777215));
         comboBoxMp3Mode->setEditable(true);
 
         horizontalLayout_11->addWidget(comboBoxMp3Mode);
 
-        horizontalSpacer_18 = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
+        horizontalSpacer_18 = new QSpacerItem(100, 20, QSizePolicy::Fixed, QSizePolicy::Minimum);
 
         horizontalLayout_11->addItem(horizontalSpacer_18);
 
@@ -763,6 +774,11 @@ public:
 
         horizontalLayout = new QHBoxLayout();
         horizontalLayout->setObjectName(QStringLiteral("horizontalLayout"));
+        checkBoxAdvancedOption = new QCheckBox(AudioConfig);
+        checkBoxAdvancedOption->setObjectName(QStringLiteral("checkBoxAdvancedOption"));
+
+        horizontalLayout->addWidget(checkBoxAdvancedOption);
+
         horizontalSpacer = new QSpacerItem(40, 20, QSizePolicy::Expanding, QSizePolicy::Minimum);
 
         horizontalLayout->addItem(horizontalSpacer);
@@ -880,6 +896,7 @@ public:
         groupBoxAc3->setTitle(QApplication::translate("AudioConfig", "AC3", nullptr));
         labelAc3Bitrate->setText(QApplication::translate("AudioConfig", "Bitrate", nullptr));
         groupBoxWav->setTitle(QApplication::translate("AudioConfig", "WAV", nullptr));
+        checkBoxAdvancedOption->setText(QApplication::translate("AudioConfig", "Advanced Option", nullptr));
         buttonAccept->setText(QApplication::translate("AudioConfig", "Accept", nullptr));
         buttonCancel->setText(QApplication::translate("AudioConfig", "Cancel", nullptr));
     } // retranslateUi

@@ -26,23 +26,19 @@ void AudioEnc::setupUi(void)
     setMode(true);
 }
 
-void AudioEnc::setMode(bool a_bitrateMode)
+void AudioEnc::setMode(bool a_advancedMode)
 {
-    if(a_bitrateMode)
+    if(a_advancedMode)
     {
         ui->labelAudioBitrate->setVisible(true);
         ui->comboBoxAudioBitrate->setVisible(true);
         ui->labelAudioKbps->setVisible(true);
-        ui->labelAudioQuarity->setVisible(false);
-        ui->comboBoxAudioQuarity->setVisible(false);
     }
     else
     {
         ui->labelAudioBitrate->setVisible(false);
         ui->comboBoxAudioBitrate->setVisible(false);
         ui->labelAudioKbps->setVisible(false);
-        ui->labelAudioQuarity->setVisible(true);
-        ui->comboBoxAudioQuarity->setVisible(true);
     }
 }
 

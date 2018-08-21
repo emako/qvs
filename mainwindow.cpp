@@ -941,7 +941,7 @@ void MainWindow::acceptedJobCreator(JobCreator::EJOB_RELOAD a_job_reload)
 
 bool MainWindow::eventFilter(QObject *o, QEvent *e)
 {
-    if (o == ui->jobsView)
+    if(o == ui->jobsView)
     {
         QString baseSelectionStyleSheet = "QTableWidget{selection-background-color:#%1;selection-color:#%2}";
 

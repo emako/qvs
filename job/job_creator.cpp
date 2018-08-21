@@ -155,9 +155,9 @@ void JobCreator::setupUi(void)
 
     /*Property*/
     this->setMaximumHeight(eINDEX_10);
-    this->resize(eINDEX_10, eINDEX_10);
     this->setAcceptDrops(true);
     this->loadCommonConfig();
+    this->installEventFilter(this);
 
     /*Ui*/
     for(int i = eINDEX_0; i <= (int)eJOB_CONFIG_MAX; i++)
@@ -703,6 +703,10 @@ bool JobCreator::eventFilter(QObject *o, QEvent *e)
     else if((o == ui->editCustomPiperParams) && (e->type() == QEvent::FocusOut))
     {
         ui->editCustomPiperParams->setText(ui->editCustomPiperParams->text().simplified());
+    }
+    else if((o == this) && (e->type() == QEvent::Show))
+    {
+        resizeEventMinimum();
     }
     return false;
 }
@@ -1458,3 +1462,10 @@ void JobCreator::setPreferAvisynthWith32Bit(bool a_is32Bit)
 {
     m_isPreferAvsWith32Bit = a_is32Bit;
 }
+
+void JobCreator::resizeEventMinimum(void)
+{
+    resize(minimumWidth() + eINDEX_1, minimumHeight());
+    resize(minimumWidth(), minimumHeight());
+}
+

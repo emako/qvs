@@ -11,6 +11,16 @@ namespace Ui {
 class AudioConfig;
 }
 
+class AudioAdvancedConfig
+{
+public:
+    AudioAdvancedConfig()
+    {
+    }
+
+    QString config_name;
+};
+
 class AudioConfig : public QDialog
 {
     Q_OBJECT
@@ -23,14 +33,20 @@ public:
     class MainWindow *mainUi;
 
 private slots:
-    void resizeEvent(QResizeEvent *e);
+    virtual bool eventFilter(QObject *o, QEvent *e);
+    virtual void resizeEvent(QResizeEvent *e);
+    virtual void resizeEvent(void);
+    virtual void resizeEventMinimum(void);
 
     void on_buttonAccept_clicked();
     void on_buttonCancel_clicked();
     void on_comboBoxAudioEncoder_currentIndexChanged(int a_index);
+    void on_checkBoxAdvancedOption_stateChanged(int a_state);
 
 private:
     Ui::AudioConfig *ui;
+
+    void setup(void);
 };
 
 #endif // AUDIO_CONFIG_H

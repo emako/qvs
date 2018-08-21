@@ -148,6 +148,7 @@ protected:
     virtual bool eventFilter(QObject *o, QEvent *e);
     virtual void dragEnterEvent(QDragEnterEvent *e);
     virtual void dropEvent(QDropEvent *e);
+    virtual void resizeEventMinimum(void);
 };
 
 #endif // JOB_CREATOR_H
