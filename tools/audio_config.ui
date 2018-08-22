@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>548</width>
-    <height>324</height>
+    <height>332</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -256,7 +256,7 @@
    <item>
     <widget class="QStackedWidget" name="stackedWidgetMode">
      <property name="currentIndex">
-      <number>0</number>
+      <number>6</number>
      </property>
      <widget class="QWidget" name="page_qaac">
       <layout class="QVBoxLayout" name="verticalLayout_3">
@@ -278,6 +278,9 @@
           <string>QAAC</string>
          </property>
          <layout class="QVBoxLayout" name="verticalLayout_4">
+          <property name="spacing">
+           <number>11</number>
+          </property>
           <item>
            <layout class="QHBoxLayout" name="horizontalLayout_4">
             <item>
@@ -365,6 +368,12 @@
            <layout class="QHBoxLayout" name="horizontalLayout_5">
             <item>
              <widget class="QSlider" name="horizontalSliderAacApple">
+              <property name="maximum">
+               <number>99</number>
+              </property>
+              <property name="pageStep">
+               <number>10</number>
+              </property>
               <property name="orientation">
                <enum>Qt::Horizontal</enum>
               </property>
@@ -509,6 +518,9 @@
           <string>FDKAAC</string>
          </property>
          <layout class="QVBoxLayout" name="verticalLayout_6">
+          <property name="spacing">
+           <number>11</number>
+          </property>
           <item>
            <layout class="QHBoxLayout" name="horizontalLayout_6">
             <item>
@@ -769,6 +781,113 @@
           <string>NeroAAC</string>
          </property>
          <layout class="QVBoxLayout" name="verticalLayout_8">
+          <property name="spacing">
+           <number>11</number>
+          </property>
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_14">
+            <item>
+             <spacer name="horizontalSpacer_20">
+              <property name="orientation">
+               <enum>Qt::Horizontal</enum>
+              </property>
+              <property name="sizeType">
+               <enum>QSizePolicy::Minimum</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>40</width>
+                <height>20</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+            <item>
+             <widget class="QLabel" name="labelAacNeroMode">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="minimumSize">
+               <size>
+                <width>80</width>
+                <height>0</height>
+               </size>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>80</width>
+                <height>16777215</height>
+               </size>
+              </property>
+              <property name="text">
+               <string>Mode</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QComboBox" name="comboBoxAacNeroMode">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="minimumSize">
+               <size>
+                <width>180</width>
+                <height>23</height>
+               </size>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>16777215</width>
+                <height>16777215</height>
+               </size>
+              </property>
+              <property name="editable">
+               <bool>true</bool>
+              </property>
+              <property name="currentIndex">
+               <number>0</number>
+              </property>
+              <item>
+               <property name="text">
+                <string>Adaptive Bitrate</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>Constant Bitrate</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>Variable Bitrate</string>
+               </property>
+              </item>
+             </widget>
+            </item>
+            <item>
+             <spacer name="horizontalSpacer_21">
+              <property name="orientation">
+               <enum>Qt::Horizontal</enum>
+              </property>
+              <property name="sizeType">
+               <enum>QSizePolicy::Fixed</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>100</width>
+                <height>17</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+           </layout>
+          </item>
           <item>
            <widget class="QSlider" name="horizontalSliderAacNero">
             <property name="orientation">
@@ -859,17 +978,22 @@
               </property>
               <item>
                <property name="text">
-                <string>Adaptive Bitrate</string>
+                <string>Automatic</string>
                </property>
               </item>
               <item>
                <property name="text">
-                <string>Constant Bitrate</string>
+                <string>HE-AAC+PS</string>
                </property>
               </item>
               <item>
                <property name="text">
-                <string>Variable Bitrate</string>
+                <string>HE-AAC</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>LC-AAC</string>
                </property>
               </item>
              </widget>
@@ -940,8 +1064,20 @@
           <string>FLAC</string>
          </property>
          <layout class="QVBoxLayout" name="verticalLayout_11">
+          <property name="spacing">
+           <number>11</number>
+          </property>
           <item>
            <widget class="QSlider" name="horizontalSliderFlac">
+            <property name="maximum">
+             <number>8</number>
+            </property>
+            <property name="pageStep">
+             <number>1</number>
+            </property>
+            <property name="value">
+             <number>5</number>
+            </property>
             <property name="orientation">
              <enum>Qt::Horizontal</enum>
             </property>
@@ -955,7 +1091,7 @@
              <enum>QSlider::TicksAbove</enum>
             </property>
             <property name="tickInterval">
-             <number>10</number>
+             <number>1</number>
             </property>
            </widget>
           </item>
@@ -1027,6 +1163,9 @@
           <string>OPUS</string>
          </property>
          <layout class="QVBoxLayout" name="verticalLayout_13">
+          <property name="spacing">
+           <number>11</number>
+          </property>
           <item>
            <layout class="QHBoxLayout" name="horizontalLayout_9">
             <item>
@@ -1133,6 +1272,15 @@
           </item>
           <item>
            <widget class="QSlider" name="horizontalSliderOpus">
+            <property name="minimum">
+             <number>6</number>
+            </property>
+            <property name="maximum">
+             <number>512</number>
+            </property>
+            <property name="value">
+             <number>160</number>
+            </property>
             <property name="orientation">
              <enum>Qt::Horizontal</enum>
             </property>
@@ -1175,6 +1323,9 @@
           <string>Ogg Vorbis</string>
          </property>
          <layout class="QVBoxLayout" name="verticalLayout_15">
+          <property name="spacing">
+           <number>11</number>
+          </property>
           <item>
            <layout class="QHBoxLayout" name="horizontalLayout_10">
             <item>
@@ -1207,6 +1358,21 @@
           </item>
           <item>
            <widget class="QSlider" name="horizontalSliderOggVorbis">
+            <property name="minimum">
+             <number>-200</number>
+            </property>
+            <property name="maximum">
+             <number>1000</number>
+            </property>
+            <property name="singleStep">
+             <number>1</number>
+            </property>
+            <property name="pageStep">
+             <number>1</number>
+            </property>
+            <property name="value">
+             <number>100</number>
+            </property>
             <property name="orientation">
              <enum>Qt::Horizontal</enum>
             </property>
@@ -1220,7 +1386,7 @@
              <enum>QSlider::TicksAbove</enum>
             </property>
             <property name="tickInterval">
-             <number>10</number>
+             <number>100</number>
             </property>
            </widget>
           </item>
@@ -1246,9 +1412,12 @@
        <item>
         <widget class="QGroupBox" name="groupBoxMp3">
          <property name="title">
-          <string>MP3</string>
+          <string>Lame MP3</string>
          </property>
          <layout class="QVBoxLayout" name="verticalLayout_16">
+          <property name="spacing">
+           <number>11</number>
+          </property>
           <item>
            <layout class="QHBoxLayout" name="horizontalLayout_11">
             <item>
@@ -1397,6 +1566,9 @@
           <string>AC3</string>
          </property>
          <layout class="QVBoxLayout" name="verticalLayout_17">
+          <property name="spacing">
+           <number>11</number>
+          </property>
           <item>
            <layout class="QHBoxLayout" name="horizontalLayout_12">
             <item>
@@ -1429,6 +1601,21 @@
           </item>
           <item>
            <widget class="QSlider" name="horizontalSliderAc3">
+            <property name="minimum">
+             <number>64</number>
+            </property>
+            <property name="maximum">
+             <number>640</number>
+            </property>
+            <property name="singleStep">
+             <number>1</number>
+            </property>
+            <property name="pageStep">
+             <number>8</number>
+            </property>
+            <property name="value">
+             <number>64</number>
+            </property>
             <property name="orientation">
              <enum>Qt::Horizontal</enum>
             </property>
@@ -1442,7 +1629,7 @@
              <enum>QSlider::TicksAbove</enum>
             </property>
             <property name="tickInterval">
-             <number>10</number>
+             <number>8</number>
             </property>
            </widget>
           </item>
@@ -1491,7 +1678,7 @@
      <item>
       <widget class="QCheckBox" name="checkBoxAdvancedOption">
        <property name="text">
-        <string>Advanced Option</string>
+        <string>Advanced</string>
        </property>
       </widget>
      </item>

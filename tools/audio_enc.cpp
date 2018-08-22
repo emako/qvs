@@ -10,7 +10,8 @@ extern QMap<QUuid, StdWatcher*> g_pStdWatch;
 
 AudioEnc::AudioEnc(QWidget *parent) :
     QWidget(parent),
-    ui(new Ui::AudioEnc)
+    ui(new Ui::AudioEnc),
+    m_advancedMode(false)
 {
     ui->setupUi(this);
     this->setupUi();
@@ -23,23 +24,24 @@ AudioEnc::~AudioEnc()
 
 void AudioEnc::setupUi(void)
 {
-    setMode(true);
+    setMode(m_advancedMode);
 }
 
 void AudioEnc::setMode(bool a_advancedMode)
 {
     if(a_advancedMode)
     {
-        ui->labelAudioBitrate->setVisible(true);
-        ui->comboBoxAudioBitrate->setVisible(true);
-        ui->labelAudioKbps->setVisible(true);
-    }
-    else
-    {
         ui->labelAudioBitrate->setVisible(false);
         ui->comboBoxAudioBitrate->setVisible(false);
         ui->labelAudioKbps->setVisible(false);
     }
+    else
+    {
+        ui->labelAudioBitrate->setVisible(true);
+        ui->comboBoxAudioBitrate->setVisible(true);
+        ui->labelAudioKbps->setVisible(true);
+    }
+    m_advancedMode = a_advancedMode;
 }
 
 void AudioEnc::reload(QString a_filename)
@@ -204,17 +206,6 @@ void AudioEnc::on_buttonAudioStart_clicked()
     }
 }
 
-void AudioEnc::on_comboBoxAudioEncoder_activated(int a_index)
-{
-    QString input = ui->editAudioInput->text();
-
-    if(input.isEmpty())
-    {
-        return;
-    }
-    ui->editAudioOutput->setText(getAudioOutputPath((EENCODE_TYPE)a_index, input));
-}
-
 void AudioEnc::on_buttonAudioInput_clicked()
 {
     QString filename = QFileDialog::getOpenFileName(this, tr("Open Audio file"), NULL, tr("Audio (*.*)"));
@@ -255,6 +246,7 @@ void AudioEnc::on_buttonAudioConfig_clicked()
     audioConfig.mainUi = mainUi;
     audioConfig.ui->comboBoxAudioEncoder->setCurrentIndex(ui->comboBoxAudioEncoder->currentIndex());
     emit audioConfig.ui->comboBoxAudioEncoder->currentIndexChanged(ui->comboBoxAudioEncoder->currentIndex());
+    audioConfig.setMode(m_advancedMode);
 
     switch(audioConfig.exec())
     {
@@ -264,4 +256,36 @@ void AudioEnc::on_buttonAudioConfig_clicked()
     default:
         break;
     }
+}
+
+void AudioEnc::on_comboBoxAudioEncoder_activated(int a_index)
+{
+    QString input = ui->editAudioInput->text();
+
+    if(input.isEmpty())
+    {
+        return;
+    }
+    ui->editAudioOutput->setText(getAudioOutputPath((EENCODE_TYPE)a_index, input));
+}
+
+void AudioEnc::on_comboBoxAudioEncoder_currentIndexChanged(int a_index)
+{
+    emit ui->comboBoxAudioEncoder->activated(a_index);
+
+    bool bitrateMode = true;
+
+    switch((EENCODE_TYPE)a_index)
+    {
+    case eENCODE_TYPE_ALAC:
+    case eENCODE_TYPE_FLAC:
+    case eENCODE_TYPE_WAV:
+        bitrateMode = false;
+        break;
+    default:
+        break;
+    }
+    ui->labelAudioBitrate->setEnabled(bitrateMode);
+    ui->comboBoxAudioBitrate->setEnabled(bitrateMode);
+    ui->labelAudioKbps->setEnabled(bitrateMode);
 }

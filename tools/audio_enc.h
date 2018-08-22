@@ -49,12 +49,14 @@ public slots:
 private slots:
     void on_buttonAudioStart_clicked();
     void on_comboBoxAudioEncoder_activated(int a_index);
+    void on_comboBoxAudioEncoder_currentIndexChanged(int a_index);
     void on_buttonAudioInput_clicked();
     void on_buttonAudioOutput_clicked();
     void on_buttonAudioConfig_clicked();
 
 private:
     Ui::AudioEnc *ui;
+    bool m_advancedMode;
     void setupUi(void);
 };
 

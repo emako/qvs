@@ -80,6 +80,11 @@ public:
     QVBoxLayout *verticalLayout_7;
     QGroupBox *groupBoxAacNero;
     QVBoxLayout *verticalLayout_8;
+    QHBoxLayout *horizontalLayout_14;
+    QSpacerItem *horizontalSpacer_20;
+    QLabel *labelAacNeroMode;
+    QComboBox *comboBoxAacNeroMode;
+    QSpacerItem *horizontalSpacer_21;
     QSlider *horizontalSliderAacNero;
     QHBoxLayout *horizontalLayout_7;
     QSpacerItem *horizontalSpacer_11;
@@ -148,7 +153,7 @@ public:
     {
         if (AudioConfig->objectName().isEmpty())
             AudioConfig->setObjectName(QStringLiteral("AudioConfig"));
-        AudioConfig->resize(548, 324);
+        AudioConfig->resize(548, 332);
         verticalLayout_2 = new QVBoxLayout(AudioConfig);
         verticalLayout_2->setObjectName(QStringLiteral("verticalLayout_2"));
         groupBoxConfig = new QGroupBox(AudioConfig);
@@ -253,6 +258,7 @@ public:
         groupBoxAacApple = new QGroupBox(page_qaac);
         groupBoxAacApple->setObjectName(QStringLiteral("groupBoxAacApple"));
         verticalLayout_4 = new QVBoxLayout(groupBoxAacApple);
+        verticalLayout_4->setSpacing(11);
         verticalLayout_4->setObjectName(QStringLiteral("verticalLayout_4"));
         horizontalLayout_4 = new QHBoxLayout();
         horizontalLayout_4->setObjectName(QStringLiteral("horizontalLayout_4"));
@@ -288,6 +294,8 @@ public:
         horizontalLayout_5->setObjectName(QStringLiteral("horizontalLayout_5"));
         horizontalSliderAacApple = new QSlider(groupBoxAacApple);
         horizontalSliderAacApple->setObjectName(QStringLiteral("horizontalSliderAacApple"));
+        horizontalSliderAacApple->setMaximum(99);
+        horizontalSliderAacApple->setPageStep(10);
         horizontalSliderAacApple->setOrientation(Qt::Horizontal);
         horizontalSliderAacApple->setInvertedAppearance(false);
         horizontalSliderAacApple->setInvertedControls(false);
@@ -348,6 +356,7 @@ public:
         groupBoxAacFdk = new QGroupBox(page_fdkaac);
         groupBoxAacFdk->setObjectName(QStringLiteral("groupBoxAacFdk"));
         verticalLayout_6 = new QVBoxLayout(groupBoxAacFdk);
+        verticalLayout_6->setSpacing(11);
         verticalLayout_6->setObjectName(QStringLiteral("verticalLayout_6"));
         horizontalLayout_6 = new QHBoxLayout();
         horizontalLayout_6->setObjectName(QStringLiteral("horizontalLayout_6"));
@@ -444,7 +453,46 @@ public:
         groupBoxAacNero = new QGroupBox(page_neroaac);
         groupBoxAacNero->setObjectName(QStringLiteral("groupBoxAacNero"));
         verticalLayout_8 = new QVBoxLayout(groupBoxAacNero);
+        verticalLayout_8->setSpacing(11);
         verticalLayout_8->setObjectName(QStringLiteral("verticalLayout_8"));
+        horizontalLayout_14 = new QHBoxLayout();
+        horizontalLayout_14->setObjectName(QStringLiteral("horizontalLayout_14"));
+        horizontalSpacer_20 = new QSpacerItem(40, 20, QSizePolicy::Minimum, QSizePolicy::Minimum);
+
+        horizontalLayout_14->addItem(horizontalSpacer_20);
+
+        labelAacNeroMode = new QLabel(groupBoxAacNero);
+        labelAacNeroMode->setObjectName(QStringLiteral("labelAacNeroMode"));
+        QSizePolicy sizePolicy2(QSizePolicy::Fixed, QSizePolicy::Preferred);
+        sizePolicy2.setHorizontalStretch(0);
+        sizePolicy2.setVerticalStretch(0);
+        sizePolicy2.setHeightForWidth(labelAacNeroMode->sizePolicy().hasHeightForWidth());
+        labelAacNeroMode->setSizePolicy(sizePolicy2);
+        labelAacNeroMode->setMinimumSize(QSize(80, 0));
+        labelAacNeroMode->setMaximumSize(QSize(80, 16777215));
+
+        horizontalLayout_14->addWidget(labelAacNeroMode);
+
+        comboBoxAacNeroMode = new QComboBox(groupBoxAacNero);
+        comboBoxAacNeroMode->addItem(QString());
+        comboBoxAacNeroMode->addItem(QString());
+        comboBoxAacNeroMode->addItem(QString());
+        comboBoxAacNeroMode->setObjectName(QStringLiteral("comboBoxAacNeroMode"));
+        sizePolicy.setHeightForWidth(comboBoxAacNeroMode->sizePolicy().hasHeightForWidth());
+        comboBoxAacNeroMode->setSizePolicy(sizePolicy);
+        comboBoxAacNeroMode->setMinimumSize(QSize(180, 23));
+        comboBoxAacNeroMode->setMaximumSize(QSize(16777215, 16777215));
+        comboBoxAacNeroMode->setEditable(true);
+
+        horizontalLayout_14->addWidget(comboBoxAacNeroMode);
+
+        horizontalSpacer_21 = new QSpacerItem(100, 17, QSizePolicy::Fixed, QSizePolicy::Minimum);
+
+        horizontalLayout_14->addItem(horizontalSpacer_21);
+
+
+        verticalLayout_8->addLayout(horizontalLayout_14);
+
         horizontalSliderAacNero = new QSlider(groupBoxAacNero);
         horizontalSliderAacNero->setObjectName(QStringLiteral("horizontalSliderAacNero"));
         horizontalSliderAacNero->setOrientation(Qt::Horizontal);
@@ -463,9 +511,6 @@ public:
 
         labelAacNeroProfile = new QLabel(groupBoxAacNero);
         labelAacNeroProfile->setObjectName(QStringLiteral("labelAacNeroProfile"));
-        QSizePolicy sizePolicy2(QSizePolicy::Fixed, QSizePolicy::Preferred);
-        sizePolicy2.setHorizontalStretch(0);
-        sizePolicy2.setVerticalStretch(0);
         sizePolicy2.setHeightForWidth(labelAacNeroProfile->sizePolicy().hasHeightForWidth());
         labelAacNeroProfile->setSizePolicy(sizePolicy2);
         labelAacNeroProfile->setMinimumSize(QSize(80, 0));
@@ -474,6 +519,7 @@ public:
         horizontalLayout_7->addWidget(labelAacNeroProfile);
 
         comboBoxAacNeroProfile = new QComboBox(groupBoxAacNero);
+        comboBoxAacNeroProfile->addItem(QString());
         comboBoxAacNeroProfile->addItem(QString());
         comboBoxAacNeroProfile->addItem(QString());
         comboBoxAacNeroProfile->addItem(QString());
@@ -516,14 +562,18 @@ public:
         groupBoxFlac = new QGroupBox(page_flac);
         groupBoxFlac->setObjectName(QStringLiteral("groupBoxFlac"));
         verticalLayout_11 = new QVBoxLayout(groupBoxFlac);
+        verticalLayout_11->setSpacing(11);
         verticalLayout_11->setObjectName(QStringLiteral("verticalLayout_11"));
         horizontalSliderFlac = new QSlider(groupBoxFlac);
         horizontalSliderFlac->setObjectName(QStringLiteral("horizontalSliderFlac"));
+        horizontalSliderFlac->setMaximum(8);
+        horizontalSliderFlac->setPageStep(1);
+        horizontalSliderFlac->setValue(5);
         horizontalSliderFlac->setOrientation(Qt::Horizontal);
         horizontalSliderFlac->setInvertedAppearance(false);
         horizontalSliderFlac->setInvertedControls(false);
         horizontalSliderFlac->setTickPosition(QSlider::TicksAbove);
-        horizontalSliderFlac->setTickInterval(10);
+        horizontalSliderFlac->setTickInterval(1);
 
         verticalLayout_11->addWidget(horizontalSliderFlac);
 
@@ -565,6 +615,7 @@ public:
         groupBoxOpus = new QGroupBox(page_opus);
         groupBoxOpus->setObjectName(QStringLiteral("groupBoxOpus"));
         verticalLayout_13 = new QVBoxLayout(groupBoxOpus);
+        verticalLayout_13->setSpacing(11);
         verticalLayout_13->setObjectName(QStringLiteral("verticalLayout_13"));
         horizontalLayout_9 = new QHBoxLayout();
         horizontalLayout_9->setObjectName(QStringLiteral("horizontalLayout_9"));
@@ -603,6 +654,9 @@ public:
 
         horizontalSliderOpus = new QSlider(groupBoxOpus);
         horizontalSliderOpus->setObjectName(QStringLiteral("horizontalSliderOpus"));
+        horizontalSliderOpus->setMinimum(6);
+        horizontalSliderOpus->setMaximum(512);
+        horizontalSliderOpus->setValue(160);
         horizontalSliderOpus->setOrientation(Qt::Horizontal);
         horizontalSliderOpus->setInvertedAppearance(false);
         horizontalSliderOpus->setInvertedControls(false);
@@ -623,6 +677,7 @@ public:
         groupBoxOggVorbis = new QGroupBox(page_vorbis);
         groupBoxOggVorbis->setObjectName(QStringLiteral("groupBoxOggVorbis"));
         verticalLayout_15 = new QVBoxLayout(groupBoxOggVorbis);
+        verticalLayout_15->setSpacing(11);
         verticalLayout_15->setObjectName(QStringLiteral("verticalLayout_15"));
         horizontalLayout_10 = new QHBoxLayout();
         horizontalLayout_10->setObjectName(QStringLiteral("horizontalLayout_10"));
@@ -642,11 +697,16 @@ public:
 
         horizontalSliderOggVorbis = new QSlider(groupBoxOggVorbis);
         horizontalSliderOggVorbis->setObjectName(QStringLiteral("horizontalSliderOggVorbis"));
+        horizontalSliderOggVorbis->setMinimum(-200);
+        horizontalSliderOggVorbis->setMaximum(1000);
+        horizontalSliderOggVorbis->setSingleStep(1);
+        horizontalSliderOggVorbis->setPageStep(1);
+        horizontalSliderOggVorbis->setValue(100);
         horizontalSliderOggVorbis->setOrientation(Qt::Horizontal);
         horizontalSliderOggVorbis->setInvertedAppearance(false);
         horizontalSliderOggVorbis->setInvertedControls(false);
         horizontalSliderOggVorbis->setTickPosition(QSlider::TicksAbove);
-        horizontalSliderOggVorbis->setTickInterval(10);
+        horizontalSliderOggVorbis->setTickInterval(100);
 
         verticalLayout_15->addWidget(horizontalSliderOggVorbis);
 
@@ -662,6 +722,7 @@ public:
         groupBoxMp3 = new QGroupBox(page_mp3);
         groupBoxMp3->setObjectName(QStringLiteral("groupBoxMp3"));
         verticalLayout_16 = new QVBoxLayout(groupBoxMp3);
+        verticalLayout_16->setSpacing(11);
         verticalLayout_16->setObjectName(QStringLiteral("verticalLayout_16"));
         horizontalLayout_11 = new QHBoxLayout();
         horizontalLayout_11->setObjectName(QStringLiteral("horizontalLayout_11"));
@@ -720,6 +781,7 @@ public:
         groupBoxAc3 = new QGroupBox(page_ac3);
         groupBoxAc3->setObjectName(QStringLiteral("groupBoxAc3"));
         verticalLayout_17 = new QVBoxLayout(groupBoxAc3);
+        verticalLayout_17->setSpacing(11);
         verticalLayout_17->setObjectName(QStringLiteral("verticalLayout_17"));
         horizontalLayout_12 = new QHBoxLayout();
         horizontalLayout_12->setObjectName(QStringLiteral("horizontalLayout_12"));
@@ -739,11 +801,16 @@ public:
 
         horizontalSliderAc3 = new QSlider(groupBoxAc3);
         horizontalSliderAc3->setObjectName(QStringLiteral("horizontalSliderAc3"));
+        horizontalSliderAc3->setMinimum(64);
+        horizontalSliderAc3->setMaximum(640);
+        horizontalSliderAc3->setSingleStep(1);
+        horizontalSliderAc3->setPageStep(8);
+        horizontalSliderAc3->setValue(64);
         horizontalSliderAc3->setOrientation(Qt::Horizontal);
         horizontalSliderAc3->setInvertedAppearance(false);
         horizontalSliderAc3->setInvertedControls(false);
         horizontalSliderAc3->setTickPosition(QSlider::TicksAbove);
-        horizontalSliderAc3->setTickInterval(10);
+        horizontalSliderAc3->setTickInterval(8);
 
         verticalLayout_17->addWidget(horizontalSliderAc3);
 
@@ -809,11 +876,12 @@ public:
 
         comboBoxTemplate->setCurrentIndex(-1);
         comboBoxAudioEncoder->setCurrentIndex(0);
-        stackedWidgetMode->setCurrentIndex(0);
+        stackedWidgetMode->setCurrentIndex(6);
         comboBoxAacAppleMode->setCurrentIndex(-1);
         comboBoxAacAppleProfile->setCurrentIndex(0);
         comboBoxAacFdkMode->setCurrentIndex(0);
         comboBoxAacFdkProfile->setCurrentIndex(0);
+        comboBoxAacNeroMode->setCurrentIndex(0);
         comboBoxAacNeroProfile->setCurrentIndex(0);
         comboBoxOpusMode->setCurrentIndex(0);
         comboBoxMp3Mode->setCurrentIndex(0);
@@ -870,10 +938,16 @@ public:
         comboBoxAacFdkProfile->setItemText(7, QApplication::translate("AudioConfig", "MPEG-2 HE-AAC v2", nullptr));
 
         groupBoxAacNero->setTitle(QApplication::translate("AudioConfig", "NeroAAC", nullptr));
+        labelAacNeroMode->setText(QApplication::translate("AudioConfig", "Mode", nullptr));
+        comboBoxAacNeroMode->setItemText(0, QApplication::translate("AudioConfig", "Adaptive Bitrate", nullptr));
+        comboBoxAacNeroMode->setItemText(1, QApplication::translate("AudioConfig", "Constant Bitrate", nullptr));
+        comboBoxAacNeroMode->setItemText(2, QApplication::translate("AudioConfig", "Variable Bitrate", nullptr));
+
         labelAacNeroProfile->setText(QApplication::translate("AudioConfig", "Profile", nullptr));
-        comboBoxAacNeroProfile->setItemText(0, QApplication::translate("AudioConfig", "Adaptive Bitrate", nullptr));
-        comboBoxAacNeroProfile->setItemText(1, QApplication::translate("AudioConfig", "Constant Bitrate", nullptr));
-        comboBoxAacNeroProfile->setItemText(2, QApplication::translate("AudioConfig", "Variable Bitrate", nullptr));
+        comboBoxAacNeroProfile->setItemText(0, QApplication::translate("AudioConfig", "Automatic", nullptr));
+        comboBoxAacNeroProfile->setItemText(1, QApplication::translate("AudioConfig", "HE-AAC+PS", nullptr));
+        comboBoxAacNeroProfile->setItemText(2, QApplication::translate("AudioConfig", "HE-AAC", nullptr));
+        comboBoxAacNeroProfile->setItemText(3, QApplication::translate("AudioConfig", "LC-AAC", nullptr));
 
         groupBoxAlac->setTitle(QApplication::translate("AudioConfig", "ALAC", nullptr));
         groupBoxFlac->setTitle(QApplication::translate("AudioConfig", "FLAC", nullptr));
@@ -887,7 +961,7 @@ public:
 
         groupBoxOggVorbis->setTitle(QApplication::translate("AudioConfig", "Ogg Vorbis", nullptr));
         labelOggVorbisVariableBitrate->setText(QApplication::translate("AudioConfig", "Variable Bitrate", nullptr));
-        groupBoxMp3->setTitle(QApplication::translate("AudioConfig", "MP3", nullptr));
+        groupBoxMp3->setTitle(QApplication::translate("AudioConfig", "Lame MP3", nullptr));
         labelMp3Mode->setText(QApplication::translate("AudioConfig", "Mode", nullptr));
         comboBoxMp3Mode->setItemText(0, QApplication::translate("AudioConfig", "CBR", nullptr));
         comboBoxMp3Mode->setItemText(1, QApplication::translate("AudioConfig", "ABR", nullptr));
@@ -896,7 +970,7 @@ public:
         groupBoxAc3->setTitle(QApplication::translate("AudioConfig", "AC3", nullptr));
         labelAc3Bitrate->setText(QApplication::translate("AudioConfig", "Bitrate", nullptr));
         groupBoxWav->setTitle(QApplication::translate("AudioConfig", "WAV", nullptr));
-        checkBoxAdvancedOption->setText(QApplication::translate("AudioConfig", "Advanced Option", nullptr));
+        checkBoxAdvancedOption->setText(QApplication::translate("AudioConfig", "Advanced", nullptr));
         buttonAccept->setText(QApplication::translate("AudioConfig", "Accept", nullptr));
         buttonCancel->setText(QApplication::translate("AudioConfig", "Cancel", nullptr));
     } // retranslateUi

@@ -87,10 +87,8 @@
         <file>buttons/zoom_fit.png</file>
         <file>buttons/zoom_in.png</file>
         <file>images/console.png</file>
-        <file>buttons/terminal.png</file>
         <file>fonts/consola.ttf</file>
         <file>buttons/python.png</file>
-        <file>buttons/code.png</file>
         <file>buttons/pismo.png</file>
         <file>icons/pismo.ico</file>
         <file>buttons/system_run.png</file>
@@ -103,7 +101,6 @@
         <file>buttons/vsedit.png</file>
         <file>buttons/mediainfo.png</file>
         <file>buttons/python_module.png</file>
-        <file>buttons/arrow_sort.png</file>
         <file>strings/about</file>
         <file>strings/cli-usage</file>
         <file>buttons/timeline.png</file>
