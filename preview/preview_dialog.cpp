@@ -352,13 +352,15 @@ inline void PreviewDialog::setPreviewPixmap(void)
     if(zoomMode == ZoomMode::FixedRatio)
     {
         double ratio = ui->zoomRatioSpinBox->value();
+
         frameWidth = m_framePixmap.width() * ratio;
         frameHeight = m_framePixmap.height() * ratio;
     }
     else
     {
         QRect previewRect = ui->scrollArea->geometry();
-        int cropSize = ui->previewArea->frameWidth() * 2;
+        int cropSize = ui->previewArea->lineWidth() * 2;
+
         frameWidth = previewRect.width() - cropSize;
         frameHeight = previewRect.height() - cropSize;
     }

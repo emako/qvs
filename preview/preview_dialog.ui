@@ -74,6 +74,9 @@
           <property name="focusPolicy">
            <enum>Qt::NoFocus</enum>
           </property>
+          <property name="lineWidth">
+           <number>1</number>
+          </property>
           <property name="text">
            <string/>
           </property>

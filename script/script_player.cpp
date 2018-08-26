@@ -14,7 +14,8 @@ ScriptPlayer::ScriptPlayer(QWidget *parent) :
     ui(new Ui::ScriptPlayer),
     m_isPlayOnMounted(false),
     m_isPlayAvsWith32Bit(false),
-    m_reloadTitleShown(true)
+    m_reloadTitleShown(true),
+    m_script_path_index(NULL)
 {
     ui->setupUi(this);
     this->setupUi();
@@ -43,7 +44,6 @@ void ScriptPlayer::releasePreviewDialog(const QUuid &a_uid)
 
 void ScriptPlayer::setupUi(void)
 {
-    //this->setWindowIcon(QIcon(":/buttons/slideshow_next.png"));
     ui->editInput->setReadOnly(true);
     ui->editMountMessage->setReadOnly(true);
     ui->labelMessage->clear();
@@ -225,7 +225,9 @@ bool ScriptPlayer::slotMail(STMAILBOX* a_mail_box)
                 QString text = getFileText(content.toString());
                 ui->editMountMessage->setText(text);
                 if(m_isPlayOnMounted)
+                {
                     emit ui->buttonPlay->click();
+                }
                 return true;
             }
         }
@@ -236,25 +238,61 @@ bool ScriptPlayer::slotMail(STMAILBOX* a_mail_box)
 
 QString ScriptPlayer::getErrorLogFilename(void)
 {
-    return QString("%1/%2/%3").arg(c_pfm_root).arg(QFileInfo(ui->editInput->text()).fileName()).arg(c_pfm_log);
+    QString script_filename = ui->editInput->text();
+    QString error_log_filename = QString("%1/%2/%3").arg(c_pfm_root).arg(QFileInfo(getScriptRightMountedPath(script_filename)).fileName()).arg(c_pfm_log);
+
+    m_script_path_index = NULL;
+    if(isFileExist(error_log_filename))
+    {
+        /* Welding detected */
+        for(int i = eINDEX_1; true; i++)
+        {
+            error_log_filename = QString("%1/%2-%3/%4").arg(c_pfm_root).arg(QFileInfo(getScriptRightMountedPath(script_filename)).fileName()).arg(i).arg(c_pfm_log);
+
+            if(!isFileExist(error_log_filename))
+            {
+                m_script_path_index = i;
+                break;
+            }
+            else
+            {
+                error_log_filename.clear();
+            }
+        }
+    }
+    return error_log_filename;
 }
 
 QString ScriptPlayer::getScriptFilename(void)
 {
-    return QString("%1/%2/%3").arg(c_pfm_root).arg(QFileInfo(ui->editInput->text()).fileName()).arg(QFileInfo(m_filename).fileName());
+    return QString("%1/%2/%3").arg(c_pfm_root).arg(QFileInfo(getScriptRightMountedPath(ui->editInput->text())).fileName()).arg(QFileInfo(m_filename).fileName());
+}
+
+QString ScriptPlayer::getScriptRightMountedPath(const QString &a_filename) const
+{
+    QString filename = a_filename;
+
+    filename.remove(QT_BRACKET_L).remove(QT_BRACKET_R).remove(QT_BIKKURI_MARK);
+    if(m_script_path_index != NULL)
+    {
+        filename = QString("%1-%2").arg(filename).arg(m_script_path_index);
+    }
+    return filename;
 }
 
 QString ScriptPlayer::getOutputFilename(void)
 {
     /* Avi -> Wav -> Error */
     QString script_filename = QFileInfo(ui->editInput->text()).fileName();
-    QString path = QDir::toNativeSeparators(QString("%1/%2/").arg(c_pfm_root).arg(script_filename));
-    QString play_filename = path + QFileInfo(chgFileExt(script_filename, "avi")).fileName();
+    QString script_path = QDir::toNativeSeparators(QString("%1/%2/").arg(c_pfm_root).arg(getScriptRightMountedPath(script_filename)));
+    QString play_filename = script_path + QFileInfo(chgFileExt(script_filename, "avi")).fileName();
     QString filename;
+
+    qDebug() << play_filename;
 
     if(!isFileExist(play_filename))
     {
-        play_filename = path + QFileInfo(chgFileExt(script_filename, "wav")).fileName();
+        play_filename = script_path + QFileInfo(chgFileExt(script_filename, "wav")).fileName();
     }
     if(!isFileExist(play_filename))
     {
@@ -271,6 +309,12 @@ void ScriptPlayer::setReloadTitleShown(bool a_shown)
 
 void ScriptPlayer::on_buttonPlay_clicked()
 {
+    if(!ui->buttonMount->isChecked())
+    {
+        QMessageBox::information(this, tr("Message"), tr("No script mounted."), QMessageBox::Ok);
+        return;
+    }
+
     QString filename = getOutputFilename();
 
     if(filename.isEmpty())
@@ -290,6 +334,7 @@ void ScriptPlayer::on_buttonPlay_clicked()
     case eSCRIPT_PLAYER_PLAYER_PREVIEW:
         do{
             PreviewDialog *at_pPreviewDialog = new PreviewDialog();
+
             at_pPreviewDialog->mainUi = mainUi;
             m_uid_preview = QUuid::createUuid();
             at_pPreviewDialog->m_uid = m_uid_preview;
@@ -346,6 +391,7 @@ void ScriptPlayer::showStdwatcher(bool a_isShow)
     else
     {
         m_pContextMenu->actions().at(eCONTEXT_MENU_SHOW_STD_WATCHER)->setChecked(false);
+        QMessageBox::information(this, tr("Message"), tr("No Standard Watcher opened!"), QMessageBox::Ok);
     }
 }
 

@@ -88,6 +88,7 @@ public:
         previewArea = new QLabel(scrollAreaWidgetContents);
         previewArea->setObjectName(QStringLiteral("previewArea"));
         previewArea->setFocusPolicy(Qt::NoFocus);
+        previewArea->setLineWidth(1);
         previewArea->setAlignment(Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop);
 
         verticalLayout->addWidget(previewArea);

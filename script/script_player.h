@@ -56,11 +56,13 @@ public:
     QString getErrorLogFilename(void);
     QString getScriptFilename(void);
     QString getOutputFilename(void);
+    QString getScriptRightMountedPath(const QString &a_filename) const;
     void setReloadTitleShown(bool a_shown);
 
     QMenu *m_pContextMenu;
     QString m_filename;
     ESCRIPT_TYPE m_script_type;
+    uint m_script_path_index;
 
 public slots:
     bool slotMail(STMAILBOX* a_mail_box);
