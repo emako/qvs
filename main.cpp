@@ -43,10 +43,7 @@ int main(int argc, char *argv[])
 
     /* Splash Screen Finish */
 #ifdef QT_PLASH
-    if(screen.isActiveWindow())
-    {
-        screen.finish(&w);
-    }
+    screen.finish(&w);
 #endif
 
     /* MainWindow Show */

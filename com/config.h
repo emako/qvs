@@ -11,6 +11,23 @@
 #include <QSplashScreen>
 #include <QDebug>
 
+#define ENV_PYTHON_HOME               "PYTHONHOME"
+#define ENV_PATH                      "PATH"
+
+#define REG_HKEY_SOFTWARE_VS          "HKEY_LOCAL_MACHINE\\SOFTWARE\\VapourSynth"
+#define REG_HKEY_SOFTWARE_AVS         "HKEY_LOCAL_MACHINE\\SOFTWARE\\Avisynth"
+#define REG_HKEY_SOFTWARE_VS2         "HKEY_LOCAL_MACHINE\\SOFTWARE\\WOW6432Node\\VapourSynth"
+
+#define REG_KEY_VS_VERSION            "Version"
+#define REG_KEY_VS_PATH               "Path"
+#define REG_KEY_VS_PYTHON_PATH        "PythonPath"
+#define REG_KEY_VS_CORE_PLUGINS       "CorePlugins"
+#define REG_KEY_VS_PLUGINS            "Plugins"
+#define REG_KEY_VS_VAPOURSYNTH_DLL    "VapourSynthDLL"
+#define REG_KEY_VS_VSSCRIPT_DLL       "VSScriptDLL"
+#define REG_KEY_AVS_INIT_DIR          "initialplugindir"
+#define REG_KEY_AVS_PLUGIN_DIR        "plugindir2_5"
+
 class MainWindow;
 class JobCreator;
 class Config;
@@ -133,6 +150,9 @@ public:
     void reset(ECONFIG_TYPE a_config_type);
     QVariant pyValue(const QString & a_key, const QVariant & a_defaultValue) const;
     bool pySetValue(const QString & a_key, const QVariant & a_value);
+
+    QString getEnv(QString value);
+    QString getReg(QString key, QString hkey);
 
 private:
     QString m_settingsFilePath;

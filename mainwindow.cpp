@@ -133,8 +133,24 @@ void MainWindow::setupUi(void)
     /*After Reload*/
     if(g_pConfig->getConfig(Config::eCONFIG_FIRST_FIRST_LAUNCH).toBool())
     {
-        emit ui->actionInstaller->triggered();
-        g_pConfig->setConfig(Config::eCONFIG_FIRST_FIRST_LAUNCH, false);
+        if(g_pConfig->isShowMainWindow())
+        {
+            QString version = g_pConfig->getReg(REG_KEY_VS_VERSION, REG_HKEY_SOFTWARE_VS);
+
+            if(version.isEmpty())
+            {
+                /* Detected VapourSynth has not been installed. */
+                this->show();
+                emit ui->actionInstaller->triggered();
+            }
+            else
+            {
+#ifdef QT_DEBUG
+                qDebug() << "Tip: Detected VapourSynth has been installed.";
+#endif
+            }
+            g_pConfig->setConfig(Config::eCONFIG_FIRST_FIRST_LAUNCH, false);
+        }
     }
 }
 

@@ -55,6 +55,7 @@ static const char QT_BRACKET_L[]      = "{";
 static const char QT_BRACKET_R[]      = "}";
 static const char QT_BIKKURI_MARK[]   = "!";
 static const char QT_NOR_PATH_SPR[]   = "/";
+static const char QT_EQUAL[]          = "=";
 static const char QT_DOS_PATH_SPR[]   = "\\";
 static const char QT_META[]           = "\b";
 static const char QT_NOR_EOL[]        = "\n";

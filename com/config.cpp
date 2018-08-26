@@ -544,3 +544,21 @@ bool Config::pySetValue(const QString & a_key, const QVariant & a_value)
     bool success = (QSettings::NoError == settings.status());
     return success;
 }
+
+QString Config::getEnv(QString value)
+{
+    for(QString env : QProcess::systemEnvironment())
+    {
+        if(env.startsWith(QString(value) + QString(QT_EQUAL)))
+        {
+            return env.mid(QString(value).length() + eINDEX_1);
+        }
+    }
+    return QT_EMPTY;
+}
+
+QString Config::getReg(QString key, QString hkey)
+{
+    QSettings settings(hkey, QSettings::NativeFormat);
+    return settings.value(key).toString();
+}
