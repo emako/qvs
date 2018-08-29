@@ -231,7 +231,7 @@ void Demuxer::reloadInfo(ERELOAD_TYPE a_reload_type)
     {
     case eRELOAD_TYPE_FFMPEG:
     default:
-#if 1
+#if (QT_VERSION >= QT_VERSION_CHECK(5,11,0))
         do{
             QJsonObject json = mainUi->m_com->getJsonFromString(m_track_raw.trimmed().simplified());
             DemuxerItem item;
@@ -400,7 +400,7 @@ void Demuxer::reloadInfo(ERELOAD_TYPE a_reload_type)
                 {
                     item.track_num = attachment_track_num;
                     item.output = getMkvextractAttachmentOutput(track_info);
-                    item.ext = getFileExt(item.output);
+                    item.ext = qvs::getFileExt(item.output);
                     item.type = DemuxerItem::eMEDIA_TYPE_ATTACHMENT;
                     attachment_track_num++;
                 }
@@ -457,7 +457,7 @@ void Demuxer::setOutput(ERELOAD_TYPE a_reload_type, QString a_filename)
         ui->editDemuxerOutput->setText(QDir::toNativeSeparators(QFileInfo(a_filename).absolutePath()));
         break;
     case eRELOAD_TYPE_CAPTION2ASS:
-        ui->editDemuxerOutput->setText(chgFileExt(a_filename, ui->comboBoxDemuxerParam->currentText()));
+        ui->editDemuxerOutput->setText(qvs::chgFileExt(a_filename, ui->comboBoxDemuxerParam->currentText()));
         break;
     default:
         ui->editDemuxerOutput->clear();
@@ -644,7 +644,7 @@ QString Demuxer::getOutput(QString a_input, DemuxerItem a_item)
     }
 
     /* %Floder% + %Basename% + %Track% + %Delay%.%Ext% */
-    output = QString("%1_%2%3.%4").arg(delFileExt(a_input)).arg(a_item.track_info).arg(a_item.delay).arg(ext);
+    output = QString("%1_%2%3.%4").arg(qvs::delFileExt(a_input)).arg(a_item.track_info).arg(a_item.delay).arg(ext);
     return QDir::toNativeSeparators(output);
 }
 
@@ -794,7 +794,7 @@ void Demuxer::on_buttonDemuxerStart_clicked()
         cmd = QString("%1 -i \"%2\" -encode %3 -quit").arg(mainUi->m_com->findFirstFilePath("tsdemux")).arg(input).arg(mainUi->m_com->toUpperFirstStr(ui->comboBoxDemuxerParam->currentText()));
         break;
     case eRELOAD_TYPE_CAPTION2ASS:
-        cmd = QString("%1 -format %2 \"%3\" \"%4\"").arg(mainUi->m_com->findFirstFilePath("Caption2Ass_PCR")).arg(ui->comboBoxDemuxerParam->currentText()).arg(input).arg(delFileExt(output));
+        cmd = QString("%1 -format %2 \"%3\" \"%4\"").arg(mainUi->m_com->findFirstFilePath("Caption2Ass_PCR")).arg(ui->comboBoxDemuxerParam->currentText()).arg(input).arg(qvs::delFileExt(output));
         break;
     }
 

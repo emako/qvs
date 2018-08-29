@@ -4,7 +4,7 @@
 #include "mediaInfo_dll.h"
 #include "../com/common.h"
 
-#define _Q(a) QString::fromStdWString((std::wstring)a)
+#define _Q(a) qvs::fromStdBasicWString(a)
 
 #define MEDIA_PROP_COMPLETE L"Complete"
 #define MEDIA_PROP_FORMAT L"Format"

@@ -194,7 +194,7 @@ QStringList JobCreator::getEncoderItems(bool a_flag)
 void JobCreator::reloadSource(QString a_fileName)
 {
     QFileInfo fileInfo = QFileInfo(a_fileName);
-    QString outputFileName = delFileExt(a_fileName);
+    QString outputFileName = qvs::delFileExt(a_fileName);
 
     if((fileInfo.suffix().toLower() == "vpy") || (fileInfo.suffix().toLower() == "py"))
     {
@@ -256,7 +256,7 @@ void JobCreator::reloadOutput(QString a_fileName)
     if(!isVaildType)
     {
         m_job_output_suffix = fileSuffixList.first();
-        outputFileName = delFileExt(a_fileName) + "." + m_job_output_suffix;
+        outputFileName = qvs::delFileExt(a_fileName) + "." + m_job_output_suffix;
     }
 
     if( ( (ui->cbxEncoderType->currentIndex() == eINDEX_0) && (fileInfo.suffix().toLower() == "hevc") )

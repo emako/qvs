@@ -59,7 +59,7 @@ void Muxer::reload(EOUTPUT_TYPE a_reload_type)
 
 QString Muxer::getOutputFilename(const QString a_basename)
 {
-    return QDir::toNativeSeparators(QString("%1_mux.%2").arg(delFileExt(a_basename)).arg(getOutputFileExt((EOUTPUT_TYPE)ui->comboBoxMuxerFormat->currentIndex())));
+    return QDir::toNativeSeparators(QString("%1_mux.%2").arg(qvs::delFileExt(a_basename)).arg(getOutputFileExt((EOUTPUT_TYPE)ui->comboBoxMuxerFormat->currentIndex())));
 }
 
 QString Muxer::getOutputFileExt(EOUTPUT_TYPE a_output_type)

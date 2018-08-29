@@ -96,12 +96,17 @@ enum EBOOL {
     eNG      = true,
 };
 
-extern bool isFileExist(const QString &a_filename);
-extern QString getFileExt(const QString &a_filename);
-extern QString chgFileExt(const QString &a_filename, QString a_ext);
-extern QString delFileExt(const QString &a_filename);
-extern QString getFileText(const QString &a_filename);
-extern bool setFileText(const QString &a_filename, const QString &a_text);
+namespace qvs
+{
+    bool isFileExist(const QString &a_filename);
+    QString getFileExt(const QString &a_filename);
+    QString chgFileExt(const QString &a_filename, QString a_ext);
+    QString delFileExt(const QString &a_filename);
+    QString getFileText(const QString &a_filename);
+    bool setFileText(const QString &a_filename, const QString &a_text);
+    QString timeToString(double a_seconds, bool a_fullFormat = false);
+    QString fromStdBasicWString(std::basic_string<wchar_t> a_str);
+}
 
 class Common : public QObject
 {

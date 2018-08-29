@@ -104,7 +104,7 @@ void ScriptPlayer::setNotScriptMessage(const QString &a_filename)
 
 ScriptPlayer::ESCRIPT_TYPE ScriptPlayer::reloadTypeDetect(QString a_filename)
 {
-    QString ext = getFileExt(a_filename).toLower();
+    QString ext = qvs::getFileExt(a_filename).toLower();
     ESCRIPT_TYPE type = eSCRIPT_TYPE_NOT_SCRIPT;
 
     if(ext == "vpy") /* Can't load *.py */
@@ -218,11 +218,11 @@ bool ScriptPlayer::slotMail(STMAILBOX* a_mail_box)
     switch(a_mail_box->type)
     {
     case eINDEX_0:
-        if(isFileExist(content.toString())) /* Errorlog filename. */
+        if(qvs::isFileExist(content.toString())) /* Errorlog filename. */
         {
             if(g_pStdWatch.contains(m_uid_std))
             {
-                QString text = getFileText(content.toString());
+                QString text = qvs::getFileText(content.toString());
                 ui->editMountMessage->setText(text);
                 if(m_isPlayOnMounted)
                 {
@@ -242,14 +242,14 @@ QString ScriptPlayer::getErrorLogFilename(void)
     QString error_log_filename = QString("%1/%2/%3").arg(c_pfm_root).arg(QFileInfo(getScriptRightMountedPath(script_filename)).fileName()).arg(c_pfm_log);
 
     m_script_path_index = NULL;
-    if(isFileExist(error_log_filename))
+    if(qvs::isFileExist(error_log_filename))
     {
         /* Welding detected */
         for(int i = eINDEX_1; true; i++)
         {
             error_log_filename = QString("%1/%2-%3/%4").arg(c_pfm_root).arg(QFileInfo(getScriptRightMountedPath(script_filename)).fileName()).arg(i).arg(c_pfm_log);
 
-            if(!isFileExist(error_log_filename))
+            if(!qvs::isFileExist(error_log_filename))
             {
                 m_script_path_index = i;
                 break;
@@ -285,16 +285,16 @@ QString ScriptPlayer::getOutputFilename(void)
     /* Avi -> Wav -> Error */
     QString script_filename = QFileInfo(ui->editInput->text()).fileName();
     QString script_path = QDir::toNativeSeparators(QString("%1/%2/").arg(c_pfm_root).arg(getScriptRightMountedPath(script_filename)));
-    QString play_filename = script_path + QFileInfo(chgFileExt(script_filename, "avi")).fileName();
+    QString play_filename = script_path + QFileInfo(qvs::chgFileExt(script_filename, "avi")).fileName();
     QString filename;
 
     qDebug() << play_filename;
 
-    if(!isFileExist(play_filename))
+    if(!qvs::isFileExist(play_filename))
     {
-        play_filename = script_path + QFileInfo(chgFileExt(script_filename, "wav")).fileName();
+        play_filename = script_path + QFileInfo(qvs::chgFileExt(script_filename, "wav")).fileName();
     }
-    if(!isFileExist(play_filename))
+    if(!qvs::isFileExist(play_filename))
     {
         return filename;
     }

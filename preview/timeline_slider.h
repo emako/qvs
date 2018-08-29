@@ -33,8 +33,7 @@ public:
 		CurrentFramePointer,
 		SlidingPointer,
 		Bookmark,
-	};
-    QString timeToString(double a_seconds, bool a_fullFormat = false);
+    };
 
 	int frame() const;
 

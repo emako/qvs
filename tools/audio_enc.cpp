@@ -58,11 +58,11 @@ void AudioEnc::reload(void)
 
 QString AudioEnc::getAudioOutputPath(EENCODE_TYPE a_type, QString a_filename)
 {
-    QString filename = chgFileExt(a_filename, getAudioOutputExt(a_type));
+    QString filename = qvs::chgFileExt(a_filename, getAudioOutputExt(a_type));
 
     if(filename == a_filename)
     {
-        filename = chgFileExt(a_filename, "qvs" + QString(QT_EXT_SPLITE) + getAudioOutputExt(a_type));
+        filename = qvs::chgFileExt(a_filename, "qvs" + QString(QT_EXT_SPLITE) + getAudioOutputExt(a_type));
     }
     return filename;
 }

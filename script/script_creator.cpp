@@ -91,7 +91,7 @@ void ScriptCreator::reload(const QString &a_filename)
 
 QString ScriptCreator::getOutputFilename(const QString &a_filename)
 {
-    return delFileExt(a_filename) + ".vpy";
+    return qvs::delFileExt(a_filename) + ".vpy";
 }
 
 void ScriptCreator::getSourceInfo(const QString &a_filename)
@@ -138,7 +138,7 @@ void ScriptCreator::on_buttonPreview_clicked()
     release(m_uid_preview_script);
     m_uid_preview_script = QUuid::createUuid();
     script_filename = previewScriptFilename(m_uid_preview_script);
-    setFileText(script_filename, ui->scriptEditor->toPlainText());
+    qvs::setFileText(script_filename, ui->scriptEditor->toPlainText());
 
     ScriptPlayer *at_pScriptPlayer = new ScriptPlayer();
     at_pScriptPlayer->mainUi = mainUi;
@@ -163,7 +163,7 @@ void ScriptCreator::on_buttonSave_clicked()
         QMessageBox::warning(this, tr("Warning"), tr("Output file is empty!"), QMessageBox::Ok);
         return;
     }
-    if(isFileExist(m_outputFilename))
+    if(qvs::isFileExist(m_outputFilename))
     {
         if( (ui->editOutput->text() == ui->editSource->text())
          || (m_sourceFilename == m_outputFilename) )
@@ -180,7 +180,7 @@ void ScriptCreator::on_buttonSave_clicked()
         }
     }
 
-    setFileText(m_outputFilename, ui->scriptEditor->toPlainText());
+    qvs::setFileText(m_outputFilename, ui->scriptEditor->toPlainText());
 
     if(!ui->checkBoxNotAddJobOnSaved->isChecked())
     {
@@ -527,7 +527,7 @@ inline QString ScriptCreator::createScriptSource(const SourceFilter &a_filterSou
                 width = ui->spinBoxSourceFilterDGNVResizeW->value();
                 height = ui->spinBoxSourceFilterDGNVResizeH->value();
             }
-            if(getFileExt(m_sourceFilename) == "dgi")
+            if(qvs::getFileExt(m_sourceFilename) == "dgi")
             {
                 QString funcPackage = "dgdecodenv";
 
@@ -542,7 +542,7 @@ inline QString ScriptCreator::createScriptSource(const SourceFilter &a_filterSou
         break;
     case DGSource:
         do{
-            if(getFileExt(m_sourceFilename) == "d2v")
+            if(qvs::getFileExt(m_sourceFilename) == "d2v")
             {
                 script = QString("src = core.d2v.Source(u'%1', threads=0, nocrop=True, rff=True)").arg(m_sourceFilename);
             }
@@ -582,7 +582,7 @@ inline bool ScriptCreator::isLsmash(void)
     {
     case Qt::PartiallyChecked:
         do{
-            QString ext = getFileExt(ui->editSource->text().toLower());
+            QString ext = qvs::getFileExt(ui->editSource->text().toLower());
             if( (QStringList() << "mp4" << "3gp" << "mov" << "3g2" << "mj2" << "dvb" << "dcf" << "m21").contains(ext)
              && (!m_videoInfo.isVFR) )
             {
@@ -794,7 +794,7 @@ inline QString ScriptCreator::createScriptSubtitle(const SubtitleFilter &a_filte
         do{
             QString funcName = "TextFile";
 
-            if(getFileExt(m_subtitleFilename) == "sup")
+            if(qvs::getFileExt(m_subtitleFilename) == "sup")
             {
                 funcName = "ImageFile";
             }

@@ -4,13 +4,12 @@
 #include "std_watcher.h"
 #include <QUuid>
 
-class StdManager
+namespace StdManager
 {
-public:
-    static QUuid createStdWatch(void);
-    static StdWatcher* callStdWatch(QUuid a_uid);
-    static void releaseStdWatch(QUuid a_uid);
-    static void releaseStdWatchAll(void);
-};
+    QUuid createStdWatch(void);
+    StdWatcher* callStdWatch(QUuid a_uid);
+    void releaseStdWatch(QUuid a_uid);
+    void releaseStdWatchAll(void);
+}
 
 #endif // STD_MANAGER_H

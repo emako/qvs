@@ -1,13 +1,12 @@
 #include "std_manager.h"
 
 QMap<QUuid, StdWatcher*> g_pStdWatch;
-QUuid g_now_uid;
 
 QUuid StdManager::createStdWatch(void)
 {
-    g_now_uid = QUuid::createUuid();
-    g_pStdWatch.insert(g_now_uid, new StdWatcher());
-    return g_now_uid;
+    QUuid uid = QUuid::createUuid();
+    g_pStdWatch.insert(uid, new StdWatcher());
+    return uid;
 }
 
 StdWatcher *StdManager::callStdWatch(QUuid a_uid)

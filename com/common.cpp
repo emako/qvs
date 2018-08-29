@@ -6,7 +6,7 @@
 Config *g_pConfig = nullptr;
 const QString c_default_style = "Fusion";
 
-bool isFileExist(const QString &a_filename)
+bool qvs::isFileExist(const QString &a_filename)
 {
     QFileInfo info(a_filename);
     if(info.isFile())
@@ -16,13 +16,13 @@ bool isFileExist(const QString &a_filename)
     return false;
 }
 
-QString getFileExt(const QString &a_filename)
+QString qvs::getFileExt(const QString &a_filename)
 {
     QFileInfo file(a_filename);
     return file.suffix();
 }
 
-QString chgFileExt(const QString &a_filename, QString a_ext)
+QString qvs::chgFileExt(const QString &a_filename, QString a_ext)
 {
     if(!a_ext.startsWith(QString(QT_EXT_SPLITE)))
     {
@@ -31,7 +31,7 @@ QString chgFileExt(const QString &a_filename, QString a_ext)
     return delFileExt(a_filename) + a_ext;
 }
 
-QString delFileExt(const QString &a_filename)
+QString qvs::delFileExt(const QString &a_filename)
 {
     QFileInfo file(a_filename);
     QString filename = QDir::toNativeSeparators(file.absolutePath());
@@ -40,7 +40,7 @@ QString delFileExt(const QString &a_filename)
     return filename;
 }
 
-QString getFileText(const QString &a_filename)
+QString qvs::getFileText(const QString &a_filename)
 {
     QFile file(a_filename);
     QTextStream in(&file);
@@ -55,7 +55,7 @@ QString getFileText(const QString &a_filename)
     return text;
 }
 
-bool setFileText(const QString &a_filename, const QString &a_text)
+bool qvs::setFileText(const QString &a_filename, const QString &a_text)
 {
     QFile file(a_filename);
     QTextStream in(&file);
@@ -69,6 +69,48 @@ bool setFileText(const QString &a_filename, const QString &a_text)
     in << a_text;
     file.close();
     return true;
+}
+
+QString qvs::timeToString(double a_seconds, bool a_fullFormat)
+{
+    if(a_seconds <= 0.0)
+        return QString("0");
+
+    // Milliseconds cut-off
+    a_seconds = std::round(a_seconds * 1000.0) / 1000.0;
+
+    // Seconds
+    uint64_t integer = (uint64_t)a_seconds;
+    int seconds = integer % 60ll;
+    integer /= 60ll;
+    int minutes = integer % 60ll;
+    integer /= 60ll;
+    int hours = integer;
+
+    QString timeString;
+
+    if((hours > 0) || a_fullFormat)
+    {
+        timeString = QString("%1:%2:%3").arg(hours)
+            .arg(minutes, 2, 10, QChar('0')).arg(seconds, 2, 10, QChar('0'));
+    }
+    else
+    {
+        timeString = QString("%1:%2") .arg(minutes)
+            .arg(seconds, 2, 10, QChar('0'));
+    }
+
+    // Fraction
+    double fraction = a_seconds - std::floor(a_seconds);
+    if((fraction > 0.0) || a_fullFormat)
+        timeString += QString::number(fraction, 'f', 3).mid(1);
+
+    return timeString;
+}
+
+QString qvs::fromStdBasicWString(std::basic_string<wchar_t> a_str)
+{
+    return QString::fromStdWString((std::wstring)a_str);
 }
 
 Common::Common(QObject *parent) : QObject(parent)
@@ -593,3 +635,4 @@ QString Common::fromStdWString(std::basic_string<wchar_t> a_string)
 {
     return QString::fromStdWString((std::wstring)a_string);
 }
+

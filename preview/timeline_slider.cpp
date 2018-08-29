@@ -1,5 +1,7 @@
 #include "timeline_slider.h"
 
+#include "../com/common.h"
+
 #include <QKeyEvent>
 #include <QMouseEvent>
 #include <QPaintEvent>
@@ -13,7 +15,6 @@
 #include <cmath>
 #include <cstdlib>
 #include <map>
-#include <cassert>
 
 //==============================================================================
 
@@ -39,7 +40,7 @@ TimeLineSlider::TimeLineSlider(QWidget * a_pParent) : QWidget(a_pParent)
 	, m_sliderPressed(false)
 	, m_labelsFont("Digital Mini")
 {
-	assert(m_bigStep > 0);
+    Q_ASSERT(m_bigStep > 0);
 
 	setAutoFillBackground(true);
 	setFocusPolicy(Qt::StrongFocus);
@@ -70,43 +71,6 @@ TimeLineSlider::~TimeLineSlider()
 
 }
 
-
-QString TimeLineSlider::timeToString(double a_seconds, bool a_fullFormat)
-{
-    if(a_seconds <= 0.0)
-        return QString("0");
-
-    // Milliseconds cut-off
-    a_seconds = std::round(a_seconds * 1000.0) / 1000.0;
-
-    // Seconds
-    uint64_t integer = (uint64_t)a_seconds;
-    int seconds = integer % 60ll;
-    integer /= 60ll;
-    int minutes = integer % 60ll;
-    integer /= 60ll;
-    int hours = integer;
-
-    QString timeString;
-
-    if((hours > 0) || a_fullFormat)
-    {
-        timeString = QString("%1:%2:%3").arg(hours)
-            .arg(minutes, 2, 10, QChar('0')).arg(seconds, 2, 10, QChar('0'));
-    }
-    else
-    {
-        timeString = QString("%1:%2") .arg(minutes)
-            .arg(seconds, 2, 10, QChar('0'));
-    }
-
-    // Fraction
-    double fraction = a_seconds - std::floor(a_seconds);
-    if((fraction > 0.0) || a_fullFormat)
-        timeString += QString::number(fraction, 'f', 3).mid(1);
-
-    return timeString;
-}
 // END OF TimeLineSlider::~TimeLineSlider()
 //==============================================================================
 
@@ -179,7 +143,7 @@ void TimeLineSlider::setDisplayMode(DisplayMode a_displayMode)
 
 void TimeLineSlider::setBigStep(int a_bigStep)
 {
-	m_bigStep = std::max(std::abs(a_bigStep), 1);
+    m_bigStep = a_bigStep;
 }
 
 
@@ -510,7 +474,7 @@ void TimeLineSlider::mouseMoveEvent(QMouseEvent * a_pEvent)
 		if(m_fps != 0.0)
 		{
 			tipString += " - ";
-            tipString += timeToString(((double)l_frame) / m_fps);
+            tipString += qvs::timeToString(((double)l_frame) / m_fps);
 		}
 		QToolTip::showText(a_pEvent->globalPos(), tipString);
 	}
@@ -644,7 +608,7 @@ void TimeLineSlider::paintEvent(QPaintEvent * a_pEvent)
 				if(l_displayMode == Frames)
 					labelString = QString::number(n);
 				else
-                    labelString = timeToString(((double)n) / m_fps);
+                    labelString = qvs::timeToString(((double)n) / m_fps);
 				labelPos.setX(tickPos - labelsFontMetrics.width(labelString) /
 					2 + 1);
 				painter.drawText(labelPos, labelString);
@@ -716,7 +680,7 @@ void TimeLineSlider::paintEvent(QPaintEvent * a_pEvent)
 				if(l_displayMode == Frames)
 					labelString = QString::number(units);
 				else
-                    labelString = timeToString(units);
+                    labelString = qvs::timeToString(units);
 				labelPos.setX(tickPos - labelsFontMetrics.width(labelString) /
 					2 + 1);
 				painter.drawText(labelPos, labelString);

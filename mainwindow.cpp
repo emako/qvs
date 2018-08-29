@@ -1500,4 +1500,8 @@ void MainWindow::loadFonts(void)
     QResource consolaFontResource(":/fonts/consola.ttf");
     QByteArray consolaFontData((const char *)consolaFontResource.data(), consolaFontResource.size());
     QFontDatabase::addApplicationFontFromData(consolaFontData);
+
+    QResource consolaFont2Resource(":/fonts/DigitalMini.ttf");
+    QByteArray consolaFont2Data((const char *)consolaFont2Resource.data(), consolaFont2Resource.size());
+    QFontDatabase::addApplicationFontFromData(consolaFont2Data);
 }

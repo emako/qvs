@@ -145,5 +145,6 @@
         <file>buttons/dot_grid.png</file>
         <file>images/splashscreen.png</file>
         <file>images/splashscreen_cn.png</file>
+        <file>fonts/DigitalMini.ttf</file>
     </qresource>
 </RCC>
