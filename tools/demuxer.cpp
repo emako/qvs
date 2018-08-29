@@ -268,7 +268,7 @@ void Demuxer::reloadInfo(ERELOAD_TYPE a_reload_type)
                         item.type_track_num = item_video_count;
                         item.track_num = j.i;
                         item.track_info = QString("video%1").arg(item_video_count);
-                        item.ext = getFileExt(ui->editDemuxerVideoInput->text());
+                        item.ext = qvs::getFileExt(ui->editDemuxerVideoInput->text());
                         item_video_count++;
                     }
                     else if(codec_type == "audio")
