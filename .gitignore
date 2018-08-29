@@ -37,4 +37,4 @@
 
 # Qt
 *.user
-$GIT_DIR/generated
+/generated
