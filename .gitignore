@@ -37,4 +37,4 @@
 
 # Qt
 *.user
-generated/obj-debug-64bit-msvc/qvs-debug-64bit-msvc_resource.res
+$GIT_DIR/generated
