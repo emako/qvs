@@ -1,6 +1,6 @@
 //-------------------------------------------------
 //
-// Header File created by Python 2018-08-30T14:17:54
+// Header File created by Python 2018-08-30T14:39:01
 //
 //-------------------------------------------------
 #ifndef MEDIAINFO_DEFINE_H
@@ -131,12 +131,12 @@
 #define MI_AUDIO_BITRATE_MAXIMUM_STRING __T("BitRate_Maximum/String")
 #define MI_AUDIO_BITRATE_ENCODED __T("BitRate_Encoded")
 #define MI_AUDIO_BITRATE_ENCODED_STRING __T("BitRate_Encoded/String")
-#define MI_AUDIO_CHANNEL(S) __T("Channel(s)")
-#define MI_AUDIO_CHANNEL(S)_STRING __T("Channel(s)/String")
-#define MI_AUDIO_CHANNEL(S)_ORIGINAL __T("Channel(s)_Original")
-#define MI_AUDIO_CHANNEL(S)_ORIGINAL_STRING __T("Channel(s)_Original/String")
-#define MI_AUDIO_MATRIX_CHANNEL(S) __T("Matrix_Channel(s)")
-#define MI_AUDIO_MATRIX_CHANNEL(S)_STRING __T("Matrix_Channel(s)/String")
+#define MI_AUDIO_CHANNELS __T("Channel(s)")
+#define MI_AUDIO_CHANNELS_STRING __T("Channel(s)/String")
+#define MI_AUDIO_CHANNELS_ORIGINAL __T("Channel(s)_Original")
+#define MI_AUDIO_CHANNELS_ORIGINAL_STRING __T("Channel(s)_Original/String")
+#define MI_AUDIO_MATRIX_CHANNELS __T("Matrix_Channel(s)")
+#define MI_AUDIO_MATRIX_CHANNELS_STRING __T("Matrix_Channel(s)/String")
 #define MI_AUDIO_CHANNELPOSITIONS __T("ChannelPositions")
 #define MI_AUDIO_CHANNELPOSITIONS_STRING2 __T("ChannelPositions/String2")
 #define MI_AUDIO_MATRIX_CHANNELPOSITIONS __T("Matrix_ChannelPositions")
@@ -873,7 +873,7 @@
 #define MI_AUDIO_COUNT __T("Count")
 #define MI_AUDIO_STATUS __T("Status")
 #define MI_AUDIO_STREAMCOUNT __T("StreamCount")
-#define MI_AUDIO_STREAMKIND;MENU __T("StreamKind;Menu")
+#define MI_AUDIO_STREAMKIND __T("StreamKind")
 #define MI_AUDIO_STREAMKIND_STRING __T("StreamKind/String")
 #define MI_AUDIO_STREAMKINDID __T("StreamKindID")
 #define MI_AUDIO_STREAMKINDPOS __T("StreamKindPos")
@@ -1539,7 +1539,7 @@
 #define MI_AUDIO_COMPRESSION_MODE __T("Compression_Mode")
 #define MI_AUDIO_COMPRESSION_MODE_STRING __T("Compression_Mode/String")
 #define MI_AUDIO_COMPRESSION_RATIO __T("Compression_Ratio")
-#define MI_AUDIO_BITS-(PIXEL*FRAME) __T("Bits-(Pixel*Frame)")
+#define MI_AUDIO_BITS_PIXEL_X_FRAME __T("Bits-(Pixel*Frame)")
 #define MI_AUDIO_DELAY __T("Delay")
 #define MI_AUDIO_DELAY_STRING __T("Delay/String")
 #define MI_AUDIO_DELAY_STRING1 __T("Delay/String1")
