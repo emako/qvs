@@ -223,7 +223,8 @@ HEADERS += \
     script/script_creator.h \
     script/number_matcher.h \
     com/version.h \
-    tools/audio_config.h
+    tools/audio_config.h \
+    tools/mediainfo_define.h
 
 FORMS += \
     mainwindow.ui \

@@ -1,8 +1,10 @@
 #ifndef MEDIAINFO_LOADER_H
 #define MEDIAINFO_LOADER_H
 
-#include "mediaInfo_dll.h"
+#include "mediainfo_define.h"
 #include "../com/common.h"
+
+using namespace MediaInfoDLL;
 
 #define __TR(__x) QObject::tr(__x)
 #if defined(UNICODE) || defined(_UNICODE)
@@ -79,6 +81,7 @@ public:
     size_t open(const QString &a_filename);
     size_t open(void);
     QString get(EMEDIA_PROP a_prop = eMEDIA_PROP_ALL, ESTREAM_TYPE a_streamType = eSTREAM_TYPE_VIDEO, size_t a_streamNumber = (size_t)eINDEX_0);
+    QString get(String a_prop, stream_t a_streamType = Stream_Video, size_t a_streamNumber = (size_t)eINDEX_0);
     virtual void close(void);
 
 private:

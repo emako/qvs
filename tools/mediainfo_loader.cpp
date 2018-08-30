@@ -1,9 +1,6 @@
 #include "mediainfo_loader.h"
 #include <QDebug>
 
-using namespace MediaInfoDLL;
-using namespace std;
-
 MediaInfoLoader::MediaInfoLoader()
 {
 }
@@ -124,4 +121,9 @@ QString MediaInfoLoader::get(EMEDIA_PROP a_prop, ESTREAM_TYPE a_streamType, size
         break;
     }
     return fromStd(info);
+}
+
+QString MediaInfoLoader::get(String a_prop, stream_t a_streamType, size_t a_streamNumber)
+{
+    return fromStd(m_mediainfo.Get(a_streamType, a_streamNumber, a_prop));
 }
