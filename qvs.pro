@@ -18,7 +18,7 @@ VER_MAJ = 1
 VERSION = $$VER_MAJ
 QMAKE_TARGET_PRODUCT = 'Qvs'
 QMAKE_TARGET_DESCRIPTION = 'Qvs'
-QMAKE_TARGET_COMPANY = 'ema (egosub)'
+QMAKE_TARGET_COMPANY = 'ema'
 QMAKE_TARGET_COPYRIGHT = $$QMAKE_TARGET_COMPANY
 
 MOC_DIR = $${PROJECT_DIRECTORY}/generated/moc
@@ -37,6 +37,15 @@ INCLUDEPATH += $${OPENCV_HEADER}
 INCLUDEPATH += $${OPENCV_HEADER}/opencv
 INCLUDEPATH += $${OPENCV_HEADER}/opencv2
 INCLUDEPATH += $${FFMPEG_HEADER}
+
+VERSION_MESSAGE = "QT version is too low"
+greaterThan(QT_MAJOR_VERSION, 5)|equals(QT_MAJOR_VERSION, 5){
+    !greaterThan(QT_MINOR_VERSION, 11){
+        message($${VERSION_MESSAGE})
+    }
+}else{
+        error($${VERSION_MESSAGE})
+}
 
 CONFIG(debug, debug|release) {
 

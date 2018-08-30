@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Qvs Installer</string>
+   <string>Module Portable Installer</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>

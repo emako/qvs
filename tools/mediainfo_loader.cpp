@@ -36,25 +36,25 @@ size_t MediaInfoLoader::open(void)
 
 QString MediaInfoLoader::get(EMEDIA_PROP a_prop, ESTREAM_TYPE a_streamType, size_t a_streamNumber)
 {
-    QString info;
+    String info; /* Type define from MediaInfoDLL Header file. */
 
     if(!m_mediainfo.IsReady())
     {
-        return info;
+        return QT_EMPTY;
     }
 
     switch(a_prop)
     {
     case eMEDIA_PROP_ALL_COMPLETE:
         m_mediainfo.Option(MEDIA_PROP_COMPLETE, MEDIA_PROP_TRUE);
-        info = _Q(m_mediainfo.Inform());
+        info = m_mediainfo.Inform();
         break;
     case eMEDIA_PROP_ALL:
         m_mediainfo.Option(MEDIA_PROP_COMPLETE, MEDIA_PROP_FALSE);
-        info = _Q(m_mediainfo.Inform());
+        info = m_mediainfo.Inform();
         break;
     case eMEDIA_PROP_FORMAT_CODE:
-        info = _Q(m_mediainfo.Get((stream_t)a_streamType, a_streamNumber, MEDIA_PROP_FORMAT));
+        info = m_mediainfo.Get((stream_t)a_streamType, a_streamNumber, MEDIA_PROP_FORMAT);
         break;
     case eMEDIA_PROP_FORMAT:
     do{
@@ -67,61 +67,61 @@ QString MediaInfoLoader::get(EMEDIA_PROP a_prop, ESTREAM_TYPE a_streamType, size
 
             if(format.isEmpty())
             {
-                info = QObject::tr("UNKNOWED");
+                info = toStd(MEDIA_UNKNOWED_FORMAT);
             }
             else
             {
-                info = format;
+                info = toStd(format);
             }
         }
         else
         {
-            info = color_space + chroma_subsampling + "P" + bit_depth;
+            info = toStd(color_space + chroma_subsampling + "P" + bit_depth);
         }
     }while(false);
         break;
     case eMEDIA_PROP_WIDTH:
-        info = _Q(m_mediainfo.Get((stream_t)a_streamType, a_streamNumber, MEDIA_PROP_WIDTH));
+        info = m_mediainfo.Get((stream_t)a_streamType, a_streamNumber, MEDIA_PROP_WIDTH);
         break;
     case eMEDIA_PROP_HEIGHT:
-        info = _Q(m_mediainfo.Get((stream_t)a_streamType, a_streamNumber, MEDIA_PROP_HEIGHT));
+        info = m_mediainfo.Get((stream_t)a_streamType, a_streamNumber, MEDIA_PROP_HEIGHT);
         break;
     case eMEDIA_PROP_FRAME_RATE_MODE:
-        info = _Q(m_mediainfo.Get((stream_t)a_streamType, a_streamNumber, MEDIA_PROP_FRAME_RATE_MODE));
+        info = m_mediainfo.Get((stream_t)a_streamType, a_streamNumber, MEDIA_PROP_FRAME_RATE_MODE);
         break;
     case eMEDIA_PROP_FRAME_RATE:
-        info = _Q(m_mediainfo.Get((stream_t)a_streamType, a_streamNumber, MEDIA_PROP_FRAME_RATE));
+        info = m_mediainfo.Get((stream_t)a_streamType, a_streamNumber, MEDIA_PROP_FRAME_RATE);
         break;
     case eMEDIA_PROP_FRAME_RATE_NUM:
-        info = _Q(m_mediainfo.Get((stream_t)a_streamType, a_streamNumber, MEDIA_PROP_FRAME_RATE_NUM));
+        info = m_mediainfo.Get((stream_t)a_streamType, a_streamNumber, MEDIA_PROP_FRAME_RATE_NUM);
         break;
     case eMEDIA_PROP_FRAME_RATE_DEN:
-        info = _Q(m_mediainfo.Get((stream_t)a_streamType, a_streamNumber, MEDIA_PROP_FRAME_RATE_DEN));
+        info = m_mediainfo.Get((stream_t)a_streamType, a_streamNumber, MEDIA_PROP_FRAME_RATE_DEN);
         break;
     case eMEDIA_PROP_FRAME_COUNT:
-        info = _Q(m_mediainfo.Get((stream_t)a_streamType, a_streamNumber, MEDIA_PROP_FRAME_COUNT));
+        info = m_mediainfo.Get((stream_t)a_streamType, a_streamNumber, MEDIA_PROP_FRAME_COUNT);
         break;
     case eMEDIA_PROP_DURATION:
-        info = _Q(m_mediainfo.Get((stream_t)a_streamType, a_streamNumber, MEDIA_PROP_DURATION));
+        info = m_mediainfo.Get((stream_t)a_streamType, a_streamNumber, MEDIA_PROP_DURATION);
         break;
     case eMEDIA_PROP_BIT_RATE:
-        info = _Q(m_mediainfo.Get((stream_t)a_streamType, a_streamNumber, MEDIA_PROP_BIT_RATE));
+        info = m_mediainfo.Get((stream_t)a_streamType, a_streamNumber, MEDIA_PROP_BIT_RATE);
         break;
     case eMEDIA_PROP_COLOR_SPACE:
-        info = _Q(m_mediainfo.Get((stream_t)a_streamType, a_streamNumber, MEDIA_PROP_COLOR_SPACE));
+        info = m_mediainfo.Get((stream_t)a_streamType, a_streamNumber, MEDIA_PROP_COLOR_SPACE);
         break;
     case eMEDIA_PROP_CHROMA_SUBSAMPLING:
-        info = _Q(m_mediainfo.Get((stream_t)a_streamType, a_streamNumber, MEDIA_PROP_CHROMA_SUBSAMPLING));
+        info = m_mediainfo.Get((stream_t)a_streamType, a_streamNumber, MEDIA_PROP_CHROMA_SUBSAMPLING);
         break;
     case eMEDIA_PROP_BIT_DEPTH:
-        info = _Q(m_mediainfo.Get((stream_t)a_streamType, a_streamNumber, MEDIA_PROP_BIT_DEPTH));
+        info = m_mediainfo.Get((stream_t)a_streamType, a_streamNumber, MEDIA_PROP_BIT_DEPTH);
         break;
     case eMEDIA_PROP_SCAN_TYPE:
-        info = _Q(m_mediainfo.Get((stream_t)a_streamType, a_streamNumber, MEDIA_PROP_SCAN_TYPE));
+        info = m_mediainfo.Get((stream_t)a_streamType, a_streamNumber, MEDIA_PROP_SCAN_TYPE);
         break;
     case eMEDIA_PROP_SCAN_ORDER:
-        info = _Q(m_mediainfo.Get((stream_t)a_streamType, a_streamNumber, MEDIA_PROP_SCAN_ORDER));
+        info = m_mediainfo.Get((stream_t)a_streamType, a_streamNumber, MEDIA_PROP_SCAN_ORDER);
         break;
     }
-    return info;
+    return fromStd(info);
 }

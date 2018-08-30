@@ -591,8 +591,8 @@ QProgressBar::chunk {
     <addaction name="actionCommand_Line"/>
     <addaction name="actionPython"/>
     <addaction name="separator"/>
-    <addaction name="actionInstaller"/>
     <addaction name="actionPreferences"/>
+    <addaction name="actionInstaller"/>
     <addaction name="separator"/>
     <addaction name="actionExit"/>
    </widget>
@@ -1177,7 +1177,7 @@ QProgressBar::chunk {
      <normaloff>:/buttons/package.png</normaloff>:/buttons/package.png</iconset>
    </property>
    <property name="text">
-    <string>Installer</string>
+    <string>Make Portable</string>
    </property>
   </action>
   <action name="actionPreviewDialog">

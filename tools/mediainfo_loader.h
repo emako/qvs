@@ -4,27 +4,34 @@
 #include "mediaInfo_dll.h"
 #include "../com/common.h"
 
-#define _Q(a) qvs::fromStdBasicWString(a)
+#define __TR(__x) QObject::tr(__x)
+#if defined(UNICODE) || defined(_UNICODE)
+    #define toStd(__x) qvs::toStdBasicWString(__x)
+    #define fromStd(__x) qvs::fromStdBasicWString(__x)
+#else
+    #define toStd(__x) qvs::toStdBasicString(__x)
+    #define fromStd(__x) qvs::fromStdBasicString(__x)
+#endif
 
-#define MEDIA_PROP_COMPLETE L"Complete"
-#define MEDIA_PROP_FORMAT L"Format"
-#define MEDIA_PROP_WIDTH L"Width"
-#define MEDIA_PROP_HEIGHT L"Height"
-#define MEDIA_PROP_FRAME_RATE_MODE L"FrameRateMode"
-#define MEDIA_PROP_FRAME_RATE L"FrameRate"
-#define MEDIA_PROP_FRAME_RATE_NUM L"FrameRate_Num"
-#define MEDIA_PROP_FRAME_RATE_DEN L"FrameRate_Den"
-#define MEDIA_PROP_FRAME_COUNT L"FrameCount"
-#define MEDIA_PROP_DURATION L"Duration"
-#define MEDIA_PROP_BIT_RATE L"BitRate"
-#define MEDIA_PROP_COLOR_SPACE L"ColorSpace"
-#define MEDIA_PROP_CHROMA_SUBSAMPLING L"ChromaSubsampling"
-#define MEDIA_PROP_BIT_DEPTH L"BitDepth"
-#define MEDIA_PROP_SCAN_TYPE L"ScanType"
-#define MEDIA_PROP_SCAN_ORDER L"ScanOrder"
-
-#define MEDIA_PROP_TRUE L"1"
-#define MEDIA_PROP_FALSE L"0"
+#define MEDIA_PROP_COMPLETE __T("Complete")
+#define MEDIA_PROP_FORMAT __T("Format")
+#define MEDIA_PROP_WIDTH __T("Width")
+#define MEDIA_PROP_HEIGHT __T("Height")
+#define MEDIA_PROP_FRAME_RATE_MODE __T("FrameRateMode")
+#define MEDIA_PROP_FRAME_RATE __T("FrameRate")
+#define MEDIA_PROP_FRAME_RATE_NUM __T("FrameRate_Num")
+#define MEDIA_PROP_FRAME_RATE_DEN __T("FrameRate_Den")
+#define MEDIA_PROP_FRAME_COUNT __T("FrameCount")
+#define MEDIA_PROP_DURATION __T("Duration")
+#define MEDIA_PROP_BIT_RATE __T("BitRate")
+#define MEDIA_PROP_COLOR_SPACE __T("ColorSpace")
+#define MEDIA_PROP_CHROMA_SUBSAMPLING __T("ChromaSubsampling")
+#define MEDIA_PROP_BIT_DEPTH __T("BitDepth")
+#define MEDIA_PROP_SCAN_TYPE __T("ScanType")
+#define MEDIA_PROP_SCAN_ORDER __T("ScanOrder")
+#define MEDIA_PROP_TRUE __T("1")
+#define MEDIA_PROP_FALSE __T("0")
+#define MEDIA_UNKNOWED_FORMAT __TR("UNKNOWED")
 
 namespace MediaInfoDLL {
 class MediaInfo;

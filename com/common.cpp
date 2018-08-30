@@ -108,9 +108,51 @@ QString qvs::timeToString(double a_seconds, bool a_fullFormat)
     return timeString;
 }
 
-QString qvs::fromStdBasicWString(std::basic_string<wchar_t> a_str)
+QString qvs::fromStdBasicWString(const std::basic_string<wchar_t> &a_str)
 {
     return QString::fromStdWString((std::wstring)a_str);
+}
+
+std::basic_string<wchar_t> qvs::toStdBasicWString(const QString &a_str)
+{
+    return (std::basic_string<wchar_t>)a_str.toStdWString();
+}
+
+QString qvs::fromStdBasicString(const std::basic_string<char> &a_str)
+{
+    return QString::fromStdString((std::string)a_str);
+}
+
+std::basic_string<char> qvs::toStdBasicString(const QString &a_str)
+{
+    return (std::basic_string<char>)a_str.toStdString();
+}
+
+QString qvs::convertFramesToTimecode(double a_frames, double a_fps)
+{
+    return convertSecondToTimecode(convertFramesToTime(a_frames, a_fps));
+}
+
+double qvs::convertFramesToTime(double a_frames, double a_fps)
+{
+    return (a_fps == (double)eINDEX_0) ? (double)eINDEX_0 : a_frames * ((double)eINDEX_1 / a_fps);
+}
+
+QString qvs::convertSecondToTimecode(double a_timeSec)
+{
+    if(a_timeSec < (double)eINDEX_0)
+    {
+        a_timeSec = (double)eINDEX_0;
+    }
+
+    QString timecode;
+    int h  = (int)a_timeSec / HOUR;
+    int m  = ((int)a_timeSec % HOUR) / MINUTE;
+    int s  = ((int)a_timeSec % HOUR) % MINUTE;
+    int ms = (int)((double)(a_timeSec - (int)a_timeSec) * SECOND_TO_MILLISECOND_UNIT);
+
+    timecode.sprintf("%02d:%02d:%02d.%03d", h, m, s, ms);
+    return timecode;
 }
 
 Common::Common(QObject *parent) : QObject(parent)
@@ -608,31 +650,3 @@ void Common::copyPath(void)
     connect(board, SIGNAL(dataChanged()), mainUi, SLOT(close()));
     mainUi->m_timer->start(Timer::ETIMER_TYPE_ONE_SHOT, Timer::ETIMER_SLOT_PROGURM_QUIT, HOUR * SECOND_TO_MILLISECOND_UNIT);
 }
-
-QString Common::convertFramesToTimecode(double a_frames, double a_fps)
-{
-    return convertSecondToTimecode(convertFramesToTime(a_frames, a_fps));
-}
-
-double Common::convertFramesToTime(double a_frames, double a_fps)
-{
-    return a_frames * (eINDEX_1 / a_fps);
-}
-
-QString Common::convertSecondToTimecode(double a_timeSec)
-{
-    QString timecode;
-    int h  = (int)a_timeSec / HOUR;
-    int m  = ((int)a_timeSec % HOUR) / MINUTE;
-    int s  = ((int)a_timeSec % HOUR) % MINUTE;
-    int ms = (int)((double)(a_timeSec - (int)a_timeSec) * SECOND_TO_MILLISECOND_UNIT);
-
-    timecode.sprintf("%02d:%02d:%02d.%03d", h, m, s, ms);
-    return timecode;
-}
-
-QString Common::fromStdWString(std::basic_string<wchar_t> a_string)
-{
-    return QString::fromStdWString((std::wstring)a_string);
-}
-

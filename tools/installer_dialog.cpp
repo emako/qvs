@@ -34,6 +34,23 @@ void InstallerDialog::setup(void)
     this->loadInstallerConfig();
     ui->treeWidgetModule->setHeaderHidden(false);
 
+#ifndef QVS_PORTABLE
+    int index = (int)eINDEX_0;
+    QTreeWidgetItemIterator i(ui->treeWidgetModule);
+
+    while(*i)
+    {
+        if(index != (int)eINSTALLER_CONTENTS_MEDIA)
+        {
+            (*i)->setDisabled(true);
+            (*i)->setCheckState(0, Qt::Unchecked);
+            (*i)->setHidden(true);
+        }
+        i++;
+        index++;
+    }
+#endif
+
     connect(&m_process_installer, SIGNAL(started()),this, SLOT(slotInstallerProcessStarted()));
     connect(&m_process_installer, SIGNAL(finished(int,QProcess::ExitStatus)), this, SLOT(slotInstallerProcessFinished(int, QProcess::ExitStatus)));
     connect(&m_process_installer, SIGNAL(readyReadStandardOutput()), this, SLOT(slotInstallerProcessReadyReadStandardOutput()));
@@ -53,13 +70,16 @@ void InstallerDialog::loadInstallerConfig(void)
     QTreeWidgetItemIterator i(ui->treeWidgetModule);
     while(*i)
     {
-        if(!ui->checkBoxUninstall->isChecked())
+        if(!(*i)->isDisabled())
         {
-            (*i)->setCheckState(0, convertBoolToCheckState(!convertCheckStateToBool(m_checkstate[(Config::ECONFIG_INSTALLER)index])));
-        }
-        else
-        {
-            (*i)->setCheckState(0, (Qt::CheckState)m_checkstate[(Config::ECONFIG_INSTALLER)index]);
+            if(!ui->checkBoxUninstall->isChecked())
+            {
+                (*i)->setCheckState(0, convertBoolToCheckState(!convertCheckStateToBool(m_checkstate[(Config::ECONFIG_INSTALLER)index])));
+            }
+            else
+            {
+                (*i)->setCheckState(0, (Qt::CheckState)m_checkstate[(Config::ECONFIG_INSTALLER)index]);
+            }
         }
         i++;
         index++;
@@ -106,7 +126,10 @@ void InstallerDialog::on_buttonSecletAll_clicked()
     QTreeWidgetItemIterator i(ui->treeWidgetModule);
     while(*i)
     {
-        (*i)->setCheckState(0, Qt::Checked);
+        if(!(*i)->isDisabled())
+        {
+            (*i)->setCheckState(0, Qt::Checked);
+        }
         i++;
     }
 }
@@ -116,7 +139,10 @@ void InstallerDialog::on_buttonSelectNone_clicked()
     QTreeWidgetItemIterator i(ui->treeWidgetModule);
     while(*i)
     {
-        (*i)->setCheckState(0, Qt::Unchecked);
+        if(!(*i)->isDisabled())
+        {
+            (*i)->setCheckState(0, Qt::Unchecked);
+        }
         i++;
     }
 }
@@ -174,7 +200,7 @@ void InstallerDialog::on_buttonInstall_clicked()
         return;
     }
 
-#ifdef QT_BRANCH_VS_RECOVERY
+#ifdef QVS_BRANCH_VS_RECOVERY
     arg << c_content_to_arg[(int)eINSTALLER_CONTENTS_VSEDIT_RECOVERY];
     arg << c_content_to_arg[(int)eINSTALLER_CONTENTS_VSEDIT_TEMPLATE];
 #endif

@@ -104,8 +104,17 @@ namespace qvs
     QString delFileExt(const QString &a_filename);
     QString getFileText(const QString &a_filename);
     bool setFileText(const QString &a_filename, const QString &a_text);
-    QString timeToString(double a_seconds, bool a_fullFormat = false);
-    QString fromStdBasicWString(std::basic_string<wchar_t> a_str);
+    QString timeToString(double a_seconds, bool a_fullFormat = false);      /* For Time Line Slider */
+
+    QString fromStdBasicWString(const std::basic_string<wchar_t> &a_str);
+    std::basic_string<wchar_t> toStdBasicWString(const QString &a_str);
+
+    QString fromStdBasicString(const std::basic_string<char> &a_str);
+    std::basic_string<char> toStdBasicString(const QString &a_str);
+
+    QString convertFramesToTimecode(double a_frames, double a_fps);
+    double convertFramesToTime(double a_frames, double a_fps);
+    QString convertSecondToTimecode(double a_timeSec);
 }
 
 class Common : public QObject
@@ -197,12 +206,6 @@ public:
 
     QString getAudioFileDelayValueString(QString a_filename);
     int getAudioFileDelayValue(QString a_filename);
-
-    QString convertFramesToTimecode(double a_frames, double a_fps);
-    double convertFramesToTime(double a_frames, double a_fps);
-    QString convertSecondToTimecode(double a_timeSec);
-
-    static QString fromStdWString(std::basic_string<wchar_t> a_string);
 
     ESHUTDOWN m_shutdown;
     void systemShutdown(ESHUTDOWN a_shotdown);

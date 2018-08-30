@@ -188,7 +188,7 @@ void PreviewDialog::getVideoInfo(void)
     m_videoInfo.fpsCV       = m_videoCapture.get(CV_CAP_PROP_FPS);
     m_videoInfo.fps         = m_mediainfoLoader.get(MediaInfoLoader::eMEDIA_PROP_FRAME_RATE).toDouble();
     m_videoInfo.AviRatio    = m_videoCapture.get(CV_CAP_PROP_POS_AVI_RATIO);
-    m_videoInfo.time        = mainUi->m_com->convertFramesToTimecode(m_videoInfo.frameCount, m_videoInfo.fps);
+    m_videoInfo.time        = qvs::convertFramesToTimecode(m_videoInfo.frameCount, m_videoInfo.fps);
     m_videoInfo.format      = m_mediainfoLoader.get(MediaInfoLoader::eMEDIA_PROP_FORMAT);
     m_videoInfo.fpsNum      = m_mediainfoLoader.get(MediaInfoLoader::eMEDIA_PROP_FRAME_RATE_NUM).toInt();
     m_videoInfo.fpsDen      = m_mediainfoLoader.get(MediaInfoLoader::eMEDIA_PROP_FRAME_RATE_DEN).toInt();

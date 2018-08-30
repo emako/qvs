@@ -1,9 +1,13 @@
 #ifndef INSTALLER_DIALOG_H
 #define INSTALLER_DIALOG_H
 
+#include "../com/config.h"
+
 #include <QDialog>
 #include <QDebug>
-#include "../com/config.h"
+
+#undef QVS_PORTABLE
+#define QVS_PORTABLE
 
 class MainWindow;
 
