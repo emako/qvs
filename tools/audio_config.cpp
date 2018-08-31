@@ -45,22 +45,9 @@ void AudioConfig::setup(void)
     emit ui->comboBoxAacAppleProfile->currentIndexChanged(ui->comboBoxAacAppleProfile->currentIndex());
 }
 
-void AudioConfig::on_buttonCancel_clicked()
-{
-    this->reject();
-}
-
 void AudioConfig::on_comboBoxAudioEncoder_currentIndexChanged(int a_index)
 {
     ui->stackedWidgetMode->setCurrentIndex(a_index);
-}
-
-void AudioConfig::on_buttonAccept_clicked()
-{
-    mainUi->m_pAudioEnc->ui->comboBoxAudioEncoder->setCurrentIndex(ui->comboBoxAudioEncoder->currentIndex());
-    emit mainUi->m_pAudioEnc->ui->comboBoxAudioEncoder->currentIndexChanged(ui->comboBoxAudioEncoder->currentIndex());
-    mainUi->m_pAudioEnc->setMode(m_advancedMode);
-    this->accept();
 }
 
 void AudioConfig::on_checkBoxAdvancedOption_stateChanged(int a_state)
@@ -406,3 +393,53 @@ void AudioConfig::on_horizontalSliderAc3_valueChanged(int a_value)
 }
 
 ///->AC3_END
+
+void AudioConfig::on_buttonCancel_clicked()
+{
+    this->reject();
+}
+
+void AudioConfig::on_buttonAccept_clicked()
+{
+    int index = ui->comboBoxAudioEncoder->currentIndex();
+
+    switch(index)
+    {
+    case AudioEnc::eENCODE_TYPE_AAC_APPLE:
+    default:
+
+        break;
+    case AudioEnc::eENCODE_TYPE_AAC_FDK:
+        break;
+
+    case AudioEnc::eENCODE_TYPE_AAC_NERO:
+        break;
+
+    case AudioEnc::eENCODE_TYPE_ALAC:
+        break;
+
+    case AudioEnc::eENCODE_TYPE_FLAC:
+        break;
+
+    case AudioEnc::eENCODE_TYPE_OPUS:
+        break;
+
+    case AudioEnc::eENCODE_TYPE_OGG_VORBIS:
+        break;
+
+    case AudioEnc::eENCODE_TYPE_MP3:
+        break;
+
+    case AudioEnc::eENCODE_TYPE_AC3:
+        break;
+
+    case AudioEnc::eENCODE_TYPE_WAV:
+        break;
+
+    }
+
+    mainUi->m_pAudioEnc->ui->comboBoxAudioEncoder->setCurrentIndex(index);
+    emit mainUi->m_pAudioEnc->ui->comboBoxAudioEncoder->currentIndexChanged(index);
+    mainUi->m_pAudioEnc->setMode(m_advancedMode);
+    this->accept();
+}

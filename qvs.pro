@@ -60,9 +60,9 @@ CONFIG(debug, debug|release) {
             OBJECTS_DIR = $${PROJECT_DIRECTORY}/generated/obj-debug-32bit-gcc
         }
 
-        QMAKE_CXXFLAGS += -O0
-        QMAKE_CXXFLAGS += -g
-        QMAKE_CXXFLAGS += -ggdb3
+#        QMAKE_CXXFLAGS += -O0
+#        QMAKE_CXXFLAGS += -g
+#        QMAKE_CXXFLAGS += -ggdb3
     }
 
     contains(QMAKE_COMPILER, msvc) {
@@ -76,13 +76,7 @@ CONFIG(debug, debug|release) {
             OBJECTS_DIR = $${PROJECT_DIRECTORY}/generated/obj-debug-32bit-msvc
         }
     }
-#    LIBS += -L$${OPENCV_LIB} -lopencv_world341d
-
-    LIBS += -L$${OPENCV_LIB} -lopencv_core342d
-    LIBS += -L$${OPENCV_LIB} -lopencv_imgcodecs342d
-    LIBS += -L$${OPENCV_LIB} -lopencv_imgproc342d
-    LIBS += -L$${OPENCV_LIB} -lopencv_video342d
-    LIBS += -L$${OPENCV_LIB} -lopencv_videoio342d
+    LIBS += -L$${OPENCV_LIB} -lopencv_world343d
 
 } else {
 
@@ -97,9 +91,9 @@ CONFIG(debug, debug|release) {
             OBJECTS_DIR = $${PROJECT_DIRECTORY}/generated/obj-release-32bit-gcc
         }
 
-        QMAKE_CXXFLAGS += -O2
-        QMAKE_CXXFLAGS += -fexpensive-optimizations
-        QMAKE_CXXFLAGS += -funit-at-a-time
+#        QMAKE_CXXFLAGS += -O2
+#        QMAKE_CXXFLAGS += -fexpensive-optimizations
+#        QMAKE_CXXFLAGS += -funit-at-a-time
     }
 
     contains(QMAKE_COMPILER, msvc) {
@@ -113,13 +107,7 @@ CONFIG(debug, debug|release) {
             OBJECTS_DIR = $${PROJECT_DIRECTORY}/generated/obj-release-32bit-msvc
         }
     }
-#    LIBS += -L$${OPENCV_LIB} -lopencv_world341
-
-    LIBS += -L$${OPENCV_LIB} -lopencv_core342
-    LIBS += -L$${OPENCV_LIB} -lopencv_imgcodecs342
-    LIBS += -L$${OPENCV_LIB} -lopencv_imgproc342
-    LIBS += -L$${OPENCV_LIB} -lopencv_video342
-    LIBS += -L$${OPENCV_LIB} -lopencv_videoio342
+    LIBS += -L$${OPENCV_LIB} -lopencv_world343
 
     DEFINES += NDEBUG
 }

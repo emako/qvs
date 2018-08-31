@@ -575,7 +575,7 @@ protected:
     MatStep& operator = (const MatStep&);
 };
 
-/** @example cout_mat.cpp
+/** @example samples/cpp/cout_mat.cpp
 An example demonstrating the serial out capabilities of cv::Mat
 */
 
@@ -1171,7 +1171,7 @@ public:
     The method creates a full copy of the array. The original step[] is not taken into account. So, the
     array copy is a continuous array occupying total()*elemSize() bytes.
      */
-    Mat clone() const;
+    Mat clone() const CV_NODISCARD;
 
     /** @brief Copies the matrix to another one.
 
@@ -1324,7 +1324,7 @@ public:
     /** @brief Returns a zero array of the specified size and type.
 
     The method returns a Matlab-style zero array initializer. It can be used to quickly form a constant
-    array as a function parameter, part of a matrix expression, or as a matrix initializer. :
+    array as a function parameter, part of a matrix expression, or as a matrix initializer:
     @code
         Mat A;
         A = Mat::zeros(3, 3, CV_32F);
@@ -1360,6 +1360,8 @@ public:
     The above operation does not form a 100x100 matrix of 1's and then multiply it by 3. Instead, it
     just remembers the scale factor (3 in this case) and use it when actually invoking the matrix
     initializer.
+    @note In case of multi-channels type, only the first channel will be initialized with 1's, the
+    others will be set to 0's.
     @param rows Number of rows.
     @param cols Number of columns.
     @param type Created matrix type.
@@ -1387,6 +1389,8 @@ public:
         // make a 4x4 diagonal matrix with 0.1's on the diagonal.
         Mat A = Mat::eye(4, 4, CV_32F)*0.1;
     @endcode
+    @note In case of multi-channels type, identity matrix will be initialized only for the first channel,
+    the others will be set to 0's
     @param rows Number of rows.
     @param cols Number of columns.
     @param type Created matrix type.
@@ -2258,7 +2262,7 @@ public:
     Mat_ row(int y) const;
     Mat_ col(int x) const;
     Mat_ diag(int d=0) const;
-    Mat_ clone() const;
+    Mat_ clone() const CV_NODISCARD;
 
     //! overridden forms of Mat::elemSize() etc.
     size_t elemSize() const;
@@ -2437,7 +2441,7 @@ public:
     static UMat diag(const UMat& d);
 
     //! returns deep copy of the matrix, i.e. the data is copied
-    UMat clone() const;
+    UMat clone() const CV_NODISCARD;
     //! copies the matrix content to "m".
     // It calls m.create(this->size(), this->type()).
     void copyTo( OutputArray m ) const;
@@ -2732,7 +2736,7 @@ public:
     SparseMat& operator = (const Mat& m);
 
     //! creates full copy of the matrix
-    SparseMat clone() const;
+    SparseMat clone() const CV_NODISCARD;
 
     //! copies all the data to the destination matrix. All the previous content of m is erased
     void copyTo( SparseMat& m ) const;
@@ -2969,7 +2973,7 @@ public:
     SparseMat_& operator = (const Mat& m);
 
     //! makes full copy of the matrix. All the elements are duplicated
-    SparseMat_ clone() const;
+    SparseMat_ clone() const CV_NODISCARD;
     //! equivalent to cv::SparseMat::create(dims, _sizes, DataType<_Tp>::type)
     void create(int dims, const int* _sizes);
     //! converts sparse matrix to the old-style CvSparseMat. All the elements are copied
