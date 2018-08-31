@@ -38,3 +38,6 @@
 # Qt
 *.user
 /generated
+
+# openCV
+/opencv
