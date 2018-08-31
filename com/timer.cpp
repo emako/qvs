@@ -1,6 +1,6 @@
 #include "timer.h"
 #include "mainwindow.h"
-#include "../tools/mediainfo_dialog.h"
+#include "../mediainfo/mediainfo_dialog.h"
 #include "ui_mainwindow.h"
 
 Timer::Timer(QObject *parent) : QObject(parent)

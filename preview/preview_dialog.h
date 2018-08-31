@@ -2,7 +2,7 @@
 #define PREVIEW_DIALOG_H
 
 #include "../com/common.h"
-#include "../tools/mediainfo_loader.h"
+#include "../mediainfo/mediainfo_loader.h"
 
 #include <QMainWindow>
 #include <opencv2/opencv.hpp>
