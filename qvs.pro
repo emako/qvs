@@ -170,15 +170,14 @@ SOURCES += \
     com/config.cpp \
     tools/installer_dialog.cpp \
     preview/preview_dialog.cpp \
-    preview/timeline_slider.cpp \
-    preview/timeline_slider.cpp \
     mediainfo/mediainfo_dialog.cpp \
     mediainfo/mediainfo_loader.cpp \
     script/script_editor.cpp \
     script/syntax_highlighter.cpp \
     script/script_creator.cpp \
     script/number_matcher.cpp \
-    tools/audio_config.cpp
+    tools/audio_config.cpp \
+    preview/preview_timeline_slider.cpp
 
 HEADERS += \
     mainwindow.h \
@@ -202,8 +201,6 @@ HEADERS += \
     com/config.h \
     tools/installer_dialog.h \
     preview/preview_dialog.h \
-    preview/timeline_slider.h \
-    preview/timeline_slider.h \
     mediainfo/mediainfo_define.h \
     mediainfo/mediainfo_dialog.h \
     mediainfo/mediainfo_loader.h \
@@ -212,7 +209,8 @@ HEADERS += \
     script/script_creator.h \
     script/number_matcher.h \
     com/version.h \
-    tools/audio_config.h
+    tools/audio_config.h \
+    preview/preview_timeline_slider.h
 
 FORMS += \
     mainwindow.ui \
