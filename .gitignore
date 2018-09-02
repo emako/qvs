@@ -38,6 +38,7 @@
 # Qt
 *.user
 /generated
+/build
 
 # openCV
 /opencv

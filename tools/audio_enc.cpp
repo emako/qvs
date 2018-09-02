@@ -123,7 +123,7 @@ StdWatcherCmd AudioEnc::getEncodeCmd(QString a_input, QString a_output, QString 
         cmd = QString("%1 -ignorelength -lc -br %2 -if - -of \"%3\"").arg(mainUi->m_com->findFirstFilePath("neroAacEnc")).arg(QString::number(a_bitrate.toInt()*1000)).arg(a_output);
         break;
     case eENCODE_TYPE_FLAC:
-        cmd = QString("%1 -f --ignore-chunk-sizes -5 - -o \"%2\"").arg(mainUi->m_com->findFirstFilePath("flac")).arg(a_output);
+        cmd = QString("%1 -5 - -o \"%2\"").arg(mainUi->m_com->findFirstFilePath("flac")).arg(a_output);
         break;
     case eENCODE_TYPE_ALAC:
         cmd = QString("%1 --ignorelength - -o \"%2\"").arg(mainUi->m_com->findFirstFilePath("refalac")).arg(a_output);

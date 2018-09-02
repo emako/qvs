@@ -1,6 +1,9 @@
 #include "audio_config.h"
 #include "audio_enc.h"
+#include "std_watcher.h"
+
 #include "../mainwindow.h"
+
 #include "ui_mainwindow.h"
 #include "ui_audio_config.h"
 #include "ui_audio_enc.h"
@@ -17,6 +20,7 @@
 #define MP3_BITRATE_MAX (320)     /* 32~320, 8~320 */
 #define MP3_QUALITY_MAX (9)       /* 0~9 */
 #define AC3_BITRATE_MAX (640)     /* 64~640 */
+#define NEROAAC_BITRATE_DIFF_MULTIPLIER (1000)
 
 static const QString c_audio_config_bitrate = QObject::tr("Bitrate");
 static const QString c_audio_config_quality = QObject::tr("Quality");
@@ -401,45 +405,333 @@ void AudioConfig::on_buttonCancel_clicked()
 
 void AudioConfig::on_buttonAccept_clicked()
 {
+    QString cmd;
     int index = ui->comboBoxAudioEncoder->currentIndex();
 
     switch(index)
     {
     case AudioEnc::eENCODE_TYPE_AAC_APPLE:
     default:
-
+        cmd = processAccApple();
         break;
     case AudioEnc::eENCODE_TYPE_AAC_FDK:
+        cmd = processAccFdk();
         break;
-
     case AudioEnc::eENCODE_TYPE_AAC_NERO:
+        cmd = processAccNero();
         break;
-
     case AudioEnc::eENCODE_TYPE_ALAC:
+        cmd = processAlac();
         break;
-
     case AudioEnc::eENCODE_TYPE_FLAC:
+        cmd = processFlac();
         break;
-
     case AudioEnc::eENCODE_TYPE_OPUS:
+        cmd = processOpus();
         break;
-
     case AudioEnc::eENCODE_TYPE_OGG_VORBIS:
+        cmd = processOggVorbis();
         break;
-
     case AudioEnc::eENCODE_TYPE_MP3:
+        cmd = processMp3();
         break;
-
     case AudioEnc::eENCODE_TYPE_AC3:
+        cmd = processAc3();
         break;
-
     case AudioEnc::eENCODE_TYPE_WAV:
+        cmd = processWav();
         break;
-
     }
 
     mainUi->m_pAudioEnc->ui->comboBoxAudioEncoder->setCurrentIndex(index);
     emit mainUi->m_pAudioEnc->ui->comboBoxAudioEncoder->currentIndexChanged(index);
     mainUi->m_pAudioEnc->setMode(m_advancedMode);
+    qDebug() << cmd;
     this->accept();
 }
+
+QString AudioConfig::processAccApple(void)
+{
+    QString cmd;
+    QByteArray exec = mainUi->m_com->findFirstFilePath("qaac").toUtf8();
+    QByteArray delay = ui->checkBoxAacAppleNoDelay->isChecked() ? "--no-delay" : QT_EMPTY;
+    EAUDIO_CONFIG_PROFILE profile = static_cast<EAUDIO_CONFIG_PROFILE>(ui->comboBoxAacAppleProfile->currentIndex());
+    EAUDIO_CONFIG_MODE mode = static_cast<EAUDIO_CONFIG_MODE>(ui->comboBoxAacAppleMode->currentIndex());
+
+    switch(profile)
+    {
+    case eQAAC_PROFILE_LC_AAC:
+    default:
+        if(mode == eQAAC_MODE_LC_AAC_TRUE_VBR) /* not variant value */
+        {
+            cmd.sprintf("%s --ignorelength --threading -V %d %s - -o \"%1\"", exec.data(), ui->horizontalSliderAacApple->value(), delay.data());
+        }
+        else if(mode == eQAAC_MODE_LC_AAC_CONSTRAINED_VBR)
+        {
+            cmd.sprintf("%s --ignorelength --threading -v %d %s - -o \"%1\"", exec.data(), ui->horizontalSliderAacApple->value(), delay.data());
+        }
+        else if(mode == eQAAC_MODE_LC_AAC_ABR)
+        {
+            cmd.sprintf("%s --ignorelength --threading -a %d %s - -o \"%1\"", exec.data(), ui->horizontalSliderAacApple->value(), delay.data());
+        }
+        else if(mode == eQAAC_MODE_LC_AAC_CBR)
+        {
+            cmd.sprintf("%s --ignorelength --threading -c %d %s - -o \"%1\"", exec.data(), ui->horizontalSliderAacApple->value(), delay.data());
+        }
+        break;
+    case eQAAC_PROFILE_HE_AAC:
+        if(mode == eQAAC_MODE_HE_AAC_CONSTRAINED_VBR)
+        {
+            cmd.sprintf("%s --ignorelength --threading -he -v %d - -o \"%1\"", exec.data(), ui->horizontalSliderAacApple->value());
+        }
+        else if(mode == eQAAC_MODE_HE_AAC_ABR)
+        {
+            cmd.sprintf("%s --ignorelength --threading -he -a %d - -o \"%1\"", exec.data(), ui->horizontalSliderAacApple->value());
+        }
+        else if(mode == eQAAC_MODE_HE_AAC_CBR)
+        {
+            cmd.sprintf("%s --ignorelength --threading -he -c %d - -o \"%1\"", exec.data(), ui->horizontalSliderAacApple->value());
+        }
+        break;
+    }
+    return cmd;
+}
+
+QString AudioConfig::processAccFdk(void)
+{
+    QString cmd;
+    QByteArray exec = mainUi->m_com->findFirstFilePath("fdkaac").toUtf8();
+    EAUDIO_CONFIG_PROFILE profile = static_cast<EAUDIO_CONFIG_PROFILE>(ui->comboBoxAacFdkProfile->currentIndex());
+    EAUDIO_CONFIG_MODE mode = static_cast<EAUDIO_CONFIG_MODE>(ui->comboBoxAacFdkMode->currentIndex());
+
+    switch(profile)
+    {
+    case eFDKAAC_PROFILE_MPEG_4_LC_AAC:
+        if(mode == eFDKAAC_MODE_CBR)
+        {
+            cmd.sprintf("%s --ignorelength -m 0 -b %d -p 2 - -o \"%1\"", exec.data(), ui->horizontalSliderAacFdk->value());
+        }
+        else if(mode == eFDKAAC_MODE_VBR)
+        {
+            cmd.sprintf("%s --ignorelength -m %d -p 2 - -o \"%1\"", exec.data(), ui->horizontalSliderAacFdk->value());
+        }
+        break;
+    case eFDKAAC_PROFILE_MPEG_4_HE_AAC:
+        if(mode == eFDKAAC_MODE_CBR)
+        {
+            cmd.sprintf("%s --ignorelength -m 0 -b %d -p 5 - -o \"%1\"", exec.data(), ui->horizontalSliderAacFdk->value());
+        }
+        else if(mode == eFDKAAC_MODE_VBR)
+        {
+            cmd.sprintf("%s --ignorelength -m %d -p 5 - -o \"%1\"", exec.data(), ui->horizontalSliderAacFdk->value());
+        }
+        break;
+    case eFDKAAC_PROFILE_MPEG_4_HE_AAC_V2:
+        if(mode == eFDKAAC_MODE_CBR)
+        {
+            cmd.sprintf("%s --ignorelength -m 0 -b %d -p 29 - -o \"%1\"", exec.data(), ui->horizontalSliderAacFdk->value());
+        }
+        else if(mode == eFDKAAC_MODE_VBR)
+        {
+            cmd.sprintf("%s --ignorelength -m %d -p 29 - -o \"%1\"", exec.data(), ui->horizontalSliderAacFdk->value());
+        }
+        break;
+    case eFDKAAC_PROFILE_MPEG_4_AAC_LD:
+        if(mode == eFDKAAC_MODE_CBR)
+        {
+            cmd.sprintf("%s --ignorelength -m 0 -b %d -p 23 - -o \"%1\"", exec.data(), ui->horizontalSliderAacFdk->value());
+        }
+        else if(mode == eFDKAAC_MODE_VBR)
+        {
+            cmd.sprintf("%s --ignorelength -m %d -p 23 - -o \"%1\"", exec.data(), ui->horizontalSliderAacFdk->value());
+        }
+        break;
+    case eFDKAAC_PROFILE_MPEG_4_AAC_ELD:
+        if(mode == eFDKAAC_MODE_CBR)
+        {
+            cmd.sprintf("%s --ignorelength -m 0 -b %d -p 39 - -o \"%1\"", exec.data(), ui->horizontalSliderAacFdk->value());
+        }
+        else if(mode == eFDKAAC_MODE_VBR)
+        {
+            cmd.sprintf("%s --ignorelength -m %d -p 39 - -o \"%1\"", exec.data(), ui->horizontalSliderAacFdk->value());
+        }
+        break;
+    case eFDKAAC_PROFILE_MPEG_2_LC_AAC:
+        if(mode == eFDKAAC_MODE_CBR)
+        {
+            cmd.sprintf("%s --ignorelength -m 0 -b %d -p 129 - -o \"%1\"", exec.data(), ui->horizontalSliderAacFdk->value());
+        }
+        else if(mode == eFDKAAC_MODE_VBR)
+        {
+            cmd.sprintf("%s --ignorelength -m %d -p 129 - -o \"%1\"", exec.data(), ui->horizontalSliderAacFdk->value());
+        }
+        break;
+    case eFDKAAC_PROFILE_MPEG_2_HE_AAC:
+        if(mode == eFDKAAC_MODE_CBR)
+        {
+            cmd.sprintf("%s --ignorelength -m 0 -b %d -p 132 - -o \"%1\"", exec.data(), ui->horizontalSliderAacFdk->value());
+        }
+        else if(mode == eFDKAAC_MODE_VBR)
+        {
+            cmd.sprintf("%s --ignorelength -m %d -p 132 - -o \"%1\"", exec.data(), ui->horizontalSliderAacFdk->value());
+        }
+        break;
+    case eFDKAAC_PROFILE_MPEG_2_HE_AAC_V2:
+        if(mode == eFDKAAC_MODE_CBR)
+        {
+            cmd.sprintf("%s --ignorelength -m 0 -b %d -p 156 - -o \"%1\"", exec.data(), ui->horizontalSliderAacFdk->value());
+        }
+        else if(mode == eFDKAAC_MODE_VBR)
+        {
+            cmd.sprintf("%s --ignorelength -m %d -p 156 - -o \"%1\"", exec.data(), ui->horizontalSliderAacFdk->value());
+        }
+        break;
+    }
+    return cmd;
+}
+
+QString AudioConfig::processAccNero(void)
+{
+    QString cmd;
+    QByteArray exec = mainUi->m_com->findFirstFilePath("neroAacEnc").toUtf8();
+    EAUDIO_CONFIG_PROFILE profile = static_cast<EAUDIO_CONFIG_PROFILE>(ui->comboBoxAacNeroProfile->currentIndex());
+    EAUDIO_CONFIG_MODE mode = static_cast<EAUDIO_CONFIG_MODE>(ui->comboBoxAacNeroMode->currentIndex());
+    int value = ui->horizontalSliderAacNero->value();
+
+    switch(mode)
+    {
+    case eNEROAAC_MODE_ABR:
+    default:
+        value *= NEROAAC_BITRATE_DIFF_MULTIPLIER;
+        if(profile == eNEROAAC_PROFILE_AUTO)
+        {
+            cmd.sprintf("%s -ignorelength -br %d -if - -of \"%1\"", exec.data(), value);
+        }
+        else if(profile == eNEROAAC_PROFILE_HE_AAC_PS)
+        {
+            cmd.sprintf("%s -ignorelength -hev2 -br %d -if - -of \"%1\"", exec.data(), value);
+        }
+        else if(profile == eNEROAAC_PROFILE_HE_AAC)
+        {
+            cmd.sprintf("%s -ignorelength -he -br %d -if - -of \"%1\"", exec.data(), value);
+        }
+        else if(profile == eNEROAAC_PROFILE_LC_AAC)
+        {
+            cmd.sprintf("%s -ignorelength -lc -br %d -if - -of \"%1\"", exec.data(), value);
+        }
+        break;
+    case eNEROAAC_MODE_CBR:
+        value *= NEROAAC_BITRATE_DIFF_MULTIPLIER;
+        if(profile == eNEROAAC_PROFILE_AUTO)
+        {
+            cmd.sprintf("%s -ignorelength -cbr %d -if - -of \"%1\"", exec.data(), value);
+        }
+        else if(profile == eNEROAAC_PROFILE_HE_AAC_PS)
+        {
+            cmd.sprintf("%s -ignorelength -hev2 -cbr %d -if - -of \"%1\"", exec.data(), value);
+        }
+        else if(profile == eNEROAAC_PROFILE_HE_AAC)
+        {
+            cmd.sprintf("%s -ignorelength -he -cbr %d -if - -of \"%1\"", exec.data(), value);
+        }
+        else if(profile == eNEROAAC_PROFILE_LC_AAC)
+        {
+            cmd.sprintf("%s -ignorelength -lc -cbr %d -if - -of \"%1\"", exec.data(), value);
+        }
+        break;
+    case eNEROAAC_MODE_VBR:
+        cmd.sprintf("%s -ignorelength -q %.2f -if - -of \"%1\"", exec.data(), (double)value / (int)eINDEX_100);
+        break;
+    }
+    return cmd;
+}
+
+QString AudioConfig::processAlac(void)
+{
+    QString cmd;
+    QByteArray exec = mainUi->m_com->findFirstFilePath("refalac").toUtf8();
+
+    cmd.sprintf("%s --ignorelength - -o \"%1\"", exec.data());
+    return cmd;
+}
+
+QString AudioConfig::processFlac(void)
+{
+    QString cmd;
+    QByteArray exec = mainUi->m_com->findFirstFilePath("flac").toUtf8();
+
+    cmd.sprintf("%s -%d - -o \"%1\"", exec.data(), ui->horizontalSliderFlac->value());
+    return cmd;
+}
+
+QString AudioConfig::processOpus(void)
+{
+    QString cmd;
+    QByteArray exec = mainUi->m_com->findFirstFilePath("opusenc").toUtf8();
+    EAUDIO_CONFIG_MODE mode = static_cast<EAUDIO_CONFIG_MODE>(ui->comboBoxOpusMode->currentIndex());
+
+    switch(mode)
+    {
+    case eOPUS_MODE_VBR:
+    default:
+        cmd.sprintf("%s --ignorelength --vbr --bitrate %d - \"%1\"", exec.data(), ui->horizontalSliderOpus->value());
+        break;
+    case eOPUS_MODE_CONSTRAINED_VBR:
+        cmd.sprintf("%s --ignorelength --cvbr --bitrate %d - \"%1\"", exec.data(), ui->horizontalSliderOpus->value());
+        break;
+    case eOPUS_MODE_HARD_CBR:
+        cmd.sprintf("%s --ignorelength --hard-cbr --bitrate %d - \"%1\"", exec.data(), ui->horizontalSliderOpus->value());
+        break;
+    }
+    return cmd;
+}
+
+QString AudioConfig::processOggVorbis(void)
+{
+    QString cmd;
+    QByteArray exec = mainUi->m_com->findFirstFilePath("oggenc2").toUtf8();
+
+    /* not support for bitrate mode in advanced config */
+    cmd.sprintf("%s - --ignorelength --quality %.2fk -o \"%1\"", exec.data(), ui->horizontalSliderOggVorbis->value() / (double)eINDEX_100);
+    return cmd;
+}
+
+QString AudioConfig::processMp3(void)
+{
+    QString cmd;
+    QByteArray exec = mainUi->m_com->findFirstFilePath("lame").toUtf8();
+    EAUDIO_CONFIG_MODE mode = static_cast<EAUDIO_CONFIG_MODE>(ui->comboBoxMp3Mode->currentIndex());
+    int value = ui->horizontalSliderMp3->value();
+
+    switch(mode)
+    {
+    case eMP3_MODE_CBR:
+    default:
+        cmd.sprintf("%s -b %d --cbr -h - \"%1\"", exec.data(), value);
+        break;
+    case eMP3_MODE_ABR:
+        cmd.sprintf("%s --abr %d -h - \"%1\"", exec.data(), value);
+        break;
+    case eMP3_MODE_VBR:
+        cmd.sprintf("%s -V%d - \"%1\"", exec.data(), value);
+        break;
+    }
+    return cmd;
+}
+
+QString AudioConfig::processAc3(void)
+{
+    QString cmd;
+
+    cmd.sprintf("%1 -i \"%2\" -c:a ac3 -b:a %dk \"%3\" -y", ui->horizontalSliderAc3->value());
+    return cmd;
+}
+
+QString AudioConfig::processWav(void)
+{
+    QString cmd;
+
+    /* no config */
+    return cmd;
+}
+

@@ -82,6 +82,16 @@ public:
 public slots:
     virtual void setMode(bool a_advancedMode);
     virtual void reloadFlac(void);
+    virtual QString processAccApple(void);
+    virtual QString processAccFdk(void);
+    virtual QString processAccNero(void);
+    virtual QString processAlac(void);
+    virtual QString processFlac(void);
+    virtual QString processOpus(void);
+    virtual QString processOggVorbis(void);
+    virtual QString processMp3(void);
+    virtual QString processAc3(void);
+    virtual QString processWav(void);
 
 private slots:
     virtual void contextMenuEvent(QContextMenuEvent *e);

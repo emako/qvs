@@ -207,101 +207,103 @@ QProgressBar::chunk {
          </widget>
         </item>
         <item>
-         <layout class="QHBoxLayout" name="horizontalLayout">
-          <item>
-           <widget class="QPushButton" name="buttonAddJob">
-            <property name="minimumSize">
-             <size>
-              <width>128</width>
-              <height>0</height>
-             </size>
-            </property>
-            <property name="text">
-             <string>Add New Job</string>
-            </property>
-            <property name="icon">
-             <iconset resource="res/resources.qrc">
-              <normaloff>:/buttons/add.png</normaloff>:/buttons/add.png</iconset>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <spacer name="horizontalSpacer">
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
-            </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>40</width>
-              <height>20</height>
-             </size>
-            </property>
-           </spacer>
-          </item>
-          <item>
-           <widget class="QPushButton" name="buttonStartJob">
-            <property name="enabled">
-             <bool>true</bool>
-            </property>
-            <property name="minimumSize">
-             <size>
-              <width>104</width>
-              <height>0</height>
-             </size>
-            </property>
-            <property name="text">
-             <string>Start Job</string>
-            </property>
-            <property name="icon">
-             <iconset resource="res/resources.qrc">
-              <normaloff>:/buttons/play.png</normaloff>:/buttons/play.png</iconset>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QPushButton" name="buttonPauseJob">
-            <property name="enabled">
-             <bool>true</bool>
-            </property>
-            <property name="minimumSize">
-             <size>
-              <width>104</width>
-              <height>0</height>
-             </size>
-            </property>
-            <property name="text">
-             <string>Pause Job</string>
-            </property>
-            <property name="icon">
-             <iconset resource="res/resources.qrc">
-              <normaloff>:/buttons/pause_green.png</normaloff>:/buttons/pause_green.png</iconset>
-            </property>
-            <property name="checkable">
-             <bool>true</bool>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QPushButton" name="buttonAbortJob">
-            <property name="enabled">
-             <bool>true</bool>
-            </property>
-            <property name="minimumSize">
-             <size>
-              <width>104</width>
-              <height>0</height>
-             </size>
-            </property>
-            <property name="text">
-             <string>Abort Job</string>
-            </property>
-            <property name="icon">
-             <iconset resource="res/resources.qrc">
-              <normaloff>:/buttons/cross.png</normaloff>:/buttons/cross.png</iconset>
-            </property>
-           </widget>
-          </item>
-         </layout>
+         <widget class="QWidget" name="" native="true">
+          <layout class="QHBoxLayout" name="horizontalLayout">
+           <item>
+            <widget class="QPushButton" name="buttonAddJob">
+             <property name="minimumSize">
+              <size>
+               <width>128</width>
+               <height>0</height>
+              </size>
+             </property>
+             <property name="text">
+              <string>Add New Job</string>
+             </property>
+             <property name="icon">
+              <iconset resource="res/resources.qrc">
+               <normaloff>:/buttons/add.png</normaloff>:/buttons/add.png</iconset>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <spacer name="horizontalSpacer">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>40</width>
+               <height>20</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+           <item>
+            <widget class="QPushButton" name="buttonStartJob">
+             <property name="enabled">
+              <bool>true</bool>
+             </property>
+             <property name="minimumSize">
+              <size>
+               <width>104</width>
+               <height>0</height>
+              </size>
+             </property>
+             <property name="text">
+              <string>Start Job</string>
+             </property>
+             <property name="icon">
+              <iconset resource="res/resources.qrc">
+               <normaloff>:/buttons/play.png</normaloff>:/buttons/play.png</iconset>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="buttonPauseJob">
+             <property name="enabled">
+              <bool>true</bool>
+             </property>
+             <property name="minimumSize">
+              <size>
+               <width>104</width>
+               <height>0</height>
+              </size>
+             </property>
+             <property name="text">
+              <string>Pause Job</string>
+             </property>
+             <property name="icon">
+              <iconset resource="res/resources.qrc">
+               <normaloff>:/buttons/pause_green.png</normaloff>:/buttons/pause_green.png</iconset>
+             </property>
+             <property name="checkable">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="buttonAbortJob">
+             <property name="enabled">
+              <bool>true</bool>
+             </property>
+             <property name="minimumSize">
+              <size>
+               <width>104</width>
+               <height>0</height>
+              </size>
+             </property>
+             <property name="text">
+              <string>Abort Job</string>
+             </property>
+             <property name="icon">
+              <iconset resource="res/resources.qrc">
+               <normaloff>:/buttons/cross.png</normaloff>:/buttons/cross.png</iconset>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
         </item>
        </layout>
       </widget>
@@ -352,123 +354,127 @@ QProgressBar::chunk {
             <number>5</number>
            </property>
            <item>
-            <layout class="QHBoxLayout" name="horizontalLayout_2">
-             <property name="spacing">
-              <number>3</number>
-             </property>
-             <item>
-              <widget class="QListWidget" name="listViewAudioBatch"/>
-             </item>
-             <item>
-              <layout class="QVBoxLayout" name="verticalLayout_6">
-               <item>
-                <widget class="QPushButton" name="buttonAudioBatchAdd">
-                 <property name="enabled">
-                  <bool>true</bool>
-                 </property>
-                 <property name="minimumSize">
-                  <size>
-                   <width>104</width>
-                   <height>0</height>
-                  </size>
-                 </property>
-                 <property name="layoutDirection">
-                  <enum>Qt::LeftToRight</enum>
-                 </property>
-                 <property name="autoFillBackground">
-                  <bool>false</bool>
-                 </property>
-                 <property name="text">
-                  <string> Add </string>
-                 </property>
-                 <property name="icon">
-                  <iconset resource="res/resources.qrc">
-                   <normaloff>:/buttons/add.png</normaloff>:/buttons/add.png</iconset>
-                 </property>
-                 <property name="checkable">
-                  <bool>false</bool>
-                 </property>
-                 <property name="checked">
-                  <bool>false</bool>
-                 </property>
-                </widget>
-               </item>
-               <item>
-                <widget class="QPushButton" name="buttonAudioBatchDelete">
-                 <property name="enabled">
-                  <bool>true</bool>
-                 </property>
-                 <property name="minimumSize">
-                  <size>
-                   <width>104</width>
-                   <height>0</height>
-                  </size>
-                 </property>
-                 <property name="text">
-                  <string> Del </string>
-                 </property>
-                 <property name="icon">
-                  <iconset resource="res/resources.qrc">
-                   <normaloff>:/buttons/delete.png</normaloff>:/buttons/delete.png</iconset>
-                 </property>
-                </widget>
-               </item>
-               <item>
-                <widget class="QPushButton" name="buttonAudioBatchClear">
-                 <property name="enabled">
-                  <bool>true</bool>
-                 </property>
-                 <property name="minimumSize">
-                  <size>
-                   <width>104</width>
-                   <height>0</height>
-                  </size>
-                 </property>
-                 <property name="text">
-                  <string>Clear</string>
-                 </property>
-                 <property name="icon">
-                  <iconset resource="res/resources.qrc">
-                   <normaloff>:/buttons/cross.png</normaloff>:/buttons/cross.png</iconset>
-                 </property>
-                </widget>
-               </item>
-               <item>
-                <spacer name="verticalSpacer_3">
-                 <property name="orientation">
-                  <enum>Qt::Vertical</enum>
-                 </property>
-                 <property name="sizeHint" stdset="0">
-                  <size>
-                   <width>20</width>
-                   <height>40</height>
-                  </size>
-                 </property>
-                </spacer>
-               </item>
-               <item>
-                <widget class="QPushButton" name="buttonAudioBatchStart">
-                 <property name="enabled">
-                  <bool>true</bool>
-                 </property>
-                 <property name="minimumSize">
-                  <size>
-                   <width>104</width>
-                   <height>0</height>
-                  </size>
-                 </property>
-                 <property name="text">
-                  <string>Start</string>
-                 </property>
-                 <property name="icon">
-                  <iconset resource="res/resources.qrc">
-                   <normaloff>:/buttons/play.png</normaloff>:/buttons/play.png</iconset>
-                 </property>
-                </widget>
-               </item>
-              </layout>
-             </item>
-            </layout>
+            <widget class="QWidget" name="" native="true">
+             <layout class="QHBoxLayout" name="horizontalLayout_2">
+              <property name="spacing">
+               <number>3</number>
+              </property>
+              <item>
+               <widget class="QListWidget" name="listViewAudioBatch"/>
+              </item>
+              <item>
+               <widget class="QWidget" name="" native="true">
+                <layout class="QVBoxLayout" name="verticalLayout_6">
+                 <item>
+                  <widget class="QPushButton" name="buttonAudioBatchAdd">
+                   <property name="enabled">
+                    <bool>true</bool>
+                   </property>
+                   <property name="minimumSize">
+                    <size>
+                     <width>104</width>
+                     <height>0</height>
+                    </size>
+                   </property>
+                   <property name="layoutDirection">
+                    <enum>Qt::LeftToRight</enum>
+                   </property>
+                   <property name="autoFillBackground">
+                    <bool>false</bool>
+                   </property>
+                   <property name="text">
+                    <string> Add </string>
+                   </property>
+                   <property name="icon">
+                    <iconset resource="res/resources.qrc">
+                     <normaloff>:/buttons/add.png</normaloff>:/buttons/add.png</iconset>
+                   </property>
+                   <property name="checkable">
+                    <bool>false</bool>
+                   </property>
+                   <property name="checked">
+                    <bool>false</bool>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QPushButton" name="buttonAudioBatchDelete">
+                   <property name="enabled">
+                    <bool>true</bool>
+                   </property>
+                   <property name="minimumSize">
+                    <size>
+                     <width>104</width>
+                     <height>0</height>
+                    </size>
+                   </property>
+                   <property name="text">
+                    <string> Del </string>
+                   </property>
+                   <property name="icon">
+                    <iconset resource="res/resources.qrc">
+                     <normaloff>:/buttons/delete.png</normaloff>:/buttons/delete.png</iconset>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QPushButton" name="buttonAudioBatchClear">
+                   <property name="enabled">
+                    <bool>true</bool>
+                   </property>
+                   <property name="minimumSize">
+                    <size>
+                     <width>104</width>
+                     <height>0</height>
+                    </size>
+                   </property>
+                   <property name="text">
+                    <string>Clear</string>
+                   </property>
+                   <property name="icon">
+                    <iconset resource="res/resources.qrc">
+                     <normaloff>:/buttons/cross.png</normaloff>:/buttons/cross.png</iconset>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <spacer name="verticalSpacer_3">
+                   <property name="orientation">
+                    <enum>Qt::Vertical</enum>
+                   </property>
+                   <property name="sizeHint" stdset="0">
+                    <size>
+                     <width>20</width>
+                     <height>40</height>
+                    </size>
+                   </property>
+                  </spacer>
+                 </item>
+                 <item>
+                  <widget class="QPushButton" name="buttonAudioBatchStart">
+                   <property name="enabled">
+                    <bool>true</bool>
+                   </property>
+                   <property name="minimumSize">
+                    <size>
+                     <width>104</width>
+                     <height>0</height>
+                    </size>
+                   </property>
+                   <property name="text">
+                    <string>Start</string>
+                   </property>
+                   <property name="icon">
+                    <iconset resource="res/resources.qrc">
+                     <normaloff>:/buttons/play.png</normaloff>:/buttons/play.png</iconset>
+                   </property>
+                  </widget>
+                 </item>
+                </layout>
+               </widget>
+              </item>
+             </layout>
+            </widget>
            </item>
           </layout>
          </widget>
@@ -1232,54 +1238,6 @@ QProgressBar::chunk {
     <hint type="destinationlabel">
      <x>399</x>
      <y>299</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>actionCreateJob</sender>
-   <signal>triggered()</signal>
-   <receiver>buttonAddJob</receiver>
-   <slot>click()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>-1</x>
-     <y>-1</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>73</x>
-     <y>617</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>actionJob_Start</sender>
-   <signal>triggered()</signal>
-   <receiver>buttonStartJob</receiver>
-   <slot>click()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>-1</x>
-     <y>-1</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>490</x>
-     <y>632</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>actionJob_Abort</sender>
-   <signal>triggered()</signal>
-   <receiver>buttonAbortJob</receiver>
-   <slot>click()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>-1</x>
-     <y>-1</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>657</x>
-     <y>617</y>
     </hint>
    </hints>
   </connection>
