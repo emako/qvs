@@ -3,6 +3,21 @@
 
 #include <QWidget>
 
+#define AUDIO_CONFIG_EXEC_PIPER "ffmpeg"
+#define AUDIO_CONFIG_EXEC_PIPER_32 "ffmpeg32"
+#define AUDIO_CONFIG_EXEC_AAC_APPLE "qaac"
+#define AUDIO_CONFIG_EXEC_AAC_FDK "fdkaac"
+#define AUDIO_CONFIG_EXEC_AAC_NERO "neroAacEnc"
+#define AUDIO_CONFIG_EXEC_FLAC "flac"
+#define AUDIO_CONFIG_EXEC_ALAC "refalac"
+#define AUDIO_CONFIG_EXEC_OPUS "opusenc"
+#define AUDIO_CONFIG_EXEC_OGG_VORBIS "oggenc2"
+#define AUDIO_CONFIG_EXEC_MP3 "lame"
+#define AUDIO_CONFIG_EXEC_AC3 AUDIO_CONFIG_EXEC_PIPER
+#define AUDIO_CONFIG_EXEC_AC3_32 AUDIO_CONFIG_EXEC_PIPER_32
+#define AUDIO_CONFIG_EXEC_WAV AUDIO_CONFIG_EXEC_PIPER
+#define AUDIO_CONFIG_EXEC_WAV_32 AUDIO_CONFIG_EXEC_PIPER_32
+
 class MainWindow;
 class AudioConfig;
 class StdWatcherCmd;
@@ -45,6 +60,7 @@ public:
 
 public slots:
     void setMode(bool a_advancedMode);
+    void setModeCmd(const QString &a_cmd);
 
 private slots:
     void on_buttonAudioStart_clicked();
@@ -57,6 +73,7 @@ private slots:
 private:
     Ui::AudioEnc *ui;
     bool m_advancedMode;
+    QString m_advancedCmd;
     void setupUi(void);
 };
 

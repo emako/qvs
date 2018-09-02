@@ -783,6 +783,7 @@ void MainWindow::dropEvent(QDropEvent* e)
                 }
                 /* Audio Batch Input */
                 pos = QPoint(ui->tabWidget->pos()
+                           + ui->groupBoxAudioBatch->pos()
                            + ui->centralWidget->pos()
                            + ui->listViewAudioBatch->pos()
                            + QPoint(ui->menubar->pos().x(), ui->menubar->height()));

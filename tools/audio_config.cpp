@@ -446,14 +446,14 @@ void AudioConfig::on_buttonAccept_clicked()
     mainUi->m_pAudioEnc->ui->comboBoxAudioEncoder->setCurrentIndex(index);
     emit mainUi->m_pAudioEnc->ui->comboBoxAudioEncoder->currentIndexChanged(index);
     mainUi->m_pAudioEnc->setMode(m_advancedMode);
-    qDebug() << cmd;
+    mainUi->m_pAudioEnc->setModeCmd(cmd);
     this->accept();
 }
 
 QString AudioConfig::processAccApple(void)
 {
     QString cmd;
-    QByteArray exec = mainUi->m_com->findFirstFilePath("qaac").toUtf8();
+    QByteArray exec = mainUi->m_com->findFirstFilePath(AUDIO_CONFIG_EXEC_AAC_APPLE).toUtf8();
     QByteArray delay = ui->checkBoxAacAppleNoDelay->isChecked() ? "--no-delay" : QT_EMPTY;
     EAUDIO_CONFIG_PROFILE profile = static_cast<EAUDIO_CONFIG_PROFILE>(ui->comboBoxAacAppleProfile->currentIndex());
     EAUDIO_CONFIG_MODE mode = static_cast<EAUDIO_CONFIG_MODE>(ui->comboBoxAacAppleMode->currentIndex());
@@ -500,7 +500,7 @@ QString AudioConfig::processAccApple(void)
 QString AudioConfig::processAccFdk(void)
 {
     QString cmd;
-    QByteArray exec = mainUi->m_com->findFirstFilePath("fdkaac").toUtf8();
+    QByteArray exec = mainUi->m_com->findFirstFilePath(AUDIO_CONFIG_EXEC_AAC_FDK).toUtf8();
     EAUDIO_CONFIG_PROFILE profile = static_cast<EAUDIO_CONFIG_PROFILE>(ui->comboBoxAacFdkProfile->currentIndex());
     EAUDIO_CONFIG_MODE mode = static_cast<EAUDIO_CONFIG_MODE>(ui->comboBoxAacFdkMode->currentIndex());
 
@@ -593,7 +593,7 @@ QString AudioConfig::processAccFdk(void)
 QString AudioConfig::processAccNero(void)
 {
     QString cmd;
-    QByteArray exec = mainUi->m_com->findFirstFilePath("neroAacEnc").toUtf8();
+    QByteArray exec = mainUi->m_com->findFirstFilePath(AUDIO_CONFIG_EXEC_AAC_NERO).toUtf8();
     EAUDIO_CONFIG_PROFILE profile = static_cast<EAUDIO_CONFIG_PROFILE>(ui->comboBoxAacNeroProfile->currentIndex());
     EAUDIO_CONFIG_MODE mode = static_cast<EAUDIO_CONFIG_MODE>(ui->comboBoxAacNeroMode->currentIndex());
     int value = ui->horizontalSliderAacNero->value();
@@ -649,7 +649,7 @@ QString AudioConfig::processAccNero(void)
 QString AudioConfig::processAlac(void)
 {
     QString cmd;
-    QByteArray exec = mainUi->m_com->findFirstFilePath("refalac").toUtf8();
+    QByteArray exec = mainUi->m_com->findFirstFilePath(AUDIO_CONFIG_EXEC_ALAC).toUtf8();
 
     cmd.sprintf("%s --ignorelength - -o \"%1\"", exec.data());
     return cmd;
@@ -658,7 +658,7 @@ QString AudioConfig::processAlac(void)
 QString AudioConfig::processFlac(void)
 {
     QString cmd;
-    QByteArray exec = mainUi->m_com->findFirstFilePath("flac").toUtf8();
+    QByteArray exec = mainUi->m_com->findFirstFilePath(AUDIO_CONFIG_EXEC_FLAC).toUtf8();
 
     cmd.sprintf("%s -%d - -o \"%1\"", exec.data(), ui->horizontalSliderFlac->value());
     return cmd;
@@ -667,7 +667,7 @@ QString AudioConfig::processFlac(void)
 QString AudioConfig::processOpus(void)
 {
     QString cmd;
-    QByteArray exec = mainUi->m_com->findFirstFilePath("opusenc").toUtf8();
+    QByteArray exec = mainUi->m_com->findFirstFilePath(AUDIO_CONFIG_EXEC_OPUS).toUtf8();
     EAUDIO_CONFIG_MODE mode = static_cast<EAUDIO_CONFIG_MODE>(ui->comboBoxOpusMode->currentIndex());
 
     switch(mode)
@@ -689,7 +689,7 @@ QString AudioConfig::processOpus(void)
 QString AudioConfig::processOggVorbis(void)
 {
     QString cmd;
-    QByteArray exec = mainUi->m_com->findFirstFilePath("oggenc2").toUtf8();
+    QByteArray exec = mainUi->m_com->findFirstFilePath(AUDIO_CONFIG_EXEC_OGG_VORBIS).toUtf8();
 
     /* not support for bitrate mode in advanced config */
     cmd.sprintf("%s - --ignorelength --quality %.2fk -o \"%1\"", exec.data(), ui->horizontalSliderOggVorbis->value() / (double)eINDEX_100);
@@ -699,7 +699,7 @@ QString AudioConfig::processOggVorbis(void)
 QString AudioConfig::processMp3(void)
 {
     QString cmd;
-    QByteArray exec = mainUi->m_com->findFirstFilePath("lame").toUtf8();
+    QByteArray exec = mainUi->m_com->findFirstFilePath(AUDIO_CONFIG_EXEC_MP3).toUtf8();
     EAUDIO_CONFIG_MODE mode = static_cast<EAUDIO_CONFIG_MODE>(ui->comboBoxMp3Mode->currentIndex());
     int value = ui->horizontalSliderMp3->value();
 
