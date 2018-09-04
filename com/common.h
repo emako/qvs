@@ -38,6 +38,7 @@
 #define MINUTE (60)
 #define HOUR (MINUTE * MINUTE)
 #define SECOND_TO_MILLISECOND_UNIT (1000)
+#define NUL (0)
 #define QT_PASS do{}while(false)
 
 static const char QT_EMPTY[]          = "";

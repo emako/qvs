@@ -146,5 +146,6 @@
         <file>images/splashscreen.png</file>
         <file>images/splashscreen_cn.png</file>
         <file>fonts/DigitalMini.ttf</file>
+        <file>style/white_circle.png</file>
     </qresource>
 </RCC>

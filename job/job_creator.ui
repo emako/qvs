@@ -257,7 +257,7 @@
            <string>Save</string>
           </property>
           <property name="icon">
-           <iconset resource="res/resources.qrc">
+           <iconset resource="../res/resources.qrc">
             <normaloff>:/buttons/disk.png</normaloff>:/buttons/disk.png</iconset>
           </property>
          </widget>
@@ -274,7 +274,7 @@
            <string>Delete</string>
           </property>
           <property name="icon">
-           <iconset resource="res/resources.qrc">
+           <iconset resource="../res/resources.qrc">
             <normaloff>:/buttons/cross.png</normaloff>:/buttons/cross.png</iconset>
           </property>
          </widget>
@@ -1066,7 +1066,7 @@
         <string>Add Job</string>
        </property>
        <property name="icon">
-        <iconset resource="res/resources.qrc">
+        <iconset resource="../res/resources.qrc">
          <normaloff>:/buttons/accept.png</normaloff>:/buttons/accept.png</iconset>
        </property>
       </widget>
@@ -1083,7 +1083,7 @@
         <string>Cancel</string>
        </property>
        <property name="icon">
-        <iconset resource="res/resources.qrc">
+        <iconset resource="../res/resources.qrc">
          <normaloff>:/buttons/cancel.png</normaloff>:/buttons/cancel.png</iconset>
        </property>
       </widget>
@@ -1111,7 +1111,7 @@
   <tabstop>buttonCancel</tabstop>
  </tabstops>
  <resources>
-  <include location="res/resources.qrc"/>
+  <include location="../res/resources.qrc"/>
  </resources>
  <connections/>
 </ui>

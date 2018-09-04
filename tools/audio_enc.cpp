@@ -121,7 +121,7 @@ StdWatcherCmd AudioEnc::getEncodeCmd(QString a_input, QString a_output, QString 
     switch(encode_type)
     {
     case eENCODE_TYPE_AAC_APPLE:
-        cmd = QString("%1 -q 2 --ignorelength -c %2 - -o \"%3\"").arg(mainUi->m_com->findFirstFilePath(AUDIO_CONFIG_EXEC_AAC_APPLE)).arg(a_bitrate).arg(a_output);
+        cmd = QString("%1 --ignorelength -c %2 - -o \"%3\"").arg(mainUi->m_com->findFirstFilePath(AUDIO_CONFIG_EXEC_AAC_APPLE)).arg(a_bitrate).arg(a_output);
         break;
     case eENCODE_TYPE_AAC_FDK:
         cmd = QString("%1 --ignorelength -b %2 - -o \"%3\"").arg(mainUi->m_com->findFirstFilePath(AUDIO_CONFIG_EXEC_AAC_FDK)).arg(a_bitrate).arg(a_output);
@@ -136,13 +136,13 @@ StdWatcherCmd AudioEnc::getEncodeCmd(QString a_input, QString a_output, QString 
         cmd = QString("%1 --ignorelength - -o \"%2\"").arg(mainUi->m_com->findFirstFilePath(AUDIO_CONFIG_EXEC_ALAC)).arg(a_output);
         break;
     case eENCODE_TYPE_OPUS:
-        cmd = QString("%1 --ignorelength --bitrate %2 - \"%3\"").arg(mainUi->m_com->findFirstFilePath(AUDIO_CONFIG_EXEC_OPUS)).arg(a_bitrate).arg(a_output);
+        cmd = QString("%1 --ignorelength --vbr --bitrate %2 - \"%3\"").arg(mainUi->m_com->findFirstFilePath(AUDIO_CONFIG_EXEC_OPUS)).arg(a_bitrate).arg(a_output);
         break;
     case eENCODE_TYPE_OGG_VORBIS:
         cmd = QString("%1 - --ignorelength --bitrate %2 -o \"%3\"").arg(mainUi->m_com->findFirstFilePath(AUDIO_CONFIG_EXEC_OGG_VORBIS)).arg(a_bitrate).arg(a_output);
         break;
     case eENCODE_TYPE_MP3:
-        cmd = QString("%1 -q 3 -b %2 - \"%3\"").arg(mainUi->m_com->findFirstFilePath(AUDIO_CONFIG_EXEC_MP3)).arg(a_bitrate).arg(a_output);
+        cmd = QString("%1 -b %2 --cbr -h - \"%3\"").arg(mainUi->m_com->findFirstFilePath(AUDIO_CONFIG_EXEC_MP3)).arg(a_bitrate).arg(a_output);
         break;
     case eENCODE_TYPE_AC3:
         cmd = QString("%1 -i \"%2\" -c:a ac3 -b:a %3k \"%4\" -y").arg(mainUi->m_com->findFirstFilePath(getPiperFilename())).arg(a_input).arg(a_bitrate).arg(a_output);

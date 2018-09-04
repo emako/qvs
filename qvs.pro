@@ -8,6 +8,8 @@ QT += core gui
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
+CONFIG += no_batch
+
 TEMPLATE = app
 DEFINES += QT_DEPRECATED_WARNINGS
 
@@ -210,7 +212,8 @@ HEADERS += \
     script/number_matcher.h \
     com/version.h \
     tools/audio_config.h \
-    preview/preview_timeline_slider.h
+    preview/preview_timeline_slider.h \
+    com/style_sheet.h
 
 FORMS += \
     mainwindow.ui \
@@ -230,4 +233,6 @@ FORMS += \
     tools/audio_config.ui
 
 RESOURCES += \
-    res/resources.qrc
+    res/resources.qrc \
+    job/res/resources.qrc \
+    job/res/resources.qrc

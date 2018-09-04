@@ -6,6 +6,8 @@
 #include <QDialog>
 #include <QDebug>
 
+#define DEFAULT_BITRATE (160)
+
 class MainWindow;
 class AudioEnc;
 
@@ -21,6 +23,10 @@ public:
     }
 
     QString config_name;
+    uint type = eINDEX_0;
+    uint mode = eINDEX_0;
+    uint profile = eINDEX_0;
+    QVariant value;
 };
 
 class AudioConfig : public QDialog
@@ -35,6 +41,8 @@ public:
     class MainWindow *mainUi;
 
     enum EAUDIO_CONFIG_MODE {
+        eDEFAULT_MODE = eINDEX_0,
+
         eQAAC_MODE_LC_AAC_TRUE_VBR = eINDEX_0,
         eQAAC_MODE_LC_AAC_CONSTRAINED_VBR,
         eQAAC_MODE_LC_AAC_ABR,
@@ -61,6 +69,8 @@ public:
     };
 
     enum EAUDIO_CONFIG_PROFILE {
+        eDEFAULT_PROFILE = eINDEX_0,
+
         eQAAC_PROFILE_LC_AAC = eINDEX_0,
         eQAAC_PROFILE_HE_AAC,
 
@@ -78,6 +88,9 @@ public:
         eNEROAAC_PROFILE_HE_AAC,
         eNEROAAC_PROFILE_LC_AAC,
     };
+
+    AudioAdvancedConfig creatDefaultConfig(const uint &a_type = eINDEX_0, const QVariant &a_value = DEFAULT_BITRATE);
+    void setDefaultConfig(const uint &a_type, const AudioAdvancedConfig &advanced_config);
 
 public slots:
     virtual void setMode(bool a_advancedMode);

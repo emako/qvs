@@ -3,6 +3,7 @@
 #include "std_watcher.h"
 
 #include "../mainwindow.h"
+#include "../com/style_sheet.h"
 
 #include "ui_mainwindow.h"
 #include "ui_audio_config.h"
@@ -45,8 +46,83 @@ void AudioConfig::setup(void)
     ui->comboBoxTemplate->addItem(c_template_key_default);
     ui->comboBoxAacAppleMode->installEventFilter(this);
     this->installEventFilter(this);
+    this->setStyleSheet(c_qss_slider_white_circle);
 
     emit ui->comboBoxAacAppleProfile->currentIndexChanged(ui->comboBoxAacAppleProfile->currentIndex());
+}
+
+AudioAdvancedConfig AudioConfig::creatDefaultConfig(const uint &a_type, const QVariant &a_value)
+{
+    AudioAdvancedConfig advanced_config;
+
+    advanced_config.type = a_type;
+    advanced_config.mode = (uint)NUL;
+    advanced_config.profile = (uint)NUL;
+    advanced_config.value = a_value;
+
+    switch(static_cast<AudioEnc::EENCODE_TYPE>(a_type))
+    {
+    case AudioEnc::eENCODE_TYPE_AAC_APPLE:
+    default:
+        advanced_config.mode = (uint)eQAAC_MODE_LC_AAC_CBR;
+        advanced_config.profile = (uint)eQAAC_PROFILE_LC_AAC;
+        break;
+    case AudioEnc::eENCODE_TYPE_AAC_FDK:
+        advanced_config.mode = (uint)eFDKAAC_MODE_CBR;
+        advanced_config.profile = (uint)eFDKAAC_PROFILE_MPEG_4_LC_AAC;
+        break;
+    case AudioEnc::eENCODE_TYPE_AAC_NERO:
+        advanced_config.mode = (uint)eNEROAAC_MODE_ABR;
+        advanced_config.profile = (uint)eNEROAAC_PROFILE_LC_AAC;
+        break;
+    case AudioEnc::eENCODE_TYPE_ALAC:
+        break;
+    case AudioEnc::eENCODE_TYPE_FLAC:
+        advanced_config.value = (uint)eINDEX_5;
+        break;
+    case AudioEnc::eENCODE_TYPE_OPUS:
+        advanced_config.mode = (uint)eOPUS_MODE_VBR;
+        break;
+    case AudioEnc::eENCODE_TYPE_OGG_VORBIS:
+        advanced_config.value = (uint)(eINDEX_3 * eINDEX_100);
+        break;
+    case AudioEnc::eENCODE_TYPE_MP3:
+        advanced_config.mode = (uint)eMP3_MODE_CBR;
+        break;
+    case AudioEnc::eENCODE_TYPE_AC3:
+        break;
+    case AudioEnc::eENCODE_TYPE_WAV:
+        break;
+    }
+    return advanced_config;
+}
+
+void AudioConfig::setDefaultConfig(const uint &a_type, const AudioAdvancedConfig &advanced_config)
+{
+    switch(static_cast<AudioEnc::EENCODE_TYPE>(a_type))
+    {
+    case AudioEnc::eENCODE_TYPE_AAC_APPLE:
+    default:
+        break;
+    case AudioEnc::eENCODE_TYPE_AAC_FDK:
+        break;
+    case AudioEnc::eENCODE_TYPE_AAC_NERO:
+        break;
+    case AudioEnc::eENCODE_TYPE_ALAC:
+        break;
+    case AudioEnc::eENCODE_TYPE_FLAC:
+        break;
+    case AudioEnc::eENCODE_TYPE_OPUS:
+        break;
+    case AudioEnc::eENCODE_TYPE_OGG_VORBIS:
+        break;
+    case AudioEnc::eENCODE_TYPE_MP3:
+        break;
+    case AudioEnc::eENCODE_TYPE_AC3:
+        break;
+    case AudioEnc::eENCODE_TYPE_WAV:
+        break;
+    }
 }
 
 void AudioConfig::on_comboBoxAudioEncoder_currentIndexChanged(int a_index)
@@ -129,7 +205,7 @@ void AudioConfig::resizeEvent(QResizeEvent *e)
 
 void AudioConfig::resizeEvent(void)
 {
-    resize(width() + eINDEX_1,height());
+    resize(width() + eINDEX_1, height());
     resize(width() - eINDEX_1, height());
 }
 
