@@ -11,7 +11,7 @@ extern QMap<QUuid, StdWatcher*> g_pStdWatch;
 AudioEnc::AudioEnc(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::AudioEnc),
-    m_advancedMode(false)
+    m_pAdvancedConfig(new AudioAdvancedConfig(false))
 {
     ui->setupUi(this);
     this->setupUi();
@@ -19,15 +19,33 @@ AudioEnc::AudioEnc(QWidget *parent) :
 
 AudioEnc::~AudioEnc()
 {
+    delete m_pAdvancedConfig;
     delete ui;
 }
 
 void AudioEnc::setupUi(void)
 {
-    setMode(m_advancedMode);
+    setMode(m_pAdvancedConfig->isEnable());
 }
 
-void AudioEnc::setMode(bool a_advancedMode)
+void AudioEnc::setConfig(const AudioAdvancedConfig &a_advancedConfig)
+{
+    bool enable = a_advancedConfig.isEnable();
+    setMode(enable);
+    m_pAdvancedConfig->name = a_advancedConfig.name;
+    m_pAdvancedConfig->cmd = a_advancedConfig.cmd;
+    m_pAdvancedConfig->type = a_advancedConfig.type;
+    m_pAdvancedConfig->mode = a_advancedConfig.mode;
+    m_pAdvancedConfig->profile = a_advancedConfig.profile;
+    m_pAdvancedConfig->value = a_advancedConfig.value;
+    m_pAdvancedConfig->value2 = a_advancedConfig.value2;
+
+#ifndef QT_DEBUG
+    m_pAdvancedConfig->print();
+#endif
+}
+
+void AudioEnc::setMode(const bool &a_advancedMode)
 {
     if(a_advancedMode)
     {
@@ -41,13 +59,7 @@ void AudioEnc::setMode(bool a_advancedMode)
         ui->comboBoxAudioBitrate->setVisible(true);
         ui->labelAudioKbps->setVisible(true);
     }
-    m_advancedMode = a_advancedMode;
-}
-
-void AudioEnc::setModeCmd(const QString &a_cmd)
-{
-    m_advancedCmd = a_cmd;
-    qDebug() << m_advancedCmd;
+    m_pAdvancedConfig->setEnable(a_advancedMode);
 }
 
 void AudioEnc::reload(QString a_filename)
@@ -155,15 +167,15 @@ StdWatcherCmd AudioEnc::getEncodeCmd(QString a_input, QString a_output, QString 
     default:
         break;
     }
-    if(m_advancedMode)
+    if(m_pAdvancedConfig->isEnable())
     {
         if(encode_type == eENCODE_TYPE_AC3)
         {
-            cmd = m_advancedCmd.arg(mainUi->m_com->findFirstFilePath(getPiperFilename())).arg(a_input).arg(a_output);
+            cmd = m_pAdvancedConfig->cmd.arg(mainUi->m_com->findFirstFilePath(getPiperFilename())).arg(a_input).arg(a_output);
         }
         else
         {
-            cmd = m_advancedCmd.arg(a_output);
+            cmd = m_pAdvancedConfig->cmd.arg(a_output);
         }
     }
     job_cmd.pipe = pipe;
@@ -262,9 +274,7 @@ void AudioEnc::on_buttonAudioConfig_clicked()
     AudioConfig audioConfig;
 
     audioConfig.mainUi = mainUi;
-    audioConfig.ui->comboBoxAudioEncoder->setCurrentIndex(ui->comboBoxAudioEncoder->currentIndex());
-    emit audioConfig.ui->comboBoxAudioEncoder->currentIndexChanged(ui->comboBoxAudioEncoder->currentIndex());
-    audioConfig.setMode(m_advancedMode);
+    audioConfig.setConfig(m_pAdvancedConfig);
 
     switch(audioConfig.exec())
     {

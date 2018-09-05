@@ -20,6 +20,7 @@
 
 class MainWindow;
 class AudioConfig;
+class AudioAdvancedConfig;
 class StdWatcherCmd;
 
 namespace Ui {
@@ -59,8 +60,8 @@ public:
     QString getPiperFilename(void);
 
 public slots:
-    void setMode(bool a_advancedMode);
-    void setModeCmd(const QString &a_cmd);
+    void setMode(const bool &a_advancedMode);
+    void setConfig(const AudioAdvancedConfig &a_advancedConfig);
 
 private slots:
     void on_buttonAudioStart_clicked();
@@ -72,8 +73,7 @@ private slots:
 
 private:
     Ui::AudioEnc *ui;
-    bool m_advancedMode;
-    QString m_advancedCmd;
+    AudioAdvancedConfig *m_pAdvancedConfig;
     void setupUi(void);
 };
 

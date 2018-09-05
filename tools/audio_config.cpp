@@ -43,15 +43,76 @@ AudioConfig::~AudioConfig()
 
 void AudioConfig::setup(void)
 {
-    ui->comboBoxTemplate->addItem(c_template_key_default);
-    ui->comboBoxAacAppleMode->installEventFilter(this);
+    this->setupUi();
     this->installEventFilter(this);
     this->setStyleSheet(c_qss_slider_white_circle);
+    this->loadConfig();
 
-    emit ui->comboBoxAacAppleProfile->currentIndexChanged(ui->comboBoxAacAppleProfile->currentIndex());
+    ui->comboBoxAacAppleMode->installEventFilter(this);
 }
 
-AudioAdvancedConfig AudioConfig::creatDefaultConfig(const uint &a_type, const QVariant &a_value)
+void AudioConfig::setupUi(void)
+{
+    /* Group: AAC(APPLE) */
+    emit ui->comboBoxAacAppleProfile->currentIndexChanged(ui->comboBoxAacAppleProfile->currentIndex());
+    emit ui->comboBoxAacAppleMode->currentIndexChanged(ui->comboBoxAacAppleMode->currentIndex());
+
+    /* Group: AAC(FDK) */
+    emit ui->comboBoxAacFdkMode->currentIndexChanged(ui->comboBoxAacFdkMode->currentIndex());
+    emit ui->comboBoxAacFdkProfile->currentIndexChanged(ui->comboBoxAacFdkProfile->currentIndex());
+
+    /* Group: AAC(NERO) */
+    emit ui->comboBoxAacNeroMode->currentIndexChanged(ui->comboBoxAacNeroMode->currentIndex());
+    emit ui->comboBoxAacNeroProfile->currentIndexChanged(ui->comboBoxAacNeroProfile->currentIndex());
+
+    /* Group: ALAC */
+    PASS;
+
+    /* Group: FLAC */
+    ui->horizontalSliderFlac->setMinimum((int)eINDEX_0);
+    ui->horizontalSliderFlac->setMaximum(FLAC_QUALITY_MAX);
+    ui->horizontalSliderFlac->setTickInterval((int)eINDEX_1);
+    ui->horizontalSliderFlac->setPageStep((int)eINDEX_1);
+
+    /* Group: OPUS */
+    emit ui->comboBoxOpusMode->currentIndexChanged(ui->comboBoxOpusMode->currentIndex());
+
+    /* Group: OGG_VORBIS */
+    PASS;
+
+    /* Group: MP3 */
+    emit ui->comboBoxMp3Mode->currentIndexChanged(ui->comboBoxMp3Mode->currentIndex());
+
+    /* Group: AC3 */
+    PASS;
+
+    /* Group: WAV */
+    PASS;
+
+    static const QList<QPair<AudioEnc::EENCODE_TYPE, QVariant>> s_config_default_value = {
+        { AudioEnc::eENCODE_TYPE_AAC_APPLE,  DEFAULT_BITRATE },
+        { AudioEnc::eENCODE_TYPE_AAC_FDK,    DEFAULT_BITRATE },
+        { AudioEnc::eENCODE_TYPE_AAC_NERO,   DEFAULT_BITRATE },
+        { AudioEnc::eENCODE_TYPE_ALAC,       QVariant()      },
+        { AudioEnc::eENCODE_TYPE_FLAC,       eINDEX_5        },
+        { AudioEnc::eENCODE_TYPE_OPUS,       DEFAULT_BITRATE },
+        { AudioEnc::eENCODE_TYPE_OGG_VORBIS, eINDEX_100      },
+        { AudioEnc::eENCODE_TYPE_MP3,        DEFAULT_BITRATE },
+        { AudioEnc::eENCODE_TYPE_AC3,        DEFAULT_BITRATE },
+        { AudioEnc::eENCODE_TYPE_WAV,        QVariant()      },
+    };
+    for(uint i = eINDEX_0; i < AudioEnc::eENCODER_MAX; i++)
+    {
+        setDefaultConfig(getDefaultConfig(i, s_config_default_value.at(i).second));
+    }
+}
+
+void AudioConfig::loadConfig(void)
+{
+    ui->comboBoxTemplate->addItem(c_template_key_default);
+}
+
+AudioAdvancedConfig AudioConfig::getDefaultConfig(const uint &a_type, const QVariant &a_value)
 {
     AudioAdvancedConfig advanced_config;
 
@@ -66,6 +127,7 @@ AudioAdvancedConfig AudioConfig::creatDefaultConfig(const uint &a_type, const QV
     default:
         advanced_config.mode = (uint)eQAAC_MODE_LC_AAC_CBR;
         advanced_config.profile = (uint)eQAAC_PROFILE_LC_AAC;
+        advanced_config.value2 = false; /* No delay flag (default: true) */
         break;
     case AudioEnc::eENCODE_TYPE_AAC_FDK:
         advanced_config.mode = (uint)eFDKAAC_MODE_CBR;
@@ -97,32 +159,58 @@ AudioAdvancedConfig AudioConfig::creatDefaultConfig(const uint &a_type, const QV
     return advanced_config;
 }
 
-void AudioConfig::setDefaultConfig(const uint &a_type, const AudioAdvancedConfig &advanced_config)
+void AudioConfig::setDefaultConfig(const AudioAdvancedConfig &advanced_config)
 {
-    switch(static_cast<AudioEnc::EENCODE_TYPE>(a_type))
+    uint type = advanced_config.type;
+    int mode = (int)advanced_config.mode;
+    int profile = (int)advanced_config.profile;
+    int value = advanced_config.value.toInt();
+
+    switch(static_cast<AudioEnc::EENCODE_TYPE>(type))
     {
     case AudioEnc::eENCODE_TYPE_AAC_APPLE:
     default:
+        ui->comboBoxAacAppleMode->setCurrentIndex(mode);
+        ui->comboBoxAacAppleProfile->setCurrentIndex(profile);
+        ui->horizontalSliderAacApple->setValue(value);
         break;
     case AudioEnc::eENCODE_TYPE_AAC_FDK:
+        ui->comboBoxAacFdkMode->setCurrentIndex(mode);
+        ui->comboBoxAacFdkProfile->setCurrentIndex(profile);
+        ui->horizontalSliderAacFdk->setValue(value);
         break;
     case AudioEnc::eENCODE_TYPE_AAC_NERO:
+        ui->comboBoxAacNeroMode->setCurrentIndex(mode);
+        ui->comboBoxAacNeroProfile->setCurrentIndex(profile);
+        ui->horizontalSliderAacNero->setValue(value);
         break;
     case AudioEnc::eENCODE_TYPE_ALAC:
         break;
     case AudioEnc::eENCODE_TYPE_FLAC:
+        ui->horizontalSliderFlac->setValue(value);
         break;
     case AudioEnc::eENCODE_TYPE_OPUS:
+        ui->comboBoxOpusMode->setCurrentIndex(mode);
+        ui->horizontalSliderOpus->setValue(value);
         break;
     case AudioEnc::eENCODE_TYPE_OGG_VORBIS:
+        ui->horizontalSliderOggVorbis->setValue(value);
         break;
     case AudioEnc::eENCODE_TYPE_MP3:
+        ui->comboBoxMp3Mode->setCurrentIndex(mode);
+        ui->horizontalSliderMp3->setValue(value);
         break;
     case AudioEnc::eENCODE_TYPE_AC3:
+        ui->horizontalSliderAc3->setValue(value);
         break;
     case AudioEnc::eENCODE_TYPE_WAV:
         break;
     }
+}
+
+void AudioConfig::setDefaultConfig(const uint &a_type, const QVariant &a_value)
+{
+    setDefaultConfig(getDefaultConfig(a_type, a_value));
 }
 
 void AudioConfig::on_comboBoxAudioEncoder_currentIndexChanged(int a_index)
@@ -164,6 +252,8 @@ void AudioConfig::setMode(bool a_advancedMode)
     {
         emit ui->checkBoxAdvancedOption->stateChanged((int)state);
     }
+
+    m_advancedMode = a_advancedMode;
 }
 
 void AudioConfig::contextMenuEvent(QContextMenuEvent *e)
@@ -241,21 +331,11 @@ void AudioConfig::on_comboBoxAacAppleMode_currentIndexChanged(int a_index)
 {
     if( (ui->comboBoxAacAppleProfile->currentIndex() == (int)eQAAC_PROFILE_LC_AAC) && (a_index == (int)eQAAC_MODE_LC_AAC_TRUE_VBR) )
     {
-        if(ui->horizontalSliderAacApple->maximum() != QAAC_QUALITY_MAX)
-        {
-            ui->horizontalSliderAacApple->setValue(ui->horizontalSliderAacApple->minimum());
-        }
-        ui->horizontalSliderAacApple->setMinimum((int)eINDEX_0);
-        ui->horizontalSliderAacApple->setMaximum(QAAC_QUALITY_MAX);
+        fitValue(ui->horizontalSliderAacApple, QAAC_QUALITY_MAX);
     }
     else
     {
-        if(ui->horizontalSliderAacApple->maximum() != QAAC_BITRATE_MAX)
-        {
-            ui->horizontalSliderAacApple->setValue(ui->horizontalSliderAacApple->minimum());
-        }
-        ui->horizontalSliderAacApple->setMinimum((int)eINDEX_0);
-        ui->horizontalSliderAacApple->setMaximum(QAAC_BITRATE_MAX);
+        fitValue(ui->horizontalSliderAacApple, QAAC_BITRATE_MAX);
     }
     ui->horizontalSliderAacApple->setTickInterval(ui->horizontalSliderAacApple->maximum() / (int)eINDEX_10);
 }
@@ -281,22 +361,12 @@ void AudioConfig::on_comboBoxAacFdkMode_currentIndexChanged(int a_index)
     {
     case eFDKAAC_MODE_CBR:
     default:
-        if(ui->horizontalSliderAacFdk->maximum() != FDKAAC_BITRATE_MAX)
-        {
-            ui->horizontalSliderAacFdk->setValue(ui->horizontalSliderAacFdk->minimum());
-        }
-        ui->horizontalSliderAacFdk->setMinimum((int)eINDEX_0);
-        ui->horizontalSliderAacFdk->setMaximum(FDKAAC_BITRATE_MAX);
+        fitValue(ui->horizontalSliderAacFdk, FDKAAC_BITRATE_MAX);
         ui->horizontalSliderAacFdk->setTickInterval(ui->horizontalSliderAacFdk->maximum() / (int)eINDEX_10);
         ui->horizontalSliderAacFdk->setPageStep((int)eINDEX_10);
         break;
     case eFDKAAC_MODE_VBR:
-        if(ui->horizontalSliderAacFdk->maximum() != FDKAAC_QUALITY_MAX)
-        {
-            ui->horizontalSliderAacFdk->setValue((int)eINDEX_1);
-        }
-        ui->horizontalSliderAacFdk->setMinimum((int)eINDEX_1);
-        ui->horizontalSliderAacFdk->setMaximum(FDKAAC_QUALITY_MAX);
+        fitValue(ui->horizontalSliderAacFdk, FDKAAC_QUALITY_MAX);
         ui->horizontalSliderAacFdk->setTickInterval((int)eINDEX_1);
         ui->horizontalSliderAacFdk->setPageStep((int)eINDEX_1);
         break;
@@ -325,24 +395,14 @@ void AudioConfig::on_comboBoxAacNeroMode_currentIndexChanged(int a_index)
     case eNEROAAC_MODE_ABR:
     case eNEROAAC_MODE_CBR:
     default:
-        if(ui->horizontalSliderAacNero->maximum() != NEROAAC_BITRATE_MAX)
-        {
-            ui->horizontalSliderAacNero->setValue(ui->horizontalSliderAacNero->minimum());
-        }
-        ui->horizontalSliderAacNero->setMinimum((int)eINDEX_16);
-        ui->horizontalSliderAacNero->setMaximum(NEROAAC_BITRATE_MAX);
+        fitValue(ui->horizontalSliderAacNero, NEROAAC_BITRATE_MAX, (int)eINDEX_16);
         ui->horizontalSliderAacNero->setTickInterval(ui->horizontalSliderAacNero->maximum() / (int)eINDEX_10);
         ui->horizontalSliderAacNero->setPageStep((int)eINDEX_10);
         ui->labelAacNeroProfile->setEnabled(true);
         ui->comboBoxAacNeroProfile->setEnabled(true);
         break;
     case eNEROAAC_MODE_VBR:
-        if(ui->horizontalSliderAacNero->maximum() != NEROAAC_QUALITY_MAX)
-        {
-            ui->horizontalSliderAacNero->setValue(ui->horizontalSliderAacNero->minimum());
-        }
-        ui->horizontalSliderAacNero->setMinimum((int)eINDEX_0);
-        ui->horizontalSliderAacNero->setMaximum(NEROAAC_QUALITY_MAX);
+        fitValue(ui->horizontalSliderAacNero, NEROAAC_QUALITY_MAX, (int)eINDEX_0);
         ui->horizontalSliderAacNero->setTickInterval((int)eINDEX_10);
         ui->horizontalSliderAacNero->setPageStep((int)eINDEX_1);
         ui->labelAacNeroProfile->setDisabled(true);
@@ -367,15 +427,6 @@ void AudioConfig::on_horizontalSliderAacNero_valueChanged(int a_value)
 ///->NEROAAC_END
 
 ///->FLAC_START
-
-void AudioConfig::reloadFlac(void)
-{
-    ui->horizontalSliderFlac->setMinimum((int)eINDEX_0);
-    ui->horizontalSliderFlac->setMaximum(FLAC_QUALITY_MAX);
-    ui->horizontalSliderFlac->setTickInterval((int)eINDEX_1);
-    ui->horizontalSliderFlac->setPageStep((int)eINDEX_1);
-    ui->horizontalSliderFlac->setValue((int)eINDEX_5); /*Default*/
-}
 
 void AudioConfig::on_horizontalSliderFlac_valueChanged(int a_value)
 {
@@ -418,32 +469,17 @@ void AudioConfig::on_comboBoxMp3Mode_currentIndexChanged(int a_index)
     {
     case eMP3_MODE_CBR:
     default:
-        if(ui->horizontalSliderMp3->maximum() != MP3_BITRATE_MAX)
-        {
-            ui->horizontalSliderMp3->setValue((int)eINDEX_32);
-        }
-        ui->horizontalSliderMp3->setMinimum((int)eINDEX_32);
-        ui->horizontalSliderMp3->setMaximum(MP3_BITRATE_MAX);
+        fitValue(ui->horizontalSliderMp3, MP3_BITRATE_MAX, (int)eINDEX_32);
         ui->horizontalSliderMp3->setTickInterval((int)eINDEX_8);
         ui->horizontalSliderMp3->setPageStep((int)eINDEX_8);
         break;
     case eMP3_MODE_ABR:
-        if(ui->horizontalSliderMp3->maximum() != MP3_BITRATE_MAX)
-        {
-            ui->horizontalSliderMp3->setValue((int)eINDEX_8);
-        }
-        ui->horizontalSliderMp3->setMinimum((int)eINDEX_8);
-        ui->horizontalSliderMp3->setMaximum(MP3_BITRATE_MAX);
+        fitValue(ui->horizontalSliderMp3, MP3_BITRATE_MAX, (int)eINDEX_8);
         ui->horizontalSliderMp3->setTickInterval((int)eINDEX_8);
         ui->horizontalSliderMp3->setPageStep((int)eINDEX_8);
         break;
     case eMP3_MODE_VBR:
-        if(ui->horizontalSliderMp3->maximum() != MP3_QUALITY_MAX)
-        {
-            ui->horizontalSliderMp3->setValue((int)eINDEX_0);
-        }
-        ui->horizontalSliderMp3->setMinimum((int)eINDEX_0);
-        ui->horizontalSliderMp3->setMaximum(MP3_QUALITY_MAX);
+        fitValue(ui->horizontalSliderMp3, MP3_QUALITY_MAX, (int)eINDEX_0);
         ui->horizontalSliderMp3->setTickInterval((int)eINDEX_1);
         ui->horizontalSliderMp3->setPageStep((int)eINDEX_1);
         break;
@@ -481,49 +517,148 @@ void AudioConfig::on_buttonCancel_clicked()
 
 void AudioConfig::on_buttonAccept_clicked()
 {
-    QString cmd;
-    int index = ui->comboBoxAudioEncoder->currentIndex();
+    AudioAdvancedConfig config = getConfig();
 
-    switch(index)
+    mainUi->m_pAudioEnc->ui->comboBoxAudioEncoder->setCurrentIndex(config.type);
+    emit mainUi->m_pAudioEnc->ui->comboBoxAudioEncoder->currentIndexChanged(config.type);
+
+    mainUi->m_pAudioEnc->setConfig(config);
+    this->accept();
+}
+
+AudioAdvancedConfig AudioConfig::getConfig(void)
+{
+    AudioAdvancedConfig config;
+
+    config.setEnable(m_advancedMode);
+    config.type = ui->comboBoxAudioEncoder->currentIndex();
+
+    switch(static_cast<AudioEnc::EENCODE_TYPE>(config.type))
     {
     case AudioEnc::eENCODE_TYPE_AAC_APPLE:
     default:
-        cmd = processAccApple();
+        config.name = ui->groupBoxAacApple->title();
+        config.cmd = processAccApple();
+        config.mode = ui->comboBoxAacAppleMode->currentIndex();
+        config.profile = ui->comboBoxAacAppleProfile->currentIndex();
+        config.value = ui->horizontalSliderAacApple->value();
+        config.value2 = ui->checkBoxAacAppleNoDelay->isChecked();
         break;
     case AudioEnc::eENCODE_TYPE_AAC_FDK:
-        cmd = processAccFdk();
+        config.name = ui->groupBoxAacFdk->title();
+        config.cmd = processAccFdk();
+        config.mode = ui->comboBoxAacFdkMode->currentIndex();
+        config.profile = ui->comboBoxAacFdkProfile->currentIndex();
+        config.value = ui->horizontalSliderAacFdk->value();
         break;
     case AudioEnc::eENCODE_TYPE_AAC_NERO:
-        cmd = processAccNero();
+        config.name = ui->groupBoxAacNero->title();
+        config.cmd = processAccNero();
+        config.mode = ui->comboBoxAacNeroMode->currentIndex();
+        config.profile = ui->comboBoxAacNeroProfile->currentIndex();
+        config.value = ui->horizontalSliderAacNero->value();
         break;
     case AudioEnc::eENCODE_TYPE_ALAC:
-        cmd = processAlac();
+        config.name = ui->groupBoxAlac->title();
+        config.cmd = processAlac();
         break;
     case AudioEnc::eENCODE_TYPE_FLAC:
-        cmd = processFlac();
+        config.name = ui->groupBoxFlac->title();
+        config.cmd = processFlac();
+        config.value = ui->horizontalSliderFlac->value();
         break;
     case AudioEnc::eENCODE_TYPE_OPUS:
-        cmd = processOpus();
+        config.name = ui->groupBoxOpus->title();
+        config.cmd = processOpus();
+        config.mode = ui->comboBoxOpusMode->currentIndex();
+        config.value = ui->horizontalSliderOpus->value();
         break;
     case AudioEnc::eENCODE_TYPE_OGG_VORBIS:
-        cmd = processOggVorbis();
+        config.name = ui->groupBoxOggVorbis->title();
+        config.cmd = processOggVorbis();
+        config.value = ui->horizontalSliderOggVorbis->value();
         break;
     case AudioEnc::eENCODE_TYPE_MP3:
-        cmd = processMp3();
+        config.name = ui->groupBoxMp3->title();
+        config.cmd = processMp3();
+        config.mode = ui->comboBoxMp3Mode->currentIndex();
+        config.value = ui->horizontalSliderMp3->value();
         break;
     case AudioEnc::eENCODE_TYPE_AC3:
-        cmd = processAc3();
+        config.name = ui->groupBoxAc3->title();
+        config.cmd = processAc3();
+        config.value = ui->horizontalSliderAc3->value();
         break;
     case AudioEnc::eENCODE_TYPE_WAV:
-        cmd = processWav();
+        config.name = ui->groupBoxWav->title();
+        config.cmd = processWav();
+        break;
+    }
+    return config;
+}
+
+void AudioConfig::setConfig(AudioAdvancedConfig *a_pAdvancedConfig)
+{
+    setMode(a_pAdvancedConfig->isEnable());
+
+    if(!m_advancedMode)
+    {
+        a_pAdvancedConfig = &getDefaultConfig();
+    }
+
+    switch(static_cast<AudioEnc::EENCODE_TYPE>(a_pAdvancedConfig->type))
+    {
+    case AudioEnc::eENCODE_TYPE_AAC_APPLE:
+    default:
+        ui->comboBoxAacAppleMode->setCurrentIndex(a_pAdvancedConfig->mode);
+        ui->comboBoxAacAppleProfile->setCurrentIndex(a_pAdvancedConfig->profile);
+        ui->horizontalSliderAacApple->setValue(a_pAdvancedConfig->value.toInt());
+        ui->checkBoxAacAppleNoDelay->setChecked(a_pAdvancedConfig->value2.toBool());
+        break;
+    case AudioEnc::eENCODE_TYPE_AAC_FDK:
+        ui->comboBoxAacFdkMode->setCurrentIndex(a_pAdvancedConfig->mode);
+        ui->comboBoxAacFdkProfile->setCurrentIndex(a_pAdvancedConfig->profile);
+        ui->horizontalSliderAacFdk->setValue(a_pAdvancedConfig->value.toInt());
+        break;
+    case AudioEnc::eENCODE_TYPE_AAC_NERO:
+        ui->comboBoxAacNeroMode->setCurrentIndex(a_pAdvancedConfig->mode);
+        ui->comboBoxAacNeroProfile->setCurrentIndex(a_pAdvancedConfig->profile);
+        ui->horizontalSliderAacNero->setValue(a_pAdvancedConfig->value.toInt());
+        break;
+    case AudioEnc::eENCODE_TYPE_ALAC:
+        break;
+    case AudioEnc::eENCODE_TYPE_FLAC:
+        ui->horizontalSliderFlac->setValue(a_pAdvancedConfig->value.toInt());
+        break;
+    case AudioEnc::eENCODE_TYPE_OPUS:
+        ui->comboBoxOpusMode->setCurrentIndex(a_pAdvancedConfig->mode);
+        ui->horizontalSliderOpus->setValue(a_pAdvancedConfig->value.toInt());
+        break;
+    case AudioEnc::eENCODE_TYPE_OGG_VORBIS:
+        ui->horizontalSliderOggVorbis->setValue(a_pAdvancedConfig->value.toInt());
+        break;
+    case AudioEnc::eENCODE_TYPE_MP3:
+        ui->comboBoxMp3Mode->setCurrentIndex(a_pAdvancedConfig->mode);
+        ui->horizontalSliderMp3->setValue(a_pAdvancedConfig->value.toInt());
+        break;
+    case AudioEnc::eENCODE_TYPE_AC3:
+        ui->horizontalSliderAc3->setValue(a_pAdvancedConfig->value.toInt());
+        break;
+    case AudioEnc::eENCODE_TYPE_WAV:
         break;
     }
 
-    mainUi->m_pAudioEnc->ui->comboBoxAudioEncoder->setCurrentIndex(index);
-    emit mainUi->m_pAudioEnc->ui->comboBoxAudioEncoder->currentIndexChanged(index);
-    mainUi->m_pAudioEnc->setMode(m_advancedMode);
-    mainUi->m_pAudioEnc->setModeCmd(cmd);
-    this->accept();
+    ui->comboBoxAudioEncoder->setCurrentIndex(a_pAdvancedConfig->type);
+    emit ui->comboBoxAudioEncoder->currentIndexChanged(a_pAdvancedConfig->type);
+}
+
+void AudioConfig::setConfig(AudioAdvancedConfig a_pAdvancedConfig)
+{
+    AudioAdvancedConfig *at_pAdvancedConfig = new AudioAdvancedConfig();
+
+    at_pAdvancedConfig = &a_pAdvancedConfig;
+    setConfig(at_pAdvancedConfig);
+    delete at_pAdvancedConfig;
 }
 
 QString AudioConfig::processAccApple(void)
@@ -809,5 +944,19 @@ QString AudioConfig::processWav(void)
 
     /* no config */
     return cmd;
+}
+
+void AudioConfig::fitValue(QSlider *a_slider, const int &a_maxValue, const int &a_minValue)
+{
+    a_slider->setMinimum(a_minValue);
+    a_slider->setMaximum(a_maxValue);
+    if(a_slider->value() > a_maxValue)
+    {
+        a_slider->setValue(a_maxValue);
+    }
+    if(a_slider->value() < a_minValue)
+    {
+        a_slider->setValue(a_minValue);
+    }
 }
 

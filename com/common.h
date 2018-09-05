@@ -1,6 +1,9 @@
 #ifndef COMMON_H
 #define COMMON_H
 
+#include "preferences.h"
+#include <windows.h>
+
 #include <QDragEnterEvent>
 #include <QDragMoveEvent>
 #include <QDropEvent>
@@ -28,10 +31,6 @@
 #include <QApplication>
 #include <QDebug>
 
-#include <windows.h>
-
-#include "preferences.h"
-
 #define KB (1024)
 #define MB (KB * KB)
 #define GB (MB * KB)
@@ -40,6 +39,7 @@
 #define SECOND_TO_MILLISECOND_UNIT (1000)
 #define NUL (0)
 #define QT_PASS do{}while(false)
+#define PASS QT_PASS
 
 static const char QT_EMPTY[]          = "";
 static const char QT_BLANK[]          = " ";

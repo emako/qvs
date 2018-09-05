@@ -1184,7 +1184,7 @@
              <number>1</number>
             </property>
             <property name="value">
-             <number>5</number>
+             <number>0</number>
             </property>
             <property name="orientation">
              <enum>Qt::Horizontal</enum>
@@ -1303,6 +1303,18 @@
              </sizepolicy>
             </property>
             <layout class="QHBoxLayout" name="horizontalLayout_9">
+             <property name="leftMargin">
+              <number>0</number>
+             </property>
+             <property name="topMargin">
+              <number>0</number>
+             </property>
+             <property name="rightMargin">
+              <number>0</number>
+             </property>
+             <property name="bottomMargin">
+              <number>0</number>
+             </property>
              <item>
               <spacer name="horizontalSpacer_14">
                <property name="orientation">
@@ -1415,7 +1427,7 @@
              <number>512</number>
             </property>
             <property name="value">
-             <number>160</number>
+             <number>6</number>
             </property>
             <property name="orientation">
              <enum>Qt::Horizontal</enum>
@@ -1471,6 +1483,18 @@
              </sizepolicy>
             </property>
             <layout class="QHBoxLayout" name="horizontalLayout_10">
+             <property name="leftMargin">
+              <number>0</number>
+             </property>
+             <property name="topMargin">
+              <number>0</number>
+             </property>
+             <property name="rightMargin">
+              <number>0</number>
+             </property>
+             <property name="bottomMargin">
+              <number>0</number>
+             </property>
              <item>
               <widget class="QLabel" name="labelOggVorbisVariableBitrate">
                <property name="sizePolicy">
@@ -1515,7 +1539,7 @@
              <number>1</number>
             </property>
             <property name="value">
-             <number>100</number>
+             <number>0</number>
             </property>
             <property name="orientation">
              <enum>Qt::Horizontal</enum>
@@ -1571,6 +1595,18 @@
              </sizepolicy>
             </property>
             <layout class="QHBoxLayout" name="horizontalLayout_11">
+             <property name="leftMargin">
+              <number>0</number>
+             </property>
+             <property name="topMargin">
+              <number>0</number>
+             </property>
+             <property name="rightMargin">
+              <number>0</number>
+             </property>
+             <property name="bottomMargin">
+              <number>0</number>
+             </property>
              <item>
               <spacer name="horizontalSpacer_17">
                <property name="orientation">
@@ -1730,6 +1766,21 @@
              </sizepolicy>
             </property>
             <layout class="QHBoxLayout" name="horizontalLayout_12">
+             <property name="spacing">
+              <number>7</number>
+             </property>
+             <property name="leftMargin">
+              <number>0</number>
+             </property>
+             <property name="topMargin">
+              <number>0</number>
+             </property>
+             <property name="rightMargin">
+              <number>0</number>
+             </property>
+             <property name="bottomMargin">
+              <number>0</number>
+             </property>
              <item>
               <widget class="QLabel" name="labelAc3Bitrate">
                <property name="sizePolicy">

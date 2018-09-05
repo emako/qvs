@@ -179,7 +179,8 @@ SOURCES += \
     script/script_creator.cpp \
     script/number_matcher.cpp \
     tools/audio_config.cpp \
-    preview/preview_timeline_slider.cpp
+    preview/preview_timeline_slider.cpp \
+    com/style_sheet.cpp
 
 HEADERS += \
     mainwindow.h \
@@ -191,8 +192,6 @@ HEADERS += \
     job/job_creator.h \
     job/job_creator_help.h \
     job/job_chef.h \
-    job/job_cmdlist.h \
-    job/job_item.h \
     job/job_view_cmd.h \
     tools/muxer.h \
     tools/std_watcher.h \
@@ -213,7 +212,9 @@ HEADERS += \
     com/version.h \
     tools/audio_config.h \
     preview/preview_timeline_slider.h \
-    com/style_sheet.h
+    com/style_sheet.h \
+    job/job_cmdlist.h \
+    job/job_item.h
 
 FORMS += \
     mainwindow.ui \
@@ -233,6 +234,4 @@ FORMS += \
     tools/audio_config.ui
 
 RESOURCES += \
-    res/resources.qrc \
-    job/res/resources.qrc \
-    job/res/resources.qrc
+    res/resources.qrc

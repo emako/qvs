@@ -18,15 +18,48 @@ class AudioConfig;
 class AudioAdvancedConfig
 {
 public:
-    AudioAdvancedConfig()
+    AudioAdvancedConfig(bool a_advanced = false)
+        : advanced(a_advanced)
     {
     }
 
-    QString config_name;
-    uint type = eINDEX_0;
-    uint mode = eINDEX_0;
-    uint profile = eINDEX_0;
-    QVariant value;
+public:
+    QString name;               /* advanced config name */
+    QString cmd;                /* encoder cmd */
+    uint type = eINDEX_0;       /* encoder type */
+    uint mode = eINDEX_0;       /* encoder mode */
+    uint profile = eINDEX_0;    /* encoder profile */
+    QVariant value;             /* encoder value: bitrate/quality */
+    QVariant value2;            /* encoder value: flag */
+
+public:
+    QString toString(void) const
+    {
+        return QString("name=%1,type=%2,mode=%3,profile=%4,value=%5,value2=%6,cmd=%7").arg(name).arg(type).arg(mode).arg(profile).arg(value.toString()).arg(value2.toString()).arg(cmd);
+    }
+
+    void print(void) const
+    {
+        qDebug() << this->toString();
+    }
+
+    void setDisable(bool a_advanced = true)
+    {
+        advanced = !a_advanced;
+    }
+
+    void setEnable(bool a_advanced = true)
+    {
+        advanced = a_advanced;
+    }
+
+    bool isEnable(void) const
+    {
+        return advanced;
+    }
+
+private:
+    bool advanced;              /* advanced flag */
 };
 
 class AudioConfig : public QDialog
@@ -89,12 +122,16 @@ public:
         eNEROAAC_PROFILE_LC_AAC,
     };
 
-    AudioAdvancedConfig creatDefaultConfig(const uint &a_type = eINDEX_0, const QVariant &a_value = DEFAULT_BITRATE);
-    void setDefaultConfig(const uint &a_type, const AudioAdvancedConfig &advanced_config);
+    AudioAdvancedConfig getDefaultConfig(const uint &a_type = eINDEX_0, const QVariant &a_value = DEFAULT_BITRATE);
+    void setDefaultConfig(const AudioAdvancedConfig &advanced_config);
+    void setDefaultConfig(const uint &a_type, const QVariant &a_value); /* used from class audio enc */
+
+    AudioAdvancedConfig getConfig(void);
+    void setConfig(AudioAdvancedConfig *a_pAdvancedConfig);
+    void setConfig(AudioAdvancedConfig a_pAdvancedConfig);
 
 public slots:
     virtual void setMode(bool a_advancedMode);
-    virtual void reloadFlac(void);
     virtual QString processAccApple(void);
     virtual QString processAccFdk(void);
     virtual QString processAccNero(void);
@@ -135,6 +172,9 @@ private:
     Ui::AudioConfig *ui;
     bool m_advancedMode;
     void setup(void);
+    void setupUi(void);
+    void loadConfig(void);
+    void fitValue(QSlider *a_slider, const int &a_maxValue, const int &a_minValue = (int)eINDEX_0);
 };
 
 #endif // AUDIO_CONFIG_H
