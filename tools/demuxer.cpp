@@ -231,9 +231,9 @@ void Demuxer::reloadInfo(ERELOAD_TYPE a_reload_type)
     {
     case eRELOAD_TYPE_FFMPEG:
     default:
-#if (QT_VERSION >= QT_VERSION_CHECK(5,11,0))
+#if !QT_VERSION_TOO_LOW
         do{
-            QJsonObject json = mainUi->m_com->getJsonFromString(m_track_raw.trimmed().simplified());
+            QJsonObject json = qvs::getJsonFromString(m_track_raw.trimmed().simplified());
             DemuxerItem item;
             int item_video_count = (int)eINDEX_0;
             int item_audio_count = (int)eINDEX_0;

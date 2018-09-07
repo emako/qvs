@@ -27,9 +27,20 @@ static const QString c_audio_config_bitrate = QObject::tr("Bitrate");
 static const QString c_audio_config_quality = QObject::tr("Quality");
 static const QString c_template_key_default = QObject::tr("<Default>");
 
+const QList<QPair<AudioAdvancedConfig::ECONFIG, QString>> c_list_config_encode_audio = {
+    { AudioAdvancedConfig::eCONFIG_ADVANCED, "Advanced" },
+    { AudioAdvancedConfig::eCONFIG_TYPE, "Type" },
+    { AudioAdvancedConfig::eCONFIG_MODE, "Mode" },
+    { AudioAdvancedConfig::eCONFIG_PROFILE, "Profile" },
+    { AudioAdvancedConfig::eCONFIG_VALUE, "Value" },
+    { AudioAdvancedConfig::eCONFIG_VALUE2, "Value2" },
+};
+
 AudioConfig::AudioConfig(QDialog *parent) :
     QDialog(parent),
     ui(new Ui::AudioConfig),
+    m_pSpinBox(new QDoubleSpinBox(this)),
+    m_pTimerValueHidden(new QTimer(this)),
     m_advancedMode(false)
 {
     ui->setupUi(this);
@@ -38,17 +49,28 @@ AudioConfig::AudioConfig(QDialog *parent) :
 
 AudioConfig::~AudioConfig()
 {
+    delete m_pTimerValueHidden;
+    delete m_pSpinBox;
     delete ui;
 }
 
 void AudioConfig::setup(void)
 {
     this->setupUi();
+    this->setValueHidden();
     this->installEventFilter(this);
     this->setStyleSheet(c_qss_slider_white_circle);
     this->loadConfig();
 
+    m_pTimerValueHidden->connect(m_pTimerValueHidden, SIGNAL(timeout()), this, SLOT(setValueHidden()));
+    m_pTimerValueHidden->setInterval(eINDEX_100);
+    m_pTimerValueHidden->setSingleShot(true);
+
     ui->comboBoxAacAppleMode->installEventFilter(this);
+    m_pSpinBox->installEventFilter(this);
+    m_pSpinBox->raise();
+    m_pSpinBox->setStyleSheet(c_qss_spin_box_background_alpha_half);
+    m_pSpinBox->connect(m_pSpinBox, SIGNAL(valueChanged(double)), this, SLOT(valueChanged(double)));
 }
 
 void AudioConfig::setupUi(void)
@@ -105,11 +127,32 @@ void AudioConfig::setupUi(void)
     {
         setDefaultConfig(getDefaultConfig(i, s_config_default_value.at(i).second));
     }
+
+    s_value_sliders = {
+        ui->horizontalSliderAacApple,    /* eENCODE_TYPE_AAC_APPLE */
+        ui->horizontalSliderAacFdk,      /* eENCODE_TYPE_AAC_FDK */
+        ui->horizontalSliderAacNero,     /* eENCODE_TYPE_AAC_NERO */
+        nullptr,                         /* eENCODE_TYPE_ALAC */
+        ui->horizontalSliderFlac,        /* eENCODE_TYPE_FLAC */
+        ui->horizontalSliderOpus,        /* eENCODE_TYPE_OPUS */
+        ui->horizontalSliderOggVorbis,   /* eENCODE_TYPE_OGG_VORBIS */
+        ui->horizontalSliderMp3,         /* eENCODE_TYPE_MP3 */
+        ui->horizontalSliderAc3,         /* eENCODE_TYPE_AC3 */
+        nullptr,                         /* eENCODE_TYPE_WAV */
+    };
+    for(int i = eINDEX_0; i < s_value_sliders.length(); i++)
+    {
+        if(s_value_sliders[i] != nullptr)
+        {
+            s_value_sliders[i]->installEventFilter(this);
+        }
+    }
 }
 
 void AudioConfig::loadConfig(void)
 {
     ui->comboBoxTemplate->addItem(c_template_key_default);
+    ui->comboBoxTemplate->addItems(getTemplateKeys());
 }
 
 AudioAdvancedConfig AudioConfig::getDefaultConfig(const uint &a_type, const QVariant &a_value)
@@ -213,6 +256,22 @@ void AudioConfig::setDefaultConfig(const uint &a_type, const QVariant &a_value)
     setDefaultConfig(getDefaultConfig(a_type, a_value));
 }
 
+void AudioConfig::reloadConfig(const QString &a_key)
+{
+    AudioAdvancedConfig advanced_config;
+
+    if(a_key == c_template_key_default)
+    {
+        advanced_config = getDefaultConfig();
+    }
+    else
+    {
+        advanced_config = g_pConfig->getConfigAudioEncodeTemplate(a_key);
+    }
+
+    setConfig(advanced_config);
+}
+
 void AudioConfig::on_comboBoxAudioEncoder_currentIndexChanged(int a_index)
 {
     ui->stackedWidgetMode->setCurrentIndex(a_index);
@@ -256,23 +315,11 @@ void AudioConfig::setMode(bool a_advancedMode)
     m_advancedMode = a_advancedMode;
 }
 
-void AudioConfig::contextMenuEvent(QContextMenuEvent *e)
-{
-    e->accept();
-#if 0
-    QMenu *menu = new QMenu();
-    QAction *action = menu->addAction("Edit value");
-
-    connect(action, SIGNAL(triggered()), this, SLOT(slotEditValue()));
-    menu->exec(QCursor::pos());
-    delete menu;
-#endif
-}
-
 bool AudioConfig::eventFilter(QObject *o, QEvent *e)
 {
-    if(e->type() == QEvent::Show)
+    switch(e->type())
     {
+    case QEvent::Show:
         if(o == ui->comboBoxAacAppleMode)
         {
             resizeEvent();
@@ -281,8 +328,136 @@ bool AudioConfig::eventFilter(QObject *o, QEvent *e)
         {
             resizeEventMinimum();
         }
+        break;
+    case QEvent::Enter:
+        if(containsValue(o))
+        {
+            if(m_advancedMode)
+            {
+                if(o != m_pSpinBox)
+                {
+                    this->moveValue();
+                }
+                this->setValueVisible(true);
+            }
+        }
+        break;
+    case QEvent::Leave:
+        if(containsValue(o))
+        {
+            this->setValueVisible(false);
+        }
+        break;
     }
     return false;
+}
+
+bool AudioConfig::containsValue(QObject *a_object)
+{
+    if(a_object == m_pSpinBox)
+    {
+        return true;
+    }
+
+    for(int i = eINDEX_0; i < s_value_sliders.length(); i++)
+    {
+        if(s_value_sliders[i] != nullptr)
+        {
+            if(s_value_sliders[i] == a_object)
+            {
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
+void AudioConfig::setValueHidden(void)
+{
+    m_pSpinBox->setVisible(false);
+}
+
+void AudioConfig::moveValue(void)
+{
+    int type = ui->comboBoxAudioEncoder->currentIndex();
+    int x = QCursor::pos().x() - pos().x() - m_pSpinBox->width() / eINDEX_2 + eINDEX_5;
+    int y = s_value_sliders[type]->y() + s_value_sliders[type]->height() + ui->stackedWidgetMode->y();
+
+    if(x + m_pSpinBox->width() > this->width())
+    {
+        x = this->width() - m_pSpinBox->width() - eINDEX_2;
+    }
+    else if(x < eINDEX_0)
+    {
+        x = eINDEX_2;
+    }
+    m_pSpinBox->move(x, y);
+}
+
+void AudioConfig::setValueValue(void)
+{
+    int type = ui->comboBoxAudioEncoder->currentIndex();
+    QSlider *at_pSlider = static_cast<QSlider *>(s_value_sliders[type]);
+    int decimals = eINDEX_0;
+    double minimum = at_pSlider->minimum();
+    double maximum = at_pSlider->maximum();
+    double value = at_pSlider->value();
+
+    switch(static_cast<AudioEnc::EENCODE_TYPE>(type))
+    {
+    case AudioEnc::eENCODE_TYPE_AAC_APPLE:
+    case AudioEnc::eENCODE_TYPE_AAC_FDK:
+    case AudioEnc::eENCODE_TYPE_ALAC:
+    case AudioEnc::eENCODE_TYPE_FLAC:
+    case AudioEnc::eENCODE_TYPE_OPUS:
+    case AudioEnc::eENCODE_TYPE_MP3:
+    case AudioEnc::eENCODE_TYPE_AC3:
+    case AudioEnc::eENCODE_TYPE_WAV:
+    default:
+        break;
+    case AudioEnc::eENCODE_TYPE_AAC_NERO:
+        if(ui->comboBoxAacNeroMode->currentIndex() == (int)eNEROAAC_MODE_VBR)
+        {
+            decimals = eINDEX_2;
+            minimum /= eINDEX_100;
+            maximum /= eINDEX_100;
+            value /= eINDEX_100;
+        }
+        break;
+    case AudioEnc::eENCODE_TYPE_OGG_VORBIS:
+        decimals = eINDEX_2;
+        minimum /= eINDEX_100;
+        maximum /= eINDEX_100;
+        value /= eINDEX_100;
+        break;
+    }
+
+    m_pSpinBox->setDecimals(decimals);
+    m_pSpinBox->setMinimum(minimum);
+    m_pSpinBox->setMaximum(maximum);
+    m_pSpinBox->setValue(value);
+}
+
+void AudioConfig::setValueVisible(const bool &a_visible)
+{
+    if(a_visible)
+    {
+        if(m_pTimerValueHidden->isActive())
+        {
+            m_pTimerValueHidden->stop();
+        }
+        setValueValue();
+        m_pSpinBox->setVisible(true);
+    }
+    else
+    {
+        m_pTimerValueHidden->start();
+    }
+}
+
+void AudioConfig::valueChanged(double a_value)
+{
+    static_cast<QSlider *>(s_value_sliders[ui->comboBoxAudioEncoder->currentIndex()])->setValue(a_value);
 }
 
 void AudioConfig::resizeEvent(QResizeEvent *e)
@@ -344,11 +519,15 @@ void AudioConfig::on_horizontalSliderAacApple_valueChanged(int a_value)
 {
     QString mode = c_audio_config_bitrate;
 
+    if(m_pSpinBox->isVisible())
+    {
+        m_pSpinBox->setValue(a_value);
+    }
     if( (ui->comboBoxAacAppleProfile->currentIndex() == (int)eQAAC_PROFILE_LC_AAC) && (ui->comboBoxAacAppleMode->currentIndex() == (int)eQAAC_MODE_LC_AAC_TRUE_VBR) )
     {
         mode = c_audio_config_quality;
     }
-    ui->groupBoxAacApple->setTitle(QString("QAAC - (%1=%2)").arg(mode).arg(a_value));
+    ui->groupBoxAacApple->setTitle(QString("QAAC (%1=%2)").arg(mode).arg(a_value));
 }
 
 ///->QAAC_END
@@ -377,11 +556,15 @@ void AudioConfig::on_horizontalSliderAacFdk_valueChanged(int a_value)
 {
     QString mode = c_audio_config_bitrate;
 
+    if(m_pSpinBox->isVisible())
+    {
+        m_pSpinBox->setValue(a_value);
+    }
     if(ui->comboBoxAacFdkMode->currentIndex() == (int)eFDKAAC_MODE_VBR)
     {
         mode = c_audio_config_quality;
     }
-    ui->groupBoxAacFdk->setTitle(QString("FDKAAC - (%1=%2)").arg(mode).arg(a_value));
+    ui->groupBoxAacFdk->setTitle(QString("FDKAAC (%1=%2)").arg(mode).arg(a_value));
 }
 
 ///->FDKAAC_END
@@ -416,12 +599,16 @@ void AudioConfig::on_horizontalSliderAacNero_valueChanged(int a_value)
     QString mode = c_audio_config_bitrate;
     double value = a_value;
 
+    if(m_pSpinBox->isVisible())
+    {
+        m_pSpinBox->setValue(a_value);
+    }
     if(ui->comboBoxAacNeroMode->currentIndex() == (int)eNEROAAC_MODE_VBR)
     {
         mode = c_audio_config_quality;
         value /= (int)eINDEX_100;
     }
-    ui->groupBoxAacNero->setTitle(QString("NeroAAC - (%1=%2)").arg(mode).arg(value));
+    ui->groupBoxAacNero->setTitle(QString("NeroAAC (%1=%2)").arg(mode).arg(value));
 }
 
 ///->NEROAAC_END
@@ -432,7 +619,11 @@ void AudioConfig::on_horizontalSliderFlac_valueChanged(int a_value)
 {
     QString mode = c_audio_config_quality;
 
-    ui->groupBoxFlac->setTitle(QString("FLAC - (%1=%2)").arg(mode).arg(a_value));
+    if(m_pSpinBox->isVisible())
+    {
+        m_pSpinBox->setValue(a_value);
+    }
+    ui->groupBoxFlac->setTitle(QString("FLAC (%1=%2)").arg(mode).arg(a_value));
 }
 
 ///->FLAC_END
@@ -443,7 +634,11 @@ void AudioConfig::on_horizontalSliderOpus_valueChanged(int a_value)
 {
     QString mode = c_audio_config_bitrate;
 
-    ui->groupBoxOpus->setTitle(QString("OPUS - (%1=%2)").arg(mode).arg(a_value));
+    if(m_pSpinBox->isVisible())
+    {
+        m_pSpinBox->setValue(a_value);
+    }
+    ui->groupBoxOpus->setTitle(QString("OPUS (%1=%2)").arg(mode).arg(a_value));
 }
 
 ///->OPUS_END
@@ -456,7 +651,11 @@ void AudioConfig::on_horizontalSliderOggVorbis_valueChanged(int a_value)
     double value = a_value;
 
     value /= (int)eINDEX_100;
-    ui->groupBoxOggVorbis->setTitle(QString("Ogg Vorbis - (%1=%2)").arg(mode).arg(value));
+    if(m_pSpinBox->isVisible())
+    {
+        m_pSpinBox->setValue(a_value);
+    }
+    ui->groupBoxOggVorbis->setTitle(QString("Ogg Vorbis (%1=%2)").arg(mode).arg(value));
 }
 
 ///->OGG_VORBIS_END
@@ -490,11 +689,15 @@ void AudioConfig::on_horizontalSliderMp3_valueChanged(int a_value)
 {
     QString mode = c_audio_config_bitrate;
 
+    if(m_pSpinBox->isVisible())
+    {
+        m_pSpinBox->setValue(a_value);
+    }
     if(ui->comboBoxMp3Mode->currentIndex() == (int)eMP3_MODE_VBR)
     {
         mode = c_audio_config_quality;
     }
-    ui->groupBoxMp3->setTitle(QString("Lame MP3 - (%1=%2)").arg(mode).arg(a_value));
+    ui->groupBoxMp3->setTitle(QString("Lame MP3 (%1=%2)").arg(mode).arg(a_value));
 }
 
 ///->MP3_END
@@ -505,7 +708,11 @@ void AudioConfig::on_horizontalSliderAc3_valueChanged(int a_value)
 {
     QString mode = c_audio_config_bitrate;
 
-    ui->groupBoxAc3->setTitle(QString("AC3 - (%1=%2)").arg(mode).arg(a_value));
+    if(m_pSpinBox->isVisible())
+    {
+        m_pSpinBox->setValue(a_value);
+    }
+    ui->groupBoxAc3->setTitle(QString("AC3 (%1=%2)").arg(mode).arg(a_value));
 }
 
 ///->AC3_END
@@ -601,9 +808,12 @@ void AudioConfig::setConfig(AudioAdvancedConfig *a_pAdvancedConfig)
 {
     setMode(a_pAdvancedConfig->isEnable());
 
+    ui->comboBoxAudioEncoder->setCurrentIndex(a_pAdvancedConfig->type);
+    emit ui->comboBoxAudioEncoder->currentIndexChanged(a_pAdvancedConfig->type);
+
     if(!m_advancedMode)
     {
-        a_pAdvancedConfig = &getDefaultConfig();
+        a_pAdvancedConfig = &getDefaultConfig((uint)a_pAdvancedConfig->type);
     }
 
     switch(static_cast<AudioEnc::EENCODE_TYPE>(a_pAdvancedConfig->type))
@@ -647,18 +857,11 @@ void AudioConfig::setConfig(AudioAdvancedConfig *a_pAdvancedConfig)
     case AudioEnc::eENCODE_TYPE_WAV:
         break;
     }
-
-    ui->comboBoxAudioEncoder->setCurrentIndex(a_pAdvancedConfig->type);
-    emit ui->comboBoxAudioEncoder->currentIndexChanged(a_pAdvancedConfig->type);
 }
 
 void AudioConfig::setConfig(AudioAdvancedConfig a_pAdvancedConfig)
 {
-    AudioAdvancedConfig *at_pAdvancedConfig = new AudioAdvancedConfig();
-
-    at_pAdvancedConfig = &a_pAdvancedConfig;
-    setConfig(at_pAdvancedConfig);
-    delete at_pAdvancedConfig;
+    setConfig(&a_pAdvancedConfig);
 }
 
 QString AudioConfig::processAccApple(void)
@@ -940,10 +1143,8 @@ QString AudioConfig::processAc3(void)
 
 QString AudioConfig::processWav(void)
 {
-    QString cmd;
-
-    /* no config */
-    return cmd;
+    PASS;
+    return QString();
 }
 
 void AudioConfig::fitValue(QSlider *a_slider, const int &a_maxValue, const int &a_minValue)
@@ -960,3 +1161,66 @@ void AudioConfig::fitValue(QSlider *a_slider, const int &a_maxValue, const int &
     }
 }
 
+QStringList AudioConfig::getTemplateKeys(void)
+{
+    QMap<QString, AudioAdvancedConfig> at_config_audio_encode_templates = g_pConfig->m_config_audio_encode_templates;
+    QStringList at_templete_keys;
+
+    for(QMap<QString, AudioAdvancedConfig>::iterator i = at_config_audio_encode_templates.begin(); i != at_config_audio_encode_templates.end(); i++)
+    {
+        at_templete_keys << i.key();
+    }
+    return at_templete_keys;
+}
+
+void AudioConfig::on_buttonSaveTemplate_clicked()
+{
+    QString key = ui->comboBoxTemplate->currentText();
+
+    if(key.isEmpty())
+    {
+        return;
+    }
+
+    if(key == c_template_key_default)
+    {
+        QMessageBox::warning(this, tr("Rejection"), tr("Can't save as default template!\nPlease rename template."), QMessageBox::Ok);
+        return;
+    }
+
+    if(!g_pConfig->containsConfigAudioEncodeTemplate(key))
+    {
+        ui->comboBoxTemplate->addItem(key);
+    }
+    g_pConfig->setConfigAudioEncodeTemplate(key, getConfig());
+    QMessageBox::information(this, tr("Information"), tr("Template saved!"), QMessageBox::Ok);
+}
+
+void AudioConfig::on_buttonDeleteTemplate_clicked()
+{
+    QString key = ui->comboBoxTemplate->currentText();
+    int index = ui->comboBoxTemplate->currentIndex();
+
+    if(key.isEmpty())
+    {
+        return;
+    }
+
+    if( (key == c_template_key_default) || (index == eINDEX_0) )
+    {
+        QMessageBox::warning(this, tr("Rejection"), tr("Can't delete the default template!"), QMessageBox::Ok);
+        return;
+    }
+
+    if(!g_pConfig->containsConfigAudioEncodeTemplate(key))
+    {
+        return;
+    }
+    g_pConfig->removeConfigAudioEncodeTemplate(key);
+    ui->comboBoxTemplate->removeItem(index);
+}
+
+void AudioConfig::on_comboBoxTemplate_activated(const QString &a_key)
+{
+    reloadConfig(a_key);
+}

@@ -2,6 +2,7 @@
 #define CONFIG_H
 
 #include "../job/job_creator.h"
+#include "../tools/audio_config.h"
 
 #include <QObject>
 #include <QSettings>
@@ -28,6 +29,8 @@
 #define REG_KEY_AVS_INIT_DIR          "initialplugindir"
 #define REG_KEY_AVS_PLUGIN_DIR        "plugindir2_5"
 
+extern const char *c_config_key[JobCreator::eJOB_CONFIG_MAX];
+
 class MainWindow;
 class JobCreator;
 class Config;
@@ -46,6 +49,7 @@ public:
         eCONFIG_TYPE_FIRST,
         eCONFIG_TYPE_COMMON,
         eCONFIG_TYPE_ENCODE,
+        eCONFIG_TYPE_ENCODE_AUDIO,
         eCONFIG_TYPE_MAX,
     };
 
@@ -105,6 +109,7 @@ public:
     QMap<ECONFIG_COMMON, QVariant> m_config_common;
     QMap<ECONFIG_INSTALLER, QVariant> m_config_installer;
     QMap<QString, QMap<JobCreator::EJOB_CONFIG, QVariant>> m_config_encode_templates;
+    QMap<QString, AudioAdvancedConfig> m_config_audio_encode_templates;
 
     QVariant getConfig(ECONFIG_FIRST a_key);
     void setConfig(ECONFIG_FIRST a_key, QVariant a_value);
@@ -120,11 +125,15 @@ public:
     void initCommonConfig(void);
     void initCommonConfigDefault(void);
     void initEncodeConfig(void);
+    void initEncodeAudioConfig(void);
     void initInstallerConfig(void);
 
     void saveConfigAll(void);
     QJsonObject configToJson(QMap<JobCreator::EJOB_CONFIG, QVariant> a_config);
     QMap<JobCreator::EJOB_CONFIG, QVariant> jsonToConfig(QJsonObject a_json);
+
+    QJsonObject audioConfigToJson(AudioAdvancedConfig a_config);
+    AudioAdvancedConfig jsonToAudioConfig(QJsonObject a_json);
 
     void setLaunchMode(void);
     ELAUNCH_MODE getLaunchMode(void);
@@ -137,6 +146,11 @@ public:
     QMap<JobCreator::EJOB_CONFIG, QVariant> getConfigEncodeTemplate(QString a_key);
     void removeConfigEncodeTemplate(QString a_key);
     bool containsConfigEncodeTemplate(QString a_key);
+
+    void setConfigAudioEncodeTemplate(QString a_key, AudioAdvancedConfig a_config);
+    AudioAdvancedConfig getConfigAudioEncodeTemplate(QString a_key);
+    void removeConfigAudioEncodeTemplate(QString a_key);
+    bool containsConfigAudioEncodeTemplate(QString a_key);
 
     bool deleteConfigFile(void);
 

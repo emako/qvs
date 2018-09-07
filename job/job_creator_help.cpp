@@ -49,9 +49,9 @@ void JobCreatorHelp::showHelp(EJOB_ENCODER a_encoder)
         break;
     }
     cmd = mainUi->mainUi->m_com->findFirstFilePath(cmd);
-    if(cmd.indexOf("|") >= 0)
+    if(cmd.indexOf(QT_PIPE) >= 0)
     {
-        /* QProcess can't support pipe. */
+        /* One process can't support pipe. */
         cmd = "cmd /c " + cmd;
     }
     if(!cmd.isEmpty())
@@ -102,7 +102,7 @@ void JobCreatorHelp::slotProcessStarted()
     if(!m_process.isWritable())
     {
 #ifdef QT_DEBUG
-        qDebug()<<"Can not write to encoder. Aborting.";
+        qDebug()<<"Can not write to encoder.";
 #endif
         return;
     }

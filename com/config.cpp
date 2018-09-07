@@ -5,14 +5,13 @@
 #include "../job/job_view_cmd.h"
 #include "../tools/installer_dialog.h"
 
-extern const char *c_config_key[JobCreator::eJOB_CONFIG_MAX];
-
-const char SETTINGS_PY_FILE_NAME[]     = "./Lib/site-packages/qvs.conf";
-const char SETTINGS_FILE_NAME[]        = "/qvs.config";
-const char COMMON_GROUP[]              = "common";
-const char ENCODING_PRESETS_GROUP[]    = "encoding_presets";
-const char INSTALLER_GROUP[]           = "installer";
-const char PYTHON_GROUP[]              = "python";
+const char SETTINGS_PY_FILE_NAME[]        = "./Lib/site-packages/qvs.conf";
+const char SETTINGS_FILE_NAME[]           = "/qvs.config";
+const char COMMON_GROUP[]                 = "common";
+const char ENCODING_PRESETS_GROUP[]       = "encoding_presets";
+const char ENCODING_AUDIO_PRESETS_GROUP[] = "encoding_audio_presets";
+const char INSTALLER_GROUP[]              = "installer";
+const char PYTHON_GROUP[]                 = "python";
 
 const char *c_config_common_key[Config::eCONFIG_COMMON_MAX] = {
     "not_auto_next_job",                /*eCONFIG_COMMON_NOT_AUTO_NEXT_JOB*/
@@ -126,7 +125,7 @@ void Config::initEncodeConfig(void)
     for(QString key : keys)
     {
         QString jsonStr = valueInGroup(ENCODING_PRESETS_GROUP, key, QT_EMPTY).toString();
-        QJsonObject json = mainUi->m_com->getJsonFromString(jsonStr);
+        QJsonObject json = qvs::getJsonFromString(jsonStr);
         QMap<JobCreator::EJOB_CONFIG, QVariant> config = jsonToConfig(json);
 
         m_config_encode_templates.insert(key, config);
@@ -137,6 +136,7 @@ void Config::initEncodeConfig(void)
     {
         qDebug() << QString("%1=").arg(key) << valueInGroup(ENCODING_PRESETS_GROUP, key, QT_EMPTY).toString();
     }
+#ifdef QT_DEBUG
     for(QMap<QString, QMap<JobCreator::EJOB_CONFIG, QVariant>>::iterator i = m_config_encode_templates.begin(); i != m_config_encode_templates.end(); i++)
     {
         for(QMap<JobCreator::EJOB_CONFIG, QVariant>::iterator j = i.value().begin(); j != i.value().end(); j++)
@@ -144,6 +144,32 @@ void Config::initEncodeConfig(void)
             qDebug() << QString("%1=").arg(i.key()) << j.value();
         }
     }
+#endif
+}
+
+void Config::initEncodeAudioConfig(void)
+{
+    QStringList keys = groupKeys(ENCODING_AUDIO_PRESETS_GROUP);
+    for(QString key : keys)
+    {
+        QString jsonStr = valueInGroup(ENCODING_AUDIO_PRESETS_GROUP, key, QT_EMPTY).toString();
+        QJsonObject json = qvs::getJsonFromString(jsonStr);
+        AudioAdvancedConfig config = jsonToAudioConfig(json);
+
+        m_config_audio_encode_templates.insert(key, config);
+    }
+
+#ifndef QT_DEBUG
+    qDebug() << QString("[%1]").arg(ENCODING_AUDIO_PRESETS_GROUP);
+    for(QString key : keys)
+    {
+        qDebug() << QString("%1=").arg(key) << valueInGroup(ENCODING_AUDIO_PRESETS_GROUP, key, QT_EMPTY).toString();
+    }
+    for(QMap<QString, AudioAdvancedConfig>::iterator i = m_config_audio_encode_templates.begin(); i != m_config_audio_encode_templates.end(); i++)
+    {
+        qDebug() << QString("%1=").arg(i.key()) << i.value().toString();
+    }
+#endif
 }
 
 void Config::initInstallerConfig(void)
@@ -194,8 +220,14 @@ void Config::saveConfigAll(void)
     for(QMap<QString, QMap<JobCreator::EJOB_CONFIG, QVariant>>::iterator i = m_config_encode_templates.begin(); i != m_config_encode_templates.end(); i++)
     {
         key = i.key();
-        value = mainUi->m_com->getStringFromJson(configToJson(i.value())).simplified();
+        value = qvs::getStringFromJson(configToJson(i.value())).simplified();
         setValueInGroup(ENCODING_PRESETS_GROUP, key, value);
+    }
+    for(QMap<QString, AudioAdvancedConfig>::iterator i = m_config_audio_encode_templates.begin(); i != m_config_audio_encode_templates.end(); i++)
+    {
+        key = i.key();
+        value = qvs::getStringFromJson(audioConfigToJson(i.value())).simplified();
+        setValueInGroup(ENCODING_AUDIO_PRESETS_GROUP, key, value);
     }
     for(QMap<ECONFIG_INSTALLER, QVariant>::iterator i = m_config_installer.begin(); i != m_config_installer.end(); i++)
     {
@@ -212,10 +244,11 @@ void Config::saveConfigAll(void)
 QJsonObject Config::configToJson(QMap<JobCreator::EJOB_CONFIG, QVariant> a_config)
 {
     QJsonObject json;
-    QMap<JobCreator::EJOB_CONFIG, bool> skip_config;
-    skip_config.insert(JobCreator::eJOB_CONFIG_INPUT, true);
-    skip_config.insert(JobCreator::eJOB_CONFIG_OUTPUT, true);
-    skip_config.insert(JobCreator::eJOB_CONFIG_PASS_NUM, true);
+    QMap<JobCreator::EJOB_CONFIG, bool> skip_config; /* Config value will be skiped on true. */
+
+    skip_config.insert(JobCreator::eJOB_CONFIG_INPUT, true);     /* Skip input */
+    skip_config.insert(JobCreator::eJOB_CONFIG_OUTPUT, true);    /* Skip output */
+    skip_config.insert(JobCreator::eJOB_CONFIG_PASS_NUM, true);  /* Skip pass num */
 
     for(QMap<JobCreator::EJOB_CONFIG, QVariant>::iterator i = a_config.begin(); i != a_config.end(); i++)
     {
@@ -234,10 +267,11 @@ QJsonObject Config::configToJson(QMap<JobCreator::EJOB_CONFIG, QVariant> a_confi
 QMap<JobCreator::EJOB_CONFIG, QVariant> Config::jsonToConfig(QJsonObject a_json)
 {
     QMap<JobCreator::EJOB_CONFIG, QVariant> config;
-    QMap<JobCreator::EJOB_CONFIG, bool> skip_config;
-    skip_config.insert(JobCreator::eJOB_CONFIG_INPUT, true);
-    skip_config.insert(JobCreator::eJOB_CONFIG_OUTPUT, true);
-    skip_config.insert(JobCreator::eJOB_CONFIG_PASS_NUM, true);
+    QMap<JobCreator::EJOB_CONFIG, bool> skip_config; /* Config value will be skiped on true. */
+
+    skip_config.insert(JobCreator::eJOB_CONFIG_INPUT, true);     /* Skip input */
+    skip_config.insert(JobCreator::eJOB_CONFIG_OUTPUT, true);    /* Skip output */
+    skip_config.insert(JobCreator::eJOB_CONFIG_PASS_NUM, true);  /* Skip pass num */
 
     for(int i = eINDEX_0; i < JobCreator::eJOB_CONFIG_MAX; i++)
     {
@@ -249,6 +283,85 @@ QMap<JobCreator::EJOB_CONFIG, QVariant> Config::jsonToConfig(QJsonObject a_json)
             continue;
         }
         config.insert(key, value);
+    }
+    return config;
+}
+
+QJsonObject Config::audioConfigToJson(AudioAdvancedConfig a_config)
+{
+    QJsonObject json;
+
+    for(int i = eINDEX_0; i < c_list_config_encode_audio.length(); i++)
+    {
+        QString key = c_list_config_encode_audio.at(i).second;
+        QJsonValue value;
+
+        if(key.isEmpty())
+        {
+            continue;
+        }
+        if(key == c_list_config_encode_audio[AudioAdvancedConfig::eCONFIG_ADVANCED].second)
+        {
+            value = QJsonValue::fromVariant(a_config.isEnable());
+        }
+        else if(key == c_list_config_encode_audio[AudioAdvancedConfig::eCONFIG_TYPE].second)
+        {
+            value = QJsonValue::fromVariant(a_config.type);
+        }
+        else if(key == c_list_config_encode_audio[AudioAdvancedConfig::eCONFIG_MODE].second)
+        {
+            value = QJsonValue::fromVariant(a_config.mode);
+        }
+        else if(key == c_list_config_encode_audio[AudioAdvancedConfig::eCONFIG_PROFILE].second)
+        {
+            value = QJsonValue::fromVariant(a_config.profile);
+        }
+        else if(key == c_list_config_encode_audio[AudioAdvancedConfig::eCONFIG_VALUE].second)
+        {
+            value = QJsonValue::fromVariant(a_config.value);
+        }
+        else if(key == c_list_config_encode_audio[AudioAdvancedConfig::eCONFIG_VALUE2].second)
+        {
+            value = QJsonValue::fromVariant(a_config.value2);
+        }
+        json.insert(key, value);
+    }
+    return json;
+}
+
+
+AudioAdvancedConfig Config::jsonToAudioConfig(QJsonObject a_json)
+{
+    AudioAdvancedConfig config;
+
+    for(int i = eINDEX_0; i < c_list_config_encode_audio.length(); i++)
+    {
+        AudioAdvancedConfig::ECONFIG key = c_list_config_encode_audio.at(i).first;
+        QVariant value = a_json[c_list_config_encode_audio.at(i).second].toVariant();
+
+        switch(key)
+        {
+        case AudioAdvancedConfig::eCONFIG_ADVANCED:
+            config.setEnable((uint)value.toBool());
+            break;
+        case AudioAdvancedConfig::eCONFIG_TYPE:
+            config.type = (uint)value.toInt();
+            break;
+        case AudioAdvancedConfig::eCONFIG_MODE:
+            config.mode = (uint)value.toInt();
+            break;
+        case AudioAdvancedConfig::eCONFIG_PROFILE:
+            config.profile = (uint)value.toInt();
+            break;
+        case AudioAdvancedConfig::eCONFIG_VALUE:
+            config.value = value;
+            break;
+        case AudioAdvancedConfig::eCONFIG_VALUE2:
+            config.value2 = value;
+            break;
+        default:
+            break;
+        }
     }
     return config;
 }
@@ -438,6 +551,37 @@ bool Config::containsConfigEncodeTemplate(QString a_key)
     return m_config_encode_templates.contains(a_key);
 }
 
+void Config::setConfigAudioEncodeTemplate(QString a_key, AudioAdvancedConfig a_config)
+{
+    removeConfigAudioEncodeTemplate(a_key);
+    m_config_audio_encode_templates.insert(a_key, a_config);
+}
+
+AudioAdvancedConfig Config::getConfigAudioEncodeTemplate(QString a_key)
+{
+    AudioAdvancedConfig config;
+
+    if(m_config_audio_encode_templates.contains(a_key))
+    {
+        config = m_config_audio_encode_templates[a_key];
+    }
+    return config;
+}
+
+void Config::removeConfigAudioEncodeTemplate(QString a_key)
+{
+    if(m_config_audio_encode_templates.contains(a_key))
+    {
+        m_config_audio_encode_templates.remove(a_key);
+        deleteValueInGroup(ENCODING_AUDIO_PRESETS_GROUP, a_key);
+    }
+}
+
+bool Config::containsConfigAudioEncodeTemplate(QString a_key)
+{
+    return m_config_audio_encode_templates.contains(a_key);
+}
+
 QVariant Config::getConfig(ECONFIG_FIRST a_key)
 {
     return m_config_first[a_key];
@@ -515,6 +659,16 @@ void Config::reset(ECONFIG_TYPE a_config_type)
             for(int i = eINDEX_0; i < list.length(); i++)
             {
                 deleteValueInGroup(ENCODING_PRESETS_GROUP, list.at(i));
+            }
+            m_config_encode_templates.clear();
+        }while(false);
+        break;
+    case eCONFIG_TYPE_ENCODE_AUDIO:
+        do{
+            QStringList list = groupKeys(ENCODING_AUDIO_PRESETS_GROUP);
+            for(int i = eINDEX_0; i < list.length(); i++)
+            {
+                deleteValueInGroup(ENCODING_AUDIO_PRESETS_GROUP, list.at(i));
             }
             m_config_encode_templates.clear();
         }while(false);

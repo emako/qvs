@@ -74,7 +74,8 @@ private slots:
 private:
     Ui::AudioEnc *ui;
     AudioAdvancedConfig *m_pAdvancedConfig;
-    void setupUi(void);
+    void setup(void);
+    void setDefaultConfig(void);
 };
 
 #endif // AUDIO_ENC_H

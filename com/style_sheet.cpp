@@ -36,3 +36,9 @@ const char *c_qss_slider_white_circle =
 "{"
     "background: qlineargradient(spread:pad, x1:0, y1:1, x2:0, y2:0, stop:0 #F48EC2, stop:0.25 #F48EC2, stop:0.5 #F48EC2, stop:1 #F48EC2);"
 "}";
+
+const char *c_qss_spin_box_background_alpha_half =
+"QSpinBox,QDoubleSpinBox"
+"{"
+    "background-color: rgba(255, 255, 255, 128);"
+"}";

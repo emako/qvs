@@ -34,12 +34,23 @@
 #define KB (1024)
 #define MB (KB * KB)
 #define GB (MB * KB)
+
 #define MINUTE (60)
 #define HOUR (MINUTE * MINUTE)
+
 #define SECOND_TO_MILLISECOND_UNIT (1000)
-#define NUL (0)
+
+#define NUL 0
+#define ARI 1
+
 #define QT_PASS do{}while(false)
 #define PASS QT_PASS
+
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 11, QT_VERSION_PATCH))
+#define QT_VERSION_TOO_LOW NUL
+#else
+#define QT_VERSION_TOO_LOW ARI
+#endif
 
 static const char QT_EMPTY[]          = "";
 static const char QT_BLANK[]          = " ";
@@ -116,6 +127,9 @@ namespace qvs
     QString convertFramesToTimecode(double a_frames, double a_fps);
     double convertFramesToTime(double a_frames, double a_fps);
     QString convertSecondToTimecode(double a_timeSec);
+
+    QJsonObject getJsonFromString(const QString a_string);
+    QString getStringFromJson(const QJsonObject& a_json);
 }
 
 class Common : public QObject
@@ -197,9 +211,6 @@ public:
 
     QString beautifyText(QString a_text, QString a_color = "red");
     int hadNumber(QString a_text);
-
-    QJsonObject getJsonFromString(const QString a_string);
-    QString getStringFromJson(const QJsonObject& a_json);
 
     QString getHashMd5(QString a_filename);
     QString toUpperFirstStr(QString a_str);

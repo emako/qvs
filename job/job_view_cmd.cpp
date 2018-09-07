@@ -19,7 +19,6 @@ const char *c_config_key[JobCreator::eJOB_CONFIG_MAX] = {
     "Pass",         /*eJOB_CONFIG_PASS_NUM*/
 };
 
-
 JobViewCmd::JobViewCmd(QDialog *parent) :
     QDialog(parent),
     ui(new Ui::JobViewCmd)

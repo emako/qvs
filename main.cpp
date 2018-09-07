@@ -40,6 +40,7 @@ int main(int argc, char *argv[])
     MainWindow w;
     g_pConfig->setMainWindow(&w);
     g_pConfig->initEncodeConfig();  //Init encode config after create classes.
+    g_pConfig->initEncodeAudioConfig();
 
     /* Splash Screen Finish */
 #ifdef QT_PLASH

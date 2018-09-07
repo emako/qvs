@@ -220,6 +220,7 @@ void MainWindow::setAcctions(void)
 
     /* AppMenu */
     connect(ui->actionOpen, SIGNAL(triggered()), this, SLOT(selectOpenfile()));
+    connect(ui->actionCreateJob, SIGNAL(triggered()), this, SLOT(on_buttonAddJob_clicked()));
     connect(ui->actionCommand_Line, SIGNAL(triggered()), this, SLOT(openCommandLine()));
     connect(ui->actionPython, SIGNAL(triggered()), this, SLOT(openPython()));
     connect(ui->actionPreferences, SIGNAL(triggered()), this, SLOT(showPreferences()));

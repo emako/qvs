@@ -1204,7 +1204,7 @@ QStringList JobCreator::configToCommandAVC(QMap<EJOB_CONFIG, QVariant> a_job_con
         cmds.insert((int)eINDEX_1, "--y4m");
         cmds.insert((int)eINDEX_2, QString("\"%1\"").arg(a_job_config[eJOB_CONFIG_INPUT].toString()));
         cmds.insert((int)eINDEX_3, "-");
-        cmds.insert((int)eINDEX_4, "|");
+        cmds.insert((int)eINDEX_4, QT_PIPE);
         break;
     case eJOB_PIPER_AVS4X26X:
         cmds.insert((int)eINDEX_0, mainUi->m_com->findFirstFilePath(QString("avs4x26x_%1").arg(arch)));
@@ -1375,7 +1375,7 @@ QStringList JobCreator::configToCommandHEVC(QMap<EJOB_CONFIG, QVariant> a_job_co
         cmds.insert((int)eINDEX_1, "--y4m");
         cmds.insert((int)eINDEX_2, QString("\"%1\"").arg(a_job_config[eJOB_CONFIG_INPUT].toString()));
         cmds.insert((int)eINDEX_3, "-");
-        cmds.insert((int)eINDEX_4, "|");
+        cmds.insert((int)eINDEX_4, QT_PIPE);
         break;
     case eJOB_PIPER_AVS4X26X:
         cmds.insert((int)eINDEX_0, mainUi->m_com->findFirstFilePath(QString("avs4x26x_%1").arg(arch)));
@@ -1398,6 +1398,11 @@ void JobCreator::on_buttonSaveTemplate_clicked()
 {
     QString key = ui->cbxTemplate->currentText();
 
+    if(key.isEmpty())
+    {
+        return;
+    }
+
     if(key == c_template_key_default)
     {
         QMessageBox::warning(this, tr("Rejection"), tr("Can't save as default template!\nPlease rename template."), QMessageBox::Ok);
@@ -1415,6 +1420,11 @@ void JobCreator::on_buttonSaveTemplate_clicked()
 void JobCreator::on_buttonDeleteTemplate_clicked()
 {
     QString key = ui->cbxTemplate->currentText();
+
+    if(key.isEmpty())
+    {
+        return;
+    }
 
     if(key == c_template_key_default)
     {

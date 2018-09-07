@@ -14,7 +14,7 @@ AudioEnc::AudioEnc(QWidget *parent) :
     m_pAdvancedConfig(new AudioAdvancedConfig(false))
 {
     ui->setupUi(this);
-    this->setupUi();
+    this->setup();
 }
 
 AudioEnc::~AudioEnc()
@@ -23,9 +23,22 @@ AudioEnc::~AudioEnc()
     delete ui;
 }
 
-void AudioEnc::setupUi(void)
+void AudioEnc::setup(void)
 {
+    setDefaultConfig();
     setMode(m_pAdvancedConfig->isEnable());
+}
+
+void AudioEnc::setDefaultConfig(void)
+{
+    /* @AudioConfig::getDefaultConfig */
+
+    m_pAdvancedConfig->setDisable(true);
+    m_pAdvancedConfig->type = (uint)eENCODE_TYPE_AAC_APPLE;
+    m_pAdvancedConfig->mode = (uint)AudioConfig::eQAAC_MODE_LC_AAC_CBR;
+    m_pAdvancedConfig->profile = (uint)AudioConfig::eQAAC_PROFILE_LC_AAC;
+    m_pAdvancedConfig->value = DEFAULT_BITRATE;
+    m_pAdvancedConfig->value2 = false;
 }
 
 void AudioEnc::setConfig(const AudioAdvancedConfig &a_advancedConfig)
@@ -52,12 +65,16 @@ void AudioEnc::setMode(const bool &a_advancedMode)
         ui->labelAudioBitrate->setVisible(false);
         ui->comboBoxAudioBitrate->setVisible(false);
         ui->labelAudioKbps->setVisible(false);
+        ui->labelAudioEncoder->setEnabled(false);
+        ui->comboBoxAudioEncoder->setEnabled(false);
     }
     else
     {
         ui->labelAudioBitrate->setVisible(true);
         ui->comboBoxAudioBitrate->setVisible(true);
         ui->labelAudioKbps->setVisible(true);
+        ui->labelAudioEncoder->setEnabled(true);
+        ui->comboBoxAudioEncoder->setEnabled(true);
     }
     m_pAdvancedConfig->setEnable(a_advancedMode);
 }
@@ -182,7 +199,7 @@ StdWatcherCmd AudioEnc::getEncodeCmd(QString a_input, QString a_output, QString 
     job_cmd.cmd = cmd;
 
 #ifdef QT_DEBUG
-    qDebug() << pipe << "|" << cmd;
+    qDebug() << pipe << QT_PIPE << cmd;
 #endif
 
     return job_cmd;
@@ -316,4 +333,6 @@ void AudioEnc::on_comboBoxAudioEncoder_currentIndexChanged(int a_index)
     ui->labelAudioBitrate->setEnabled(bitrateMode);
     ui->comboBoxAudioBitrate->setEnabled(bitrateMode);
     ui->labelAudioKbps->setEnabled(bitrateMode);
+
+    m_pAdvancedConfig->type = (uint)a_index;
 }

@@ -4,6 +4,7 @@
 #include "../com/common.h"
 
 #include <QDialog>
+#include <QDoubleSpinBox>
 #include <QDebug>
 
 #define DEFAULT_BITRATE (160)
@@ -23,6 +24,16 @@ public:
     {
     }
 
+    enum ECONFIG {
+        eCONFIG_ADVANCED,
+        eCONFIG_TYPE,
+        eCONFIG_MODE,
+        eCONFIG_PROFILE,
+        eCONFIG_VALUE,
+        eCONFIG_VALUE2,
+        eCONFIG_MAX,
+    };
+
 public:
     QString name;               /* advanced config name */
     QString cmd;                /* encoder cmd */
@@ -35,7 +46,7 @@ public:
 public:
     QString toString(void) const
     {
-        return QString("name=%1,type=%2,mode=%3,profile=%4,value=%5,value2=%6,cmd=%7").arg(name).arg(type).arg(mode).arg(profile).arg(value.toString()).arg(value2.toString()).arg(cmd);
+        return QString("[enable:%1]name=%2,type=%3,mode=%4,profile=%5,value=%6,value2=%7,cmd=%8").arg(advanced).arg(name).arg(type).arg(mode).arg(profile).arg(value.toString()).arg(value2.toString()).arg(cmd);
     }
 
     void print(void) const
@@ -130,8 +141,16 @@ public:
     void setConfig(AudioAdvancedConfig *a_pAdvancedConfig);
     void setConfig(AudioAdvancedConfig a_pAdvancedConfig);
 
+    void reloadConfig(const QString &a_key);
+
 public slots:
     virtual void setMode(bool a_advancedMode);
+    virtual void moveValue(void);
+    virtual void setValueValue(void);
+    virtual bool containsValue(QObject *a_object);
+    virtual void setValueVisible(const bool &a_visible);
+    virtual void setValueHidden(void);
+    virtual void valueChanged(double a_value);
     virtual QString processAccApple(void);
     virtual QString processAccFdk(void);
     virtual QString processAccNero(void);
@@ -144,14 +163,16 @@ public slots:
     virtual QString processWav(void);
 
 private slots:
-    virtual void contextMenuEvent(QContextMenuEvent *e);
     virtual bool eventFilter(QObject *o, QEvent *e);
     virtual void resizeEvent(QResizeEvent *e);
     virtual void resizeEvent(void);
     virtual void resizeEventMinimum(void);
 
+    void on_buttonSaveTemplate_clicked();
+    void on_buttonDeleteTemplate_clicked();
     void on_buttonAccept_clicked();
     void on_buttonCancel_clicked();
+    void on_comboBoxTemplate_activated(const QString &a_key);
     void on_comboBoxAudioEncoder_currentIndexChanged(int a_index);
     void on_checkBoxAdvancedOption_stateChanged(int a_state);
     void on_comboBoxAacAppleProfile_currentIndexChanged(int a_index);
@@ -171,10 +192,18 @@ private slots:
 private:
     Ui::AudioConfig *ui;
     bool m_advancedMode;
+    QDoubleSpinBox *m_pSpinBox;
+    QTimer *m_pTimerValueHidden;
+    QList<QWidget *> s_value_sliders;
+
+private:
     void setup(void);
     void setupUi(void);
     void loadConfig(void);
     void fitValue(QSlider *a_slider, const int &a_maxValue, const int &a_minValue = (int)eINDEX_0);
+    QStringList getTemplateKeys(void);
 };
+
+extern const QList<QPair<AudioAdvancedConfig::ECONFIG, QString>> c_list_config_encode_audio;
 
 #endif // AUDIO_CONFIG_H

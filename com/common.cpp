@@ -155,6 +155,24 @@ QString qvs::convertSecondToTimecode(double a_timeSec)
     return timecode;
 }
 
+QJsonObject qvs::getJsonFromString(const QString a_string)
+{
+    QJsonDocument json_document = QJsonDocument::fromJson(a_string.toLocal8Bit().data());
+
+    if(json_document.isNull())
+    {
+        qDebug()<< "Illegal json string: "<< a_string.toLocal8Bit().data();
+    }
+
+    QJsonObject json = json_document.object();
+    return json;
+}
+
+QString qvs::getStringFromJson(const QJsonObject& a_json)
+{
+    return QString(QJsonDocument(a_json).toJson());
+}
+
 Common::Common(QObject *parent) : QObject(parent)
 {
     connect(&m_process, SIGNAL(readyReadStandardError()), this, SLOT(slotProcessReadyReadStandardError()));
@@ -344,24 +362,6 @@ void Common::moveRow(QTableWidget *a_pTable, int a_from, int a_to)
 QString Common::beautifyText(QString a_text, QString a_color)
 {
     return QString("<p style=\"color:%1\">%2</p>").arg(a_color).arg(a_text);
-}
-
-QJsonObject Common::getJsonFromString(const QString a_string)
-{
-    QJsonDocument json_document = QJsonDocument::fromJson(a_string.toLocal8Bit().data());
-
-    if(json_document.isNull())
-    {
-        qDebug()<< "Illegal json string: "<< a_string.toLocal8Bit().data();
-    }
-
-    QJsonObject json = json_document.object();
-    return json;
-}
-
-QString Common::getStringFromJson(const QJsonObject& a_json)
-{
-    return QString(QJsonDocument(a_json).toJson());
 }
 
 int Common::hadNumber(QString a_text)
