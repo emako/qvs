@@ -1,10 +1,12 @@
-//-------------------------------------------------
-//
-// Header File created by Python 2018-09-08T08:14:22
-//
-//-------------------------------------------------
 #ifndef MEDIAINFO_DEFINE_H
 #define MEDIAINFO_DEFINE_H
+//--------------------------------------------------------------------
+//
+// Header File created by Python3.6.4 2018-09-08T08:35:01
+// For MediaInfo v18.08 or greater version.
+// The macro definition is derived from the CSV files in Developers/List_Of_Parameters.
+//
+//--------------------------------------------------------------------
 
 #include "mediaInfo_dll.h"
 
