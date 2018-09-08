@@ -42,7 +42,7 @@ INCLUDEPATH += $${FFMPEG_HEADER}
 
 VERSION_MESSAGE = "QT version is too low"
 greaterThan(QT_MAJOR_VERSION, 5)|equals(QT_MAJOR_VERSION, 5){
-    !greaterThan(QT_MINOR_VERSION, 11){
+    !greaterThan(QT_MINOR_VERSION, 10){
         message($${VERSION_MESSAGE})
     }
 }else{

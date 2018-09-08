@@ -90,7 +90,7 @@ void MainWindow::setupUi(void)
     ui->stackedWidgetMediaInfo->setCurrentWidget(m_pMediaInfoDialog);
 
     /*Property*/
-    this->setWindowTitle(QString("Qvs %1").arg(QVS_VERSION));
+    this->setWindowTitle(QString("Qvs"));
     this->setWindowIcon(QIcon(":/icons/qvs.ico"));
     this->setAcceptDrops(true);
 

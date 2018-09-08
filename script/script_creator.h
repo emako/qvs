@@ -50,6 +50,13 @@ public:
         ScriptCreateMax,
     };
 
+    enum ScriptCreatorTab {
+        ScriptCreatorTabSource,
+        ScriptCreatorTabFilters,
+        ScriptCreatorTabScript,
+        ScriptCreatorTabMax,
+    };
+
     enum ReloadFileType {
         ReloadFileSource,
         ReloadFileOutput,

@@ -227,12 +227,13 @@ void ScriptCreator::dropEvent(QDropEvent* e)
             {
                 continue;
             }
-            switch(ui->tabWidget->currentIndex())
+            switch(static_cast<ScriptCreatorTab>(ui->tabWidget->currentIndex()))
             {
-            case eINDEX_0:/*Source*/
+            case ScriptCreatorTabSource:/*Source*/
                 /*Source*/
                 pos = QPoint(ui->groupBoxSource->pos()
                            + ui->tabWidget->pos()
+                           + ui->widgetSource->pos()
                            + ui->editSource->pos()
                            + QPoint(ui->editSource->pos().x(), ui->editSource->height()));
                 ret = QRect(pos, ui->editSource->size());
@@ -244,6 +245,8 @@ void ScriptCreator::dropEvent(QDropEvent* e)
                 /*Output*/
                 pos = QPoint(ui->groupBoxSource->pos()
                            + ui->tabWidget->pos()
+                           + ui->widgetOutputPanel->pos()
+                           + ui->widgetOutput->pos()
                            + ui->editOutput->pos()
                            + QPoint(ui->editOutput->pos().x(), ui->editOutput->height()));
                 ret = QRect(pos, ui->editOutput->size());
@@ -255,6 +258,7 @@ void ScriptCreator::dropEvent(QDropEvent* e)
                 /*TimeCode*/
                 pos = QPoint(ui->groupBoxFPS->pos()
                            + ui->tabWidget->pos()
+                           + ui->widgetTimeCode->pos()
                            + ui->editTimeCodeFile->pos()
                            + QPoint(ui->editTimeCodeFile->pos().x(), ui->editTimeCodeFile->height()));
                 ret = QRect(pos, ui->editTimeCodeFile->size());
@@ -264,10 +268,12 @@ void ScriptCreator::dropEvent(QDropEvent* e)
                     break;
                 }
                 break;
-            case eINDEX_1:/*Filters*/
+            case ScriptCreatorTabFilters:/*Filters*/
                 /*DeleteLogoData*/
                 pos = QPoint(ui->groupBoxLogo->pos()
                            + ui->tabWidget->pos()
+                           + ui->widgetDelogo->pos()
+                             + ui->widgetDelogoPanel->pos()
                            + ui->editDeleteLogoDataInput->pos()
                            + QPoint(ui->editDeleteLogoDataInput->pos().x(), ui->editDeleteLogoDataInput->height()));
                 ret = QRect(pos, ui->editDeleteLogoDataInput->size());
@@ -279,6 +285,8 @@ void ScriptCreator::dropEvent(QDropEvent* e)
                 /*AddLogoData*/
                 pos = QPoint(ui->groupBoxLogo->pos()
                            + ui->tabWidget->pos()
+                             + ui->widgetAddLogo->pos()
+                             + ui->widgetAddLogoPanel->pos()
                            + ui->editAddLogoDataInput->pos()
                            + QPoint(ui->editAddLogoDataInput->pos().x(), ui->editAddLogoDataInput->height()));
                 ret = QRect(pos, ui->editAddLogoDataInput->size());
@@ -290,6 +298,7 @@ void ScriptCreator::dropEvent(QDropEvent* e)
                 /*Subtitle*/
                 pos = QPoint(ui->groupBoxSubtitle->pos()
                            + ui->tabWidget->pos()
+                           + ui->widgetSubtitle->pos()
                            + ui->editSubtitle->pos()
                            + QPoint(ui->editSubtitle->pos().x(), ui->editSubtitle->height()));
                 ret = QRect(pos, ui->editSubtitle->size());
@@ -299,7 +308,7 @@ void ScriptCreator::dropEvent(QDropEvent* e)
                     break;
                 }
                 break;
-            case eINDEX_2:/*Script*/
+            case ScriptCreatorTabScript:/*Script*/
                 break;
             default:
                 break;
