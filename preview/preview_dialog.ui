@@ -47,7 +47,7 @@
          <x>0</x>
          <y>0</y>
          <width>1005</width>
-         <height>569</height>
+         <height>573</height>
         </rect>
        </property>
        <property name="focusPolicy">
@@ -90,7 +90,7 @@
      </widget>
     </item>
     <item>
-     <widget class="QWidget" name="" native="true">
+     <widget class="QWidget" name="widgetTopPanel" native="true">
       <layout class="QHBoxLayout" name="horizontalLayout">
        <property name="spacing">
         <number>3</number>
@@ -98,8 +98,14 @@
        <property name="leftMargin">
         <number>2</number>
        </property>
+       <property name="topMargin">
+        <number>0</number>
+       </property>
        <property name="rightMargin">
         <number>2</number>
+       </property>
+       <property name="bottomMargin">
+        <number>0</number>
        </property>
        <item>
         <widget class="QToolButton" name="timeLineCheckButton">
@@ -247,7 +253,7 @@
      </widget>
     </item>
     <item>
-     <widget class="QWidget" name="" native="true">
+     <widget class="QWidget" name="widgetBottomPanel" native="true">
       <layout class="QHBoxLayout" name="horizontalLayout_2">
        <property name="spacing">
         <number>3</number>
@@ -255,8 +261,14 @@
        <property name="leftMargin">
         <number>2</number>
        </property>
+       <property name="topMargin">
+        <number>0</number>
+       </property>
        <property name="rightMargin">
         <number>2</number>
+       </property>
+       <property name="bottomMargin">
+        <number>0</number>
        </property>
        <item>
         <widget class="QToolButton" name="playButton">
