@@ -6,7 +6,6 @@
 
 using namespace MediaInfoDLL;
 
-#define __TR(__x) QObject::tr(__x)
 #if defined(UNICODE) || defined(_UNICODE)
     #define toStd(__x) qvs::toStdBasicWString(__x)
     #define fromStd(__x) qvs::fromStdBasicWString(__x)
@@ -15,25 +14,21 @@ using namespace MediaInfoDLL;
     #define fromStd(__x) qvs::fromStdBasicString(__x)
 #endif
 
-#define MEDIA_PROP_COMPLETE __T("Complete")
-#define MEDIA_PROP_FORMAT __T("Format")
-#define MEDIA_PROP_WIDTH __T("Width")
-#define MEDIA_PROP_HEIGHT __T("Height")
-#define MEDIA_PROP_FRAME_RATE_MODE __T("FrameRateMode")
-#define MEDIA_PROP_FRAME_RATE __T("FrameRate")
-#define MEDIA_PROP_FRAME_RATE_NUM __T("FrameRate_Num")
-#define MEDIA_PROP_FRAME_RATE_DEN __T("FrameRate_Den")
-#define MEDIA_PROP_FRAME_COUNT __T("FrameCount")
-#define MEDIA_PROP_DURATION __T("Duration")
-#define MEDIA_PROP_BIT_RATE __T("BitRate")
-#define MEDIA_PROP_COLOR_SPACE __T("ColorSpace")
-#define MEDIA_PROP_CHROMA_SUBSAMPLING __T("ChromaSubsampling")
-#define MEDIA_PROP_BIT_DEPTH __T("BitDepth")
-#define MEDIA_PROP_SCAN_TYPE __T("ScanType")
-#define MEDIA_PROP_SCAN_ORDER __T("ScanOrder")
-#define MEDIA_PROP_TRUE __T("1")
-#define MEDIA_PROP_FALSE __T("0")
-#define MEDIA_UNKNOWED_FORMAT __TR("UNKNOWED")
+#define MEDIA_PROP_FORMAT MI_VIDEO_FORMAT
+#define MEDIA_PROP_WIDTH MI_VIDEO_WIDTH
+#define MEDIA_PROP_HEIGHT MI_VIDEO_HEIGHT
+#define MEDIA_PROP_FRAME_RATE_MODE MI_VIDEO_FRAMERATE_MODE
+#define MEDIA_PROP_FRAME_RATE MI_VIDEO_FRAMERATE
+#define MEDIA_PROP_FRAME_RATE_NUM MI_VIDEO_FRAMERATE_NUM
+#define MEDIA_PROP_FRAME_RATE_DEN MI_VIDEO_FRAMERATE_DEN
+#define MEDIA_PROP_FRAME_COUNT MI_VIDEO_FRAMECOUNT
+#define MEDIA_PROP_DURATION MI_VIDEO_DURATION
+#define MEDIA_PROP_BIT_RATE MI_VIDEO_BITRATE
+#define MEDIA_PROP_COLOR_SPACE MI_VIDEO_COLORSPACE
+#define MEDIA_PROP_CHROMA_SUBSAMPLING MI_VIDEO_CHROMASUBSAMPLING
+#define MEDIA_PROP_BIT_DEPTH MI_VIDEO_BITDEPTH
+#define MEDIA_PROP_SCAN_TYPE MI_VIDEO_SCANTYPE
+#define MEDIA_PROP_SCAN_ORDER MI_VIDEO_SCANORDER
 
 namespace MediaInfoDLL {
 class MediaInfo;

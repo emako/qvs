@@ -43,11 +43,11 @@ QString MediaInfoLoader::get(EMEDIA_PROP a_prop, ESTREAM_TYPE a_streamType, size
     switch(a_prop)
     {
     case eMEDIA_PROP_ALL_COMPLETE:
-        m_mediainfo.Option(MEDIA_PROP_COMPLETE, MEDIA_PROP_TRUE);
+        m_mediainfo.Option(MI_OPTION_COMPLETE, MI_OPTION_TRUE);
         info = m_mediainfo.Inform();
         break;
     case eMEDIA_PROP_ALL:
-        m_mediainfo.Option(MEDIA_PROP_COMPLETE, MEDIA_PROP_FALSE);
+        m_mediainfo.Option(MI_OPTION_COMPLETE, MI_OPTION_FALSE);
         info = m_mediainfo.Inform();
         break;
     case eMEDIA_PROP_FORMAT_CODE:
@@ -64,7 +64,7 @@ QString MediaInfoLoader::get(EMEDIA_PROP a_prop, ESTREAM_TYPE a_streamType, size
 
             if(format.isEmpty())
             {
-                info = toStd(MEDIA_UNKNOWED_FORMAT);
+                info = toStd(QObject::tr("Unknowed"));
             }
             else
             {
