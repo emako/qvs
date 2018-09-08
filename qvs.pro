@@ -180,7 +180,8 @@ SOURCES += \
     script/number_matcher.cpp \
     tools/audio_config.cpp \
     preview/preview_timeline_slider.cpp \
-    com/style_sheet.cpp
+    com/style_sheet.cpp \
+    mediainfo/mediainfo_list.cpp
 
 HEADERS += \
     mainwindow.h \
@@ -214,7 +215,9 @@ HEADERS += \
     preview/preview_timeline_slider.h \
     com/style_sheet.h \
     job/job_cmdlist.h \
-    job/job_item.h
+    job/job_item.h \
+    mediainfo/mediainfo_list.h \
+    mediainfo/mediainfo_enum.h
 
 FORMS += \
     mainwindow.ui \

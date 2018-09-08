@@ -10,15 +10,23 @@ import platform
 #
 #-------------------------------------------------
 
-input = 'General.csv', 'Video.csv', 'Audio.csv', 'Generic.csv', 'Image.csv', 'Menu.csv', 'Other.csv', 'Text.csv'
+input = 'General.csv', 'Video.csv', 'Audio.csv', 'Text.csv', 'Other.csv', 'Image.csv', 'Menu.csv', 'Generic.csv'
 output = 'mediainfo_define.h'
 datas = []
 
 def add_flag():
 	datas.append('/// -> Option')
+	datas.append('#define MI_OPTION_INFO_VERSION __T("Info_Version")')
+	datas.append('#define MI_OPTION_INFO_PARAMETERS __T("Info_Parameters")')
+	datas.append('#define MI_OPTION_INFO_CODECS __T("Info_Codecs")')
+	datas.append('#define MI_OPTION_INFORM __T("Inform")')
 	datas.append('#define MI_OPTION_COMPLETE __T("Complete")')
-	datas.append('#define MI_OPTION_TRUE __T("1")')
-	datas.append('#define MI_OPTION_FALSE __T("0")')
+	datas.append('')
+	datas.append('/// -> Value')
+	datas.append('#define MI_VALUE_EMPTY __T("")')
+	datas.append('#define MI_VALUE_TRUE __T("1")')
+	datas.append('#define MI_VALUE_FALSE __T("0")')
+	datas.append('#define MI_VALUE_INFORM_EXAMPLE __T("General;Example : FileSize=%FileSize%")')
 	datas.append('')
 
 def filename_split(filename):
@@ -52,13 +60,13 @@ def main():
 	with open(output, 'w') as f:
 		f.write('#ifndef MEDIAINFO_DEFINE_H\n')
 		f.write('#define MEDIAINFO_DEFINE_H\n')
-		f.write('//--------------------------------------------------------------------'+'\n')
+		f.write('//--------------------------------------------------------------------\n')
 		f.write('//\n')
 		f.write('// Header File created by Python{ver} {time}\n'.format(ver=str(platform.python_version()), time=time.strftime("%Y-%m-%dT%H:%M:%S", time.gmtime())))
 		f.write('// For MediaInfo v18.08 or greater version.\n')
 		f.write('// The macro definition is derived from the CSV files in Developers/List_Of_Parameters.\n')
 		f.write('//\n')
-		f.write('//--------------------------------------------------------------------'+'\n')
+		f.write('//--------------------------------------------------------------------\n')
 		f.write('\n')
 		f.write('#include "mediaInfo_dll.h"\n')
 		f.write('\n')

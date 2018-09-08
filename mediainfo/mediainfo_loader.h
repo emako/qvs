@@ -2,6 +2,7 @@
 #define MEDIAINFO_LOADER_H
 
 #include "mediainfo_define.h"
+#include "mediainfo_list.h"
 #include "../com/common.h"
 
 using namespace MediaInfoDLL;
@@ -73,11 +74,22 @@ public:
         eSTREAM_TYPE_MAX,
     };
 
+    enum EFORMAT {
+        eFORMAT_INI,
+        eFORMAT_JSON,
+        eFORMAT_XML,
+    };
+
+    QString option(const String &a_option, const String &a_value = MI_VALUE_EMPTY);
     size_t open(const QString &a_filename);
     size_t open(void);
+    QString inform(EFORMAT a_format = eFORMAT_INI);
     QString get(EMEDIA_PROP a_prop = eMEDIA_PROP_ALL, ESTREAM_TYPE a_streamType = eSTREAM_TYPE_VIDEO, size_t a_streamNumber = (size_t)eINDEX_0);
-    QString get(String a_prop, stream_t a_streamType = Stream_Video, size_t a_streamNumber = (size_t)eINDEX_0);
+    QString get(const String & a_param, stream_t a_streamType = Stream_Video, size_t a_streamNumber = (size_t)eINDEX_0, info_t a_infoKind = Info_Text, info_t a_SearchKind = Info_Name);
+    QString get(size_t a_param, stream_t a_streamType = Stream_Video, size_t a_streamNumber = (size_t)eINDEX_0, info_t a_infoKind = Info_Text);
+    size_t count(stream_t a_streamType = Stream_Video, size_t a_streamNumber = (size_t)eINDEX_NONE);
     virtual void close(void);
+    virtual QString ver(void);
 
 private:
     MediaInfoDLL::MediaInfo m_mediainfo;
