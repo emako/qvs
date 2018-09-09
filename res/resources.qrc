@@ -90,12 +90,9 @@
         <file>fonts/consola.ttf</file>
         <file>buttons/python.png</file>
         <file>buttons/pismo.png</file>
-        <file>icons/pismo.ico</file>
         <file>buttons/system_run.png</file>
         <file>buttons/ffmpeg.png</file>
         <file>buttons/play_white.png</file>
-        <file>icons/wmp.ico</file>
-        <file>icons/mplayer.ico</file>
         <file>icons/qvs.ico</file>
         <file>buttons/github.png</file>
         <file>buttons/vsedit.png</file>
@@ -147,5 +144,14 @@
         <file>images/splashscreen_cn.png</file>
         <file>fonts/DigitalMini.ttf</file>
         <file>style/white_circle.png</file>
+        <file>strings/mediainfo/language/en.csv</file>
+        <file>strings/mediainfo/language/ja.csv</file>
+        <file>strings/mediainfo/language/zh-CN.csv</file>
+        <file>strings/mediainfo/language/zh-HK.csv</file>
+        <file>strings/mediainfo/language/zh-TW.csv</file>
+        <file>buttons/lang.png</file>
+        <file>buttons/lang_en.ico</file>
+        <file>buttons/lang_ja.ico</file>
+        <file>buttons/lang_zh.ico</file>
     </qresource>
 </RCC>

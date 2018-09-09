@@ -31,6 +31,8 @@ using namespace MediaInfoDLL;
 #define MEDIA_PROP_SCAN_TYPE MI_VIDEO_SCANTYPE
 #define MEDIA_PROP_SCAN_ORDER MI_VIDEO_SCANORDER
 
+#define MEDIA_LANGUAGE_DEFAULT QObject::tr("en")
+
 namespace MediaInfoDLL {
 class MediaInfo;
 }
@@ -75,21 +77,51 @@ public:
     };
 
     enum EFORMAT {
-        eFORMAT_INI,
-        eFORMAT_JSON,
+        eFORMAT_TREE,
+        eFORMAT_INI = eFORMAT_TREE,   /* for traversal */
+        eFORMAT_TEXT = eFORMAT_TREE,
+        eFORMAT_CSV,
+        eFORMAT_HTML,
         eFORMAT_XML,
+        eFORMAT_MAXML,
+        eFORMAT_JSON,
+        eFORMAT_EBUCORE_1_8_PS,
+        eFORMAT_EBUCORE_1_8_SP,
+        eFORMAT_EBUCORE_1_8_PS_JSON,
+        eFORMAT_EBUCORE_1_8_SP_JSON,
+        eFORMAT_EBUCORE_1_6,
+        eFORMAT_FIMS_1_3,
+        eFORMAT_MPEG_7,
+        eFORMAT_PBCORE_2_1,
+        eFORMAT_PBCORE_2_0,
+        eFORMAT_PBCORE_1_2,
+        eFORMAT_NISO_Z39_87,
     };
 
     QString option(const String &a_option, const String &a_value = MI_VALUE_EMPTY);
+
     size_t open(const QString &a_filename);
     size_t open(void);
-    QString inform(EFORMAT a_format = eFORMAT_INI);
+
+    QString traversal(EFORMAT a_format);
+
+    QString inform(void);
+    QString inform(bool a_complete);
+    QString inform(bool a_complete, EFORMAT a_format);
+
     QString get(EMEDIA_PROP a_prop = eMEDIA_PROP_ALL, ESTREAM_TYPE a_streamType = eSTREAM_TYPE_VIDEO, size_t a_streamNumber = (size_t)eINDEX_0);
     QString get(const String & a_param, stream_t a_streamType = Stream_Video, size_t a_streamNumber = (size_t)eINDEX_0, info_t a_infoKind = Info_Text, info_t a_SearchKind = Info_Name);
     QString get(size_t a_param, stream_t a_streamType = Stream_Video, size_t a_streamNumber = (size_t)eINDEX_0, info_t a_infoKind = Info_Text);
+
     size_t count(stream_t a_streamType = Stream_Video, size_t a_streamNumber = (size_t)eINDEX_NONE);
+
     virtual void close(void);
-    virtual QString ver(void);
+
+    QString version(void);
+    QString language(const QString &a_language = MEDIA_LANGUAGE_DEFAULT);
+
+    QString format(const QString &a_format);
+    QString format(EFORMAT a_format);
 
 private:
     MediaInfoDLL::MediaInfo m_mediainfo;

@@ -30,7 +30,7 @@ size_t MediaInfoLoader::open(void)
     return m_mediainfo.Open(m_filename.toStdWString());
 }
 
-QString MediaInfoLoader::inform(EFORMAT a_format)
+QString MediaInfoLoader::traversal(EFORMAT a_format)
 {
     QString inform;
 
@@ -94,22 +94,49 @@ QString MediaInfoLoader::inform(EFORMAT a_format)
             }
         }
         inform = qvs::getStringFromJson(infoArray);
-#ifdef QT_DEBUG
-        qvs::setFileText(".json", inform);
-#endif
     }
-    else if(a_format == eFORMAT_XML)
-    {
-
-    }
-
     return inform;
+}
+
+QString MediaInfoLoader::inform(bool a_complete, EFORMAT a_format)
+{
+    String value = MI_VALUE_FALSE;
+
+    if(a_complete)
+    {
+        value = MI_VALUE_TRUE;
+    }
+    if(option(MI_OPTION_COMPLETE_GET, value) != value)
+    {
+        option(MI_OPTION_COMPLETE, value);
+    }
+    format(a_format);
+    return inform();
+}
+
+QString MediaInfoLoader::inform(bool a_complete)
+{
+    String value = MI_VALUE_FALSE;
+
+    if(a_complete)
+    {
+        value = MI_VALUE_TRUE;
+    }
+    if(option(MI_OPTION_COMPLETE_GET, value) != value)
+    {
+        option(MI_OPTION_COMPLETE, value);
+    }
+    return inform();
+}
+
+QString MediaInfoLoader::inform(void)
+{
+    return fromStd(m_mediainfo.Inform());
 }
 
 QString MediaInfoLoader::get(EMEDIA_PROP a_prop, ESTREAM_TYPE a_streamType, size_t a_streamNumber)
 {
     String info; /* Type define from MediaInfoDLL Header file. */
-    String option;
 
     if(!m_mediainfo.IsReady())
     {
@@ -119,11 +146,11 @@ QString MediaInfoLoader::get(EMEDIA_PROP a_prop, ESTREAM_TYPE a_streamType, size
     switch(a_prop)
     {
     case eMEDIA_PROP_ALL_COMPLETE:
-        option = m_mediainfo.Option(MI_OPTION_COMPLETE, MI_VALUE_TRUE);
+        option(MI_OPTION_COMPLETE, MI_VALUE_TRUE);
         info = m_mediainfo.Inform();
         break;
     case eMEDIA_PROP_ALL:
-        option = m_mediainfo.Option(MI_OPTION_COMPLETE, MI_VALUE_FALSE);
+        option(MI_OPTION_COMPLETE, MI_VALUE_FALSE);
         info = m_mediainfo.Inform();
         break;
     case eMEDIA_PROP_FORMAT_CODE:
@@ -222,7 +249,101 @@ void MediaInfoLoader::close(void)
     }
 }
 
-QString MediaInfoLoader::ver(void)
+QString MediaInfoLoader::version(void)
 {
     return option(MI_OPTION_INFO_VERSION);
+}
+
+QString MediaInfoLoader::language(const QString &a_language)
+{
+    QResource resource(QString(":/strings/mediainfo/language/%1.csv").arg(a_language));
+    QByteArray data((const char *)resource.data(), resource.size());
+    QString language_list = QString::fromUtf8(data);
+
+    if(a_language == MEDIA_LANGUAGE_DEFAULT)
+    {
+        if(option(MI_OPTION_INFORM_GET) != MI_VALUE_TREE)
+        {
+            option(MI_OPTION_INFORM, MI_VALUE_TREE);
+        }
+    }
+    else
+    {
+        if(option(MI_OPTION_INFORM_GET) != MI_VALUE_HTML)
+        {
+            option(MI_OPTION_INFORM, MI_VALUE_HTML);
+        }
+    }
+    return option(MI_OPTION_LANGUAGE, toStd(language_list));
+}
+
+QString MediaInfoLoader::format(const QString &a_format)
+{
+    if(option(MI_OPTION_INFORM_GET) != a_format)
+    {
+        return option(MI_OPTION_INFORM, toStd(a_format));
+    }
+    return QT_EMPTY;
+}
+
+QString MediaInfoLoader::format(EFORMAT a_format)
+{
+    QString info;
+
+    switch(a_format)
+    {
+    case eFORMAT_TREE:
+    default:
+        info = format(fromStd(MI_VALUE_TREE));
+        break;
+    case eFORMAT_CSV:
+        info = format(fromStd(MI_VALUE_CSV));
+        break;
+    case eFORMAT_HTML:
+        info = format(fromStd(MI_VALUE_HTML));
+        break;
+    case eFORMAT_XML:
+        info = format(fromStd(MI_VALUE_XML));
+        break;
+    case eFORMAT_MAXML:
+        info = format(fromStd(MI_VALUE_MAXML));
+        break;
+    case eFORMAT_JSON:
+        info = format(fromStd(MI_VALUE_JSON));
+        break;
+    case eFORMAT_EBUCORE_1_8_PS:
+        info = format(fromStd(MI_VALUE_EBUCORE_1_8_PS));
+        break;
+    case eFORMAT_EBUCORE_1_8_SP:
+        info = format(fromStd(MI_VALUE_EBUCORE_1_8_SP));
+        break;
+    case eFORMAT_EBUCORE_1_8_PS_JSON:
+        info = format(fromStd(MI_VALUE_EBUCORE_1_8_PS_JSON));
+        break;
+    case eFORMAT_EBUCORE_1_8_SP_JSON:
+        info = format(fromStd(MI_VALUE_EBUCORE_1_8_SP_JSON));
+        break;
+    case eFORMAT_EBUCORE_1_6:
+        info = format(fromStd(MI_VALUE_EBUCORE_1_6));
+        break;
+    case eFORMAT_FIMS_1_3:
+        info = format(fromStd(MI_VALUE_FIMS_1_3));
+        break;
+    case eFORMAT_MPEG_7:
+        info = format(fromStd(MI_VALUE_MPEG_7));
+        break;
+    case eFORMAT_PBCORE_2_1:
+        info = format(fromStd(MI_VALUE_PBCORE_2_1));
+        break;
+    case eFORMAT_PBCORE_2_0:
+        info = format(fromStd(MI_VALUE_PBCORE_2_0));
+        break;
+    case eFORMAT_PBCORE_1_2:
+        info = format(fromStd(MI_VALUE_PBCORE_1_2));
+        break;
+    case eFORMAT_NISO_Z39_87:
+        info = format(fromStd(MI_VALUE_NISO_Z39_87));
+        break;
+    }
+    return info;
 }

@@ -37,7 +37,6 @@
      <property name="font">
       <font>
        <family>Source Code Pro</family>
-       <pointsize>9</pointsize>
       </font>
      </property>
      <property name="acceptDrops">

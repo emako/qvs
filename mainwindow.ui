@@ -621,6 +621,7 @@ QProgressBar::chunk {
     <addaction name="actionCommand_Line"/>
     <addaction name="actionPython"/>
     <addaction name="separator"/>
+    <addaction name="actionLanguage"/>
     <addaction name="actionPreferences"/>
     <addaction name="actionInstaller"/>
     <addaction name="separator"/>
@@ -1226,6 +1227,11 @@ QProgressBar::chunk {
    </property>
    <property name="text">
     <string>Script Creator</string>
+   </property>
+  </action>
+  <action name="actionLanguage">
+   <property name="text">
+    <string>Language</string>
    </property>
   </action>
  </widget>
