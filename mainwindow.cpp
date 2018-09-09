@@ -24,6 +24,8 @@ extern QMap<QUuid, StdWatcher*> g_pStdWatch;
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow),
+    m_pActionGruopOnCompletion(new QActionGroup(this)),
+    m_pActionGruopLanguage(new QActionGroup(this)),
     m_job_chef(nullptr),
     m_com(nullptr),
     m_timer(nullptr),
@@ -52,6 +54,7 @@ MainWindow::~MainWindow()
     delete m_pAudioEnc;
     delete m_pMediaInfoDialog;
     delete m_pActionGruopOnCompletion;
+    delete m_pActionGruopLanguage;
     delete g_pConfig;
     delete ui;
 }
@@ -241,10 +244,14 @@ void MainWindow::setAcctions(void)
     connect(ui->actionCleanupAll, SIGNAL(triggered()), this, SLOT(cleanUpAll()));
 
     /* OnCompletionMenu */
-    m_pActionGruopOnCompletion = new QActionGroup(this);
     m_pActionGruopOnCompletion->addAction(ui->actionPostOp_PowerDown);
     m_pActionGruopOnCompletion->addAction(ui->actionPostOp_Hibernate);
     m_pActionGruopOnCompletion->addAction(ui->actionPostOp_DoNothing);
+
+    /* LanguageMenu */
+    m_pActionGruopLanguage->addAction(ui->actionLanguageEnglish);
+    m_pActionGruopLanguage->addAction(ui->actionLanguageChinese);
+    m_pActionGruopLanguage->addAction(ui->actionLanguageJapanese);
 
     /* Tools */
     connect(ui->actionScriptCreator, SIGNAL(triggered()), this, SLOT(openScriptCreator()));
@@ -1506,4 +1513,43 @@ void MainWindow::loadFonts(void)
     QResource consolaFont2Resource(":/fonts/DigitalMini.ttf");
     QByteArray consolaFont2Data((const char *)consolaFont2Resource.data(), consolaFont2Resource.size());
     QFontDatabase::addApplicationFontFromData(consolaFont2Data);
+}
+
+void MainWindow::setLanguage(Config::ELANGUAGE a_language)
+{
+    if(a_language > m_pActionGruopLanguage->actions().length())
+    {
+        return;
+    }
+    m_pActionGruopLanguage->actions().at(a_language)->setChecked(true);
+    setLanguage();
+}
+
+void MainWindow::setLanguage(void)
+{
+    switch(language())
+    {
+    case Config::eLANGUAGE_EN:
+    default:
+        break;
+    case Config::eLANGUAGE_ZH:
+        break;
+    case Config::eLANGUAGE_JA:
+        break;
+    }
+}
+
+Config::ELANGUAGE MainWindow::language(void)
+{
+    Config::ELANGUAGE language = static_cast<Config::ELANGUAGE>(eINDEX_0);
+
+    for(int i = eINDEX_0; i < m_pActionGruopLanguage->actions().length(); i++)
+    {
+        if(m_pActionGruopLanguage->actions().at(i)->isChecked())
+        {
+            language = static_cast<Config::ELANGUAGE>(i);
+            break;
+        }
+    }
+    return language;
 }

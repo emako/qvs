@@ -119,9 +119,9 @@ void ScriptCreator::getLogoInfo(const QString &a_filename)
     MediaInfoLoader mediaInfoLoader(a_filename);
 
     m_logoInfo.clear();
-    m_logoInfo.frameWidth   = mediaInfoLoader.get(MediaInfoLoader::eMEDIA_PROP_WIDTH, MediaInfoLoader::eSTREAM_TYPE_IMAGE).toInt();
-    m_logoInfo.frameHeight  = mediaInfoLoader.get(MediaInfoLoader::eMEDIA_PROP_HEIGHT, MediaInfoLoader::eSTREAM_TYPE_IMAGE).toInt();
-    m_logoInfo.format       = mediaInfoLoader.get(MediaInfoLoader::eMEDIA_PROP_FORMAT_CODE, MediaInfoLoader::eSTREAM_TYPE_IMAGE);
+    m_logoInfo.frameWidth   = mediaInfoLoader.get(MediaInfoLoader::eMEDIA_PROP_WIDTH, Stream_Image).toInt();
+    m_logoInfo.frameHeight  = mediaInfoLoader.get(MediaInfoLoader::eMEDIA_PROP_HEIGHT, Stream_Image).toInt();
+    m_logoInfo.format       = mediaInfoLoader.get(MediaInfoLoader::eMEDIA_PROP_FORMAT_CODE, Stream_Image);
     mediaInfoLoader.close();
 }
 
@@ -148,7 +148,6 @@ void ScriptCreator::on_buttonPreview_clicked()
     at_pScriptPlayer->slotPlayOnMounted(true);
     at_pScriptPlayer->reload(script_filename);
     mainUi->m_pScriptPlayers.insert(at_pScriptPlayer->m_uid_own, at_pScriptPlayer);
-
 }
 
 void ScriptCreator::on_buttonSave_clicked()

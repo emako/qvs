@@ -65,17 +65,6 @@ public:
         eMEDIA_PROP_MAX,
     };
 
-    enum ESTREAM_TYPE {
-        eSTREAM_TYPE_GENERAL,         /* StreamKind = General */
-        eSTREAM_TYPE_VIDEO,           /* StreamKind = Video   */
-        eSTREAM_TYPE_AUDIO,           /* StreamKind = Audio   */
-        eSTREAM_TYPE_TEXT,            /* StreamKind = Text    */
-        eSTREAM_TYPE_OTHER,           /* StreamKind = Other   */
-        eSTREAM_TYPE_IMAGE,           /* StreamKind = Image   */
-        eSTREAM_TYPE_MENU,            /* StreamKind = Menu    */
-        eSTREAM_TYPE_MAX,
-    };
-
     enum EFORMAT {
         eFORMAT_TREE,
         eFORMAT_INI = eFORMAT_TREE,   /* for traversal */
@@ -109,7 +98,7 @@ public:
     QString inform(bool a_complete);
     QString inform(bool a_complete, EFORMAT a_format);
 
-    QString get(EMEDIA_PROP a_prop = eMEDIA_PROP_ALL, ESTREAM_TYPE a_streamType = eSTREAM_TYPE_VIDEO, size_t a_streamNumber = (size_t)eINDEX_0);
+    QString get(EMEDIA_PROP a_prop = eMEDIA_PROP_ALL, stream_t a_streamType = Stream_Video, size_t a_streamNumber = (size_t)eINDEX_0);
     QString get(const String & a_param, stream_t a_streamType = Stream_Video, size_t a_streamNumber = (size_t)eINDEX_0, info_t a_infoKind = Info_Text, info_t a_SearchKind = Info_Name);
     QString get(size_t a_param, stream_t a_streamType = Stream_Video, size_t a_streamNumber = (size_t)eINDEX_0, info_t a_infoKind = Info_Text);
 

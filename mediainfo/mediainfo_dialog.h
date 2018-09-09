@@ -12,6 +12,7 @@
 #include <QUuid>
 
 class MainWindow;
+class MediaInfoLoader;
 
 namespace Ui {
 class MediaInfoDialog;
@@ -68,6 +69,7 @@ private slots:
     void setFull(bool a_state);
     void setWrapped(bool a_enable);
     void calcMd5(void);
+    void setLanguage(MediaInfoLoader *a_pMediaInfoLoader);
 
     void on_editMediaInfo_customContextMenuRequested(const QPoint &a_pos);
     void on_buttonMediaInfoSave_clicked();

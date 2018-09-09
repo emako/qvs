@@ -105,6 +105,12 @@ public:
         eCONFIG_PYTHON_MAX,
     };
 
+    enum ELANGUAGE {
+        eLANGUAGE_EN,
+        eLANGUAGE_ZH,
+        eLANGUAGE_JA,
+    };
+
     QMap<ECONFIG_FIRST, QVariant> m_config_first;
     QMap<ECONFIG_COMMON, QVariant> m_config_common;
     QMap<ECONFIG_INSTALLER, QVariant> m_config_installer;

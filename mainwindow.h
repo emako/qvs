@@ -56,6 +56,9 @@ public:
 
     void modeLaunch(void);
     void loadFonts(void);
+    void setLanguage(void);
+    void setLanguage(Config::ELANGUAGE a_language);
+    Config::ELANGUAGE language(void);
     void execJobCreator(JobCreator::EJOB_RELOAD a_job_reload, QString filename = QT_EMPTY);
     void acceptedJobCreator(JobCreator::EJOB_RELOAD a_job_reload);
     void saveJob(JobItem a_job_item, JobCreator::EJOB_RELOAD a_job_reload);
@@ -150,6 +153,7 @@ private:
     Ui::MainWindow *ui;
     bool m_is_aborted;
     QActionGroup *m_pActionGruopOnCompletion;
+    QActionGroup *m_pActionGruopLanguage;
 
     void showShutdownMessage(Common::ESHUTDOWN a_shutdown);
     QString getShutdownTitle(Common::ESHUTDOWN a_shutdown);
