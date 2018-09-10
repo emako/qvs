@@ -46,7 +46,7 @@ QString MediaInfoLoader::traversal(EFORMAT a_format)
                 QString group = QString("[%1%2]").arg(g_mediainfo_lists.at((int)i).first).arg(streamCount >= (size_t)eINDEX_2 ? QString::number(k + (size_t)eINDEX_1) : QT_EMPTY);;
 
                 inform += group + QT_NOR_EOL;
-                for(int j = (size_t)eINDEX_0; j < (size_t)context.length(); j++)
+                for(int j = (size_t)eINDEX_0; j < context.length(); j++)
                 {
                     QString key = context.at(j).second.first;
                     QString value = get(context.at(j).first, static_cast<stream_t>(i), k);
@@ -77,7 +77,7 @@ QString MediaInfoLoader::traversal(EFORMAT a_format)
             {
                 QString group = QString("%1%2").arg(g_mediainfo_lists.at((int)i).first).arg(streamCount >= (size_t)eINDEX_2 ? QString::number(k + (size_t)eINDEX_1) : QT_EMPTY);;
 
-                for(int j = (size_t)eINDEX_0; j < (size_t)context.length(); j++)
+                for(int j = (int)eINDEX_0; j < context.length(); j++)
                 {
                     QString key = context.at(j).second.first;
                     QString value = get(context.at(j).first, static_cast<stream_t>(i), k);
@@ -106,7 +106,7 @@ QString MediaInfoLoader::inform(bool a_complete, EFORMAT a_format)
     {
         value = MI_VALUE_TRUE;
     }
-    if(option(MI_OPTION_COMPLETE_GET, value) != value)
+    if(option(MI_OPTION_COMPLETE_GET, value) != fromStd(value))
     {
         option(MI_OPTION_COMPLETE, value);
     }
@@ -122,7 +122,7 @@ QString MediaInfoLoader::inform(bool a_complete)
     {
         value = MI_VALUE_TRUE;
     }
-    if(option(MI_OPTION_COMPLETE_GET, value) != value)
+    if(option(MI_OPTION_COMPLETE_GET, value) != fromStd(value))
     {
         option(MI_OPTION_COMPLETE, value);
     }
@@ -264,14 +264,14 @@ QString MediaInfoLoader::language(const QString &a_language)
 
     if(a_language == MEDIA_LANGUAGE_DEFAULT)
     {
-        if(option(MI_OPTION_INFORM_GET) != MI_VALUE_TREE)
+        if(option(MI_OPTION_INFORM_GET) != fromStd(MI_VALUE_TREE))
         {
             option(MI_OPTION_INFORM, MI_VALUE_TREE);
         }
     }
     else
     {
-        if(option(MI_OPTION_INFORM_GET) != MI_VALUE_HTML)
+        if(option(MI_OPTION_INFORM_GET) != fromStd(MI_VALUE_HTML))
         {
             option(MI_OPTION_INFORM, MI_VALUE_HTML);
         }

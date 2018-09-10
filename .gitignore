@@ -42,3 +42,14 @@
 
 # openCV
 /opencv
+
+# MSVC
+/.vs
+/GeneratedFiles
+/x64
+/debug
+/release
+.qmake.stash
+qvs_resource.rc
+qvs-debug-64bit-msvc_resource.rc
+qvs.vcxproj.filters

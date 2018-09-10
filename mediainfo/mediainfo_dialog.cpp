@@ -167,29 +167,31 @@ void MediaInfoDialog::on_editMediaInfo_customContextMenuRequested(const QPoint &
 
 void MediaInfoDialog::on_buttonMediaInfoSave_clicked()
 {
-    QString text = ui->editMediaInfo->toPlainText();
+    QString text = this->toPlainText();
+    QString filename = QString("%1.txt").arg(m_mediainfo_path);
 
     if( text.isEmpty() || m_mediainfo_path.isEmpty() )
     {
         return;
     }
 
-    QFile file(QString("%1.txt").arg(m_mediainfo_path));
-    QTextStream out(&file);
-
-    if(!file.open(QIODevice::WriteOnly | QIODevice::Text))
+    if(qvs::setFileText(filename, text))
     {
-        qDebug() << "Open MediaInfo log file failed.";
-        return;
+        qDebug() << QMessageBox::warning(this,tr("test"), tr("msg"), tr("Yesd"), tr("No"), tr("Cancel"));
+        QMessageBox::information(this, tr("Information"), tr("Saved successfully.\nLocation is \"%1\".").arg(filename), QMessageBox::NoButton);
     }
-    out << text;
-    file.close();
+    else
+    {
+        QMessageBox::critical(this, tr("Failed"), tr("Save is failed."), QMessageBox::Discard);
+    }
 }
 
 void MediaInfoDialog::on_buttonMediaInfoCopy_clicked()
 {
     QClipboard *clipboard = QApplication::clipboard();
-    clipboard->setText(ui->editMediaInfo->toPlainText());
+    QString text = this->toPlainText();
+
+    clipboard->setText(text);
 }
 
 void MediaInfoDialog::setWrapped(bool a_enable)
@@ -370,4 +372,17 @@ void MediaInfoDialog::setLanguage(MediaInfoLoader *a_pMediaInfoLoader)
         a_pMediaInfoLoader->language("ja");
         break;
     }
+}
+
+QString MediaInfoDialog::toPlainText(void)
+{
+    QString text = ui->editMediaInfo->toPlainText();
+
+    if(mainUi->language() != Config::eLANGUAGE_EN)
+    {
+        /* Clear HTML format. */
+        text.replace(QString(QT_NOR_EOL) + QString(QT_NOR_EOL), QString(QT_NOR_EOL));
+        text.replace(QString(QT_COLON) + QString(QT_NOR_EOL), QString(QT_COLON) + QString(QT_BLANK));
+    }
+    return text;
 }

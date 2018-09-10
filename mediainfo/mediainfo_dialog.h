@@ -70,6 +70,7 @@ private slots:
     void setWrapped(bool a_enable);
     void calcMd5(void);
     void setLanguage(MediaInfoLoader *a_pMediaInfoLoader);
+    QString toPlainText(void);
 
     void on_editMediaInfo_customContextMenuRequested(const QPoint &a_pos);
     void on_buttonMediaInfoSave_clicked();
