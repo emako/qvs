@@ -9,6 +9,7 @@
 #include "preview/preview_dialog.h"
 #include "script/script_creator.h"
 #include "com/version.h"
+#include "com/style_sheet.h"
 #include "ui_muxer.h"
 #include "ui_demuxer.h"
 #include "ui_mainwindow.h"
@@ -111,9 +112,11 @@ void MainWindow::setupUi(void)
     m_job_chef->updatePriortyStart();
 
     /*Ui*/
+    ui->progressBar->setStyleSheet(c_qss_process_bar_pink_lady);
     ui->tabWidget->setCurrentIndex(eINDEX_0);
     ui->logView->setLineWrapMode(QTextEdit::NoWrap);
     ui->logView->setContextMenuPolicy(Qt::CustomContextMenu);
+    ui->jobsView->setStyleSheet(c_qss_table_widget_selection_bk_focus_in);
     ui->jobsView->setContextMenuPolicy(Qt::CustomContextMenu);
     ui->jobsView->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     ui->jobsView->horizontalHeader()->setSectionResizeMode(QHeaderView::Fixed);
@@ -968,15 +971,13 @@ bool MainWindow::eventFilter(QObject *o, QEvent *e)
 {
     if(o == ui->jobsView)
     {
-        QString baseSelectionStyleSheet = "QTableWidget{selection-background-color:#%1;selection-color:#%2}";
-
         if (e->type() == QEvent::FocusIn)
         {
-            ui->jobsView->setStyleSheet(QString(baseSelectionStyleSheet).arg("FDCFE6").arg("023019"));
+            ui->jobsView->setStyleSheet(c_qss_table_widget_selection_bk_focus_in);
         }
         else if(e->type() == QEvent::FocusOut)
         {
-            ui->jobsView->setStyleSheet(QString(baseSelectionStyleSheet).arg("F0F0F0").arg("023019"));
+            ui->jobsView->setStyleSheet(c_qss_table_widget_selection_bk_focus_out);
         }
     }
     return false;

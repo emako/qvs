@@ -43,15 +43,13 @@ private slots:
     void on_buttonMuxerStart_clicked();
     void on_comboBoxMuxerFormat_activated(int a_index);
     void on_comboBoxMuxerFormat_currentIndexChanged(int a_index);
-
     void on_buttonMuxerVideoInput_clicked();
-
     void on_buttonMuxerAudioInput_clicked();
-
     void on_buttonMuxerOutput_clicked();
 
 private:
     Ui::Muxer *ui;
+    void setup(void);
 };
 
 #endif // MUXER_H

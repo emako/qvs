@@ -2,6 +2,7 @@
 #include "audio_config.h"
 #include "std_manager.h"
 #include "mainwindow.h"
+#include "../com/style_sheet.h"
 #include "ui_audio_enc.h"
 #include "ui_audio_config.h"
 #include "ui_mainwindow.h"
@@ -27,6 +28,7 @@ void AudioEnc::setup(void)
 {
     setDefaultConfig();
     setMode(m_pAdvancedConfig->isEnable());
+    ui->editAudioInput->setStyleSheet(c_qss_line_edit_read_only);
 }
 
 void AudioEnc::setDefaultConfig(void)

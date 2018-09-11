@@ -1,5 +1,6 @@
 #include "muxer.h"
 #include "mainwindow.h"
+#include "../com/style_sheet.h"
 #include "ui_muxer.h"
 #include "ui_mainwindow.h"
 
@@ -10,11 +11,18 @@ Muxer::Muxer(QWidget *parent) :
     ui(new Ui::Muxer)
 {
     ui->setupUi(this);
+    this->setup();
 }
 
 Muxer::~Muxer()
 {
     delete ui;
+}
+
+void Muxer::setup(void)
+{
+    ui->editMuxerVideoInput->setStyleSheet(c_qss_line_edit_read_only);
+    ui->editMuxerAudioInput->setStyleSheet(c_qss_line_edit_read_only);
 }
 
 void Muxer::reload(ERELOAD_TYPE a_reload_type, QString a_filename)

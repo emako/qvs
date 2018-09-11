@@ -1,5 +1,6 @@
 #include "mainwindow.h"
 #include "../job/job_chef.h"
+#include "../com/style_sheet.h"
 #include "demuxer.h"
 #include "ui_demuxer.h"
 #include <QJsonValue>
@@ -23,6 +24,7 @@ Demuxer::~Demuxer()
 void Demuxer::setupUi(void)
 {
     reloadParamUi(eRELOAD_TYPE_FFMPEG);
+    ui->editDemuxerVideoInput->setStyleSheet(c_qss_line_edit_read_only);
     connect(&m_process_job_encoder, SIGNAL(started()),this, SLOT(slotEncoderProcessStarted()));
     connect(&m_process_job_encoder, SIGNAL(finished(int,QProcess::ExitStatus)), this, SLOT(slotEncoderProcessFinished(int, QProcess::ExitStatus)));
     connect(&m_process_job_encoder, SIGNAL(readyReadStandardOutput()), this, SLOT(slotEncoderProcessReadyReadStandardOutput()));

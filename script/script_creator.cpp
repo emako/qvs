@@ -1,5 +1,5 @@
 #include "script_creator.h"
-
+#include "../com/style_sheet.h"
 #include "../mainwindow.h"
 #include "syntax_highlighter.h"
 #include "ui_script_creator.h"
@@ -27,12 +27,13 @@ void ScriptCreator::setup(void)
     ui->tabWidget->setCurrentIndex((int)eINDEX_0);
     ui->stackedWidgetSourceFilter->setCurrentIndex((int)eINDEX_0);
     ui->labelSourcePreview->installEventFilter(this);
-    ui->dotGridFFMS2->setStyleSheet("background-image:url(:/buttons/dot_grid.png)");
-    ui->dotGridDGNV->setStyleSheet("background-image:url(:/buttons/dot_grid.png)");
-    ui->dotGridDSS->setStyleSheet("background-image:url(:/buttons/dot_grid.png)");
+    ui->dotGridFFMS2->setStyleSheet(c_qss_label_bk_dot_grid);
+    ui->dotGridDGNV->setStyleSheet(c_qss_label_bk_dot_grid);
+    ui->dotGridDSS->setStyleSheet(c_qss_label_bk_dot_grid);
     ui->comboBoxResizeFilter->addItems(QStringList() << "Bilinear" << "Bicubic" << "Point" << "Lanczos" << "Spline16" << "Spline36" << "Nnedi3");
     ui->comboBoxDenoise->addItems(QStringList() << "DGDenoise");
     ui->comboBoxSubtitle->addItems(QStringList() << "VSFilter" << "VSFilterMod" << "Subtext");
+    ui->labelSourcePreview->setStyleSheet(c_qss_label_under_line);
 }
 
 void ScriptCreator::reload(const ReloadFileType &a_fileType, const QString &a_filename)

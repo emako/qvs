@@ -9,8 +9,49 @@
 
 #include "style_sheet.h"
 
+//////////////////////////////
+/// QLineEdit
+///
+const char *c_qss_line_edit_read_only =
+"QLineEdit"
+"{"
+    "background-color: rgb(243, 243, 243);"
+"}";
 
+//////////////////////////////
+/// QLabel
+///
+const char *c_qss_label_under_line =
+"QLabel"
+"{"
+    "color: rgb(0, 0, 255);"
+"}";
 
+const char *c_qss_label_bk_dot_grid =
+"QLabel"
+"{"
+    "background-image:url(:/buttons/dot_grid.png)"
+"}";
+
+//////////////////////////////
+/// QProgressBar
+///
+const char *c_qss_process_bar_pink_lady =
+"QProgressBar"
+"{"
+    "border: 1px solid grey;"
+    "border-radius: 0px;"
+    "background-color: #FFFFFF;"
+"}"
+"QProgressBar::chunk"
+"{"
+    "background-color: #FDCFE6;"
+    "width: 20px;"
+"}";
+
+//////////////////////////////
+/// QScrollBar
+///
 const char *c_qss_horizontal_scroll_bar_alpha_gray =
 "QScrollBar"
 "{"
@@ -61,6 +102,9 @@ const char *c_qss_vertical_scroll_bar_alpha_gray =
     "background:transparent;"
 "}";
 
+//////////////////////////////
+/// QSlider
+///
 const char *c_qss_slider_white_circle =
 "QSlider"
 "{"
@@ -89,8 +133,28 @@ const char *c_qss_slider_white_circle =
     "background: qlineargradient(spread:pad, x1:0, y1:1, x2:0, y2:0, stop:0 #F48EC2, stop:0.25 #F48EC2, stop:0.5 #F48EC2, stop:1 #F48EC2);"
 "}";
 
+//////////////////////////////
+/// QSpinBox, QDoubleSpinBox
+///
 const char *c_qss_spin_box_background_alpha_half =
 "QSpinBox,QDoubleSpinBox"
 "{"
     "background-color: rgba(255, 255, 255, 128);"
+"}";
+
+//////////////////////////////
+/// QTableWidget
+///
+const char *c_qss_table_widget_selection_bk_focus_in =
+"QTableWidget"
+"{"
+    "selection-background-color:#FDCFE6;"
+    "selection-color:#023019;"
+"}";
+
+const char *c_qss_table_widget_selection_bk_focus_out =
+"QTableWidget"
+"{"
+    "selection-background-color:#F0F0F0;"
+    "selection-color:#023019;"
 "}";
