@@ -142,9 +142,6 @@
                <property name="toolTip">
                 <string/>
                </property>
-               <property name="styleSheet">
-                <string notr="true"/>
-               </property>
                <property name="readOnly">
                 <bool>true</bool>
                </property>
@@ -222,9 +219,6 @@
                   </property>
                   <property name="toolTip">
                    <string/>
-                  </property>
-                  <property name="styleSheet">
-                   <string notr="true"/>
                   </property>
                   <property name="readOnly">
                    <bool>true</bool>
@@ -1899,9 +1893,6 @@
                <property name="toolTip">
                 <string/>
                </property>
-               <property name="styleSheet">
-                <string notr="true"/>
-               </property>
                <property name="readOnly">
                 <bool>true</bool>
                </property>
@@ -2404,9 +2395,6 @@
                   <property name="toolTip">
                    <string/>
                   </property>
-                  <property name="styleSheet">
-                   <string notr="true"/>
-                  </property>
                   <property name="readOnly">
                    <bool>true</bool>
                   </property>
@@ -2550,9 +2538,6 @@
                   </property>
                   <property name="toolTip">
                    <string/>
-                  </property>
-                  <property name="styleSheet">
-                   <string notr="true"/>
                   </property>
                   <property name="readOnly">
                    <bool>true</bool>
@@ -2813,9 +2798,6 @@
                </property>
                <property name="toolTip">
                 <string/>
-               </property>
-               <property name="styleSheet">
-                <string notr="true"/>
                </property>
                <property name="readOnly">
                 <bool>true</bool>

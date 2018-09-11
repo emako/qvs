@@ -145,6 +145,7 @@ void AudioConfig::setupUi(void)
         if(s_value_sliders[i] != nullptr)
         {
             s_value_sliders[i]->installEventFilter(this);
+            s_value_sliders[i]->connect(static_cast<QSlider *>(s_value_sliders[i]), SIGNAL(valueChanged(int)), this, SLOT(setValueValue()));
         }
     }
 }
@@ -396,12 +397,14 @@ void AudioConfig::moveValue(void)
 
 void AudioConfig::setValueValue(void)
 {
+    /* From Signal: Slider valueChanged(int) */
     int type = ui->comboBoxAudioEncoder->currentIndex();
     QSlider *at_pSlider = static_cast<QSlider *>(s_value_sliders[type]);
     int decimals = eINDEX_0;
     double minimum = at_pSlider->minimum();
     double maximum = at_pSlider->maximum();
     double value = at_pSlider->value();
+    double singleStep = at_pSlider->singleStep();
 
     switch(static_cast<AudioEnc::EENCODE_TYPE>(type))
     {
@@ -421,6 +424,7 @@ void AudioConfig::setValueValue(void)
             decimals = eINDEX_2;
             minimum /= eINDEX_100;
             maximum /= eINDEX_100;
+            singleStep /= eINDEX_100;
             value /= eINDEX_100;
         }
         break;
@@ -428,6 +432,7 @@ void AudioConfig::setValueValue(void)
         decimals = eINDEX_2;
         minimum /= eINDEX_100;
         maximum /= eINDEX_100;
+        singleStep /= eINDEX_100;
         value /= eINDEX_100;
         break;
     }
@@ -435,7 +440,13 @@ void AudioConfig::setValueValue(void)
     m_pSpinBox->setDecimals(decimals);
     m_pSpinBox->setMinimum(minimum);
     m_pSpinBox->setMaximum(maximum);
+    m_pSpinBox->setSingleStep(singleStep);
+
+    at_pSlider->disconnect(at_pSlider, SIGNAL(valueChanged(int)), this, SLOT(setValueValue()));
+
     m_pSpinBox->setValue(value);
+
+    at_pSlider->connect(at_pSlider, SIGNAL(valueChanged(int)), this, SLOT(setValueValue()));
 }
 
 void AudioConfig::setValueVisible(const bool &a_visible)
@@ -457,7 +468,29 @@ void AudioConfig::setValueVisible(const bool &a_visible)
 
 void AudioConfig::valueChanged(double a_value)
 {
-    static_cast<QSlider *>(s_value_sliders[ui->comboBoxAudioEncoder->currentIndex()])->setValue(a_value);
+    /* From Signal: DoubleSpinBox valueChanged(double) */
+    double value = a_value;
+
+    switch(static_cast<AudioEnc::EENCODE_TYPE>(ui->comboBoxAudioEncoder->currentIndex()))
+    {
+    case AudioEnc::eENCODE_TYPE_AAC_NERO:
+        if(ui->comboBoxAacNeroMode->currentIndex() == (int)eNEROAAC_MODE_VBR)
+        {
+            value *= eINDEX_100;
+        }
+        break;
+    case AudioEnc::eENCODE_TYPE_OGG_VORBIS:
+        value *= eINDEX_100;
+        break;
+    default:
+        break;
+    }
+
+    m_pSpinBox->disconnect(m_pSpinBox, SIGNAL(valueChanged(double)), this, SLOT(valueChanged(double)));
+
+    static_cast<QSlider *>(s_value_sliders[ui->comboBoxAudioEncoder->currentIndex()])->setValue((int)value);
+
+    m_pSpinBox->connect(m_pSpinBox, SIGNAL(valueChanged(double)), this, SLOT(valueChanged(double)));
 }
 
 void AudioConfig::resizeEvent(QResizeEvent *e)
@@ -519,10 +552,6 @@ void AudioConfig::on_horizontalSliderAacApple_valueChanged(int a_value)
 {
     QString mode = c_audio_config_bitrate;
 
-    if(m_pSpinBox->isVisible())
-    {
-        m_pSpinBox->setValue(a_value);
-    }
     if( (ui->comboBoxAacAppleProfile->currentIndex() == (int)eQAAC_PROFILE_LC_AAC) && (ui->comboBoxAacAppleMode->currentIndex() == (int)eQAAC_MODE_LC_AAC_TRUE_VBR) )
     {
         mode = c_audio_config_quality;
@@ -556,10 +585,6 @@ void AudioConfig::on_horizontalSliderAacFdk_valueChanged(int a_value)
 {
     QString mode = c_audio_config_bitrate;
 
-    if(m_pSpinBox->isVisible())
-    {
-        m_pSpinBox->setValue(a_value);
-    }
     if(ui->comboBoxAacFdkMode->currentIndex() == (int)eFDKAAC_MODE_VBR)
     {
         mode = c_audio_config_quality;
@@ -599,10 +624,6 @@ void AudioConfig::on_horizontalSliderAacNero_valueChanged(int a_value)
     QString mode = c_audio_config_bitrate;
     double value = a_value;
 
-    if(m_pSpinBox->isVisible())
-    {
-        m_pSpinBox->setValue(a_value);
-    }
     if(ui->comboBoxAacNeroMode->currentIndex() == (int)eNEROAAC_MODE_VBR)
     {
         mode = c_audio_config_quality;
@@ -619,10 +640,6 @@ void AudioConfig::on_horizontalSliderFlac_valueChanged(int a_value)
 {
     QString mode = c_audio_config_quality;
 
-    if(m_pSpinBox->isVisible())
-    {
-        m_pSpinBox->setValue(a_value);
-    }
     ui->groupBoxFlac->setTitle(QString("FLAC (%1=%2)").arg(mode).arg(a_value));
 }
 
@@ -634,10 +651,6 @@ void AudioConfig::on_horizontalSliderOpus_valueChanged(int a_value)
 {
     QString mode = c_audio_config_bitrate;
 
-    if(m_pSpinBox->isVisible())
-    {
-        m_pSpinBox->setValue(a_value);
-    }
     ui->groupBoxOpus->setTitle(QString("OPUS (%1=%2)").arg(mode).arg(a_value));
 }
 
@@ -651,10 +664,6 @@ void AudioConfig::on_horizontalSliderOggVorbis_valueChanged(int a_value)
     double value = a_value;
 
     value /= (int)eINDEX_100;
-    if(m_pSpinBox->isVisible())
-    {
-        m_pSpinBox->setValue(a_value);
-    }
     ui->groupBoxOggVorbis->setTitle(QString("Ogg Vorbis (%1=%2)").arg(mode).arg(value));
 }
 
@@ -689,10 +698,6 @@ void AudioConfig::on_horizontalSliderMp3_valueChanged(int a_value)
 {
     QString mode = c_audio_config_bitrate;
 
-    if(m_pSpinBox->isVisible())
-    {
-        m_pSpinBox->setValue(a_value);
-    }
     if(ui->comboBoxMp3Mode->currentIndex() == (int)eMP3_MODE_VBR)
     {
         mode = c_audio_config_quality;
@@ -708,10 +713,6 @@ void AudioConfig::on_horizontalSliderAc3_valueChanged(int a_value)
 {
     QString mode = c_audio_config_bitrate;
 
-    if(m_pSpinBox->isVisible())
-    {
-        m_pSpinBox->setValue(a_value);
-    }
     ui->groupBoxAc3->setTitle(QString("AC3 (%1=%2)").arg(mode).arg(a_value));
 }
 

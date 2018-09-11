@@ -9,6 +9,58 @@
 
 #include "style_sheet.h"
 
+
+
+const char *c_qss_horizontal_scroll_bar_alpha_gray =
+"QScrollBar"
+"{"
+    "background:transparent;"
+    "height:10px;"
+"}"
+"QScrollBar::handle"
+"{"
+    "background:lightgray;"
+    "border:2px solid transparent;"
+    "border-radius:5px;"
+"}"
+"QScrollBar::handle:hover"
+"{"
+    "background:gray;"
+"}"
+"QScrollBar::sub-line"
+"{"
+    "background:transparent;"
+"}"
+"QScrollBar::add-line"
+"{"
+    "background:transparent;"
+"}";
+
+const char *c_qss_vertical_scroll_bar_alpha_gray =
+"QScrollBar"
+"{"
+    "background:transparent;"
+    "width: 10px;"
+"}"
+"QScrollBar::handle"
+"{"
+    "background:lightgray;"
+    "border:2px solid transparent;"
+    "border-radius:5px;"
+"}"
+"QScrollBar::handle:hover"
+"{"
+    "background:gray;"
+"}"
+"QScrollBar::sub-line"
+"{"
+    "background:transparent;"
+"}"
+"QScrollBar::add-line"
+"{"
+    "background:transparent;"
+"}";
+
 const char *c_qss_slider_white_circle =
 "QSlider"
 "{"
