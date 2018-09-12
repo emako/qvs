@@ -108,6 +108,28 @@ QString qvs::timeToString(double a_seconds, bool a_fullFormat)
     return timeString;
 }
 
+QString qvs::currentTime(void)
+{
+    return QString("[%1]").arg(QTime::currentTime().toString());
+}
+
+QString qvs::currentDateTime(void)
+{
+    return QDateTime::currentDateTime().toString("yyyy-MM-dd, hh:mm:ss");
+}
+
+QString qvs::toCurrentTime(const QString &a_str)
+{
+    QString time = currentTime();
+    QString str = a_str;
+
+    str.replace(QT_OTR_EOL, QT_NOR_EOL);
+    str.replace(QT_MAC_EOL, QT_NOR_EOL);
+    str.replace(QT_NOR_EOL, QT_NOR_EOL + time);
+    str = time + str;
+    return str;
+}
+
 QString qvs::fromStdBasicWString(const std::basic_string<wchar_t> &a_str)
 {
     return QString::fromStdWString((std::wstring)a_str);
@@ -126,6 +148,18 @@ QString qvs::fromStdBasicString(const std::basic_string<char> &a_str)
 std::basic_string<char> qvs::toStdBasicString(const QString &a_str)
 {
     return (std::basic_string<char>)a_str.toStdString();
+}
+
+QString qvs::toHtml(const QString &a_str, QColor a_color)
+{
+    QByteArray array;
+    QString html;
+
+    array.append(a_color.red());
+    array.append(a_color.green());
+    array.append(a_color.blue());
+    html = QString("<span style=\" color:#%1;\">%2</span>").arg(QString(array.toHex())).arg(a_str);
+    return html;
 }
 
 QString qvs::convertFramesToTimecode(double a_frames, double a_fps)

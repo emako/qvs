@@ -114,6 +114,7 @@ void MainWindow::setupUi(void)
     /*Ui*/
     ui->progressBar->setStyleSheet(c_qss_process_bar_pink_lady);
     ui->tabWidget->setCurrentIndex(eINDEX_0);
+    ui->logView->setStyleSheet(c_qss_vertical_scroll_bar_alpha_gray);
     ui->logView->setLineWrapMode(QTextEdit::NoWrap);
     ui->logView->setContextMenuPolicy(Qt::CustomContextMenu);
     ui->jobsView->setStyleSheet(c_qss_table_widget_selection_bk_focus_in);
@@ -572,19 +573,14 @@ void MainWindow::viewLog(JobChef::EJOB_LOG_TYPE a_log_type, QString a_log)
     case JobChef::eJOB_LOG_TYPE_WARN:
     case JobChef::eJOB_LOG_TYPE_ERROE:
     case JobChef::eJOB_LOG_TYPE_FATAL:
-        qDebug() << a_log;
-        ui->logView->append(a_log);
-        setInsertTextColor(QColor(255, 0, 0), a_log.length());
+        ui->logView->append(qvs::currentTime()+qvs::toHtml(a_log));
         break;
     case JobChef::eJOB_LOG_TYPE_JOB_STATUS:
-        ui->logView->append(a_log);
-        setInsertTextColor(QColor(0, 128, 128), a_log.length());
-        qDebug() << a_log;
+        ui->logView->append(qvs::currentTime()+qvs::toHtml(a_log));
         break;
     case JobChef::eJOB_LOG_TYPE_JOB_STD_ERROR:
     case JobChef::eJOB_LOG_TYPE_JOB_STD_OUTPUT:
-        qDebug() << a_log;
-        ui->logView->append(a_log);
+        ui->logView->append(qvs::toCurrentTime(a_log));
         break;
     case JobChef::eJOB_LOG_TYPE_JOB_STD_PROGRESS:
         ui->progressBar->setMaximum((int)eINDEX_10 * (int)eINDEX_10);
@@ -597,7 +593,6 @@ void MainWindow::viewLog(JobChef::EJOB_LOG_TYPE a_log_type, QString a_log)
         ui->progressBar->setValue(a_log.toDouble());
         break;
     case JobChef::eJOB_LOG_TYPE_JOB_STD_DETAILS:
-        qDebug() << "JOB_STD_DETAILS:" << a_log;
         if(a_log.indexOf(QString(QT_MAC_EOL)) >= eINDEX_0)
         {
             a_log = a_log.left(a_log.indexOf(QString(QT_MAC_EOL)));
@@ -700,7 +695,7 @@ void MainWindow::startJob(void)
 
     if(is_started)
     {
-        viewLog(JobChef::eJOB_LOG_TYPE_JOB_STATUS, tr("Job Started at %1.").arg(QDateTime::currentDateTime().toString("yyyy-MM-dd, hh:mm:ss")));
+        viewLog(JobChef::eJOB_LOG_TYPE_JOB_STATUS, tr("Job Started at %1.").arg(qvs::currentDateTime()));
         m_job_chef->startJob();
     }
     else
@@ -985,7 +980,7 @@ bool MainWindow::eventFilter(QObject *o, QEvent *e)
 
 void MainWindow::statusChanged(JobChef::EJOB_STATUS a_job_status)
 {
-    qDebug() << QString("JobStatus(%1/%2(%3)):").arg(m_jobs_index).arg(ui->jobsView->rowCount()).arg(m_jobs.length()) << getJobStatusText(m_job_status_prev) << "->" << getJobStatusText(a_job_status);
+    qDebug() << QString("JobStatus(%1/%2):").arg(m_jobs_index).arg(ui->jobsView->rowCount()) << getJobStatusText(m_job_status_prev) << "->" << getJobStatusText(a_job_status);
 
     if((m_jobs_index <= ui->jobsView->rowCount()) && (m_jobs_index >= (int)eINDEX_1))
     {
@@ -1077,7 +1072,6 @@ QString MainWindow::getJobStatusText(JobChef::EJOB_STATUS a_job_status)
     }
     return status_text;
 }
-
 
 QIcon MainWindow::getJobStatusIcon(JobChef::EJOB_STATUS a_job_status)
 {
@@ -1322,8 +1316,8 @@ void MainWindow::on_buttonAudioBatchAdd_clicked()
 
     if(!filename.isEmpty())
     {
-        filename = QDir::toNativeSeparators(filename);
-        QListWidgetItem *item = new QListWidgetItem(filename);
+        QListWidgetItem *item = new QListWidgetItem(QDir::toNativeSeparators(filename));
+
         ui->listViewAudioBatch->addItem(item);
     }
 }

@@ -111,18 +111,28 @@ enum EBOOL {
 namespace qvs
 {
     bool isFileExist(const QString &a_filename);
+
     QString getFileExt(const QString &a_filename);
     QString chgFileExt(const QString &a_filename, QString a_ext);
     QString delFileExt(const QString &a_filename);
+
     QString getFileText(const QString &a_filename);
     bool setFileText(const QString &a_filename, const QString &a_text);
+
     QString timeToString(double a_seconds, bool a_fullFormat = false);      /* For Time Line Slider */
+
+    QString currentTime(void);
+    QString currentDateTime(void);
+
+    QString toCurrentTime(const QString &a_str);
 
     QString fromStdBasicWString(const std::basic_string<wchar_t> &a_str);
     std::basic_string<wchar_t> toStdBasicWString(const QString &a_str);
 
     QString fromStdBasicString(const std::basic_string<char> &a_str);
     std::basic_string<char> toStdBasicString(const QString &a_str);
+
+    QString toHtml(const QString &a_str, QColor a_color = QColor(0, 128, 128));
 
     QString convertFramesToTimecode(double a_frames, double a_fps);
     double convertFramesToTime(double a_frames, double a_fps);

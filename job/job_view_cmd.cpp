@@ -19,6 +19,16 @@ const char *c_config_key[JobCreator::eJOB_CONFIG_MAX] = {
     "Pass",         /*eJOB_CONFIG_PASS_NUM*/
 };
 
+const char *c_config_type[JobCmdList::eJOB_CMD_TYPE_MAX] = {
+    "Info",         /*eJOB_CMD_TYPE_INFO*/
+    "Piper",         /*eJOB_CMD_TYPE_PIPER*/
+    "Encoder",       /*eJOB_CMD_TYPE_ENCODER*/
+    "Demuxer",       /*eJOB_CMD_TYPE_DEMUXER*/
+    "Muxer",          /*eJOB_CMD_TYPE_MUXER*/
+    "Remuxer",        /*eJOB_CMD_TYPE_REMUXER*/
+    "Other",        /*eJOB_CMD_TYPE_OTHER*/
+};
+
 JobViewCmd::JobViewCmd(QDialog *parent) :
     QDialog(parent),
     ui(new Ui::JobViewCmd)
@@ -47,7 +57,7 @@ QString JobViewCmd::createCommand(bool a_is_detail)
         for(int i = 0; i < m_job_item.job_cmds.length(); i++)
         {
 #ifdef QT_DEBUG
-            qDebug() << "Job:" << m_job_item.job_name << "UID:" << m_job_item.job_cmds.at(i).uid << "," << "Exec:" << m_job_item.job_cmds.at(i).type << "," << "Command:" << m_job_item.job_cmds.at(i).cmd;
+            qDebug() << "Job:" << m_job_item.job_name << "UID:" << m_job_item.job_cmds.at(i).uid << "," << "Type:" << m_job_item.job_cmds.at(i).type << "," << "Command:" << m_job_item.job_cmds.at(i).cmd;
 #endif
             if(m_job_item.job_cmds.at(i).type == JobCmdList::eJOB_CMD_TYPE_PIPER)
             {
@@ -94,7 +104,7 @@ QString JobViewCmd::createCommand(bool a_is_detail)
 #endif
             cmds << QString("[Command%1]").arg(i+1);
             cmds << QString("UID=%1").arg(m_job_item.job_cmds.at(i).uid.toString());
-            cmds << QString("Exec=%1").arg(m_job_item.job_cmds.at(i).type);
+            cmds << QString("Type=\"%1\"").arg(c_config_type[m_job_item.job_cmds.at(i).type]);
             cmds << QString("Command=%1").arg(m_job_item.job_cmds.at(i).cmd);
             cmds << QString(QT_EMPTY);
         }
@@ -156,4 +166,9 @@ void JobViewCmd::on_buttonCopy_clicked()
 QString JobViewCmd::getConfigName(JobCreator::EJOB_CONFIG a_job_config)
 {
     return QString(c_config_key[a_job_config]);
+}
+
+void JobViewCmd::on_buttonClose_clicked()
+{
+    this->close();
 }

@@ -6,6 +6,7 @@
 
 static const QString c_template_key_default = QObject::tr("<Default>");
 
+
 JobCreator::JobCreator(QDialog *parent) :
     QDialog(parent),
     ui(new Ui::JobCreator)
@@ -223,7 +224,7 @@ void JobCreator::reloadSource(QString a_fileName)
 QStringList JobCreator::getOutputFileSuffixList(void)
 {
     QStringList fileSuffixList;
-    fileSuffixList << "mp4" << "mkv" << "h264" << "hevc";
+    fileSuffixList << OUTPUT_EXT_MP4 << OUTPUT_EXT_MKV << OUTPUT_EXT_H264 << OUTPUT_EXT_HEVC;
     return fileSuffixList;
 }
 
@@ -259,8 +260,8 @@ void JobCreator::reloadOutput(QString a_fileName)
         outputFileName = qvs::delFileExt(a_fileName) + "." + m_job_output_suffix;
     }
 
-    if( ( (ui->cbxEncoderType->currentIndex() == eINDEX_0) && (fileInfo.suffix().toLower() == "hevc") )
-     || ( (ui->cbxEncoderType->currentIndex() == eINDEX_1) && (fileInfo.suffix().toLower() == "h264") ) )
+    if( ( (ui->cbxEncoderType->currentIndex() == eINDEX_0) && (fileInfo.suffix().toLower() == OUTPUT_EXT_HEVC) )
+     || ( (ui->cbxEncoderType->currentIndex() == eINDEX_1) && (fileInfo.suffix().toLower() == OUTPUT_EXT_H264) ) )
     {
         QMessageBox::information(this, tr("Warning"), tr("Invaild type for selected encoder!"));
         return;
@@ -284,10 +285,10 @@ void JobCreator::on_buttonBrowseOutput_clicked()
 {
     QList<QPair<QString, QString>> fileExtMap =
     {
-        {"mp4",  "MPEG-4 (*.mp4)"},
-        {"mkv",  "Matroska (*.mkv)"},
-        {"h264", "AVC Raw (*.h264)"},
-        {"hevc", "HEVC Raw (*.hevc)"},
+        {OUTPUT_EXT_MP4,  tr("MPEG-4 (*.mp4)")},
+        {OUTPUT_EXT_MKV,  tr("Matroska (*.mkv)")},
+        {OUTPUT_EXT_H264, tr("AVC Raw (*.h264)")},
+        {OUTPUT_EXT_HEVC, tr("HEVC Raw (*.hevc)")},
     };
 
     QStringList fileExtList;
@@ -798,6 +799,7 @@ QList<JobCmdList> JobCreator::configToCommandX26X(QMap<EJOB_CONFIG, QVariant> a_
     bool is_two_part_mode = isTwoPartMode(a_job_config);
     EJOB_PIPER piper = getEncoderPiper(a_job_config);
 
+    /* Show Information Command */
     switch(piper)
     {
     case eJOB_PIPER_VSPIPE:
@@ -815,6 +817,7 @@ QList<JobCmdList> JobCreator::configToCommandX26X(QMap<EJOB_CONFIG, QVariant> a_
         break;
     }
 
+    /* Encode Command */
     if(is_two_part_mode)
     {
         for(int i = (int)eINDEX_1; i <= (int)eINDEX_2; i++)
@@ -864,6 +867,26 @@ QList<JobCmdList> JobCreator::configToCommandX26X(QMap<EJOB_CONFIG, QVariant> a_
         {
             return QList<JobCmdList>();
         }
+    }
+
+    /* Remux Command */
+    switch(a_encoder)
+    {
+    case eJOB_ENCODER_HEVC:
+        do{
+            QString at_output = a_job_config[eJOB_CONFIG_OUTPUT].toString();
+
+            if(qvs::getFileExt(at_output).toLower() != OUTPUT_EXT_HEVC)
+            {
+                cmd.clear();
+                cmd.cmd = QString("%1 -i \"%2\" -c copy \"%3\"").arg(mainUi->m_com->findFirstFilePath(QString("ffmpeg"))).arg(at_output + QT_EXT_SPLITE + QString(OUTPUT_EXT_HEVC)).arg(at_output);
+                cmd.type = JobCmdList::eJOB_CMD_TYPE_REMUXER;
+                cmds << cmd;
+            }
+        }while(false);
+        break;
+    default:
+        break;
     }
 
     return cmds;
@@ -1354,7 +1377,13 @@ QStringList JobCreator::configToCommandHEVC(QMap<EJOB_CONFIG, QVariant> a_job_co
     }
     else
     {
-        cmds << QString("\"%1\"").arg(a_job_config[eJOB_CONFIG_OUTPUT].toString());
+        QString at_output = a_job_config[eJOB_CONFIG_OUTPUT].toString();
+
+        if(qvs::getFileExt(at_output).toLower() != OUTPUT_EXT_HEVC)
+        {
+            at_output += QT_EXT_SPLITE + QString(OUTPUT_EXT_HEVC);
+        }
+        cmds << QString("\"%1\"").arg(at_output);
     }
 
     /*Input*/

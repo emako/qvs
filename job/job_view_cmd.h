@@ -30,6 +30,7 @@ private slots:
     void on_checkBoxShowDetail_stateChanged(int a_state);
     void on_buttonSave_clicked();
     void on_buttonCopy_clicked();
+    void on_buttonClose_clicked();
 
 private:
     Ui::JobViewCmd *ui;

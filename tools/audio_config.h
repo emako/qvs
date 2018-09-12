@@ -46,7 +46,7 @@ public:
 public:
     QString toString(void) const
     {
-        return QString("[enable:%1]name=%2,type=%3,mode=%4,profile=%5,value=%6,value2=%7,cmd=%8").arg(advanced).arg(name).arg(type).arg(mode).arg(profile).arg(value.toString()).arg(value2.toString()).arg(cmd);
+        return QString("%1:name=%2,type=%3,mode=%4,profile=%5,value=%6,value2=%7,cmd=%8").arg(advanced ? "Enable" : "Disable").arg(name).arg(type).arg(mode).arg(profile).arg(value.toString()).arg(value2.toString()).arg(cmd);
     }
 
     void print(void) const

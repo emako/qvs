@@ -16,6 +16,11 @@
 #include "job_cmdlist.h"
 #include "com/common.h"
 
+#define OUTPUT_EXT_MP4 "mp4"
+#define OUTPUT_EXT_MKV "mkv"
+#define OUTPUT_EXT_H264 "h264"
+#define OUTPUT_EXT_HEVC "hevc"
+
 class MainWindow;
 class JobCmdList;
 class JobCreator;
