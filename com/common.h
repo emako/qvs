@@ -122,9 +122,8 @@ namespace qvs
     QString timeToString(double a_seconds, bool a_fullFormat = false);      /* For Time Line Slider */
 
     QString currentTime(void);
+    QString currentTime(const QString &a_str);
     QString currentDateTime(void);
-
-    QString toCurrentTime(const QString &a_str);
 
     QString fromStdBasicWString(const std::basic_string<wchar_t> &a_str);
     std::basic_string<wchar_t> toStdBasicWString(const QString &a_str);
@@ -132,6 +131,7 @@ namespace qvs
     QString fromStdBasicString(const std::basic_string<char> &a_str);
     std::basic_string<char> toStdBasicString(const QString &a_str);
 
+    QString fromHtml(const QString &a_str);
     QString toHtml(const QString &a_str, QColor a_color = QColor(0, 128, 128));
 
     QString convertFramesToTimecode(double a_frames, double a_fps);

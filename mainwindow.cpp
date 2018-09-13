@@ -27,14 +27,14 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow),
     m_pActionGruopOnCompletion(new QActionGroup(this)),
     m_pActionGruopLanguage(new QActionGroup(this)),
-    m_job_chef(nullptr),
-    m_com(nullptr),
-    m_timer(nullptr),
-    m_pMailBox(nullptr),
-    m_pAudioEnc(nullptr),
-    m_pMuxer(nullptr),
-    m_pDemuxer(nullptr),
-    m_pMediaInfoDialog(nullptr),
+    m_com(new Common()),
+    m_job_chef(new JobChef()),
+    m_timer(new Timer()),
+    m_pMailBox(new MailBox()),
+    m_pAudioEnc(new AudioEnc()),
+    m_pMuxer(new Muxer()),
+    m_pDemuxer(new Demuxer()),
+    m_pMediaInfoDialog(new MediaInfoDialog()),
     m_pJobViewMenu(nullptr),
     m_pLogViewMenu(nullptr),
     m_pMsgBoxShutdown(nullptr)
@@ -64,16 +64,8 @@ void MainWindow::setupUi(void)
 {
     /*Macro*/
     g_pConfig->initCommonConfig(); //Init common config before.
-    m_job_chef = new JobChef();
-    m_com = new Common();
-    m_timer = new Timer();
-    m_pMailBox = new MailBox();
     m_pJobViewMenu = new QMenu(ui->jobsView);
     m_pLogViewMenu = new QMenu(ui->logView);
-    m_pAudioEnc = new AudioEnc();
-    m_pMuxer = new Muxer();
-    m_pDemuxer = new Demuxer();
-    m_pMediaInfoDialog = new MediaInfoDialog();
 
     m_pAudioEnc->mainUi = this;
     ui->stackedWidgetAudioEnc->addWidget(m_pAudioEnc);
@@ -115,7 +107,7 @@ void MainWindow::setupUi(void)
     ui->progressBar->setStyleSheet(c_qss_process_bar_pink_lady);
     ui->tabWidget->setCurrentIndex(eINDEX_0);
     ui->logView->setStyleSheet(c_qss_vertical_scroll_bar_alpha_gray);
-    ui->logView->setLineWrapMode(QTextEdit::NoWrap);
+    ui->logView->setLineWrapMode(QPlainTextEdit::NoWrap);
     ui->logView->setContextMenuPolicy(Qt::CustomContextMenu);
     ui->jobsView->setStyleSheet(c_qss_table_widget_selection_bk_focus_in);
     ui->jobsView->setContextMenuPolicy(Qt::CustomContextMenu);
@@ -350,6 +342,7 @@ void MainWindow::selectOpenfile(void)
 void MainWindow::logCopy(void)
 {
     QClipboard *clipboard = QApplication::clipboard();
+
     clipboard->setText(ui->logView->toPlainText());
 }
 
@@ -383,11 +376,11 @@ void MainWindow::logSetWrapped(bool a_enable)
 {
     if(a_enable)
     {
-        ui->logView->setLineWrapMode(QTextEdit::WidgetWidth);
+        ui->logView->setLineWrapMode(QPlainTextEdit::WidgetWidth);
     }
     else
     {
-        ui->logView->setLineWrapMode(QTextEdit::NoWrap);
+        ui->logView->setLineWrapMode(QPlainTextEdit::NoWrap);
     }
 }
 
@@ -567,20 +560,20 @@ void MainWindow::viewLog(JobChef::EJOB_LOG_TYPE a_log_type, QString a_log)
     switch(a_log_type)
     {
     case JobChef::eJOB_LOG_TYPE_DEBUG:
-    case JobChef::eJOB_LOG_TYPE_INFO:
         qDebug() << a_log;
+        break;
+    case JobChef::eJOB_LOG_TYPE_INFO:
+        ui->logView->appendHtml(qvs::currentTime()+qvs::toHtml(a_log, QColor(23, 81, 144)));
         break;
     case JobChef::eJOB_LOG_TYPE_WARN:
     case JobChef::eJOB_LOG_TYPE_ERROE:
     case JobChef::eJOB_LOG_TYPE_FATAL:
-        ui->logView->append(qvs::currentTime()+qvs::toHtml(a_log));
-        break;
     case JobChef::eJOB_LOG_TYPE_JOB_STATUS:
-        ui->logView->append(qvs::currentTime()+qvs::toHtml(a_log));
+        ui->logView->appendHtml(qvs::currentTime()+qvs::toHtml(a_log));
         break;
     case JobChef::eJOB_LOG_TYPE_JOB_STD_ERROR:
     case JobChef::eJOB_LOG_TYPE_JOB_STD_OUTPUT:
-        ui->logView->append(qvs::toCurrentTime(a_log));
+        ui->logView->appendPlainText(qvs::currentTime(a_log));
         break;
     case JobChef::eJOB_LOG_TYPE_JOB_STD_PROGRESS:
         ui->progressBar->setMaximum((int)eINDEX_10 * (int)eINDEX_10);
@@ -1017,6 +1010,7 @@ void MainWindow::statusChanged(JobChef::EJOB_STATUS a_job_status)
         m_is_aborted = true;
         break;
     case JobChef::eJOB_STATUS_FAILED:
+        viewLog(JobChef::eJOB_LOG_TYPE_DEBUG, tr("Process Failed!"));
         break;
     case JobChef::eJOB_STATUS_COMPLETED:
         viewLog(JobChef::eJOB_LOG_TYPE_JOB_STD_PROGRESS, QString::number(eINDEX_10 * eINDEX_10));
@@ -1028,49 +1022,22 @@ void MainWindow::statusChanged(JobChef::EJOB_STATUS a_job_status)
 
 QString MainWindow::getJobStatusText(JobChef::EJOB_STATUS a_job_status)
 {
-    QString status_text;
+    static const QStringList s_job_status = {
+        QObject::tr("Initial"),     /* eJOB_STATUS_INITIAL */
+        QObject::tr("Ready"),       /* eJOB_STATUS_READY */
+        QObject::tr("Starting"),    /* eJOB_STATUS_STARTING */
+        QObject::tr("Running..."),  /* eJOB_STATUS_RUNNING */
+        QObject::tr("Pausing"),     /* eJOB_STATUS_PAUSING */
+        QObject::tr("Paused"),      /* eJOB_STATUS_PAUSED */
+        QObject::tr("Resuming"),    /* eJOB_STATUS_RESUMING */
+        QObject::tr("Aborting"),    /* eJOB_STATUS_ABORTING */
+        QObject::tr("Aborted"),     /* eJOB_STATUS_ABORTED */
+        QObject::tr("Failed"),      /* eJOB_STATUS_FAILED */
+        QObject::tr("Waiting"),     /* eJOB_STATUS_WAITING */
+        QObject::tr("Completed"),   /* eJOB_STATUS_COMPLETED */
+    };
 
-    switch(a_job_status)
-    {
-    case JobChef::eJOB_STATUS_INITIAL:
-    default:
-        status_text = tr("Initial");
-        break;
-    case JobChef::eJOB_STATUS_READY:
-        status_text = tr("Ready");
-        break;
-    case JobChef::eJOB_STATUS_STARTING:
-        status_text = tr("Starting");
-        break;
-    case JobChef::eJOB_STATUS_RUNNING:
-        status_text = tr("Running...");
-        break;
-    case JobChef::eJOB_STATUS_PAUSING:
-        status_text = tr("Pausing");
-        break;
-    case JobChef::eJOB_STATUS_PAUSED:
-        status_text = tr("Paused");
-        break;
-    case JobChef::eJOB_STATUS_RESUMING:
-        status_text = tr("Resuming");
-        break;
-    case JobChef::eJOB_STATUS_ABORTING:
-        status_text = tr("Aborting");
-        break;
-    case JobChef::eJOB_STATUS_ABORTED:
-        status_text = tr("Aborted");
-        break;
-    case JobChef::eJOB_STATUS_FAILED:
-        status_text = tr("Failed");
-        break;
-    case JobChef::eJOB_STATUS_WAITING:
-        status_text = tr("Waiting");
-        break;
-    case JobChef::eJOB_STATUS_COMPLETED:
-        status_text = tr("Completed");
-        break;
-    }
-    return status_text;
+    return s_job_status[a_job_status];
 }
 
 QIcon MainWindow::getJobStatusIcon(JobChef::EJOB_STATUS a_job_status)
@@ -1376,23 +1343,23 @@ QString MainWindow::getShutdownTitle(Common::ESHUTDOWN a_shutdown)
     switch(a_shutdown)
     {
     case Common::eSHUTDOWN_LOG_OUT:
-        msg = "Log out";
+        msg = tr("Log out");
         break;
     case Common::eSHUTDOWN_POWER_OFF:
     default:
-        msg = "Shutdowm";
+        msg = tr("Shutdowm");
         break;
     case Common::eSHUTDOWN_REBOOT:
-        msg = "Restart";
+        msg = tr("Restart");
         break;
     case Common::eSHUTDOWN_SLEEP:
-        msg = "Sleep";
+        msg = tr("Sleep");
         break;
     case Common::eSHUTDOWN_ABORT_POWER_OFF:
-        msg = "Shutdown Aborted";
+        msg = tr("Shutdown Aborted");
         break;
     case Common::eSHUTDOWN_FORCE_POWER_OFF:
-        msg = "Shutdown Forced";
+        msg = tr("Shutdown Forced");
         break;
     }
     return msg;

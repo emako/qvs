@@ -161,7 +161,7 @@ QProgressBar::chunk {
              </spacer>
             </item>
             <item>
-             <widget class="QTextEdit" name="logView">
+             <widget class="QPlainTextEdit" name="logView">
               <property name="font">
                <font>
                 <family>Consolas</family>

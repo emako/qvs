@@ -118,7 +118,7 @@ QString qvs::currentDateTime(void)
     return QDateTime::currentDateTime().toString("yyyy-MM-dd, hh:mm:ss");
 }
 
-QString qvs::toCurrentTime(const QString &a_str)
+QString qvs::currentTime(const QString &a_str)
 {
     QString time = currentTime();
     QString str = a_str;
@@ -150,15 +150,39 @@ std::basic_string<char> qvs::toStdBasicString(const QString &a_str)
     return (std::basic_string<char>)a_str.toStdString();
 }
 
+QString qvs::fromHtml(const QString &a_str)
+{
+    QPlainTextEdit editor;
+
+    editor.appendHtml(a_str);
+    return editor.toPlainText();
+}
+
 QString qvs::toHtml(const QString &a_str, QColor a_color)
 {
-    QByteArray array;
     QString html;
+    QByteArray color;
+    QString str;
 
-    array.append(a_color.red());
-    array.append(a_color.green());
-    array.append(a_color.blue());
-    html = QString("<span style=\" color:#%1;\">%2</span>").arg(QString(array.toHex())).arg(a_str);
+    color.append(a_color.red());
+    color.append(a_color.green());
+    color.append(a_color.blue());
+
+    for(const QChar ch : a_str)
+    {
+        switch (ch.unicode())
+        {
+        case '<':  str += QString::fromLatin1("&lt;");   break;
+        case '>':  str += QString::fromLatin1("&gt;");   break;
+        case '&':  str += QString::fromLatin1("&amp;");  break;
+        case '"':  str += QString::fromLatin1("&quot;"); break;
+        case '\'': str += QString::fromLatin1("&apos;"); break;
+        case '\n': str += QString::fromLatin1("<br/>");  break;
+        default:   str += ch;                            break;
+        }
+    }
+
+    html = QString("<span style=\" color:#%1;\">%2</span>").arg(QString(color.toHex())).arg(str);
     return html;
 }
 

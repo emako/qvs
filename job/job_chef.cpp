@@ -91,7 +91,7 @@ void JobChef::startJob(void)
 
     if(m_cmds.at(i).type == JobCmdList::eJOB_CMD_TYPE_INFO)
     {
-        mainUi->viewLog(eJOB_LOG_TYPE_INFO, "Info Process: "+m_cmds.at(i).cmd);
+        mainUi->viewLog(eJOB_LOG_TYPE_INFO, tr("Info Process: %1").arg(m_cmds.at(i).cmd));
 
         m_process_catch_vs_frames = true;
         m_process_job_info.start(m_cmds.at(i).cmd);
@@ -104,8 +104,8 @@ void JobChef::startJob(void)
         {
             QString cmd = QString(m_cmds.at(encoder_cmd_list_count).cmd).arg(m_process_vs_frames);
 
-            mainUi->viewLog(eJOB_LOG_TYPE_INFO, "Piper Process: "+m_cmds.at(i).cmd);
-            mainUi->viewLog(eJOB_LOG_TYPE_INFO, "Encoder Process: "+cmd);
+            mainUi->viewLog(eJOB_LOG_TYPE_INFO, tr("Piper Process: %1").arg(m_cmds.at(i).cmd));
+            mainUi->viewLog(eJOB_LOG_TYPE_INFO, tr("Encoder Process: %1").arg(cmd));
 
             m_process_job_encoder.start(cmd);
             m_process_job_piper.start(m_cmds.at(i).cmd);
@@ -116,7 +116,7 @@ void JobChef::startJob(void)
     }
     else
     {
-        mainUi->viewLog(eJOB_LOG_TYPE_INFO, "Encoder Process: "+m_cmds.at(i).cmd);
+        mainUi->viewLog(eJOB_LOG_TYPE_INFO, tr("Encoder Process: %1").arg(m_cmds.at(i).cmd));
         m_process_job_encoder.start(m_cmds.at(i).cmd);
         setFlag(i);
     }
