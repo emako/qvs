@@ -16,8 +16,8 @@
 #define ENV_PATH                      "PATH"
 
 #define REG_HKEY_SOFTWARE_VS          "HKEY_LOCAL_MACHINE\\SOFTWARE\\VapourSynth"
+#define REG_HKEY_SOFTWARE_VS_2        "HKEY_LOCAL_MACHINE\\SOFTWARE\\WOW6432Node\\VapourSynth"
 #define REG_HKEY_SOFTWARE_AVS         "HKEY_LOCAL_MACHINE\\SOFTWARE\\Avisynth"
-#define REG_HKEY_SOFTWARE_VS2         "HKEY_LOCAL_MACHINE\\SOFTWARE\\WOW6432Node\\VapourSynth"
 
 #define REG_KEY_VS_VERSION            "Version"
 #define REG_KEY_VS_PATH               "Path"
@@ -73,6 +73,7 @@ public:
         eCONFIG_FIRST_SPLASH_SCREEN,
         eCONFIG_FIRST_CLI_FILENAME,
         eCONFIG_FIRST_FIRST_LAUNCH,
+        eCONFIG_FIRST_LANGUAGE,
         eCONFIG_FIRST_MAX,
     };
 
@@ -109,6 +110,7 @@ public:
         eLANGUAGE_EN,
         eLANGUAGE_ZH,
         eLANGUAGE_JA,
+        eLANGUAGE_MAX,
     };
 
     QMap<ECONFIG_FIRST, QVariant> m_config_first;

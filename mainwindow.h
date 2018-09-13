@@ -56,7 +56,6 @@ public:
 
     void modeLaunch(void);
     void loadFonts(void);
-    void setLanguage(void);
     void setLanguage(Config::ELANGUAGE a_language);
     Config::ELANGUAGE language(void);
     void execJobCreator(JobCreator::EJOB_RELOAD a_job_reload, QString filename = QT_EMPTY);
@@ -121,6 +120,8 @@ private slots:
     void logClear(void);
     void logSave(void);
     void logSetWrapped(bool a_enable);
+
+    void languageChanged(void);
 
     void openCommandLine(void);
     void openPython(void);

@@ -32,6 +32,7 @@ const char *c_config_first_key[Config::eCONFIG_FIRST_MAX] = {
     "splash_screen",                    /*eCONFIG_FIRST_SPLASH_SCREEN*/
     QT_EMPTY,                           /*eCONFIG_FIRST_CLI_FILENAME*/
     "first_launch",                     /*eCONFIG_FIRST_FIRST_LAUNCH*/
+    "language",                         /*eCONFIG_FIRST_LANGUAGE*/
 };
 
 const char *c_config_installer_key[Config::eCONFIG_INSTALLER_MAX] = {
@@ -75,6 +76,7 @@ void Config::initFirstConfigDefault(void)
     m_config_first_default << QVariant(true); /*eCONFIG_FIRST_SPLASH_SCREEN*/
     m_config_first_default << QVariant(QT_EMPTY); /*eCONFIG_FIRST_CLI_FILENAME: Can't insert config after init arguments.*/
     m_config_first_default << QVariant(true); /*eCONFIG_FIRST_FIRST_LAUNCH*/
+    m_config_first_default << QVariant(eLANGUAGE_EN); /*eCONFIG_FIRST_LANGUAGE*/
 }
 
 void Config::initFirstConfig(void)
@@ -83,6 +85,7 @@ void Config::initFirstConfig(void)
     m_config_first.insert(eCONFIG_FIRST_GUARD_LOCKER, m_config_first_default.at(eCONFIG_FIRST_GUARD_LOCKER).toBool());
     m_config_first.insert(eCONFIG_FIRST_SPLASH_SCREEN, ( (m_launchMode == eLAUNCH_MODE_NORMAL) && value(c_config_first_key[eCONFIG_FIRST_SPLASH_SCREEN], m_config_first_default.at(eCONFIG_FIRST_SPLASH_SCREEN)).toBool() ));
     m_config_first.insert(eCONFIG_FIRST_FIRST_LAUNCH, value(c_config_first_key[eCONFIG_FIRST_FIRST_LAUNCH], m_config_first_default.at(eCONFIG_FIRST_FIRST_LAUNCH)).toBool() );
+    m_config_first.insert(eCONFIG_FIRST_LANGUAGE, value(c_config_first_key[eCONFIG_FIRST_LANGUAGE], m_config_first_default.at(eCONFIG_FIRST_LANGUAGE)).toInt() );
 
     qDebug() << QString("[%1]").arg(COMMON_GROUP);
     for(QMap<ECONFIG_FIRST, QVariant>::iterator i = m_config_first.begin(); i != m_config_first.end(); i++)

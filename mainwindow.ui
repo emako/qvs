@@ -33,7 +33,7 @@
     <item>
      <widget class="QTabWidget" name="tabWidget">
       <property name="currentIndex">
-       <number>0</number>
+       <number>1</number>
       </property>
       <widget class="QWidget" name="tab_main">
        <attribute name="title">
@@ -433,7 +433,7 @@ QProgressBar::chunk {
                     </size>
                    </property>
                    <property name="text">
-                    <string> Del </string>
+                    <string>Delete</string>
                    </property>
                    <property name="icon">
                     <iconset resource="res/resources.qrc">

@@ -248,6 +248,11 @@ void MainWindow::setAcctions(void)
     m_pActionGruopLanguage->addAction(ui->actionLanguageEnglish);
     m_pActionGruopLanguage->addAction(ui->actionLanguageChinese);
     m_pActionGruopLanguage->addAction(ui->actionLanguageJapanese);
+    setLanguage(static_cast<Config::ELANGUAGE>(g_pConfig->getConfig(Config::eCONFIG_FIRST_LANGUAGE).toInt()));
+    for(int i = eINDEX_0; i < m_pActionGruopLanguage->actions().length(); i++)
+    {
+        connect(m_pActionGruopLanguage->actions().at(i), SIGNAL(triggered()), this, SLOT(languageChanged()));
+    }
 
     /* Tools */
     connect(ui->actionScriptCreator, SIGNAL(triggered()), this, SLOT(openScriptCreator()));
@@ -1479,26 +1484,15 @@ void MainWindow::loadFonts(void)
 
 void MainWindow::setLanguage(Config::ELANGUAGE a_language)
 {
-    if(a_language > m_pActionGruopLanguage->actions().length())
+    if((a_language >= Config::eLANGUAGE_MAX) || (a_language <= eINDEX_NONE))
+    {
+        a_language = Config::eLANGUAGE_EN;
+    }
+    if(a_language >= m_pActionGruopLanguage->actions().length())
     {
         return;
     }
     m_pActionGruopLanguage->actions().at(a_language)->setChecked(true);
-    setLanguage();
-}
-
-void MainWindow::setLanguage(void)
-{
-    switch(language())
-    {
-    case Config::eLANGUAGE_EN:
-    default:
-        break;
-    case Config::eLANGUAGE_ZH:
-        break;
-    case Config::eLANGUAGE_JA:
-        break;
-    }
 }
 
 Config::ELANGUAGE MainWindow::language(void)
@@ -1514,4 +1508,9 @@ Config::ELANGUAGE MainWindow::language(void)
         }
     }
     return language;
+}
+
+void MainWindow::languageChanged(void)
+{
+    g_pConfig->setConfig(Config::eCONFIG_FIRST_LANGUAGE, language());
 }
