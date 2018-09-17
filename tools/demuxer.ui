@@ -144,7 +144,7 @@
          <widget class="QComboBox" name="comboBoxDemuxerFormat">
           <property name="minimumSize">
            <size>
-            <width>120</width>
+            <width>160</width>
             <height>25</height>
            </size>
           </property>

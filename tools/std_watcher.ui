@@ -30,11 +30,14 @@
     <number>5</number>
    </property>
    <item>
-    <widget class="QPlainTextEdit" name="plainTextEdit">
+    <widget class="QPlainTextEdit" name="logView">
      <property name="font">
       <font>
        <family>Consolas</family>
       </font>
+     </property>
+     <property name="contextMenuPolicy">
+      <enum>Qt::CustomContextMenu</enum>
      </property>
     </widget>
    </item>

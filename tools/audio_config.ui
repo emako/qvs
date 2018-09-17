@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>568</width>
-    <height>320</height>
+    <height>324</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -71,7 +71,7 @@
            <property name="minimumSize">
             <size>
              <width>200</width>
-             <height>23</height>
+             <height>25</height>
             </size>
            </property>
            <property name="maximumSize">
@@ -192,7 +192,7 @@
            <property name="minimumSize">
             <size>
              <width>200</width>
-             <height>23</height>
+             <height>25</height>
             </size>
            </property>
            <property name="maximumSize">
@@ -284,7 +284,7 @@
    <item>
     <widget class="QStackedWidget" name="stackedWidgetMode">
      <property name="currentIndex">
-      <number>6</number>
+      <number>0</number>
      </property>
      <widget class="QWidget" name="page_qaac">
       <layout class="QVBoxLayout" name="verticalLayout_3">
@@ -370,7 +370,7 @@
                <property name="minimumSize">
                 <size>
                  <width>180</width>
-                 <height>23</height>
+                 <height>25</height>
                 </size>
                </property>
                <property name="maximumSize">
@@ -492,7 +492,7 @@
                <property name="minimumSize">
                 <size>
                  <width>180</width>
-                 <height>23</height>
+                 <height>25</height>
                 </size>
                </property>
                <property name="maximumSize">
@@ -634,7 +634,7 @@
                <property name="minimumSize">
                 <size>
                  <width>180</width>
-                 <height>23</height>
+                 <height>25</height>
                 </size>
                </property>
                <property name="maximumSize">
@@ -760,7 +760,7 @@
                <property name="minimumSize">
                 <size>
                  <width>180</width>
-                 <height>23</height>
+                 <height>25</height>
                 </size>
                </property>
                <property name="maximumSize">
@@ -931,7 +931,7 @@
                <property name="minimumSize">
                 <size>
                  <width>180</width>
-                 <height>23</height>
+                 <height>25</height>
                 </size>
                </property>
                <property name="maximumSize">
@@ -1068,7 +1068,7 @@
                <property name="minimumSize">
                 <size>
                  <width>180</width>
-                 <height>23</height>
+                 <height>25</height>
                 </size>
                </property>
                <property name="maximumSize">
@@ -1367,7 +1367,7 @@
                <property name="minimumSize">
                 <size>
                  <width>180</width>
-                 <height>23</height>
+                 <height>25</height>
                 </size>
                </property>
                <property name="maximumSize">
@@ -1659,7 +1659,7 @@
                <property name="minimumSize">
                 <size>
                  <width>180</width>
-                 <height>23</height>
+                 <height>25</height>
                 </size>
                </property>
                <property name="maximumSize">

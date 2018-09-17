@@ -98,7 +98,7 @@ private slots:
     void on_btnClose_clicked();
     void on_btnPause_clicked(bool a_checked);
     void on_checkBoxExitCompleted_stateChanged(int a_state);
-    void on_plainTextEdit_customContextMenuRequested(const QPoint &a_pos);
+    void on_logView_customContextMenuRequested(const QPoint &a_pos);
 };
 
 #endif // STD_WATCHER_H

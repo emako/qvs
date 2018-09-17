@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>795</width>
-    <height>175</height>
+    <width>654</width>
+    <height>178</height>
    </rect>
   </property>
   <property name="maximumSize">
@@ -138,13 +138,13 @@
          <widget class="QComboBox" name="comboBoxAudioEncoder">
           <property name="minimumSize">
            <size>
-            <width>130</width>
-            <height>22</height>
+            <width>160</width>
+            <height>25</height>
            </size>
           </property>
           <property name="maximumSize">
            <size>
-            <width>90</width>
+            <width>0</width>
             <height>22</height>
            </size>
           </property>
@@ -246,13 +246,13 @@
          <widget class="QComboBox" name="comboBoxAudioBitrate">
           <property name="minimumSize">
            <size>
-            <width>130</width>
-            <height>22</height>
+            <width>160</width>
+            <height>25</height>
            </size>
           </property>
           <property name="maximumSize">
            <size>
-            <width>120</width>
+            <width>0</width>
             <height>22</height>
            </size>
           </property>
