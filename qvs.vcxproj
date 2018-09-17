@@ -234,6 +234,7 @@ if errorlevel 1 goto VCEnd
     <ClCompile Include="mediainfo\mediainfo_dialog.cpp" />
     <ClCompile Include="mediainfo\mediainfo_list.cpp" />
     <ClCompile Include="mediainfo\mediainfo_loader.cpp" />
+    <ClCompile Include="tools\merge.cpp" />
     <ClCompile Include="tools\muxer.cpp" />
     <ClCompile Include="script\number_matcher.cpp" />
     <ClCompile Include="com\preferences.cpp" />
@@ -281,6 +282,8 @@ if errorlevel 1 goto VCEnd
     <ClInclude Include="mediainfo\mediainfo_enum.h" />
     <ClInclude Include="mediainfo\mediainfo_list.h" />
     <ClInclude Include="mediainfo\mediainfo_loader.h" />
+    <QtMoc Include="tools\merge.h">
+    </QtMoc>
     <QtMoc Include="tools\muxer.h">
     </QtMoc>
     <ClInclude Include="script\number_matcher.h" />
@@ -327,6 +330,7 @@ if errorlevel 1 goto VCEnd
     <ClInclude Include="..\qvs\generated\ui\ui_job_view_cmd.h" />
     <ClInclude Include="..\qvs\generated\ui\ui_mainwindow.h" />
     <ClInclude Include="..\qvs\generated\ui\ui_mediainfo_dialog.h" />
+    <ClInclude Include="..\qvs\generated\ui\ui_merge.h" />
     <ClInclude Include="..\qvs\generated\ui\ui_muxer.h" />
     <ClInclude Include="..\qvs\generated\ui\ui_preferences.h" />
     <ClInclude Include="..\qvs\generated\ui\ui_preview_dialog.h" />
@@ -352,6 +356,8 @@ if errorlevel 1 goto VCEnd
     <QtUic Include="mainwindow.ui">
     </QtUic>
     <QtUic Include="mediainfo\mediainfo_dialog.ui">
+    </QtUic>
+    <QtUic Include="tools\merge.ui">
     </QtUic>
     <QtUic Include="tools\muxer.ui">
     </QtUic>
@@ -389,6 +395,7 @@ if errorlevel 1 goto VCEnd
     <None Include="res\buttons\clear.png" />
     <None Include="res\strings\cli-usage" />
     <None Include="res\buttons\clip_splitter.png" />
+    <None Include="res\buttons\clipboard_sign_out.png" />
     <None Include="res\buttons\clock.png" />
     <None Include="res\buttons\clock_pause.png" />
     <None Include="res\buttons\clock_play.png" />
@@ -403,6 +410,7 @@ if errorlevel 1 goto VCEnd
     <None Include="res\buttons\cross.png" />
     <None Include="res\buttons\cross_grey.png" />
     <None Include="res\buttons\date_task.png" />
+    <None Include="res\buttons\debugging.png" />
     <None Include="res\buttons\delete.png" />
     <None Include="res\buttons\disk.png" />
     <None Include="res\buttons\disk_edit.png" />
