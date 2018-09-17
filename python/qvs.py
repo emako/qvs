@@ -115,6 +115,8 @@ Configure functions:
 	SetConfig
 	GetConfig
 	TestSuite
+	PathSplit
+	FindFirstFilePath
 ************************************************
 Assistant functions:
 	Default
@@ -4419,8 +4421,8 @@ def FindFirstFilePath(filename, fileext=None):
 ##################################################################################################
 ### Function  : AddDefEnv
 ### Author    : ema
-### Version   : v0.1
-### Release   : 2018.05.26
+### Version   : v0.2
+### Release   : 2018.09.17
 ##################################################################################################
 ### Add default temporary environ.
 ##################################################################################################
@@ -4428,6 +4430,7 @@ def AddDefEnv():
 	env_list = []
 	env_list.append(os.path.dirname(os.path.abspath(__file__)))
 	env_list.append(GetLibPath(lib='/..'))
+	env_list.append(GetLibPath(lib='/../tools'))
 	env_list.append(GetLibPath(lib='/../avisynth/avisynth32/plugins'))
 	env_list.append(GetLibPath(lib='/../avisynth/avisynthplus64/plugins'))
 	env_list.append(GetLibPath(lib='/site-packages'))
