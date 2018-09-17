@@ -48,7 +48,7 @@ void JobCreatorHelp::showHelp(EJOB_ENCODER a_encoder)
         cmd = "VCEEncC64";
         break;
     }
-    cmd = mainUi->mainUi->m_com->findFirstFilePath(cmd);
+    cmd = qvs::findFirstFilePath(cmd);
     if(cmd.indexOf(QT_PIPE) >= 0)
     {
         /* One process can't support pipe. */
@@ -82,7 +82,7 @@ void JobCreatorHelp::showHelp(EJOB_PIPER a_piper)
         break;
     }
 
-    cmd = mainUi->mainUi->m_com->findFirstFilePath(cmd);
+    cmd = qvs::findFirstFilePath(cmd);
     ui->plainTextEdit->clear();
     startJob(cmd);
 }

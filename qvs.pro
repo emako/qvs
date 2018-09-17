@@ -181,7 +181,8 @@ SOURCES += \
     tools/audio_config.cpp \
     preview/preview_timeline_slider.cpp \
     com/style_sheet.cpp \
-    mediainfo/mediainfo_list.cpp
+    mediainfo/mediainfo_list.cpp \
+    tools/merge.cpp
 
 HEADERS += \
     mainwindow.h \
@@ -217,7 +218,8 @@ HEADERS += \
     job/job_cmdlist.h \
     job/job_item.h \
     mediainfo/mediainfo_list.h \
-    mediainfo/mediainfo_enum.h
+    mediainfo/mediainfo_enum.h \
+    tools/merge.h
 
 FORMS += \
     mainwindow.ui \
@@ -234,7 +236,8 @@ FORMS += \
     preview/preview_dialog.ui \
     mediainfo/mediainfo_dialog.ui \
     script/script_creator.ui \
-    tools/audio_config.ui
+    tools/audio_config.ui \
+    tools/merge.ui
 
 RESOURCES += \
     res/resources.qrc

@@ -383,7 +383,7 @@ void Config::setLaunchMode(void)
         {
             m_launchMode = eLAUNCH_MODE_SHOW_HELP;
         }
-        else if(Common::isFile(m_args[eINDEX_1]))
+        else if(qvs::isFile(m_args[eINDEX_1]))
         {
             m_launchMode = eLAUNCH_MODE_NORMAL_ADD_JOB;
             setConfig(eCONFIG_FIRST_CLI_FILENAME, m_args[eINDEX_1]);
@@ -395,7 +395,7 @@ void Config::setLaunchMode(void)
     }
     else if(m_args.length() == eINDEX_3)
     {
-        if(Common::isFile(m_args[eINDEX_1]))
+        if(qvs::isFile(m_args[eINDEX_1]))
         {
             if(m_args[eINDEX_2] == "-cp" || m_args[eINDEX_2] == "--copypath")
             {

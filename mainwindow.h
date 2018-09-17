@@ -54,6 +54,15 @@ public:
     friend class PreviewDialog;
     friend class ScriptCreator;
 
+    enum ETAB {
+        eTAB_MAIN,
+        eTAB_AUDIO,
+        eTAB_MUXER,
+        eTAB_MEDIAINFO,
+        eTAB_EXTRA,
+        eTAB_MAX,
+    };
+
     void modeLaunch(void);
     void loadFonts(void);
     void setLanguage(Config::ELANGUAGE a_language);

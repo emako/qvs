@@ -407,7 +407,7 @@ QProgressBar::chunk {
                     <bool>false</bool>
                    </property>
                    <property name="text">
-                    <string> Add </string>
+                    <string>Load...</string>
                    </property>
                    <property name="icon">
                     <iconset resource="res/resources.qrc">
@@ -567,6 +567,51 @@ QProgressBar::chunk {
          <widget class="QStackedWidget" name="stackedWidgetMediaInfo">
           <widget class="QWidget" name="page_MediaInfo"/>
          </widget>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="tab_extra">
+       <attribute name="title">
+        <string>Extra</string>
+       </attribute>
+       <layout class="QVBoxLayout" name="verticalLayout_5">
+        <property name="leftMargin">
+         <number>2</number>
+        </property>
+        <property name="topMargin">
+         <number>2</number>
+        </property>
+        <property name="rightMargin">
+         <number>2</number>
+        </property>
+        <property name="bottomMargin">
+         <number>2</number>
+        </property>
+        <item>
+         <widget class="Merge" name="widgetMerge" native="true">
+          <property name="minimumSize">
+           <size>
+            <width>0</width>
+            <height>50</height>
+           </size>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <spacer name="verticalSpacer_2">
+          <property name="orientation">
+           <enum>Qt::Vertical</enum>
+          </property>
+          <property name="sizeType">
+           <enum>QSizePolicy::Expanding</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>20</width>
+            <height>40</height>
+           </size>
+          </property>
+         </spacer>
         </item>
        </layout>
       </widget>
@@ -1283,9 +1328,16 @@ QProgressBar::chunk {
    </property>
   </action>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>Merge</class>
+   <extends>QWidget</extends>
+   <header location="global">./tools/merge.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
  <tabstops>
   <tabstop>buttonStartJob</tabstop>
-  <tabstop>tabWidget</tabstop>
   <tabstop>buttonAbortJob</tabstop>
   <tabstop>jobsView</tabstop>
   <tabstop>logView</tabstop>

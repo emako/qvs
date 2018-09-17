@@ -67,6 +67,8 @@ void MainWindow::setupUi(void)
     m_pJobViewMenu = new QMenu(ui->jobsView);
     m_pLogViewMenu = new QMenu(ui->logView);
 
+    ui->widgetMerge->mainUi = this;
+
     m_pAudioEnc->mainUi = this;
     ui->stackedWidgetAudioEnc->addWidget(m_pAudioEnc);
     ui->stackedWidgetAudioEnc->setCurrentWidget(m_pAudioEnc);
@@ -767,10 +769,10 @@ void MainWindow::dropEvent(QDropEvent* e)
             }
             switch(ui->tabWidget->currentIndex())
             {
-            case eINDEX_0:/*Main*/
+            case eTAB_MAIN:/*Main*/
                 execJobCreator(JobCreator::eJOB_RELOAD_DROP, filename);
                 break;
-            case eINDEX_1:/*Audio*/
+            case eTAB_AUDIO:/*Audio*/
                 /* Audio Input */
                 pos = QPoint(m_pAudioEnc->ui->editAudioInput->pos()
                            + m_pAudioEnc->ui->groupBoxAudio->pos()
@@ -799,7 +801,7 @@ void MainWindow::dropEvent(QDropEvent* e)
                     break;
                 }
                 break;
-            case eINDEX_2:/*Muxer*/
+            case eTAB_MUXER:/*Muxer*/
                 /* Muxer */
                 /* Video Input */
                 pos = QPoint(m_pMuxer->ui->editMuxerVideoInput->pos()
@@ -845,9 +847,12 @@ void MainWindow::dropEvent(QDropEvent* e)
                     break;
                 }
                 break;
-            case eINDEX_3:/*MediaInfo*/
+            case eTAB_MEDIAINFO:/*MediaInfo*/
                 m_pMediaInfoDialog->m_mediainfo_path = filename;
                 m_pMediaInfoDialog->showMediaInfo(filename);
+                break;
+            case eTAB_EXTRA:/*Extra*/
+                ui->widgetMerge->reload(filename);
                 break;
             default:
                 break;
@@ -1447,7 +1452,7 @@ void MainWindow::modeLaunch(void)
         break;
     case Config::eLAUNCH_MODE_MEDIAINFO:
         this->show();
-        ui->tabWidget->setCurrentIndex(eINDEX_3);
+        ui->tabWidget->setCurrentIndex(eTAB_MEDIAINFO);
         m_pMediaInfoDialog->setPath(g_pConfig->getConfig(Config::eCONFIG_FIRST_CLI_FILENAME).toString());
         m_pMediaInfoDialog->reload();
         break;

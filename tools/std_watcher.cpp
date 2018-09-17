@@ -8,6 +8,7 @@ extern QMap<QUuid, StdWatcher*> g_pStdWatch;
 StdWatcher::StdWatcher(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::StdWatcher),
+    m_pContextMenu(nullptr),
     m_isBatch(false)
 {
     ui->setupUi(this);
@@ -36,7 +37,7 @@ void StdWatcher::initJob(QUuid a_uid)
 void StdWatcher::startJob(QString a_cmd)
 {
     m_cmd = a_cmd;
-    ui->plainTextEdit->appendPlainText(m_cmd);
+    viewLog(JobChef::eJOB_LOG_TYPE_INFO, m_cmd);
     m_process_job_encoder.start(m_cmd);
 }
 
@@ -44,7 +45,15 @@ void StdWatcher::startJob(StdWatcherCmd a_cmd)
 {
     m_pipe = a_cmd.pipe;
     m_cmd = a_cmd.cmd;
-    ui->plainTextEdit->appendPlainText(QString("%1 | %2").arg(m_pipe).arg(m_cmd));
+
+    if(m_pipe.isEmpty())
+    {
+        viewLog(JobChef::eJOB_LOG_TYPE_INFO, m_cmd);
+    }
+    else
+    {
+        viewLog(JobChef::eJOB_LOG_TYPE_INFO, QString("%1 | %2").arg(m_pipe).arg(m_cmd));
+    }
     m_process_job_encoder.start(m_cmd);
     if(!m_pipe.isEmpty())
     {
@@ -211,21 +220,22 @@ void StdWatcher::setWrapped(bool a_enable)
 {
     if(a_enable)
     {
-        ui->plainTextEdit->setLineWrapMode(QPlainTextEdit::WidgetWidth);
+        ui->logView->setLineWrapMode(QPlainTextEdit::WidgetWidth);
     }
     else
     {
-        ui->plainTextEdit->setLineWrapMode(QPlainTextEdit::NoWrap);
+        ui->logView->setLineWrapMode(QPlainTextEdit::NoWrap);
     }
 }
 
 void StdWatcher::setupUi(void)
 {
-    m_pContextMenu = new QMenu(ui->plainTextEdit);
-    ui->plainTextEdit->setContextMenuPolicy(Qt::CustomContextMenu);
-    QAction *at_action_copy = new QAction(QIcon(":/buttons/page_paste.png"), tr("Copy command"), ui->plainTextEdit);
-    QAction *at_action_enable_line_wrapping = new QAction(QIcon(":/buttons/text_wrapping.png"), tr("Enable Line Wrap"), ui->plainTextEdit);
+    m_pContextMenu = new QMenu(ui->logView);
+    ui->logView->setContextMenuPolicy(Qt::CustomContextMenu);
+    QAction *at_action_copy = new QAction(QIcon(":/buttons/page_paste.png"), tr("Copy command"), ui->logView);
+    QAction *at_action_enable_line_wrapping = new QAction(QIcon(":/buttons/text_wrapping.png"), tr("Enable Line Wrap"), ui->logView);
     at_action_enable_line_wrapping->setCheckable(true);
+    at_action_enable_line_wrapping->setChecked(true);
     m_pContextMenu->addActions(QList<QAction*>() << at_action_copy);
     m_pContextMenu->addSeparator();
     m_pContextMenu->addActions(QList<QAction*>() << at_action_enable_line_wrapping);
@@ -256,15 +266,17 @@ void StdWatcher::viewLog(JobChef::EJOB_LOG_TYPE a_log_type, const QString a_log)
     switch(a_log_type)
     {
     case JobChef::eJOB_LOG_TYPE_WARN:
-        ui->plainTextEdit->appendPlainText(a_log);
-        setInsertTextColor(QColor(255, 0, 0), a_log.length());
+        ui->logView->appendHtml(qvs::toHtml(qvs::currentTime(a_log), QColor(255, 0, 0)));
         break;
     case JobChef::eJOB_LOG_TYPE_JOB_STATUS:
-        ui->plainTextEdit->appendPlainText(a_log);
-        setInsertTextColor(QColor(0, 128, 128), a_log.length());
+        ui->logView->appendHtml(qvs::currentTime()+qvs::toHtml(a_log, QColor(0, 128, 128)));
         break;
     case JobChef::eJOB_LOG_TYPE_DEBUG:
+        qDebug() << a_log;
+        break;
     case JobChef::eJOB_LOG_TYPE_INFO:
+        ui->logView->appendHtml(qvs::currentTime()+qvs::toHtml(a_log, QColor(23, 81, 144)));
+        break;
     case JobChef::eJOB_LOG_TYPE_ERROE:
     case JobChef::eJOB_LOG_TYPE_FATAL:
     case JobChef::eJOB_LOG_TYPE_JOB_STD_ERROR:
@@ -272,7 +284,7 @@ void StdWatcher::viewLog(JobChef::EJOB_LOG_TYPE a_log_type, const QString a_log)
     case JobChef::eJOB_LOG_TYPE_JOB_STD_PROGRESS:
     case JobChef::eJOB_LOG_TYPE_JOB_STD_DETAILS:
     default:
-        ui->plainTextEdit->appendPlainText(a_log);
+        ui->logView->appendPlainText(qvs::currentTime(a_log));
         break;
     }
 }
@@ -285,11 +297,11 @@ void StdWatcher::setInsertTextColor(QColor a_color, int a_length)
     }
 
     QTextCharFormat fmt;
-    QTextCursor cursor = ui->plainTextEdit->textCursor();
+    QTextCursor cursor = ui->logView->textCursor();
 
     fmt.setForeground(a_color);
-    cursor.setPosition(ui->plainTextEdit->toPlainText().length() - a_length);
-    cursor.setPosition(ui->plainTextEdit->toPlainText().length(), QTextCursor::KeepAnchor);
+    cursor.setPosition(ui->logView->toPlainText().length() - a_length);
+    cursor.setPosition(ui->logView->toPlainText().length(), QTextCursor::KeepAnchor);
     cursor.setCharFormat(fmt);
 }
 
@@ -511,7 +523,7 @@ void StdWatcher::on_checkBoxExitCompleted_stateChanged(int a_state)
         {
             m_pCloseTimer->stop();
             initCloseTimerParm();
-            this->setWindowTitle(QString("StdWatcher"));
+            this->setWindowTitle(tr("StdWatcher"));
         }
     }
 }
@@ -524,13 +536,13 @@ void StdWatcher::releaseCloseTimer()
     }
 }
 
-void StdWatcher::on_plainTextEdit_customContextMenuRequested(const QPoint &)
-{
-    m_pContextMenu->exec(QCursor::pos());
-}
-
 void StdWatcher::closeEvent(QCloseEvent *e)
 {
     abortJob();
     e->accept();
+}
+
+void StdWatcher::on_logView_customContextMenuRequested(const QPoint &)
+{
+    m_pContextMenu->exec(QCursor::pos());
 }

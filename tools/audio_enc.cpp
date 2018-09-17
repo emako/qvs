@@ -145,42 +145,42 @@ QString AudioEnc::getAudioOutputExt(EENCODE_TYPE a_type)
 StdWatcherCmd AudioEnc::getEncodeCmd(QString a_input, QString a_output, QString a_bitrate)
 {
     StdWatcherCmd job_cmd;
-    QString pipe = QString("%1 -i \"%2\" -vn -sn -v 0 -c:a pcm_s16le -f wav pipe: ").arg(mainUi->m_com->findFirstFilePath(getPiperFilename())).arg(a_input);
+    QString pipe = QString("%1 -i \"%2\" -vn -sn -v 0 -c:a pcm_s16le -f wav pipe: ").arg(qvs::findFirstFilePath(getPiperFilename())).arg(a_input);
     QString cmd;
     EENCODE_TYPE encode_type = static_cast<EENCODE_TYPE>(ui->comboBoxAudioEncoder->currentIndex());
 
     switch(encode_type)
     {
     case eENCODE_TYPE_AAC_APPLE:
-        cmd = QString("%1 --ignorelength -c %2 - -o \"%3\"").arg(mainUi->m_com->findFirstFilePath(AUDIO_CONFIG_EXEC_AAC_APPLE)).arg(a_bitrate).arg(a_output);
+        cmd = QString("%1 --ignorelength -c %2 - -o \"%3\"").arg(qvs::findFirstFilePath(AUDIO_CONFIG_EXEC_AAC_APPLE)).arg(a_bitrate).arg(a_output);
         break;
     case eENCODE_TYPE_AAC_FDK:
-        cmd = QString("%1 --ignorelength -b %2 - -o \"%3\"").arg(mainUi->m_com->findFirstFilePath(AUDIO_CONFIG_EXEC_AAC_FDK)).arg(a_bitrate).arg(a_output);
+        cmd = QString("%1 --ignorelength -b %2 - -o \"%3\"").arg(qvs::findFirstFilePath(AUDIO_CONFIG_EXEC_AAC_FDK)).arg(a_bitrate).arg(a_output);
         break;
     case eENCODE_TYPE_AAC_NERO:
-        cmd = QString("%1 -ignorelength -lc -br %2 -if - -of \"%3\"").arg(mainUi->m_com->findFirstFilePath(AUDIO_CONFIG_EXEC_AAC_NERO)).arg(QString::number(a_bitrate.toInt()*1000)).arg(a_output);
+        cmd = QString("%1 -ignorelength -lc -br %2 -if - -of \"%3\"").arg(qvs::findFirstFilePath(AUDIO_CONFIG_EXEC_AAC_NERO)).arg(QString::number(a_bitrate.toInt()*1000)).arg(a_output);
         break;
     case eENCODE_TYPE_FLAC:
-        cmd = QString("%1 -5 - -o \"%2\"").arg(mainUi->m_com->findFirstFilePath(AUDIO_CONFIG_EXEC_FLAC)).arg(a_output);
+        cmd = QString("%1 -5 - -o \"%2\"").arg(qvs::findFirstFilePath(AUDIO_CONFIG_EXEC_FLAC)).arg(a_output);
         break;
     case eENCODE_TYPE_ALAC:
-        cmd = QString("%1 --ignorelength - -o \"%2\"").arg(mainUi->m_com->findFirstFilePath(AUDIO_CONFIG_EXEC_ALAC)).arg(a_output);
+        cmd = QString("%1 --ignorelength - -o \"%2\"").arg(qvs::findFirstFilePath(AUDIO_CONFIG_EXEC_ALAC)).arg(a_output);
         break;
     case eENCODE_TYPE_OPUS:
-        cmd = QString("%1 --ignorelength --vbr --bitrate %2 - \"%3\"").arg(mainUi->m_com->findFirstFilePath(AUDIO_CONFIG_EXEC_OPUS)).arg(a_bitrate).arg(a_output);
+        cmd = QString("%1 --ignorelength --vbr --bitrate %2 - \"%3\"").arg(qvs::findFirstFilePath(AUDIO_CONFIG_EXEC_OPUS)).arg(a_bitrate).arg(a_output);
         break;
     case eENCODE_TYPE_OGG_VORBIS:
-        cmd = QString("%1 - --ignorelength --bitrate %2 -o \"%3\"").arg(mainUi->m_com->findFirstFilePath(AUDIO_CONFIG_EXEC_OGG_VORBIS)).arg(a_bitrate).arg(a_output);
+        cmd = QString("%1 - --ignorelength --bitrate %2 -o \"%3\"").arg(qvs::findFirstFilePath(AUDIO_CONFIG_EXEC_OGG_VORBIS)).arg(a_bitrate).arg(a_output);
         break;
     case eENCODE_TYPE_MP3:
-        cmd = QString("%1 -b %2 --cbr -h - \"%3\"").arg(mainUi->m_com->findFirstFilePath(AUDIO_CONFIG_EXEC_MP3)).arg(a_bitrate).arg(a_output);
+        cmd = QString("%1 -b %2 --cbr -h - \"%3\"").arg(qvs::findFirstFilePath(AUDIO_CONFIG_EXEC_MP3)).arg(a_bitrate).arg(a_output);
         break;
     case eENCODE_TYPE_AC3:
-        cmd = QString("%1 -i \"%2\" -c:a ac3 -b:a %3k \"%4\" -y").arg(mainUi->m_com->findFirstFilePath(getPiperFilename())).arg(a_input).arg(a_bitrate).arg(a_output);
+        cmd = QString("%1 -i \"%2\" -c:a ac3 -b:a %3k \"%4\" -y").arg(qvs::findFirstFilePath(getPiperFilename())).arg(a_input).arg(a_bitrate).arg(a_output);
         pipe.clear();
         break;
     case eENCODE_TYPE_WAV:
-        cmd = QString("%1 -i \"%2\" -f wav \"%3\" -y").arg(mainUi->m_com->findFirstFilePath(getPiperFilename())).arg(a_input).arg(a_output);
+        cmd = QString("%1 -i \"%2\" -f wav \"%3\" -y").arg(qvs::findFirstFilePath(getPiperFilename())).arg(a_input).arg(a_output);
         pipe.clear();
         break;
     default:
@@ -190,7 +190,7 @@ StdWatcherCmd AudioEnc::getEncodeCmd(QString a_input, QString a_output, QString 
     {
         if(encode_type == eENCODE_TYPE_AC3)
         {
-            cmd = m_pAdvancedConfig->cmd.arg(mainUi->m_com->findFirstFilePath(getPiperFilename())).arg(a_input).arg(a_output);
+            cmd = m_pAdvancedConfig->cmd.arg(qvs::findFirstFilePath(getPiperFilename())).arg(a_input).arg(a_output);
         }
         else
         {
@@ -223,7 +223,7 @@ void AudioEnc::on_buttonAudioStart_clicked()
         QMessageBox::warning(this, tr("Warning"), tr("Output file is empty!"), QMessageBox::Ok);
         return;
     }
-    if(mainUi->m_com->isFile(output))
+    if(qvs::isFile(output))
     {
         if(output == input)
         {

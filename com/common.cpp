@@ -16,6 +16,11 @@ bool qvs::isFileExist(const QString &a_filename)
     return false;
 }
 
+bool qvs::isFile(const QString &a_filename)
+{
+    return QFileInfo(a_filename).isFile();
+}
+
 QString qvs::getFileExt(const QString &a_filename)
 {
     QFileInfo file(a_filename);
@@ -231,17 +236,7 @@ QString qvs::getStringFromJson(const QJsonObject& a_json)
     return QString(QJsonDocument(a_json).toJson());
 }
 
-Common::Common(QObject *parent) : QObject(parent)
-{
-    connect(&m_process, SIGNAL(readyReadStandardError()), this, SLOT(slotProcessReadyReadStandardError()));
-    connect(&m_process, SIGNAL(readyReadStandardOutput()), this, SLOT(slotProcessReadyReadStandardOutput()));
-}
-
-Common::~Common()
-{
-}
-
-QFileInfoList Common::getFileList(QString a_path)
+QFileInfoList qvs::getFileList(QString a_path)
 {
     QDir dir(a_path);
 
@@ -256,7 +251,7 @@ QFileInfoList Common::getFileList(QString a_path)
     return file_list;
 }
 
-QString Common::findFirstFilePath(QString a_filename, QString a_path)
+QString qvs::findFirstFilePath(QString a_filename, QString a_path)
 {
     QString path;
     QFileInfoList fileInfoList;
@@ -286,6 +281,16 @@ QString Common::findFirstFilePath(QString a_filename, QString a_path)
         path = a_filename;
     }
     return path;
+}
+
+Common::Common(QObject *parent) : QObject(parent)
+{
+    connect(&m_process, SIGNAL(readyReadStandardError()), this, SLOT(slotProcessReadyReadStandardError()));
+    connect(&m_process, SIGNAL(readyReadStandardOutput()), this, SLOT(slotProcessReadyReadStandardOutput()));
+}
+
+Common::~Common()
+{
 }
 
 QList<DWORD> Common::getProcessID(QString a_filename)
@@ -438,22 +443,7 @@ int Common::hadNumber(QString a_text)
     return (int)eINDEX_NONE;
 }
 
-bool Common::isFile(QString a_filename)
-{
-    return QFileInfo(a_filename).isFile();
-}
-
-QString Common::getHashMd5(QString a_filename)
-{
-    QFile file(a_filename);
-
-    file.open(QIODevice::ReadOnly);
-    QByteArray byte_array = QCryptographicHash::hash(file.readAll(), QCryptographicHash::Md5);
-    file.close();
-    return QString(byte_array.toHex().constData());
-}
-
-QString Common::toUpperFirstStr(QString a_str)
+QString qvs::toStringFirstUpper(QString a_str)
 {
     QString out;
     switch(a_str.length())
@@ -467,6 +457,62 @@ QString Common::toUpperFirstStr(QString a_str)
         out = a_str.at(eINDEX_0).toUpper() + a_str.mid(eINDEX_1).toLower();
     }
     return out;
+}
+
+QStringList qvs::getUrlFromText(const QString &a_text)
+{
+    qDebug()<<a_text;
+    QString text = a_text;
+    QStringList texts;
+
+    text = text.replace(QT_OTR_EOL, QT_NOR_EOL);
+    text = text.replace(QT_MAC_EOL, QT_NOR_EOL);
+    for(QString line : text.split(QT_NOR_EOL))
+    {
+        QRegularExpression rex("(https?|ftp|file)://[-A-Za-z0-9+&@#/%?=~_|!:,.;]+[-A-Za-z0-9+&@#/%=~_|]");
+        QRegularExpressionMatch rex_match = rex.match(line);
+
+        if(rex_match.hasMatch())
+        {
+            QStringList rex_match_texts = rex_match.capturedTexts();
+
+            texts << rex_match_texts.first();
+        }
+    }
+    if(texts.isEmpty())
+    {
+        for(QString line : text.split(QT_NOR_EOL))
+        {
+            line = toFilename(line);
+
+            if(!line.isEmpty())
+            {
+                if(isFile(line))
+                {
+                    texts << line;
+                }
+            }
+        }
+    }
+    return texts;
+}
+
+QString qvs::toFilename(const QString &a_str)
+{
+    QString filename = a_str;
+    QRegularExpression rex("[\\*\\?\\\"<>\\|]"); /* / \ " : | * ? < > */
+
+    return filename.replace(rex, QT_EMPTY);
+}
+
+QString Common::getHashMd5(QString a_filename)
+{
+    QFile file(a_filename);
+
+    file.open(QIODevice::ReadOnly);
+    QByteArray byte_array = QCryptographicHash::hash(file.readAll(), QCryptographicHash::Md5);
+    file.close();
+    return QString(byte_array.toHex().constData());
 }
 
 QString Common::getAudioFileDelayValueString(QString a_filename)

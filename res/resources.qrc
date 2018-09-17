@@ -153,5 +153,7 @@
         <file>buttons/lang_en.ico</file>
         <file>buttons/lang_ja.ico</file>
         <file>buttons/lang_zh.ico</file>
+        <file>buttons/debugging.png</file>
+        <file>buttons/clipboard_sign_out.png</file>
     </qresource>
 </RCC>

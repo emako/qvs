@@ -52,27 +52,28 @@
 #define QT_VERSION_TOO_LOW ARI
 #endif
 
-static const char QT_EMPTY[]          = "";
-static const char QT_BLANK[]          = " ";
-static const char QT_EXT_SPLITE[]     = ".";
-static const char QT_CSV_SPLITE[]     = ",";
-static const char QT_PATH_SPLITE[]    = ";";
-static const char QT_COLON[]          = ":";
-static const char QT_SQM[]            = "'";
-static const char QT_PIPE[]           = "|";
-static const char QT_HYPHEN[]         = "-";
-static const char QT_PARENTHESES_L[]  = "(";
-static const char QT_PARENTHESES_R[]  = ")";
-static const char QT_BRACKET_L[]      = "{";
-static const char QT_BRACKET_R[]      = "}";
-static const char QT_BIKKURI_MARK[]   = "!";
-static const char QT_NOR_PATH_SPR[]   = "/";
-static const char QT_EQUAL[]          = "=";
-static const char QT_DOS_PATH_SPR[]   = "\\";
-static const char QT_META[]           = "\b";
-static const char QT_NOR_EOL[]        = "\n";
-static const char QT_OTR_EOL[]        = "\r\n";
-static const char QT_MAC_EOL[]        = "\r";
+static const char QT_EMPTY[]            = "";
+static const char QT_BLANK[]            = " ";
+static const char QT_EXT_SPLITE[]       = ".";
+static const char QT_CSV_SPLITE[]       = ",";
+static const char QT_PATH_SPLITE[]      = ";";
+static const char QT_COLON[]            = ":";
+static const char QT_SQM[]              = "'";
+static const char QT_PIPE[]             = "|";
+static const char QT_HYPHEN[]           = "-";
+static const char QT_PARENTHESES_L[]    = "(";
+static const char QT_PARENTHESES_R[]    = ")";
+static const char QT_BRACKET_L[]        = "{";
+static const char QT_BRACKET_R[]        = "}";
+static const char QT_BIKKURI_MARK[]     = "!";
+static const char QT_NOR_PATH_SPR[]     = "/";
+static const char QT_EQUAL[]            = "=";
+static const char QT_DOS_PATH_SPR[]     = "\\";
+static const char QT_DOUBLE_QUOT_MARK[] = "\"";
+static const char QT_META[]             = "\b";
+static const char QT_NOR_EOL[]          = "\n";
+static const char QT_OTR_EOL[]          = "\r\n";
+static const char QT_MAC_EOL[]          = "\r";
 
 class MainWindow;
 class JobItem;
@@ -111,6 +112,10 @@ enum EBOOL {
 namespace qvs
 {
     bool isFileExist(const QString &a_filename);
+    bool isFile(const QString &a_filename);
+
+    QFileInfoList getFileList(QString a_path);
+    QString findFirstFilePath(QString a_filename, QString a_path = QDir::currentPath());
 
     QString getFileExt(const QString &a_filename);
     QString chgFileExt(const QString &a_filename, QString a_ext);
@@ -140,6 +145,11 @@ namespace qvs
 
     QJsonObject getJsonFromString(const QString a_string);
     QString getStringFromJson(const QJsonObject& a_json);
+
+    QString toStringFirstUpper(QString a_str);
+
+    QStringList getUrlFromText(const QString &a_text);
+    QString toFilename(const QString &a_str);
 }
 
 class Common : public QObject
@@ -208,10 +218,6 @@ public:
         "http://www.vapoursynth.com/doc",                                   /* eURL_DOC_VS */
     };
 
-    QFileInfoList getFileList(QString a_path);
-    QString findFirstFilePath(QString a_filename, QString a_path = QDir::currentPath());
-    static bool isFile(QString a_filename);
-
     QList<DWORD> getProcessID(QString a_filename);
     QList<DWORD> getProcessID(QStringList a_filename_list);
     BOOL setPriortyClass(DWORD a_pid, DWORD a_priorityClass);
@@ -223,7 +229,6 @@ public:
     int hadNumber(QString a_text);
 
     QString getHashMd5(QString a_filename);
-    QString toUpperFirstStr(QString a_str);
     void copyPath(void);
 
     QString getAudioFileDelayValueString(QString a_filename);
