@@ -33,7 +33,7 @@
     <item>
      <widget class="QTabWidget" name="tabWidget">
       <property name="currentIndex">
-       <number>1</number>
+       <number>3</number>
       </property>
       <widget class="QWidget" name="tab_main">
        <attribute name="title">
@@ -543,33 +543,6 @@ QProgressBar::chunk {
         </item>
        </layout>
       </widget>
-      <widget class="QWidget" name="tab_mediainfo">
-       <attribute name="title">
-        <string>MediaInfo</string>
-       </attribute>
-       <layout class="QVBoxLayout" name="verticalLayout_4">
-        <property name="spacing">
-         <number>0</number>
-        </property>
-        <property name="leftMargin">
-         <number>0</number>
-        </property>
-        <property name="topMargin">
-         <number>0</number>
-        </property>
-        <property name="rightMargin">
-         <number>0</number>
-        </property>
-        <property name="bottomMargin">
-         <number>0</number>
-        </property>
-        <item>
-         <widget class="QStackedWidget" name="stackedWidgetMediaInfo">
-          <widget class="QWidget" name="page_MediaInfo"/>
-         </widget>
-        </item>
-       </layout>
-      </widget>
       <widget class="QWidget" name="tab_extra">
        <attribute name="title">
         <string>Extra</string>
@@ -612,6 +585,33 @@ QProgressBar::chunk {
            </size>
           </property>
          </spacer>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="tab_mediainfo">
+       <attribute name="title">
+        <string>MediaInfo</string>
+       </attribute>
+       <layout class="QVBoxLayout" name="verticalLayout_4">
+        <property name="spacing">
+         <number>0</number>
+        </property>
+        <property name="leftMargin">
+         <number>0</number>
+        </property>
+        <property name="topMargin">
+         <number>0</number>
+        </property>
+        <property name="rightMargin">
+         <number>0</number>
+        </property>
+        <property name="bottomMargin">
+         <number>0</number>
+        </property>
+        <item>
+         <widget class="QStackedWidget" name="stackedWidgetMediaInfo">
+          <widget class="QWidget" name="page_MediaInfo"/>
+         </widget>
         </item>
        </layout>
       </widget>

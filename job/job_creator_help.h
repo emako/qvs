@@ -54,6 +54,9 @@ protected slots:
     virtual void slotProcessReadyReadStandardOutput();
     virtual void slotProcessFinished(int a_exitCode, QProcess::ExitStatus a_exitStatus);
     virtual void slotProcessError(QProcess::ProcessError a_error);
+
+private slots:
+    void on_buttonClose_clicked();
 };
 
 #endif // JOB_CREATOR_HELP_H

@@ -58,8 +58,8 @@ public:
         eTAB_MAIN,
         eTAB_AUDIO,
         eTAB_MUXER,
-        eTAB_MEDIAINFO,
         eTAB_EXTRA,
+        eTAB_MEDIAINFO,
         eTAB_MAX,
     };
 

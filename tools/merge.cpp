@@ -26,7 +26,6 @@ void Merge::setup(void)
     ui->stackedWidgetMode->setCurrentIndex(eMERGE_STACKED_WIDGET_MODE_CONTAINER);
     ui->labelCustomParam->setVisible(false);
     ui->editCustomParam->setVisible(false);
-    ui->buttonDebug->setVisible(false);
     ui->listWidget->setContextMenuPolicy(Qt::CustomContextMenu);
 
     /* MediaInfoMenu */
@@ -313,18 +312,16 @@ QList<StdWatcherCmd> Merge::createCommand(EMERGE_TYPE type, QStringList a_inputs
 void Merge::on_buttonDebug_clicked()
 {
     QList<StdWatcherCmd> cmds = createCommand();
+    JobViewCmd job_view_cmd;
 
-    for(int i = eINDEX_0; i < cmds.length(); i++)
+    if(cmds.isEmpty())
     {
-        if(cmds.at(i).pipe.isEmpty())
-        {
-            qDebug() << cmds.at(i).cmd;
-        }
-        else
-        {
-            qDebug() << cmds.at(i).pipe + QT_BLANK + QT_PIPE + QT_BLANK + cmds.at(i).cmd;
-        }
+        return;
     }
+
+    job_view_cmd.mainUi = mainUi;
+    job_view_cmd.reload(cmds);
+    job_view_cmd.exec();
 }
 
 void Merge::on_buttonStart_clicked()
@@ -356,7 +353,6 @@ void Merge::on_comboBoxMode_currentIndexChanged(int a_index)
         ui->comboBoxContainer->setEnabled(true);
         ui->comboBoxAudio->setEnabled(true);
         ui->labelAudio->setEnabled(true);
-        ui->buttonDebug->setVisible(false);
         break;
     case eMERGE_MODE_COMBINE:
         ui->comboBoxContainer->clear();
@@ -367,17 +363,14 @@ void Merge::on_comboBoxMode_currentIndexChanged(int a_index)
         ui->comboBoxContainer->setEnabled(true);
         ui->comboBoxAudio->setEnabled(false);
         ui->labelAudio->setEnabled(false);
-        ui->buttonDebug->setVisible(false);
         break;
     case eMERGE_MODE_COPY:
     case eMERGE_MODE_CAT:
         ui->stackedWidgetMode->setEnabled(false);
-        ui->buttonDebug->setVisible(false);
         break;
     case eMERGE_MODE_CUSTOM:
         ui->stackedWidgetMode->setEnabled(true);
         ui->stackedWidgetMode->setCurrentIndex(eMERGE_STACKED_WIDGET_MODE_CUSTOM);
-        ui->buttonDebug->setVisible(true);
         break;
     }
 }

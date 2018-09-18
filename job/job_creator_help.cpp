@@ -169,3 +169,8 @@ void JobCreatorHelp::slotProcessFinished(int a_exitCode, QProcess::ExitStatus a_
     }
     ui->plainTextEdit->moveCursor(QTextCursor::Start);
 }
+
+void JobCreatorHelp::on_buttonClose_clicked()
+{
+    this->accept();
+}
