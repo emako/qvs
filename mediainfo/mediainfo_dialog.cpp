@@ -7,10 +7,11 @@
 
 MediaInfoDialog::MediaInfoDialog(QWidget *parent) :
     QWidget(parent),
+    m_fromCLI(false),
     ui(new Ui::MediaInfoDialog),
+    m_pContextMenu(nullptr),
     m_isFFprobe(false),
-    m_child(false),
-    m_fromCLI(false)
+    m_child(false)
 {
     ui->setupUi(this);
     this->setupUi();
@@ -25,6 +26,7 @@ MediaInfoDialog::~MediaInfoDialog()
 void MediaInfoDialog::setupUi(void)
 {
     this->setAcceptDrops(true);
+    this->setAttribute(Qt::WA_DeleteOnClose, true);
     ui->editMediaInfo->setAcceptDrops(false);
     ui->editMediaInfo->setContextMenuPolicy(Qt::CustomContextMenu);
 
@@ -135,7 +137,7 @@ void MediaInfoDialog::showMediaInfo(const QString &a_filename, bool a_is_full_in
 
         if(m_isFFprobe)
         {
-            cmd = QString("%1 -show_streams -show_chapters -of json %3 \"%2\"").arg(qvs::findFirstFilePath("ffprobe")).arg(a_filename).arg("-show_format " + (a_is_full_info) ? "-show_data" : "");
+            cmd = QString("%1 -show_streams -show_chapters -of json %3 \"%2\"").arg(qvs::findFirstFilePath("ffprobe")).arg(a_filename).arg(QString("-show_format ") + QString((a_is_full_info) ? "-show_data" : QT_EMPTY));
         }
         else
         {
@@ -232,8 +234,8 @@ void MediaInfoDialog::setFull(bool a_state)
 
 void MediaInfoDialog::on_checkBoxMediaInfoFull_stateChanged(int a_state)
 {
-    showMediaInfo(m_mediainfo_path, (bool)a_state);
-    m_pContextMenu->actions().at(eCONTEXT_MENU_SHOW_FULL_INFO)->setChecked((bool)a_state);
+    showMediaInfo(m_mediainfo_path, static_cast<bool>(a_state));
+    m_pContextMenu->actions().at(eCONTEXT_MENU_SHOW_FULL_INFO)->setChecked(static_cast<bool>(a_state));
 }
 
 void MediaInfoDialog::setFFprobe(bool a_state)
@@ -269,7 +271,7 @@ void MediaInfoDialog::slotSubProcessReadyReadStandardOutput()
 
 void MediaInfoDialog::selectMediafile(void)
 {
-    QString filename = QFileDialog::getOpenFileName(this, tr("Open Mediafile"), NULL, tr("Media (*.*)"));
+    QString filename = QFileDialog::getOpenFileName(this, tr("Open Mediafile"), NULLSTR, tr("Media (*.*)"));
 
     if(!filename.isEmpty())
     {
@@ -354,6 +356,7 @@ void MediaInfoDialog::dropEvent(QDropEvent* e)
 void MediaInfoDialog::closeEvent(QCloseEvent *e)
 {
     StdManager::releaseStdWatch(m_uid);
+    mainUi->slotChildWindowClosed(m_uid_own);
     e->accept();
 }
 

@@ -47,7 +47,7 @@ TimeLineSlider::TimeLineSlider(QWidget * a_pParent) : QWidget(a_pParent)
 	setMouseTracking(true);
 
 	QFontMetricsF metrics(m_labelsFont);
-	qreal factor = (qreal)m_textHeight /
+    qreal factor = static_cast<qreal>(m_textHeight) /
 		metrics.tightBoundingRect("9").height();
 	m_labelsFont.setPointSizeF(m_labelsFont.pointSizeF() * factor);
 
@@ -332,7 +332,7 @@ void TimeLineSlider::slotStepBySeconds(double a_seconds)
 	if(m_fps == 0.0)
 		return;
 
-    int framesStep = std::round(a_seconds * m_fps);
+    int framesStep = static_cast<int>(std::round(a_seconds * m_fps));
     slotStepBy(framesStep);
 }
 
@@ -474,7 +474,7 @@ void TimeLineSlider::mouseMoveEvent(QMouseEvent * a_pEvent)
 		if(m_fps != 0.0)
 		{
 			tipString += " - ";
-            tipString += qvs::timeToString(((double)l_frame) / m_fps);
+            tipString += qvs::timeToString((static_cast<double>(l_frame)) / m_fps);
 		}
 		QToolTip::showText(a_pEvent->globalPos(), tipString);
 	}
@@ -570,12 +570,12 @@ void TimeLineSlider::paintEvent(QPaintEvent * a_pEvent)
 	if((m_displayMode == Frames) || (m_fps == 0.0))
 		l_displayMode = Frames;
 
-	double unitsInPixel = (double)m_maxFrame /
-		(double)(slideLineInnerWidth() - 1);
-	double maxUnits = (double)m_maxFrame;
+    double unitsInPixel = static_cast<double>(m_maxFrame) /
+        static_cast<double>(slideLineInnerWidth() - 1);
+    double maxUnits = static_cast<double>(m_maxFrame);
 
 	bool ticksAtExactFrames =
-		(unitsInPixel < 1.0 / (double)m_minimumTicksSpacing);
+        (unitsInPixel < 1.0 / static_cast<double>(m_minimumTicksSpacing));
 
 	if(l_displayMode == Time)
 	{
@@ -608,9 +608,8 @@ void TimeLineSlider::paintEvent(QPaintEvent * a_pEvent)
 				if(l_displayMode == Frames)
 					labelString = QString::number(n);
 				else
-                    labelString = qvs::timeToString(((double)n) / m_fps);
-				labelPos.setX(tickPos - labelsFontMetrics.width(labelString) /
-					2 + 1);
+                    labelString = qvs::timeToString((static_cast<double>(n)) / m_fps);
+                labelPos.setX(static_cast<int>(tickPos - labelsFontMetrics.width(labelString) / 2 + 1));
 				painter.drawText(labelPos, labelString);
 			}
 			else if(n % 5 == 0)
@@ -622,9 +621,9 @@ void TimeLineSlider::paintEvent(QPaintEvent * a_pEvent)
 	else
 	{
 		double minUnitsPerTick =
-			unitsInPixel * (double)m_minimumTicksSpacing;
+            unitsInPixel * static_cast<double>(m_minimumTicksSpacing);
 		double unitsPerTick =
-			std::pow(10.0, std::floor(std::log10((double)maxUnits)));
+            std::pow(10.0, std::floor(std::log10(static_cast<double>(maxUnits))));
 		while(unitsPerTick > minUnitsPerTick)
 			unitsPerTick /= 10.0;
 
@@ -671,7 +670,7 @@ void TimeLineSlider::paintEvent(QPaintEvent * a_pEvent)
 		int n = 0;
 		while(units - maxUnits < 0.001)
 		{
-			int tickPos = startPos + (int)(units / unitsInPixel);
+            int tickPos = startPos + static_cast<int>(units / unitsInPixel);
 			if(n % 10 == 0)
 			{
 				painter.drawLine(tickPos, longTickTop, tickPos, tickBottom);
@@ -681,8 +680,7 @@ void TimeLineSlider::paintEvent(QPaintEvent * a_pEvent)
 					labelString = QString::number(units);
 				else
                     labelString = qvs::timeToString(units);
-				labelPos.setX(tickPos - labelsFontMetrics.width(labelString) /
-					2 + 1);
+                labelPos.setX(static_cast<int>(tickPos - labelsFontMetrics.width(labelString) / 2 + 1));
 				painter.drawText(labelPos, labelString);
 			}
 			else if(n % 5 == 0)
@@ -743,8 +741,8 @@ int TimeLineSlider::frameToPos(int a_frame) const
 {
 	if(a_frame > m_maxFrame)
 		a_frame = m_maxFrame;
-	int framePos = (int)((double)(slideLineInnerWidth() - 1) /
-		(double)m_maxFrame * (double)a_frame);
+    int framePos = static_cast<int>(static_cast<double>(slideLineInnerWidth() - 1) /
+        static_cast<double>(m_maxFrame) * static_cast<double>(a_frame));
 	framePos += m_sideMargin + m_slideLineFrameWidth;
 	return framePos;
 }
@@ -761,9 +759,9 @@ int TimeLineSlider::posToFrame(int a_pos) const
 	else if(a_pos > last)
 		return m_maxFrame;
 
-	int l_frame = (int)std::round((double)m_maxFrame /
-		(double)(slideLineInnerWidth() - 1) *
-		(double)(a_pos - start));
+    int l_frame = static_cast<int>(std::round(static_cast<double>(m_maxFrame) /
+        static_cast<double>(slideLineInnerWidth() - 1) *
+        static_cast<double>(a_pos - start)));
 	return l_frame;
 }
 

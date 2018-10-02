@@ -1,8 +1,7 @@
 #include "preferences.h"
-#include "ui_preferences.h"
+#include "config.h"
 #include "mainwindow.h"
-
-extern const char *c_config_python_key[Config::eCONFIG_PYTHON_MAX];
+#include "ui_preferences.h"
 
 Preferences::Preferences(QDialog *parent) :
     QDialog(parent),
@@ -42,17 +41,17 @@ void Preferences::on_comboBoxPriority_activated(int a_index)
 
 void Preferences::on_checkNotRunNextJob_stateChanged(int a_state)
 {
-    g_pConfig->setConfig(Config::eCONFIG_COMMON_NOT_AUTO_NEXT_JOB, (bool)a_state);
+    g_pConfig->setConfig(Config::eCONFIG_COMMON_NOT_AUTO_NEXT_JOB, static_cast<bool>(a_state));
 }
 
 void Preferences::on_checkNotShowSplashScreen_stateChanged(int a_state)
 {
-    g_pConfig->setConfig(Config::eCONFIG_FIRST_SPLASH_SCREEN, !(bool)a_state);
+    g_pConfig->setConfig(Config::eCONFIG_FIRST_SPLASH_SCREEN, !static_cast<bool>(a_state));
 }
 
 void Preferences::on_checkUse32BitAVS_stateChanged(int a_state)
 {
-    g_pConfig->setConfig(Config::eCONFIG_COMMON_PREFER_AVS_32BIT, (bool)a_state);
+    g_pConfig->setConfig(Config::eCONFIG_COMMON_PREFER_AVS_32BIT, static_cast<bool>(a_state));
 }
 
 void Preferences::on_resetButton_clicked()
@@ -64,7 +63,7 @@ void Preferences::on_resetButton_clicked()
 
 void Preferences::on_buttonDG_clicked()
 {
-    QString dir = QFileDialog::getExistingDirectory(this, tr("Get DGIndex Dir"), NULL, NULL);
+    QString dir = QFileDialog::getExistingDirectory(this, tr("Get DGIndex Dir"), NULLSTR, QFileDialog::ShowDirsOnly);
 
     if(!dir.isEmpty())
     {
@@ -74,7 +73,7 @@ void Preferences::on_buttonDG_clicked()
 
 void Preferences::on_buttonDGNV_clicked()
 {
-    QString dir = QFileDialog::getExistingDirectory(this, tr("Get DGIndexNV Dir"), NULL, NULL);
+    QString dir = QFileDialog::getExistingDirectory(this, tr("Get DGIndexNV Dir"), NULLSTR, QFileDialog::ShowDirsOnly);
 
     if(!dir.isEmpty())
     {

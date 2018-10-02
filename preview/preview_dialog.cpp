@@ -5,11 +5,13 @@
 
 PreviewDialog::PreviewDialog(QWidget *parent) :
     QMainWindow(parent),
-    ui(new Ui::PreviewDialog),
+    m_pPlayTimer(new QTimer(this)),
+    m_frameShown(eINDEX_0),
     m_playing(false),
-    m_bigFrameStep((int)eINDEX_24),
-    m_frameShown((int)eINDEX_0),
-    m_reloadTitleShown(true)
+    m_bigFrameStep(eINDEX_24),
+    m_reloadTitleShown(true),
+    ui(new Ui::PreviewDialog),
+    m_statusBarLabel(new QLabel)
 {
     ui->setupUi(this);
     this->setup();
@@ -30,17 +32,16 @@ void PreviewDialog::setup(void)
     this->installEventFilter(this);
     ui->previewArea->installEventFilter(this);
 
+    this->setAttribute(Qt::WA_DeleteOnClose, true);
     this->setWindowIcon(QIcon(":/buttons/film.png"));
     this->setWindowTitle(tr("Preview"));
 
-    m_statusBarLabel = new QLabel();
-    ui->statusBar->addPermanentWidget(m_statusBarLabel, (int)eINDEX_1);
+    ui->statusBar->addPermanentWidget(m_statusBarLabel, eINDEX_1);
     ui->previewArea->setAlignment(Qt::AlignTop | Qt::AlignLeft);
 
     ui->frameNumberSlider->setBigStep(m_bigFrameStep);
     ui->frameNumberSlider->setDisplayMode(TimeLineSlider::Frames);
 
-    m_pPlayTimer = new QTimer(this);
     m_pPlayTimer->setSingleShot(true);
     m_pPlayTimer->setTimerType(Qt::PreciseTimer);
     connect(m_pPlayTimer, SIGNAL(timeout()), this, SLOT(slotPlayNext()));
@@ -55,13 +56,13 @@ void PreviewDialog::setUpZoomPanel(void)
 {
     ui->zoomRatioSpinBox->setLocale(QLocale("C"));
 
-    ui->zoomModeComboBox->addItem(QIcon(":/buttons/zoom_actual.png"), trUtf8("No zoom"), (int)ZoomMode::NoZoom);
-    ui->zoomModeComboBox->addItem(QIcon(":/buttons/zoom_in.png"), trUtf8("Fixed ratio"), (int)ZoomMode::FixedRatio);
-    ui->zoomModeComboBox->addItem(QIcon(":/buttons/zoom_fit.png"), trUtf8("Fit to frame"), (int)ZoomMode::FitToFrame);
+    ui->zoomModeComboBox->addItem(QIcon(":/buttons/zoom_actual.png"), tr("No zoom"), static_cast<int>(ZoomMode::NoZoom));
+    ui->zoomModeComboBox->addItem(QIcon(":/buttons/zoom_in.png"), tr("Fixed ratio"), static_cast<int>(ZoomMode::FixedRatio));
+    ui->zoomModeComboBox->addItem(QIcon(":/buttons/zoom_fit.png"), tr("Fit to frame"), static_cast<int>(ZoomMode::FitToFrame));
 
-    ZoomMode zoomMode = (ZoomMode)g_pConfig->getConfig(Config::eCONFIG_COMMON_PREVIEW_ZOOM_MODE).toInt();
-    int comboIndex = ui->zoomModeComboBox->findData((int)zoomMode);
-    if(comboIndex != (int)eINDEX_NONE)
+    ZoomMode zoomMode = static_cast<ZoomMode>(g_pConfig->getConfig(Config::eCONFIG_COMMON_PREVIEW_ZOOM_MODE).toInt());
+    int comboIndex = ui->zoomModeComboBox->findData(static_cast<int>(zoomMode));
+    if(comboIndex != eINDEX_NONE)
     {
         ui->zoomModeComboBox->setCurrentIndex(comboIndex);
     }
@@ -71,14 +72,14 @@ void PreviewDialog::setUpZoomPanel(void)
     double zoomRatio = 2.0;
     ui->zoomRatioSpinBox->setValue(zoomRatio);
 
-    ui->scaleModeComboBox->addItem(trUtf8("Nearest"), (int)Qt::FastTransformation);
-    ui->scaleModeComboBox->addItem(trUtf8("Bilinear"), (int)Qt::SmoothTransformation);
+    ui->scaleModeComboBox->addItem(tr("Nearest"), static_cast<int>(Qt::FastTransformation));
+    ui->scaleModeComboBox->addItem(tr("Bilinear"), static_cast<int>(Qt::SmoothTransformation));
     bool noZoom = (zoomMode == ZoomMode::NoZoom);
     ui->scaleModeComboBox->setEnabled(!noZoom);
 
-    Qt::TransformationMode scaleMode = (Qt::TransformationMode)g_pConfig->getConfig(Config::eCONFIG_COMMON_PREVIEW_SCALE_MODE).toInt();
-    comboIndex = ui->scaleModeComboBox->findData((int)scaleMode);
-    if(comboIndex != (int)eINDEX_NONE)
+    Qt::TransformationMode scaleMode = static_cast<Qt::TransformationMode>(g_pConfig->getConfig(Config::eCONFIG_COMMON_PREVIEW_SCALE_MODE).toInt());
+    comboIndex = ui->scaleModeComboBox->findData(static_cast<int>(scaleMode));
+    if(comboIndex != eINDEX_NONE)
     {
         ui->scaleModeComboBox->setCurrentIndex(comboIndex);
     }
@@ -92,9 +93,9 @@ void PreviewDialog::setUpZoomPanel(void)
 
 void PreviewDialog::setUpTimeLinePanel(void)
 {
-    ui->playFpsLimitModeComboBox->addItem(trUtf8("From video"), (int)FromVideo);
-    ui->playFpsLimitModeComboBox->addItem(trUtf8("No limit"), (int)NoLimit);
-    ui->playFpsLimitModeComboBox->addItem(trUtf8("Custom"), (int)Custom);
+    ui->playFpsLimitModeComboBox->addItem(tr("From video"), static_cast<int>(FromVideo));
+    ui->playFpsLimitModeComboBox->addItem(tr("No limit"), static_cast<int>(NoLimit));
+    ui->playFpsLimitModeComboBox->addItem(tr("Custom"), static_cast<int>(Custom));
 
     ui->playFpsLimitSpinBox->setLocale(QLocale("C"));
     double customFPS = g_pConfig->getConfig(Config::eCONFIG_COMMON_PREVIEW_FPS_LIMIT_CUSTOM).toDouble();
@@ -102,12 +103,12 @@ void PreviewDialog::setUpTimeLinePanel(void)
 
     slotSetPlayFPSLimit();
 
-    ui->timeLineModeComboBox->addItem(QIcon(":/buttons/timeline.png"), trUtf8("Time"), (int)TimeLineSlider::DisplayMode::Time);
-    ui->timeLineModeComboBox->addItem(QIcon(":/buttons/timeline_frames.png"), trUtf8("Frames"), (int)TimeLineSlider::DisplayMode::Frames);
+    ui->timeLineModeComboBox->addItem(QIcon(":/buttons/timeline.png"), tr("Time"), static_cast<int>(TimeLineSlider::DisplayMode::Time));
+    ui->timeLineModeComboBox->addItem(QIcon(":/buttons/timeline_frames.png"), tr("Frames"), static_cast<int>(TimeLineSlider::DisplayMode::Frames));
 
-    TimeLineSlider::DisplayMode timeLineMode = (TimeLineSlider::DisplayMode)g_pConfig->getConfig(Config::eCONFIG_COMMON_PREVIEW_TIMELINE_DISPLAY_MODE).toInt();
-    int comboIndex = ui->timeLineModeComboBox->findData((int)timeLineMode);
-    if(comboIndex != -1)
+    TimeLineSlider::DisplayMode timeLineMode = static_cast<TimeLineSlider::DisplayMode>(g_pConfig->getConfig(Config::eCONFIG_COMMON_PREVIEW_TIMELINE_DISPLAY_MODE).toInt());
+    int comboIndex = ui->timeLineModeComboBox->findData(static_cast<int>(timeLineMode));
+    if(comboIndex != eINDEX_NONE)
     {
         ui->timeLineModeComboBox->setCurrentIndex(comboIndex);
     }
@@ -137,7 +138,7 @@ bool PreviewDialog::reload(const std::string &a_filename)
     getVideoInfo();
     slotSetPlayFPSLimit();
 
-    int lastFrameNumber = m_videoInfo.frameCount - (int)eINDEX_1;
+    int lastFrameNumber = m_videoInfo.frameCount - eINDEX_1;
     ui->frameNumberSpinBox->setMaximum(lastFrameNumber);
     ui->frameNumberSlider->setFramesNumber(m_videoInfo.frameCount);
     ui->frameNumberSlider->setFPS(m_videoInfo.fps);
@@ -182,9 +183,9 @@ void PreviewDialog::slotShowFrame(int a_frameNumber)
 
 void PreviewDialog::getVideoInfo(void)
 {
-    m_videoInfo.frameCount  = m_videoCapture.get(CV_CAP_PROP_FRAME_COUNT);
-    m_videoInfo.frameWidth  = m_videoCapture.get(CV_CAP_PROP_FRAME_WIDTH);
-    m_videoInfo.frameHeight = m_videoCapture.get(CV_CAP_PROP_FRAME_HEIGHT);
+    m_videoInfo.frameCount  = static_cast<int>(m_videoCapture.get(CV_CAP_PROP_FRAME_COUNT));
+    m_videoInfo.frameWidth  = static_cast<int>(m_videoCapture.get(CV_CAP_PROP_FRAME_WIDTH));
+    m_videoInfo.frameHeight = static_cast<int>(m_videoCapture.get(CV_CAP_PROP_FRAME_HEIGHT));
     m_videoInfo.fpsCV       = m_videoCapture.get(CV_CAP_PROP_FPS);
     m_videoInfo.fps         = m_mediainfoLoader.get(MediaInfoLoader::eMEDIA_PROP_FRAME_RATE).toDouble();
     m_videoInfo.AviRatio    = m_videoCapture.get(CV_CAP_PROP_POS_AVI_RATIO);
@@ -198,7 +199,7 @@ void PreviewDialog::getVideoInfo(void)
 inline void PreviewDialog::printVideoInfo(void)
 {
     m_videoInfo.posMsec     =  m_videoCapture.get(CV_CAP_PROP_POS_MSEC);
-    m_videoInfo.posFrames   =  m_videoCapture.get(CV_CAP_PROP_POS_FRAMES);
+    m_videoInfo.posFrames   =  static_cast<int>(m_videoCapture.get(CV_CAP_PROP_POS_FRAMES));
     m_videoInfo.AviRatio    =  m_videoCapture.get(CV_CAP_PROP_POS_AVI_RATIO);
     m_videoInfo.printStatus();
 }
@@ -214,7 +215,7 @@ void PreviewDialog::slotPlayNext(void)
     printVideoInfo();
     ui->frameNumberSpinBox->setValue(m_videoInfo.posFrames);
     ui->frameNumberSlider->setFrame(m_videoInfo.posFrames);
-    m_pPlayTimer->start(std::ceil(m_secondsBetweenFrames * SECOND_TO_MILLISECOND_UNIT));
+    m_pPlayTimer->start(static_cast<int>(std::ceil(m_secondsBetweenFrames * SECOND_TO_MILLISECOND_UNIT)));
 }
 
 inline QImage PreviewDialog::convertMatToImage(const Mat& a_mat)
@@ -232,22 +233,22 @@ inline QImage PreviewDialog::convertMatToImage(const Mat& a_mat)
         for(int row = 0; row < a_mat.rows; row ++)
         {
             uchar *pDest = image.scanLine(row);
-            memcpy(pDest, pSrc, a_mat.cols);
-            pSrc += a_mat.step;
+            memcpy(pDest, pSrc, static_cast<size_t>(a_mat.cols));
+            pSrc += static_cast<int>(a_mat.step);
         }
         return image;
     }
     else if(a_mat.type() == CV_8UC3)
     {
-        const uchar *pSrc = (const uchar*)a_mat.data;
-        QImage image(pSrc, a_mat.cols, a_mat.rows, (int)a_mat.step, QImage::Format_RGB888);
+        const uchar *pSrc = const_cast<uchar*>(a_mat.data);
+        QImage image(pSrc, a_mat.cols, a_mat.rows, static_cast<int>(a_mat.step), QImage::Format_RGB888);
 
         return image.rgbSwapped();
     }
     else if(a_mat.type() == CV_8UC4)
     {
-        const uchar *pSrc = (const uchar*)a_mat.data;
-        QImage image(pSrc, a_mat.cols, a_mat.rows, (int)a_mat.step, QImage::Format_ARGB32);
+        const uchar *pSrc = const_cast<uchar*>(a_mat.data);
+        QImage image(pSrc, a_mat.cols, a_mat.rows, static_cast<int>(a_mat.step), QImage::Format_ARGB32);
 
         return image.copy();
     }
@@ -303,10 +304,9 @@ void PreviewDialog::slotShowZoomPanel(bool a_checked)
 
 void PreviewDialog::slotZoomModeChanged(int a_index)
 {
-    switch((ZoomMode)a_index)
+    switch(static_cast<ZoomMode>(a_index))
     {
     case NoZoom:
-    default:
         ui->zoomRatioSpinBox->setEnabled(false);
         ui->scaleModeComboBox->setEnabled(false);
         break;
@@ -337,7 +337,7 @@ void PreviewDialog::slotScaleModeChanged(int)
 
 inline void PreviewDialog::setPreviewPixmap(void)
 {
-    ZoomMode zoomMode = (ZoomMode)ui->zoomModeComboBox->currentData().toInt();
+    ZoomMode zoomMode = static_cast<ZoomMode>(ui->zoomModeComboBox->currentData().toInt());
     if(zoomMode == ZoomMode::NoZoom)
     {
         ui->previewArea->setPixmap(m_framePixmap);
@@ -347,14 +347,14 @@ inline void PreviewDialog::setPreviewPixmap(void)
     QPixmap previewPixmap;
     int frameWidth = 0;
     int frameHeight = 0;
-    Qt::TransformationMode scaleMode = (Qt::TransformationMode)ui->scaleModeComboBox->currentData().toInt();
+    Qt::TransformationMode scaleMode = static_cast<Qt::TransformationMode>(ui->scaleModeComboBox->currentData().toInt());
 
     if(zoomMode == ZoomMode::FixedRatio)
     {
         double ratio = ui->zoomRatioSpinBox->value();
 
-        frameWidth = m_framePixmap.width() * ratio;
-        frameHeight = m_framePixmap.height() * ratio;
+        frameWidth = static_cast<int>(m_framePixmap.width() * ratio);
+        frameHeight = static_cast<int>(m_framePixmap.height() * ratio);
     }
     else
     {
@@ -412,31 +412,31 @@ void PreviewDialog::keyPressEvent(QKeyEvent * a_pEvent)
     int key = a_pEvent->key();
     if(key == Qt::Key_Left)
     {
-        slotShowFrame(m_frameShown - (int)eINDEX_1);
+        slotShowFrame(m_frameShown - eINDEX_1);
         a_pEvent->accept();
         return;
     }
     else if(key == Qt::Key_Right)
     {
-        slotShowFrame(m_frameShown + (int)eINDEX_1);
+        slotShowFrame(m_frameShown + eINDEX_1);
         a_pEvent->accept();
         return;
     }
     else if(key == Qt::Key_PageUp || (key == Qt::Key_Down))
     {
-        slotShowFrame(m_frameShown + (int)m_bigFrameStep);
+        slotShowFrame(m_frameShown + m_bigFrameStep);
         a_pEvent->accept();
         return;
     }
     else if(key == Qt::Key_PageDown || (key == Qt::Key_Up))
     {
-        slotShowFrame(m_frameShown - (int)m_bigFrameStep);
+        slotShowFrame(m_frameShown - m_bigFrameStep);
         a_pEvent->accept();
         return;
     }
     else if(key == Qt::Key_Home)
     {
-        ui->frameNumberSlider->setFrame((int)eINDEX_0);
+        ui->frameNumberSlider->setFrame(eINDEX_0);
         a_pEvent->accept();
         return;
     }
@@ -458,11 +458,9 @@ void PreviewDialog::keyPressEvent(QKeyEvent * a_pEvent)
 
 void PreviewDialog::slotTimeLineModeChanged(int a_index)
 {
-    ui->frameNumberSlider->setDisplayMode((TimeLineSlider::DisplayMode)a_index);
+    ui->frameNumberSlider->setDisplayMode(static_cast<TimeLineSlider::DisplayMode>(a_index));
     g_pConfig->setConfig(Config::eCONFIG_COMMON_PREVIEW_TIMELINE_DISPLAY_MODE, a_index);
 }
-
-
 
 void PreviewDialog::dragEnterEvent(QDragEnterEvent* e)
 {
@@ -517,16 +515,16 @@ void PreviewDialog::slotSaveSnapshot(void)
 
     std::map<QString, QString> extensionToFilterMap =
     {
-        {"png", trUtf8("PNG image (*.png)")},
+        {"png", tr("PNG image (*.png)")},
     };
 
     QString fileExtension = g_pConfig->getConfig(Config::eCONFIG_COMMON_PREVIEW_LAST_SNAPSHOT_EXT).toString();
 
     QList<QByteArray> supportedFormats = QImageWriter::supportedImageFormats();
-    bool webpSupported = (supportedFormats.indexOf("webp") > -1);
+    bool webpSupported = (supportedFormats.indexOf("webp") > eINDEX_NONE);
 
     if(webpSupported)
-        extensionToFilterMap["webp"] = trUtf8("WebP image (*.webp)");
+        extensionToFilterMap["webp"] = tr("WebP image (*.webp)");
 
     QString snapshotFilePath = QString::fromStdString(m_filename);
     if(snapshotFilePath.isEmpty())
@@ -548,7 +546,7 @@ void PreviewDialog::slotSaveSnapshot(void)
 
     QString selectedFilter = extensionToFilterMap[fileExtension];
 
-    snapshotFilePath = QFileDialog::getSaveFileName(this, trUtf8("Save frame as image"), snapshotFilePath, saveFormatsList.join(";;"), &selectedFilter);
+    snapshotFilePath = QFileDialog::getSaveFileName(this, tr("Save frame as image"), snapshotFilePath, saveFormatsList.join(";;"), &selectedFilter);
 
     QFileInfo fileInfo(snapshotFilePath);
     QString suffix = fileInfo.suffix().toLower();
@@ -568,7 +566,7 @@ void PreviewDialog::slotSaveSnapshot(void)
         }
         else
         {
-            QMessageBox::critical(this, trUtf8("Image save error"), trUtf8("Error while saving image ") + snapshotFilePath);
+            QMessageBox::critical(this, tr("Image save error"), tr("Error while saving image ") + snapshotFilePath);
         }
     }
 }
@@ -578,7 +576,7 @@ void PreviewDialog::slotSetPlayFPSLimit(void)
 {
     double limit = ui->playFpsLimitSpinBox->value();
 
-    PlayFPSLimitMode mode = (PlayFPSLimitMode)ui->playFpsLimitModeComboBox->currentIndex();
+    PlayFPSLimitMode mode = static_cast<PlayFPSLimitMode>(ui->playFpsLimitModeComboBox->currentIndex());
     if(mode == PlayFPSLimitMode::NoLimit)
     {
         m_secondsBetweenFrames = 0.0;
@@ -628,6 +626,7 @@ void PreviewDialog::closeEvent(QCloseEvent *e)
     {
         m_pPlayTimer->stop();
     }
+    mainUi->slotChildWindowClosed(m_uid);
     e->accept();
 }
 

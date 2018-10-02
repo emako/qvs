@@ -24,19 +24,17 @@ extern QMap<QUuid, StdWatcher*> g_pStdWatch;
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
-    ui(new Ui::MainWindow),
-    m_pActionGruopOnCompletion(new QActionGroup(this)),
-    m_pActionGruopLanguage(new QActionGroup(this)),
-    m_com(new Common()),
-    m_job_chef(new JobChef()),
-    m_timer(new Timer()),
-    m_pMailBox(new MailBox()),
-    m_pAudioEnc(new AudioEnc()),
-    m_pMuxer(new Muxer()),
-    m_pDemuxer(new Demuxer()),
-    m_pMediaInfoDialog(new MediaInfoDialog()),
+    m_job_chef(new JobChef),
+    m_com(new Common),
+    m_logging(new Logging),
+    m_timer(new Timer),
+    m_pMailBox(new MailBox),
     m_pJobViewMenu(nullptr),
     m_pLogViewMenu(nullptr),
+    m_pSystemTray(new QSystemTrayIcon(this)),
+    ui(new Ui::MainWindow),
+    m_pActionGruopOnCompletion(nullptr),
+    m_pActionGruopLanguage(nullptr),
     m_pMsgBoxShutdown(nullptr)
 {
     this->loadFonts();
@@ -49,46 +47,27 @@ MainWindow::~MainWindow()
     delete m_pJobViewMenu;
     delete m_pLogViewMenu;
     delete m_job_chef;
-    delete m_com;
     delete m_timer;
     delete m_pMailBox;
-    delete m_pAudioEnc;
-    delete m_pMediaInfoDialog;
     delete m_pActionGruopOnCompletion;
     delete m_pActionGruopLanguage;
+    delete m_com;
     delete g_pConfig;
     delete ui;
+    delete m_pSystemTray;
 }
 
 void MainWindow::setupUi(void)
 {
     /*Macro*/
     g_pConfig->initCommonConfig(); //Init common config before.
+    m_pActionGruopOnCompletion = new QActionGroup(this);
+    m_pActionGruopLanguage = new QActionGroup(this);
     m_pJobViewMenu = new QMenu(ui->jobsView);
     m_pLogViewMenu = new QMenu(ui->logView);
 
-    ui->widgetMerge->mainUi = this;
-
-    m_pAudioEnc->mainUi = this;
-    ui->stackedWidgetAudioEnc->addWidget(m_pAudioEnc);
-    ui->stackedWidgetAudioEnc->setCurrentWidget(m_pAudioEnc);
-    ui->stackedWidgetAudioEnc->setMaximumHeight(m_pAudioEnc->ui->groupBoxAudio->height());
-
-    m_pMuxer->mainUi = this;
-    ui->stackedWidgetMuxer->addWidget(m_pMuxer);
-    ui->stackedWidgetMuxer->setCurrentWidget(m_pMuxer);
-    ui->stackedWidgetMuxer->setMaximumHeight(m_pMuxer->ui->groupBoxMuxer->height());
-
-    m_pDemuxer->mainUi = this;
-    ui->stackedWidgetDemuxer->addWidget(m_pDemuxer);
-    ui->stackedWidgetDemuxer->setCurrentWidget(m_pDemuxer);
-
-    m_pMediaInfoDialog->mainUi = this;
-    ui->stackedWidgetMediaInfo->addWidget(m_pMediaInfoDialog);
-    ui->stackedWidgetMediaInfo->setCurrentWidget(m_pMediaInfoDialog);
-
     /*Property*/
-    this->setWindowTitle(QString("Qvs"));
+    this->setWindowTitle(tr("Qvs"));
     this->setWindowIcon(QIcon(":/icons/qvs.ico"));
     this->setAcceptDrops(true);
 
@@ -97,13 +76,22 @@ void MainWindow::setupUi(void)
     m_com->mainUi = this;
     m_timer->mainUi = this;
     m_pMailBox->mainUi = this;
-    m_timer->start(Timer::ETIMER_TYPE_MAIL_BOX, Timer::ETIMER_SLOT_CHECK_UP_MAIL, (int)(eINDEX_10 * eINDEX_10 * eINDEX_5));
+    ui->widgetMerge->mainUi = this;
+    ui->widgetAudioEnc->mainUi = this;
+    ui->widgetMuxer->mainUi = this;
+    ui->widgetDemuxer->mainUi = this;
+    ui->widgetMediaInfo->mainUi = this;
+    m_timer->start(Timer::ETIMER_TYPE_MAIL_BOX, Timer::ETIMER_SLOT_CHECK_UP_MAIL, TIMER_INTERVAL_MAIL);
     m_is_aborted = false;
-    m_jobs_index = (int)eINDEX_0;
+    m_jobs_index = eINDEX_0;
     m_job_status_prev = JobChef::eJOB_STATUS_INITIAL;
     m_isStartJobImmediately = false;
     m_com->loadCommonConfig();
     m_job_chef->updatePriortyStart();
+    m_pSystemTray->setIcon(this->windowIcon());
+    m_pSystemTray->setToolTip(this->windowTitle());
+    m_pSystemTray->show();
+    m_pSystemTray->hide();
 
     /*Ui*/
     ui->progressBar->setStyleSheet(c_qss_process_bar_pink_lady);
@@ -118,16 +106,18 @@ void MainWindow::setupUi(void)
     ui->jobsView->horizontalHeader()->setStretchLastSection(true);
     ui->jobsView->horizontalHeader()->show();
     ui->jobsView->setFrameShape(QFrame::StyledPanel);
-    ui->jobsView->setColumnCount((int)eINDEX_3);
+    ui->jobsView->setColumnCount(eINDEX_3);
     ui->jobsView->setHorizontalHeaderLabels(QStringList() << tr("Job") << tr("Status") << tr("Progress"));
     ui->jobsView->setEditTriggers(QAbstractItemView::NoEditTriggers);
-    ui->jobsView->setGeometry((int)eINDEX_0, (int)eINDEX_0, (int)eINDEX_100 * (int)eINDEX_7, (int)eINDEX_0);
-    ui->jobsView->setColumnWidth((int)eINDEX_1, (int)eINDEX_100);
-    ui->jobsView->setColumnWidth((int)eINDEX_2, (int)eINDEX_100);
+    ui->jobsView->setGeometry(eINDEX_0, eINDEX_0, eINDEX_100 * eINDEX_7, eINDEX_0);
+    ui->jobsView->setColumnWidth(eINDEX_1, eINDEX_100);
+    ui->jobsView->setColumnWidth(eINDEX_2, eINDEX_100);
 
     /*Signal*/
     setAcctions();
+    connect(m_pSystemTray, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), this, SLOT(slotTrayActivated(QSystemTrayIcon::ActivationReason)));
     connect(this, SIGNAL(ntfStartJob()), this, SLOT(startJob()));
+    connect(this, SIGNAL(ntfFailJob()), this, SLOT(failJob()));
     connect(this, SIGNAL(ntfStatusChanged(JobChef::EJOB_STATUS)), this, SLOT(statusChanged(JobChef::EJOB_STATUS)));
     connect(this, SIGNAL(ntfTimeout(Timer::ETIMER_SLOT)), this, SLOT(timeout(Timer::ETIMER_SLOT)));
 
@@ -256,6 +246,10 @@ void MainWindow::setAcctions(void)
         connect(m_pActionGruopLanguage->actions().at(i), SIGNAL(triggered()), this, SLOT(languageChanged()));
     }
 
+    /* View */
+    connect(ui->actionMinimize, SIGNAL(triggered()), this, SLOT(slotMinimize()));
+    connect(ui->actionJobsLog, SIGNAL(triggered()), this, SLOT(slotViewJobsLog()));
+
     /* Tools */
     connect(ui->actionScriptCreator, SIGNAL(triggered()), this, SLOT(openScriptCreator()));
     connect(ui->actionScriptPlayer, SIGNAL(triggered()), this, SLOT(openScriptPlayer()));
@@ -288,10 +282,10 @@ void MainWindow::cleanUpAll(void)
 {
     int row = ui->jobsView->rowCount();
 
-    for(int i = (int)eINDEX_0; i < row; i++)
+    for(int i = eINDEX_0; i < row; i++)
     {
-        ui->jobsView->removeRow((int)eINDEX_0);
-        m_jobs.removeAt((int)eINDEX_0);
+        ui->jobsView->removeRow(eINDEX_0);
+        m_jobs.removeAt(eINDEX_0);
     }
 }
 
@@ -300,9 +294,9 @@ int MainWindow::getFirstJobStatusIndex(JobChef::EJOB_STATUS a_status)
     int i;
     bool has = false;
 
-    for(i = (int)eINDEX_0; i < ui->jobsView->rowCount(); i++)
+    for(i = eINDEX_0; i < ui->jobsView->rowCount(); i++)
     {
-        if(ui->jobsView->item(i, (int)eINDEX_1)->text() == getJobStatusText(a_status))
+        if(ui->jobsView->item(i, eINDEX_1)->text() == getJobStatusText(a_status))
         {
             has = true;
             break;
@@ -311,7 +305,7 @@ int MainWindow::getFirstJobStatusIndex(JobChef::EJOB_STATUS a_status)
 
     if(!has)
     {
-        return (int)eINDEX_NONE;
+        return eINDEX_NONE;
     }
     return i;
 }
@@ -322,7 +316,7 @@ void MainWindow::cleanUpStatusAll(JobChef::EJOB_STATUS a_status)
     {
         int index = getFirstJobStatusIndex(a_status);
 
-        if(index == (int)eINDEX_NONE)
+        if(index == eINDEX_NONE)
         {
             break;
         }
@@ -338,7 +332,7 @@ void MainWindow::cleanUpFinished(void)
 
 void MainWindow::selectOpenfile(void)
 {
-    QString filename = QFileDialog::getOpenFileName(this, tr("Open Media/Script file"), NULL, tr("Media/Script (*.*)"));
+    QString filename = QFileDialog::getOpenFileName(this, tr("Open Media/Script file"), QString(), tr("Media/Script (*.*)"));
 
     if(!filename.isEmpty())
     {
@@ -360,7 +354,7 @@ void MainWindow::logClear(void)
 
 void MainWindow::logSave(void)
 {
-    QString filename = QFileDialog::getSaveFileName(this, tr("Edit Filename"), NULL, "Log File (*.log)");
+    QString filename = QFileDialog::getSaveFileName(this, tr("Edit Filename"), NULLSTR, "Log File (*.log)");
 
     if(filename.isEmpty())
     {
@@ -395,7 +389,7 @@ void MainWindow::viewJobCmd(void)
 {
     int row = ui->jobsView->currentRow();
 
-    if(row >= (int)eINDEX_0)
+    if(row >= eINDEX_0)
     {
         JobItem job_item = m_jobs.at(row);
 
@@ -412,7 +406,7 @@ void MainWindow::slotPreview(void)
     QString source_path;
     JobItem job_item;
 
-    if(row >= (int)eINDEX_0)
+    if(row >= eINDEX_0)
     {
         job_item = m_jobs.at(row);
         source_path = job_item.job_config[JobCreator::eJOB_CONFIG_INPUT].toString();
@@ -449,7 +443,7 @@ void MainWindow::exploreJob(void)
 {
     int row = ui->jobsView->currentRow();
 
-    if(row >= (int)eINDEX_0)
+    if(row >= eINDEX_0)
     {
         QFileInfo file(m_jobs.at(row).job_config[JobCreator::eJOB_CONFIG_OUTPUT].toString());
         QDesktopServices::openUrl(QUrl::fromLocalFile(QString("file:///%1").arg(file.absolutePath())));
@@ -460,7 +454,7 @@ void MainWindow::editJob(void)
 {
     int row = ui->jobsView->currentRow();
 
-    if(row >= (int)eINDEX_0)
+    if(row >= eINDEX_0)
     {
         execJobCreator(JobCreator::eJOB_RELOAD_EDIT);
     }
@@ -470,20 +464,20 @@ void MainWindow::resetJob(void)
 {
     int row = ui->jobsView->currentRow();
 
-    if(row >= (int)eINDEX_0)
+    if(row >= eINDEX_0)
     {
         QTableWidgetItem *item;
-        item = ui->jobsView->item(row, (int)eINDEX_1);
+        item = ui->jobsView->item(row, eINDEX_1);
         if( (item->text() == getJobStatusText(JobChef::eJOB_STATUS_ABORTED))
          || (item->text() == getJobStatusText(JobChef::eJOB_STATUS_FAILED))
          || (item->text() == getJobStatusText(JobChef::eJOB_STATUS_COMPLETED)) )
         {
             item->setText(getJobStatusText(JobChef::eJOB_STATUS_READY));
 
-            item = ui->jobsView->item(row, (int)eINDEX_0);
+            item = ui->jobsView->item(row, eINDEX_0);
             item->setIcon(getJobStatusIcon(JobChef::eJOB_STATUS_READY));
 
-            item = ui->jobsView->item(row, (int)eINDEX_2);
+            item = ui->jobsView->item(row, eINDEX_2);
             item->setText(QString::number(false) + QString("%"));
         }
     }
@@ -493,23 +487,23 @@ void MainWindow::moveUpJob(void)
 {
     int row = ui->jobsView->currentRow();
 
-    m_com->moveRow(ui->jobsView, row, row - (int)eINDEX_1);
-    m_com->moveRow(&m_jobs, row, row - (int)eINDEX_1);
+    m_com->moveRow(ui->jobsView, row, row - eINDEX_1);
+    m_com->moveRow(&m_jobs, row, row - eINDEX_1);
 }
 
 void MainWindow::moveDownJob(void)
 {
     int row = ui->jobsView->currentRow();
 
-    m_com->moveRow(ui->jobsView, row, row + (int)eINDEX_2);
-    m_com->moveRow(&m_jobs, row, row + (int)eINDEX_1);
+    m_com->moveRow(ui->jobsView, row, row + eINDEX_2);
+    m_com->moveRow(&m_jobs, row, row + eINDEX_1);
 }
 
 void MainWindow::delJob(void)
 {
     int row = ui->jobsView->currentRow();
 
-    if(row >= (int)eINDEX_0)
+    if(row >= eINDEX_0)
     {
         ui->jobsView->removeRow(row);
         m_jobs.removeAt(row);
@@ -562,44 +556,74 @@ bool MainWindow::isAborted(void)
     return m_is_aborted;
 }
 
-void MainWindow::viewLog(JobChef::EJOB_LOG_TYPE a_log_type, QString a_log)
+void MainWindow::viewLog(JobChef::EJOB_LOG_TYPE a_log_type, const QString &a_log)
 {
+    QString html;
+
     switch(a_log_type)
     {
     case JobChef::eJOB_LOG_TYPE_DEBUG:
         qDebug() << a_log;
         break;
     case JobChef::eJOB_LOG_TYPE_INFO:
-        ui->logView->appendHtml(qvs::currentTime()+qvs::toHtml(a_log, QColor(23, 81, 144)));
+        html = qvs::toHtml(a_log, COLOR_LOGGING_INFO, true);
+        ui->logView->appendHtml(html);
         break;
     case JobChef::eJOB_LOG_TYPE_WARN:
     case JobChef::eJOB_LOG_TYPE_ERROE:
     case JobChef::eJOB_LOG_TYPE_FATAL:
+        html = qvs::toHtml(a_log, COLOR_LOGGING_WARN, true);
+        ui->logView->appendHtml(html);
+        break;
     case JobChef::eJOB_LOG_TYPE_JOB_STATUS:
-        ui->logView->appendHtml(qvs::currentTime()+qvs::toHtml(a_log));
+        html = qvs::toHtml(a_log, COLOR_LOGGING_STATUS, true);
+        ui->logView->appendHtml(html);
         break;
     case JobChef::eJOB_LOG_TYPE_JOB_STD_ERROR:
+        html = qvs::toHtml(a_log, COLOR_LOGGING_STD_ERROR, true);
+        ui->logView->appendHtml(html);
+        break;
     case JobChef::eJOB_LOG_TYPE_JOB_STD_OUTPUT:
-        ui->logView->appendPlainText(qvs::currentTime(a_log));
+        html = qvs::toHtml(a_log, COLOR_LOGGING_STD_OUTPUT, true);
+        ui->logView->appendHtml(html);
         break;
     case JobChef::eJOB_LOG_TYPE_JOB_STD_PROGRESS:
-        ui->progressBar->setMaximum((int)eINDEX_10 * (int)eINDEX_10);
+        ui->progressBar->setMaximum(eINDEX_100);
         if( (m_jobs_index <= ui->jobsView->rowCount())
-         && (ui->jobsView->columnCount() >= (int)eINDEX_3) )
+         && (ui->jobsView->columnCount() >= eINDEX_3) )
         {
-            delete ui->jobsView->item(m_jobs_index - (int)eINDEX_1, (int)eINDEX_2);
-            ui->jobsView->setItem(m_jobs_index - (int)eINDEX_1, (int)eINDEX_2, new QTableWidgetItem(QString("%1%").arg(a_log)));
+            delete ui->jobsView->item(m_jobs_index - eINDEX_1, eINDEX_2);
+            ui->jobsView->setItem(m_jobs_index - eINDEX_1, eINDEX_2, new QTableWidgetItem(QString("%1%").arg(a_log)));
         }
-        ui->progressBar->setValue(a_log.toDouble());
+        ui->progressBar->setValue(static_cast<int>(a_log.toDouble()));
         break;
     case JobChef::eJOB_LOG_TYPE_JOB_STD_DETAILS:
-        if(a_log.indexOf(QString(QT_MAC_EOL)) >= eINDEX_0)
-        {
-            a_log = a_log.left(a_log.indexOf(QString(QT_MAC_EOL)));
-        }
-        ui->editDetails->setText(a_log);
+        setDetailLog(a_log);
+        break;
+    default:
         break;
     }
+
+    if(html.isEmpty())
+    {
+        html = qvs::toHtml(a_log, COLOR_LOGGING_DEFAULT, true);
+    }
+
+    if(a_log_type != JobChef::eJOB_LOG_TYPE_JOB_STD_PROGRESS)
+    {
+        logging(html);
+    }
+}
+
+void MainWindow::setDetailLog(const QString &a_log)
+{
+    QString log = a_log;
+
+    if(a_log.indexOf(QString(QT_MAC_EOL)) >= eINDEX_0)
+    {
+        log = a_log.left(a_log.indexOf(QString(QT_MAC_EOL)));
+    }
+    ui->editDetails->setText(log);
 }
 
 void MainWindow::setInsertTextColor(QColor a_color, int a_length)
@@ -644,10 +668,13 @@ void MainWindow::setStartJobImmediately(bool a_set)
 
 void MainWindow::initJob(void)
 {
-    m_jobs_index = (int)eINDEX_0;
+    ui->logView->clear();
+    viewLog(JobChef::eJOB_LOG_TYPE_DEBUG, tr("o=o=o=o=o=o=o=o=o=o=o=o=o=o=o=o=o=o=o=o=o=o=o=o=o=o"));
+    setDetailLog(tr("Job Initialising ..."));
+    m_jobs_index = eINDEX_0;
     m_is_aborted = false;
-    ui->progressBar->setMaximum((int)eINDEX_0);
-    ui->progressBar->setMinimum((int)eINDEX_0);
+    ui->progressBar->setMaximum(eINDEX_0);
+    ui->progressBar->setMinimum(eINDEX_0);
     m_job_chef->loadCommonConfig();
     emit ntfStatusChanged(JobChef::eJOB_STATUS_STARTING);
 }
@@ -656,7 +683,7 @@ bool MainWindow::isSkipJob(void)
 {
     if(m_jobs_index < ui->jobsView->rowCount())
     {
-        if(ui->jobsView->item(m_jobs_index, (int)eINDEX_1)->text() != getJobStatusText(JobChef::eJOB_STATUS_READY))
+        if(ui->jobsView->item(m_jobs_index, eINDEX_1)->text() != getJobStatusText(JobChef::eJOB_STATUS_READY))
         {
             return true;
         }
@@ -668,9 +695,9 @@ bool MainWindow::isEmptyJobs(void)
 {
     bool is_empty_jobs = true;
 
-    for(int at_jobs_index = (int)eINDEX_0; at_jobs_index < ui->jobsView->rowCount(); at_jobs_index++)
+    for(int at_jobs_index = eINDEX_0; at_jobs_index < ui->jobsView->rowCount(); at_jobs_index++)
     {
-        if(ui->jobsView->item(at_jobs_index, (int)eINDEX_1)->text() == getJobStatusText(JobChef::eJOB_STATUS_READY))
+        if(ui->jobsView->item(at_jobs_index, eINDEX_1)->text() == getJobStatusText(JobChef::eJOB_STATUS_READY))
         {
             is_empty_jobs = false;
         }
@@ -695,7 +722,10 @@ void MainWindow::startJob(void)
 
     if(is_started)
     {
-        viewLog(JobChef::eJOB_LOG_TYPE_JOB_STATUS, tr("Job Started at %1.").arg(qvs::currentDateTime()));
+        QString log = tr("Job Started at %1.").arg(qvs::currentDateTime());
+
+        viewLog(JobChef::eJOB_LOG_TYPE_JOB_STATUS, log);
+        setDetailLog(log);
         m_job_chef->startJob();
     }
     else
@@ -737,9 +767,9 @@ void MainWindow::addItem(int a_row, int a_col, QString a_content, QIcon a_icon)
 void MainWindow::resizeEvent(QResizeEvent*)
 {
     /*Resize JobsView Header Width*/
-    uint at_header_def_width = eINDEX_10 * eINDEX_10;
-    uint at_diff_width = eINDEX_2;
-    ui->jobsView->setColumnWidth((int)eINDEX_0, ui->jobsView->geometry().width() - eINDEX_2 * at_header_def_width - at_diff_width);
+    int at_header_def_width = eINDEX_10 * eINDEX_10;
+    int at_diff_width = eINDEX_2;
+    ui->jobsView->setColumnWidth(eINDEX_0, ui->jobsView->geometry().width() - eINDEX_2 * at_header_def_width - at_diff_width);
 }
 
 void MainWindow::dragEnterEvent(QDragEnterEvent* e)
@@ -774,17 +804,16 @@ void MainWindow::dropEvent(QDropEvent* e)
                 break;
             case eTAB_AUDIO:/*Audio*/
                 /* Audio Input */
-                pos = QPoint(m_pAudioEnc->ui->editAudioInput->pos()
-                           + m_pAudioEnc->ui->groupBoxAudio->pos()
-                           + ui->stackedWidgetAudioEnc->currentWidget()->pos()
+                pos = QPoint(ui->widgetAudioEnc->ui->editAudioInput->pos()
+                           + ui->widgetAudioEnc->ui->groupBoxAudio->pos()
                            + ui->tabWidget->pos()
                            + ui->centralWidget->pos()
-                           + ui->stackedWidgetAudioEnc->pos()
+                           + ui->widgetAudioEnc->pos()
                            + QPoint(ui->menubar->pos().x(), ui->menubar->height()));
-                ret = QRect(pos, m_pAudioEnc->ui->editAudioInput->size());
+                ret = QRect(pos, ui->widgetAudioEnc->ui->editAudioInput->size());
                 if(ret.contains(e->pos()))
                 {
-                    m_pAudioEnc->reload(filename);
+                    ui->widgetAudioEnc->reload(filename);
                     break;
                 }
                 /* Audio Batch Input */
@@ -804,52 +833,49 @@ void MainWindow::dropEvent(QDropEvent* e)
             case eTAB_MUXER:/*Muxer*/
                 /* Muxer */
                 /* Video Input */
-                pos = QPoint(m_pMuxer->ui->editMuxerVideoInput->pos()
-                           + m_pMuxer->ui->groupBoxMuxer->pos()
-                           + ui->stackedWidgetMuxer->currentWidget()->pos()
+                pos = QPoint(ui->widgetMuxer->ui->editMuxerVideoInput->pos()
+                           + ui->widgetMuxer->ui->groupBoxMuxer->pos()
                            + ui->tabWidget->pos()
                            + ui->centralWidget->pos()
-                           + ui->stackedWidgetMuxer->pos()
+                           + ui->widgetMuxer->pos()
                            + QPoint(ui->menubar->pos().x(), ui->menubar->height()));
-                ret = QRect(pos, m_pMuxer->ui->editMuxerVideoInput->size());
+                ret = QRect(pos, ui->widgetMuxer->ui->editMuxerVideoInput->size());
                 if(ret.contains(e->pos()))
                 {
-                    m_pMuxer->reload(Muxer::eRELOAD_TYPE_VIDEO, filename);
+                    ui->widgetMuxer->reload(Muxer::eRELOAD_TYPE_VIDEO, filename);
                     break;
                 }
 
                 /* Audio Input */
-                pos = QPoint(m_pMuxer->ui->editMuxerAudioInput->pos()
-                           + m_pMuxer->ui->groupBoxMuxer->pos()
-                           + ui->stackedWidgetMuxer->currentWidget()->pos()
+                pos = QPoint(ui->widgetMuxer->ui->editMuxerAudioInput->pos()
+                           + ui->widgetMuxer->ui->groupBoxMuxer->pos()
                            + ui->tabWidget->pos()
                            + ui->centralWidget->pos()
-                           + ui->stackedWidgetMuxer->pos()
+                           + ui->widgetMuxer->pos()
                            + QPoint(ui->menubar->pos().x(), ui->menubar->height()));
-                ret = QRect(pos, m_pMuxer->ui->editMuxerAudioInput->size());
+                ret = QRect(pos, ui->widgetMuxer->ui->editMuxerAudioInput->size());
                 if(ret.contains(e->pos()))
                 {
-                    m_pMuxer->reload(Muxer::eRELOAD_TYPE_AUDIO, filename);
+                    ui->widgetMuxer->reload(Muxer::eRELOAD_TYPE_AUDIO, filename);
                     break;
                 }
                 /* Demuxer */
-                pos = QPoint(m_pDemuxer->ui->editDemuxerVideoInput->pos()
-                           + m_pDemuxer->ui->groupBoxDemuxer->pos()
-                           + ui->stackedWidgetDemuxer->currentWidget()->pos()
+                pos = QPoint(ui->widgetDemuxer->ui->editDemuxerVideoInput->pos()
+                           + ui->widgetDemuxer->ui->groupBoxDemuxer->pos()
                            + ui->tabWidget->pos()
                            + ui->centralWidget->pos()
-                           + ui->stackedWidgetDemuxer->pos()
+                           + ui->widgetDemuxer->pos()
                            + QPoint(ui->menubar->pos().x(), ui->menubar->height()));
-                ret = QRect(pos, m_pDemuxer->ui->editDemuxerVideoInput->size());
+                ret = QRect(pos, ui->widgetDemuxer->ui->editDemuxerVideoInput->size());
                 if(ret.contains(e->pos()))
                 {
-                    m_pDemuxer->reload((Demuxer::ERELOAD_TYPE)m_pDemuxer->ui->comboBoxDemuxerFormat->currentIndex(), filename);
+                    ui->widgetDemuxer->reload(static_cast<Demuxer::ERELOAD_TYPE>(ui->widgetDemuxer->ui->comboBoxDemuxerFormat->currentIndex()), filename);
                     break;
                 }
                 break;
             case eTAB_MEDIAINFO:/*MediaInfo*/
-                m_pMediaInfoDialog->m_mediainfo_path = filename;
-                m_pMediaInfoDialog->showMediaInfo(filename);
+                ui->widgetMediaInfo->m_mediainfo_path = filename;
+                ui->widgetMediaInfo->showMediaInfo(filename);
                 break;
             case eTAB_EXTRA:/*Extra*/
                 ui->widgetMerge->reload(filename);
@@ -950,7 +976,7 @@ void MainWindow::acceptedJobCreator(JobCreator::EJOB_RELOAD a_job_reload)
     case JobCreator::eJOB_RELOAD_NEW:
     case JobCreator::eJOB_RELOAD_DROP:
     default:
-        appendItems(QStringList() << m_jobs.at(m_jobs.length() - (int)eINDEX_1).job_name
+        appendItems(QStringList() << m_jobs.at(m_jobs.length() - eINDEX_1).job_name
                                   << getJobStatusText(JobChef::eJOB_STATUS_READY)
                                   << QString("0%"));
         break;
@@ -958,8 +984,8 @@ void MainWindow::acceptedJobCreator(JobCreator::EJOB_RELOAD a_job_reload)
         do {
             QTableWidgetItem *at_item;
             int row = ui->jobsView->currentRow();
-            at_item = ui->jobsView->item(row, (int)eINDEX_0);
-            at_item->setText(m_jobs.at(m_jobs.length() - (int)eINDEX_1).job_name);
+            at_item = ui->jobsView->item(row, eINDEX_0);
+            at_item->setText(m_jobs.at(m_jobs.length() - eINDEX_1).job_name);
         } while(false);
         break;
     }
@@ -985,13 +1011,13 @@ void MainWindow::statusChanged(JobChef::EJOB_STATUS a_job_status)
 {
     qDebug() << QString("JobStatus(%1/%2):").arg(m_jobs_index).arg(ui->jobsView->rowCount()) << getJobStatusText(m_job_status_prev) << "->" << getJobStatusText(a_job_status);
 
-    if((m_jobs_index <= ui->jobsView->rowCount()) && (m_jobs_index >= (int)eINDEX_1))
+    if((m_jobs_index <= ui->jobsView->rowCount()) && (m_jobs_index >= eINDEX_1))
     {
-        delete ui->jobsView->item(m_jobs_index - (int)eINDEX_1, (int)eINDEX_1);
-        ui->jobsView->setItem(m_jobs_index - (int)eINDEX_1, (int)eINDEX_1, new QTableWidgetItem(getJobStatusText(a_job_status)));
+        delete ui->jobsView->item(m_jobs_index - eINDEX_1, eINDEX_1);
+        ui->jobsView->setItem(m_jobs_index - eINDEX_1, eINDEX_1, new QTableWidgetItem(getJobStatusText(a_job_status)));
 
-        delete ui->jobsView->item(m_jobs_index - (int)eINDEX_1, (int)eINDEX_0);
-        ui->jobsView->setItem(m_jobs_index - (int)eINDEX_1, (int)eINDEX_0, new QTableWidgetItem(getJobStatusIcon(a_job_status), m_jobs.at(m_jobs_index - (int)eINDEX_1).job_name));
+        delete ui->jobsView->item(m_jobs_index - eINDEX_1, eINDEX_0);
+        ui->jobsView->setItem(m_jobs_index - eINDEX_1, eINDEX_0, new QTableWidgetItem(getJobStatusIcon(a_job_status), m_jobs.at(m_jobs_index - eINDEX_1).job_name));
     }
 
     switch(a_job_status)
@@ -1020,6 +1046,7 @@ void MainWindow::statusChanged(JobChef::EJOB_STATUS a_job_status)
         m_is_aborted = true;
         break;
     case JobChef::eJOB_STATUS_FAILED:
+        ui->progressBar->setMaximum(eINDEX_100); /* Fixed progress bar filed on not processing encoder. */
         viewLog(JobChef::eJOB_LOG_TYPE_DEBUG, tr("Process Failed!"));
         break;
     case JobChef::eJOB_STATUS_COMPLETED:
@@ -1058,7 +1085,6 @@ QIcon MainWindow::getJobStatusIcon(JobChef::EJOB_STATUS a_job_status)
     {
     case JobChef::eJOB_STATUS_INITIAL:
     case JobChef::eJOB_STATUS_READY:
-    default:
         icon = QIcon(":/buttons/hourglass.png");
         break;
     case JobChef::eJOB_STATUS_STARTING:
@@ -1101,16 +1127,16 @@ void MainWindow::pauseJob(void)
 
     for(QList<qint64>::iterator i = processIds.begin(); i != processIds.end(); ++i)
     {
-        BOOL result = DebugActiveProcess((DWORD)*i);
+        BOOL result = DebugActiveProcess(static_cast<DWORD>(*i));
 
         if(result)
         {
             emit ntfStatusChanged(JobChef::eJOB_STATUS_PAUSING);
-            viewLog(JobChef::eJOB_LOG_TYPE_JOB_STATUS, tr("Paused. PID %1.").arg(QString::number((DWORD)*i)));
+            viewLog(JobChef::eJOB_LOG_TYPE_JOB_STATUS, tr("Paused. PID %1.").arg(QString::number(static_cast<DWORD>(*i))));
         }
         else
         {
-            viewLog(JobChef::eJOB_LOG_TYPE_ERROE, tr("Paused failed. PID %1. Error %2.").arg(QString::number((DWORD)*i)).arg(GetLastError()));
+            viewLog(JobChef::eJOB_LOG_TYPE_ERROE, tr("Paused failed. PID %1. Error %2.").arg(QString::number(static_cast<DWORD>(*i))).arg(GetLastError()));
         }
     }
 
@@ -1126,17 +1152,17 @@ void MainWindow::resumeJob(void)
 
     for(QList<qint64>::iterator i = processIds.begin(); i != processIds.end(); ++i)
     {
-        BOOL result = DebugActiveProcessStop((DWORD)*i);
+        BOOL result = DebugActiveProcessStop(static_cast<DWORD>(*i));
 
         if(result)
         {
             emit ntfStatusChanged(JobChef::eJOB_STATUS_RESUMING);
-            viewLog(JobChef::eJOB_LOG_TYPE_JOB_STATUS, tr("Resumed. PID %1.").arg(QString::number((DWORD)*i)));
+            viewLog(JobChef::eJOB_LOG_TYPE_JOB_STATUS, tr("Resumed. PID %1.").arg(QString::number(static_cast<DWORD>(*i))));
         }
         else
         {
             emit ntfStatusChanged(JobChef::eJOB_STATUS_FAILED);
-            viewLog(JobChef::eJOB_LOG_TYPE_JOB_STATUS, tr("Failed to resume. PID %1. Error %2.").arg(QString::number((DWORD)*i)).arg(GetLastError()));
+            viewLog(JobChef::eJOB_LOG_TYPE_JOB_STATUS, tr("Failed to resume. PID %1. Error %2.").arg(QString::number(static_cast<DWORD>(*i))).arg(GetLastError()));
         }
     }
     if(m_job_status_prev != JobChef::eJOB_STATUS_FAILED)
@@ -1177,6 +1203,12 @@ void MainWindow::abortJob(void)
         resumeJob();
     }
     m_job_chef->abortJobs();
+}
+
+void MainWindow::failJob(void)
+{
+    /* Notified from job chef. */
+    emit ntfStatusChanged(JobChef::eJOB_STATUS_FAILED);
 }
 
 void MainWindow::on_buttonAbortJob_clicked(void)
@@ -1289,7 +1321,7 @@ void MainWindow::releaseChildWindowsAll(void)
 
 void MainWindow::on_buttonAudioBatchAdd_clicked()
 {
-    QString filename = QFileDialog::getOpenFileName(this, tr("Open Audio file"), NULL, tr("Audio (*.*)"));
+    QString filename = QFileDialog::getOpenFileName(this, tr("Open Audio file"), NULLSTR, tr("Audio (*.*)"));
 
     if(!filename.isEmpty())
     {
@@ -1317,9 +1349,9 @@ void MainWindow::on_buttonAudioBatchStart_clicked()
     for(int i = eINDEX_0; i < ui->listViewAudioBatch->count(); i++)
     {
         QString input = ui->listViewAudioBatch->item(i)->text();
-        QString output = m_pAudioEnc->getAudioOutputPath((AudioEnc::EENCODE_TYPE)m_pAudioEnc->ui->comboBoxAudioEncoder->currentIndex(), input);
-        QString bitrate = m_pAudioEnc->ui->comboBoxAudioBitrate->currentText();
-        StdWatcherCmd cmd = m_pAudioEnc->getEncodeCmd(input, output, bitrate);
+        QString output = ui->widgetAudioEnc->getAudioOutputPath(static_cast<AudioEnc::EENCODE_TYPE>(ui->widgetAudioEnc->ui->comboBoxAudioEncoder->currentIndex()), input);
+        QString bitrate = ui->widgetAudioEnc->ui->comboBoxAudioBitrate->currentText();
+        StdWatcherCmd cmd = ui->widgetAudioEnc->getEncodeCmd(input, output, bitrate);
         cmds << cmd;
     }
     g_pStdWatch[uid]->show();
@@ -1385,8 +1417,8 @@ void MainWindow::showShutdownMessage(Common::ESHUTDOWN a_shutdown)
     QString msg = getShutdownTitle(a_shutdown);
 
     m_count4shutdown = eINDEX_3 * eINDEX_10;
-    m_pMsgBoxShutdown = new QMessageBox(QMessageBox::Information, msg, tr("%1 in %2s!").arg(msg).arg(m_count4shutdown), QMessageBox::Cancel, NULL);
-    m_timer->start(Timer::ETIMER_TYPE_CYCLIC, Timer::ETIMER_SLOT_SYSTEM_SHUTDOWN, (int)(eINDEX_10 * eINDEX_10 * eINDEX_10));
+    m_pMsgBoxShutdown = new QMessageBox(QMessageBox::Information, msg, tr("%1 in %2s!").arg(msg).arg(m_count4shutdown), QMessageBox::Cancel);
+    m_timer->start(Timer::ETIMER_TYPE_CYCLIC, Timer::ETIMER_SLOT_SYSTEM_SHUTDOWN, static_cast<int>(eINDEX_10 * eINDEX_10 * eINDEX_10));
 
     if(m_pMsgBoxShutdown->exec() == QMessageBox::Cancel)
     {
@@ -1407,7 +1439,7 @@ void MainWindow::setShutCountMessage(void)
     qDebug() << QString("%1 in %2s!").arg(msg).arg(m_count4shutdown);
 #endif
 
-    if(m_count4shutdown <= (int)eINDEX_0)
+    if(m_count4shutdown <= eINDEX_0)
     {
         m_timer->stop(Timer::ETIMER_TYPE_CYCLIC);
         m_pMsgBoxShutdown->close();
@@ -1420,10 +1452,7 @@ void MainWindow::setShutCountMessage(void)
 
 void MainWindow::slotAbout(void)
 {
-    QResource aboutResource(":/strings/about");
-    QByteArray aboutData((const char *)aboutResource.data(), aboutResource.size());
-    QString aboutString = QString::fromUtf8(aboutData);
-    QMessageBox::about(this, tr("About"), aboutString.arg(QVS_VERSION));
+    QMessageBox::about(this, tr("About"), qvs::fromResource(":/strings/about").arg(QVS_VERSION));
 }
 
 void MainWindow::showPreferences(void)
@@ -1453,8 +1482,8 @@ void MainWindow::modeLaunch(void)
     case Config::eLAUNCH_MODE_MEDIAINFO:
         this->show();
         ui->tabWidget->setCurrentIndex(eTAB_MEDIAINFO);
-        m_pMediaInfoDialog->setPath(g_pConfig->getConfig(Config::eCONFIG_FIRST_CLI_FILENAME).toString());
-        m_pMediaInfoDialog->reload();
+        ui->widgetMediaInfo->setPath(g_pConfig->getConfig(Config::eCONFIG_FIRST_CLI_FILENAME).toString());
+        ui->widgetMediaInfo->reload();
         break;
     case Config::eLAUNCH_MODE_COPY_PATH_DOS:
     case Config::eLAUNCH_MODE_COPY_PATH_UNIX:
@@ -1462,34 +1491,26 @@ void MainWindow::modeLaunch(void)
         m_com->copyPath();
         break;
     case Config::eLAUNCH_MODE_SHOW_HELP:
-        do{
-            QResource usageResource(":/strings/cli-usage");
-            QByteArray usageData((const char *)usageResource.data(), usageResource.size());
-            QString usageString = QString::fromUtf8(usageData);
-            QMessageBox::about(this, tr("Qvs Help Dialog"), usageString);
-            m_timer->start(Timer::ETIMER_TYPE_ONE_SHOT, Timer::ETIMER_SLOT_PROGURM_QUIT, (int)eINDEX_10);
-        }while(false);
+        QMessageBox::about(this, tr("Qvs Help Dialog"), qvs::fromResource(":/strings/cli-usage"));
+        m_timer->start(Timer::ETIMER_TYPE_ONE_SHOT, Timer::ETIMER_SLOT_PROGURM_QUIT, eINDEX_10);
         break;
     case Config::eLAUNCH_MODE_EXIT:
-        m_timer->start(Timer::ETIMER_TYPE_ONE_SHOT, Timer::ETIMER_SLOT_PROGURM_QUIT, (int)eINDEX_10);
+        m_timer->start(Timer::ETIMER_TYPE_ONE_SHOT, Timer::ETIMER_SLOT_PROGURM_QUIT, eINDEX_10);
+        break;
+    default:
         break;
     }
 }
 
 void MainWindow::loadFonts(void)
 {
-    QResource consolaFontResource(":/fonts/consola.ttf");
-    QByteArray consolaFontData((const char *)consolaFontResource.data(), consolaFontResource.size());
-    QFontDatabase::addApplicationFontFromData(consolaFontData);
-
-    QResource consolaFont2Resource(":/fonts/DigitalMini.ttf");
-    QByteArray consolaFont2Data((const char *)consolaFont2Resource.data(), consolaFont2Resource.size());
-    QFontDatabase::addApplicationFontFromData(consolaFont2Data);
+    QFontDatabase::addApplicationFontFromData(qvs::getResource(":/fonts/consola.ttf"));
+    QFontDatabase::addApplicationFontFromData(qvs::getResource(":/fonts/DigitalMini.ttf"));
 }
 
 void MainWindow::setLanguage(Config::ELANGUAGE a_language)
 {
-    if((a_language >= Config::eLANGUAGE_MAX) || (a_language <= eINDEX_NONE))
+    if((a_language >= Config::eLANGUAGE_MAX) || (a_language <= static_cast<Config::ELANGUAGE>(eINDEX_NONE)))
     {
         a_language = Config::eLANGUAGE_EN;
     }
@@ -1518,4 +1539,149 @@ Config::ELANGUAGE MainWindow::language(void)
 void MainWindow::languageChanged(void)
 {
     g_pConfig->setConfig(Config::eCONFIG_FIRST_LANGUAGE, language());
+}
+
+void MainWindow::slotMinimize(void)
+{
+    m_pMinimizeWidgets.clear();
+
+    for(QMap<QUuid, ScriptPlayer *>::iterator i = m_pScriptPlayers.begin(); i != m_pScriptPlayers.end(); ++i)
+    {
+        if(m_pScriptPlayers[i.key()]->isVisible())
+        {
+            m_pMinimizeWidgets.insert(i.key(), m_pScriptPlayers[i.key()]);
+        }
+    }
+
+    for(QMap<QUuid, MediaInfoDialog *>::iterator i = m_pMediaInfoDialogs.begin(); i != m_pMediaInfoDialogs.end(); ++i)
+    {
+        if(m_pMediaInfoDialogs[i.key()]->isVisible())
+        {
+            m_pMinimizeWidgets.insert(i.key(), m_pMediaInfoDialogs[i.key()]);
+        }
+    }
+
+    for(QMap<QUuid, PreviewDialog *>::iterator i = m_pPreviewDialogs.begin(); i != m_pPreviewDialogs.end(); ++i)
+    {
+        if(m_pPreviewDialogs[i.key()]->isVisible())
+        {
+            m_pMinimizeWidgets.insert(i.key(), m_pPreviewDialogs[i.key()]);
+        }
+    }
+
+    for(QMap<QUuid, ScriptCreator *>::iterator i = m_pScriptCreators.begin(); i != m_pScriptCreators.end(); ++i)
+    {
+        if(m_pScriptCreators[i.key()]->isVisible())
+        {
+            m_pMinimizeWidgets.insert(i.key(), m_pScriptCreators[i.key()]);
+        }
+    }
+
+    for(QMap<QUuid, StdWatcher*>::iterator i = g_pStdWatch.begin(); i != g_pStdWatch.end(); i++)
+    {
+        if(g_pStdWatch[i.key()]->isVisible())
+        {
+            m_pMinimizeWidgets.insert(i.key(), g_pStdWatch[i.key()]);
+        }
+    }
+
+    if(this->isVisible())
+    {
+        m_pMinimizeWidgets.insert(QUuid::createUuid(), this);
+    }
+
+    for(QMap<QUuid, QWidget *>::iterator i = m_pMinimizeWidgets.begin(); i != m_pMinimizeWidgets.end(); i++)
+    {
+        m_pMinimizeWidgets[i.key()]->hide();
+    }
+    m_pSystemTray->show();
+    QApplication::setQuitOnLastWindowClosed(false);
+}
+
+void MainWindow::slotTrayActivated(QSystemTrayIcon::ActivationReason a_reason)
+{
+    Q_UNUSED(a_reason)
+
+    if(m_pSystemTray->isVisible())
+    {
+        for(QMap<QUuid, QWidget *>::iterator i = m_pMinimizeWidgets.begin(); i != m_pMinimizeWidgets.end(); i++)
+        {
+            m_pMinimizeWidgets[i.key()]->show();
+        }
+    }
+    m_pSystemTray->hide();
+    QApplication::setQuitOnLastWindowClosed(true);
+}
+
+bool MainWindow::slotMail(STMAILBOX* a_mail_box)
+{
+    QVariant content = a_mail_box->content;
+
+    switch(a_mail_box->type)
+    {
+    case eINDEX_0: // Tpye 0: Called and to remove Widgets after closed.
+        return slotChildWindowClosedRemove(a_mail_box->uid);
+        //@break;
+    default:
+        break;
+    }
+    return false;
+}
+void MainWindow::slotChildWindowClosed(QUuid a_uid)
+{
+    STMAILBOX *mail_box = new STMAILBOX();
+
+    mail_box->type = eINDEX_0;
+    mail_box->uid = a_uid;
+    g_pMailBox.insert(MailBox::eMODULE_MAINWINDOW, mail_box);
+}
+
+bool MainWindow::slotChildWindowClosedRemove(QUuid a_uid)
+{
+    bool ret = false;
+    if(m_pMinimizeWidgets.contains(a_uid))
+    {
+        m_pMinimizeWidgets.remove(a_uid);
+        ret = true;
+    }
+    if(g_pStdWatch.contains(a_uid))
+    {
+        g_pStdWatch.remove(a_uid);
+        ret = true;
+    }
+    if(m_pScriptPlayers.contains(a_uid))
+    {
+        m_pScriptPlayers.remove(a_uid);
+        ret = true;
+    }
+    if(m_pMediaInfoDialogs.contains(a_uid))
+    {
+        m_pMediaInfoDialogs.remove(a_uid);
+        ret = true;
+    }
+    if(m_pPreviewDialogs.contains(a_uid))
+    {
+        m_pPreviewDialogs.remove(a_uid);
+        ret = true;
+    }
+    if(m_pScriptCreators.contains(a_uid))
+    {
+        m_pScriptCreators.remove(a_uid);
+        ret = true;
+    }
+    return ret;
+}
+
+void MainWindow::logging(const QString &a_log)
+{
+    m_logging->log().info(a_log);
+}
+
+void MainWindow::slotViewJobsLog(void)
+{
+    JobViewCmd job_view_cmd;
+
+    job_view_cmd.mainUi = this;
+    job_view_cmd.reload(m_logging->history());
+    job_view_cmd.exec();
 }

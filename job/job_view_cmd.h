@@ -16,7 +16,7 @@ class JobViewCmd : public QDialog
     Q_OBJECT
 
 public:
-    explicit JobViewCmd(QDialog *parent = 0);
+    explicit JobViewCmd(QDialog *parent = nullptr);
     ~JobViewCmd();
     friend class MainWindow;
     class MainWindow *mainUi;
@@ -33,6 +33,7 @@ public:
     void reload(JobItem a_job_item);
     void reload(QList<StdWatcherCmd> a_job_item);
     void reload(QStringList a_job_item);
+    void reload(QString a_html);
 
     QString createCommand(bool a_is_detail = false);
     void showCommand(bool a_is_detail);
@@ -54,5 +55,8 @@ private:
     ERELOAD_MODE m_mode;
     QMenu *m_pViewMenu;
 };
+
+extern const char *c_config_key[JobCreator::eJOB_CONFIG_MAX];
+extern const char *c_config_type[JobCmdList::eJOB_CMD_TYPE_MAX];
 
 #endif // JOB_VIEW_CMD_H

@@ -39,9 +39,9 @@ const QList<QPair<AudioAdvancedConfig::ECONFIG, QString>> c_list_config_encode_a
 AudioConfig::AudioConfig(QDialog *parent) :
     QDialog(parent),
     ui(new Ui::AudioConfig),
+    m_advancedMode(false),
     m_pSpinBox(new QDoubleSpinBox(this)),
-    m_pTimerValueHidden(new QTimer(this)),
-    m_advancedMode(false)
+    m_pTimerValueHidden(new QTimer(this))
 {
     ui->setupUi(this);
     this->setup();
@@ -91,10 +91,10 @@ void AudioConfig::setupUi(void)
     PASS;
 
     /* Group: FLAC */
-    ui->horizontalSliderFlac->setMinimum((int)eINDEX_0);
+    ui->horizontalSliderFlac->setMinimum(eINDEX_0);
     ui->horizontalSliderFlac->setMaximum(FLAC_QUALITY_MAX);
-    ui->horizontalSliderFlac->setTickInterval((int)eINDEX_1);
-    ui->horizontalSliderFlac->setPageStep((int)eINDEX_1);
+    ui->horizontalSliderFlac->setTickInterval(eINDEX_1);
+    ui->horizontalSliderFlac->setPageStep(eINDEX_1);
 
     /* Group: OPUS */
     emit ui->comboBoxOpusMode->currentIndexChanged(ui->comboBoxOpusMode->currentIndex());
@@ -125,7 +125,7 @@ void AudioConfig::setupUi(void)
     };
     for(uint i = eINDEX_0; i < AudioEnc::eENCODER_MAX; i++)
     {
-        setDefaultConfig(getDefaultConfig(i, s_config_default_value.at(i).second));
+        setDefaultConfig(getDefaultConfig(i, s_config_default_value.at(static_cast<int>(i)).second));
     }
 
     s_value_sliders = {
@@ -161,39 +161,39 @@ AudioAdvancedConfig AudioConfig::getDefaultConfig(const uint &a_type, const QVar
     AudioAdvancedConfig advanced_config;
 
     advanced_config.type = a_type;
-    advanced_config.mode = (uint)NUL;
-    advanced_config.profile = (uint)NUL;
+    advanced_config.mode = static_cast<uint>(NUL);
+    advanced_config.profile = static_cast<uint>(NUL);
     advanced_config.value = a_value;
 
     switch(static_cast<AudioEnc::EENCODE_TYPE>(a_type))
     {
     case AudioEnc::eENCODE_TYPE_AAC_APPLE:
     default:
-        advanced_config.mode = (uint)eQAAC_MODE_LC_AAC_CBR;
-        advanced_config.profile = (uint)eQAAC_PROFILE_LC_AAC;
+        advanced_config.mode = static_cast<uint>(eQAAC_MODE_LC_AAC_CBR);
+        advanced_config.profile = static_cast<uint>(eQAAC_PROFILE_LC_AAC);
         advanced_config.value2 = false; /* No delay flag (default: true) */
         break;
     case AudioEnc::eENCODE_TYPE_AAC_FDK:
-        advanced_config.mode = (uint)eFDKAAC_MODE_CBR;
-        advanced_config.profile = (uint)eFDKAAC_PROFILE_MPEG_4_LC_AAC;
+        advanced_config.mode = static_cast<uint>(eFDKAAC_MODE_CBR);
+        advanced_config.profile = static_cast<uint>(eFDKAAC_PROFILE_MPEG_4_LC_AAC);
         break;
     case AudioEnc::eENCODE_TYPE_AAC_NERO:
-        advanced_config.mode = (uint)eNEROAAC_MODE_ABR;
-        advanced_config.profile = (uint)eNEROAAC_PROFILE_LC_AAC;
+        advanced_config.mode = static_cast<uint>(eNEROAAC_MODE_ABR);
+        advanced_config.profile = static_cast<uint>(eNEROAAC_PROFILE_LC_AAC);
         break;
     case AudioEnc::eENCODE_TYPE_ALAC:
         break;
     case AudioEnc::eENCODE_TYPE_FLAC:
-        advanced_config.value = (uint)eINDEX_5;
+        advanced_config.value = static_cast<uint>(eINDEX_5);
         break;
     case AudioEnc::eENCODE_TYPE_OPUS:
-        advanced_config.mode = (uint)eOPUS_MODE_VBR;
+        advanced_config.mode = static_cast<uint>(eOPUS_MODE_VBR);
         break;
     case AudioEnc::eENCODE_TYPE_OGG_VORBIS:
-        advanced_config.value = (uint)(eINDEX_3 * eINDEX_100);
+        advanced_config.value = static_cast<uint>(eINDEX_3 * eINDEX_100);
         break;
     case AudioEnc::eENCODE_TYPE_MP3:
-        advanced_config.mode = (uint)eMP3_MODE_CBR;
+        advanced_config.mode = static_cast<uint>(eMP3_MODE_CBR);
         break;
     case AudioEnc::eENCODE_TYPE_AC3:
         break;
@@ -206,8 +206,8 @@ AudioAdvancedConfig AudioConfig::getDefaultConfig(const uint &a_type, const QVar
 void AudioConfig::setDefaultConfig(const AudioAdvancedConfig &advanced_config)
 {
     uint type = advanced_config.type;
-    int mode = (int)advanced_config.mode;
-    int profile = (int)advanced_config.profile;
+    int mode = static_cast<int>(advanced_config.mode);
+    int profile = static_cast<int>(advanced_config.profile);
     int value = advanced_config.value.toInt();
 
     switch(static_cast<AudioEnc::EENCODE_TYPE>(type))
@@ -283,7 +283,6 @@ void AudioConfig::on_checkBoxAdvancedOption_stateChanged(int a_state)
     switch(Qt::CheckState(a_state))
     {
     case Qt::Unchecked:
-    default:
         m_advancedMode = false;
         break;
     case Qt::PartiallyChecked:
@@ -310,7 +309,7 @@ void AudioConfig::setMode(bool a_advancedMode)
     ui->checkBoxAdvancedOption->setCheckState(state);
     if(state == ui->checkBoxAdvancedOption->checkState())
     {
-        emit ui->checkBoxAdvancedOption->stateChanged((int)state);
+        emit ui->checkBoxAdvancedOption->stateChanged(static_cast<int>(state));
     }
 
     m_advancedMode = a_advancedMode;
@@ -348,6 +347,8 @@ bool AudioConfig::eventFilter(QObject *o, QEvent *e)
         {
             this->setValueVisible(false);
         }
+        break;
+    default:
         break;
     }
     return false;
@@ -419,7 +420,7 @@ void AudioConfig::setValueValue(void)
     default:
         break;
     case AudioEnc::eENCODE_TYPE_AAC_NERO:
-        if(ui->comboBoxAacNeroMode->currentIndex() == (int)eNEROAAC_MODE_VBR)
+        if(ui->comboBoxAacNeroMode->currentIndex() == static_cast<int>(eNEROAAC_MODE_VBR))
         {
             decimals = eINDEX_2;
             minimum /= eINDEX_100;
@@ -474,7 +475,7 @@ void AudioConfig::valueChanged(double a_value)
     switch(static_cast<AudioEnc::EENCODE_TYPE>(ui->comboBoxAudioEncoder->currentIndex()))
     {
     case AudioEnc::eENCODE_TYPE_AAC_NERO:
-        if(ui->comboBoxAacNeroMode->currentIndex() == (int)eNEROAAC_MODE_VBR)
+        if(ui->comboBoxAacNeroMode->currentIndex() == static_cast<int>(eNEROAAC_MODE_VBR))
         {
             value *= eINDEX_100;
         }
@@ -488,7 +489,7 @@ void AudioConfig::valueChanged(double a_value)
 
     m_pSpinBox->disconnect(m_pSpinBox, SIGNAL(valueChanged(double)), this, SLOT(valueChanged(double)));
 
-    static_cast<QSlider *>(s_value_sliders[ui->comboBoxAudioEncoder->currentIndex()])->setValue((int)value);
+    static_cast<QSlider *>(s_value_sliders[ui->comboBoxAudioEncoder->currentIndex()])->setValue(static_cast<int>(value));
 
     m_pSpinBox->connect(m_pSpinBox, SIGNAL(valueChanged(double)), this, SLOT(valueChanged(double)));
 }
@@ -519,7 +520,7 @@ void AudioConfig::on_comboBoxAacAppleProfile_currentIndexChanged(int a_index)
 {
     QStringList items;
 
-    switch((EAUDIO_CONFIG_PROFILE)a_index)
+    switch(static_cast<EAUDIO_CONFIG_PROFILE>(a_index))
     {
     case eQAAC_PROFILE_LC_AAC:
     default:
@@ -537,7 +538,7 @@ void AudioConfig::on_comboBoxAacAppleProfile_currentIndexChanged(int a_index)
 
 void AudioConfig::on_comboBoxAacAppleMode_currentIndexChanged(int a_index)
 {
-    if( (ui->comboBoxAacAppleProfile->currentIndex() == (int)eQAAC_PROFILE_LC_AAC) && (a_index == (int)eQAAC_MODE_LC_AAC_TRUE_VBR) )
+    if( (ui->comboBoxAacAppleProfile->currentIndex() == static_cast<int>(eQAAC_PROFILE_LC_AAC)) && (a_index == static_cast<int>(eQAAC_MODE_LC_AAC_TRUE_VBR)) )
     {
         fitValue(ui->horizontalSliderAacApple, QAAC_QUALITY_MAX);
     }
@@ -545,14 +546,14 @@ void AudioConfig::on_comboBoxAacAppleMode_currentIndexChanged(int a_index)
     {
         fitValue(ui->horizontalSliderAacApple, QAAC_BITRATE_MAX);
     }
-    ui->horizontalSliderAacApple->setTickInterval(ui->horizontalSliderAacApple->maximum() / (int)eINDEX_10);
+    ui->horizontalSliderAacApple->setTickInterval(ui->horizontalSliderAacApple->maximum() / eINDEX_10);
 }
 
 void AudioConfig::on_horizontalSliderAacApple_valueChanged(int a_value)
 {
     QString mode = c_audio_config_bitrate;
 
-    if( (ui->comboBoxAacAppleProfile->currentIndex() == (int)eQAAC_PROFILE_LC_AAC) && (ui->comboBoxAacAppleMode->currentIndex() == (int)eQAAC_MODE_LC_AAC_TRUE_VBR) )
+    if( (ui->comboBoxAacAppleProfile->currentIndex() == static_cast<int>(eQAAC_PROFILE_LC_AAC)) && (ui->comboBoxAacAppleMode->currentIndex() == static_cast<int>(eQAAC_MODE_LC_AAC_TRUE_VBR)) )
     {
         mode = c_audio_config_quality;
     }
@@ -565,18 +566,18 @@ void AudioConfig::on_horizontalSliderAacApple_valueChanged(int a_value)
 
 void AudioConfig::on_comboBoxAacFdkMode_currentIndexChanged(int a_index)
 {
-    switch((EAUDIO_CONFIG_MODE)a_index)
+    switch(static_cast<EAUDIO_CONFIG_MODE>(a_index))
     {
     case eFDKAAC_MODE_CBR:
     default:
         fitValue(ui->horizontalSliderAacFdk, FDKAAC_BITRATE_MAX);
-        ui->horizontalSliderAacFdk->setTickInterval(ui->horizontalSliderAacFdk->maximum() / (int)eINDEX_10);
-        ui->horizontalSliderAacFdk->setPageStep((int)eINDEX_10);
+        ui->horizontalSliderAacFdk->setTickInterval(ui->horizontalSliderAacFdk->maximum() / eINDEX_10);
+        ui->horizontalSliderAacFdk->setPageStep(eINDEX_10);
         break;
     case eFDKAAC_MODE_VBR:
         fitValue(ui->horizontalSliderAacFdk, FDKAAC_QUALITY_MAX);
-        ui->horizontalSliderAacFdk->setTickInterval((int)eINDEX_1);
-        ui->horizontalSliderAacFdk->setPageStep((int)eINDEX_1);
+        ui->horizontalSliderAacFdk->setTickInterval(eINDEX_1);
+        ui->horizontalSliderAacFdk->setPageStep(eINDEX_1);
         break;
     }
 }
@@ -585,7 +586,7 @@ void AudioConfig::on_horizontalSliderAacFdk_valueChanged(int a_value)
 {
     QString mode = c_audio_config_bitrate;
 
-    if(ui->comboBoxAacFdkMode->currentIndex() == (int)eFDKAAC_MODE_VBR)
+    if(ui->comboBoxAacFdkMode->currentIndex() == static_cast<int>(eFDKAAC_MODE_VBR))
     {
         mode = c_audio_config_quality;
     }
@@ -598,21 +599,21 @@ void AudioConfig::on_horizontalSliderAacFdk_valueChanged(int a_value)
 
 void AudioConfig::on_comboBoxAacNeroMode_currentIndexChanged(int a_index)
 {
-    switch((EAUDIO_CONFIG_MODE)a_index)
+    switch(static_cast<EAUDIO_CONFIG_MODE>(a_index))
     {
     case eNEROAAC_MODE_ABR:
     case eNEROAAC_MODE_CBR:
     default:
-        fitValue(ui->horizontalSliderAacNero, NEROAAC_BITRATE_MAX, (int)eINDEX_16);
-        ui->horizontalSliderAacNero->setTickInterval(ui->horizontalSliderAacNero->maximum() / (int)eINDEX_10);
-        ui->horizontalSliderAacNero->setPageStep((int)eINDEX_10);
+        fitValue(ui->horizontalSliderAacNero, NEROAAC_BITRATE_MAX, eINDEX_16);
+        ui->horizontalSliderAacNero->setTickInterval(ui->horizontalSliderAacNero->maximum() / eINDEX_10);
+        ui->horizontalSliderAacNero->setPageStep(eINDEX_10);
         ui->labelAacNeroProfile->setEnabled(true);
         ui->comboBoxAacNeroProfile->setEnabled(true);
         break;
     case eNEROAAC_MODE_VBR:
-        fitValue(ui->horizontalSliderAacNero, NEROAAC_QUALITY_MAX, (int)eINDEX_0);
-        ui->horizontalSliderAacNero->setTickInterval((int)eINDEX_10);
-        ui->horizontalSliderAacNero->setPageStep((int)eINDEX_1);
+        fitValue(ui->horizontalSliderAacNero, NEROAAC_QUALITY_MAX, eINDEX_0);
+        ui->horizontalSliderAacNero->setTickInterval(eINDEX_10);
+        ui->horizontalSliderAacNero->setPageStep(eINDEX_1);
         ui->labelAacNeroProfile->setDisabled(true);
         ui->comboBoxAacNeroProfile->setDisabled(true);
         break;
@@ -624,10 +625,10 @@ void AudioConfig::on_horizontalSliderAacNero_valueChanged(int a_value)
     QString mode = c_audio_config_bitrate;
     double value = a_value;
 
-    if(ui->comboBoxAacNeroMode->currentIndex() == (int)eNEROAAC_MODE_VBR)
+    if(ui->comboBoxAacNeroMode->currentIndex() == static_cast<int>(eNEROAAC_MODE_VBR))
     {
         mode = c_audio_config_quality;
-        value /= (int)eINDEX_100;
+        value /= eINDEX_100;
     }
     ui->groupBoxAacNero->setTitle(QString("NeroAAC (%1=%2)").arg(mode).arg(value));
 }
@@ -663,7 +664,7 @@ void AudioConfig::on_horizontalSliderOggVorbis_valueChanged(int a_value)
     QString mode = c_audio_config_quality;
     double value = a_value;
 
-    value /= (int)eINDEX_100;
+    value /= eINDEX_100;
     ui->groupBoxOggVorbis->setTitle(QString("Ogg Vorbis (%1=%2)").arg(mode).arg(value));
 }
 
@@ -673,23 +674,23 @@ void AudioConfig::on_horizontalSliderOggVorbis_valueChanged(int a_value)
 
 void AudioConfig::on_comboBoxMp3Mode_currentIndexChanged(int a_index)
 {
-    switch((EAUDIO_CONFIG_MODE)a_index)
+    switch(static_cast<EAUDIO_CONFIG_MODE>(a_index))
     {
     case eMP3_MODE_CBR:
     default:
-        fitValue(ui->horizontalSliderMp3, MP3_BITRATE_MAX, (int)eINDEX_32);
-        ui->horizontalSliderMp3->setTickInterval((int)eINDEX_8);
-        ui->horizontalSliderMp3->setPageStep((int)eINDEX_8);
+        fitValue(ui->horizontalSliderMp3, MP3_BITRATE_MAX, eINDEX_32);
+        ui->horizontalSliderMp3->setTickInterval(eINDEX_8);
+        ui->horizontalSliderMp3->setPageStep(eINDEX_8);
         break;
     case eMP3_MODE_ABR:
-        fitValue(ui->horizontalSliderMp3, MP3_BITRATE_MAX, (int)eINDEX_8);
-        ui->horizontalSliderMp3->setTickInterval((int)eINDEX_8);
-        ui->horizontalSliderMp3->setPageStep((int)eINDEX_8);
+        fitValue(ui->horizontalSliderMp3, MP3_BITRATE_MAX, eINDEX_8);
+        ui->horizontalSliderMp3->setTickInterval(eINDEX_8);
+        ui->horizontalSliderMp3->setPageStep(eINDEX_8);
         break;
     case eMP3_MODE_VBR:
-        fitValue(ui->horizontalSliderMp3, MP3_QUALITY_MAX, (int)eINDEX_0);
-        ui->horizontalSliderMp3->setTickInterval((int)eINDEX_1);
-        ui->horizontalSliderMp3->setPageStep((int)eINDEX_1);
+        fitValue(ui->horizontalSliderMp3, MP3_QUALITY_MAX, eINDEX_0);
+        ui->horizontalSliderMp3->setTickInterval(eINDEX_1);
+        ui->horizontalSliderMp3->setPageStep(eINDEX_1);
         break;
     }
 }
@@ -698,7 +699,7 @@ void AudioConfig::on_horizontalSliderMp3_valueChanged(int a_value)
 {
     QString mode = c_audio_config_bitrate;
 
-    if(ui->comboBoxMp3Mode->currentIndex() == (int)eMP3_MODE_VBR)
+    if(ui->comboBoxMp3Mode->currentIndex() == static_cast<int>(eMP3_MODE_VBR))
     {
         mode = c_audio_config_quality;
     }
@@ -727,10 +728,10 @@ void AudioConfig::on_buttonAccept_clicked()
 {
     AudioAdvancedConfig config = getConfig();
 
-    mainUi->m_pAudioEnc->ui->comboBoxAudioEncoder->setCurrentIndex(config.type);
-    emit mainUi->m_pAudioEnc->ui->comboBoxAudioEncoder->currentIndexChanged(config.type);
+    mainUi->ui->widgetAudioEnc->ui->comboBoxAudioEncoder->setCurrentIndex(static_cast<int>(config.type));
+    emit mainUi->ui->widgetAudioEnc->ui->comboBoxAudioEncoder->currentIndexChanged(static_cast<int>(config.type));
 
-    mainUi->m_pAudioEnc->setConfig(config);
+    mainUi->ui->widgetAudioEnc->setConfig(config);
     this->accept();
 }
 
@@ -739,7 +740,7 @@ AudioAdvancedConfig AudioConfig::getConfig(void)
     AudioAdvancedConfig config;
 
     config.setEnable(m_advancedMode);
-    config.type = ui->comboBoxAudioEncoder->currentIndex();
+    config.type = static_cast<uint>(ui->comboBoxAudioEncoder->currentIndex());
 
     switch(static_cast<AudioEnc::EENCODE_TYPE>(config.type))
     {
@@ -747,23 +748,23 @@ AudioAdvancedConfig AudioConfig::getConfig(void)
     default:
         config.name = ui->groupBoxAacApple->title();
         config.cmd = processAccApple();
-        config.mode = ui->comboBoxAacAppleMode->currentIndex();
-        config.profile = ui->comboBoxAacAppleProfile->currentIndex();
+        config.mode = static_cast<uint>(ui->comboBoxAacAppleMode->currentIndex());
+        config.profile = static_cast<uint>(ui->comboBoxAacAppleProfile->currentIndex());
         config.value = ui->horizontalSliderAacApple->value();
         config.value2 = ui->checkBoxAacAppleNoDelay->isChecked();
         break;
     case AudioEnc::eENCODE_TYPE_AAC_FDK:
         config.name = ui->groupBoxAacFdk->title();
         config.cmd = processAccFdk();
-        config.mode = ui->comboBoxAacFdkMode->currentIndex();
-        config.profile = ui->comboBoxAacFdkProfile->currentIndex();
+        config.mode = static_cast<uint>(ui->comboBoxAacFdkMode->currentIndex());
+        config.profile = static_cast<uint>(ui->comboBoxAacFdkProfile->currentIndex());
         config.value = ui->horizontalSliderAacFdk->value();
         break;
     case AudioEnc::eENCODE_TYPE_AAC_NERO:
         config.name = ui->groupBoxAacNero->title();
         config.cmd = processAccNero();
-        config.mode = ui->comboBoxAacNeroMode->currentIndex();
-        config.profile = ui->comboBoxAacNeroProfile->currentIndex();
+        config.mode = static_cast<uint>(ui->comboBoxAacNeroMode->currentIndex());
+        config.profile = static_cast<uint>(ui->comboBoxAacNeroProfile->currentIndex());
         config.value = ui->horizontalSliderAacNero->value();
         break;
     case AudioEnc::eENCODE_TYPE_ALAC:
@@ -778,7 +779,7 @@ AudioAdvancedConfig AudioConfig::getConfig(void)
     case AudioEnc::eENCODE_TYPE_OPUS:
         config.name = ui->groupBoxOpus->title();
         config.cmd = processOpus();
-        config.mode = ui->comboBoxOpusMode->currentIndex();
+        config.mode = static_cast<uint>(ui->comboBoxOpusMode->currentIndex());
         config.value = ui->horizontalSliderOpus->value();
         break;
     case AudioEnc::eENCODE_TYPE_OGG_VORBIS:
@@ -789,7 +790,7 @@ AudioAdvancedConfig AudioConfig::getConfig(void)
     case AudioEnc::eENCODE_TYPE_MP3:
         config.name = ui->groupBoxMp3->title();
         config.cmd = processMp3();
-        config.mode = ui->comboBoxMp3Mode->currentIndex();
+        config.mode = static_cast<uint>(ui->comboBoxMp3Mode->currentIndex());
         config.value = ui->horizontalSliderMp3->value();
         break;
     case AudioEnc::eENCODE_TYPE_AC3:
@@ -809,31 +810,34 @@ void AudioConfig::setConfig(AudioAdvancedConfig *a_pAdvancedConfig)
 {
     setMode(a_pAdvancedConfig->isEnable());
 
-    ui->comboBoxAudioEncoder->setCurrentIndex(a_pAdvancedConfig->type);
-    emit ui->comboBoxAudioEncoder->currentIndexChanged(a_pAdvancedConfig->type);
+    AudioAdvancedConfig at_advancedConfig;
+
+    ui->comboBoxAudioEncoder->setCurrentIndex(static_cast<int>(a_pAdvancedConfig->type));
+    emit ui->comboBoxAudioEncoder->currentIndexChanged(static_cast<int>(a_pAdvancedConfig->type));
 
     if(!m_advancedMode)
     {
-        a_pAdvancedConfig = &getDefaultConfig((uint)a_pAdvancedConfig->type);
+        at_advancedConfig = getDefaultConfig(static_cast<uint>(a_pAdvancedConfig->type));
+        a_pAdvancedConfig = &at_advancedConfig;
     }
 
     switch(static_cast<AudioEnc::EENCODE_TYPE>(a_pAdvancedConfig->type))
     {
     case AudioEnc::eENCODE_TYPE_AAC_APPLE:
     default:
-        ui->comboBoxAacAppleMode->setCurrentIndex(a_pAdvancedConfig->mode);
-        ui->comboBoxAacAppleProfile->setCurrentIndex(a_pAdvancedConfig->profile);
+        ui->comboBoxAacAppleMode->setCurrentIndex(static_cast<int>(a_pAdvancedConfig->mode));
+        ui->comboBoxAacAppleProfile->setCurrentIndex(static_cast<int>(a_pAdvancedConfig->profile));
         ui->horizontalSliderAacApple->setValue(a_pAdvancedConfig->value.toInt());
         ui->checkBoxAacAppleNoDelay->setChecked(a_pAdvancedConfig->value2.toBool());
         break;
     case AudioEnc::eENCODE_TYPE_AAC_FDK:
-        ui->comboBoxAacFdkMode->setCurrentIndex(a_pAdvancedConfig->mode);
-        ui->comboBoxAacFdkProfile->setCurrentIndex(a_pAdvancedConfig->profile);
+        ui->comboBoxAacFdkMode->setCurrentIndex(static_cast<int>(a_pAdvancedConfig->mode));
+        ui->comboBoxAacFdkProfile->setCurrentIndex(static_cast<int>(a_pAdvancedConfig->profile));
         ui->horizontalSliderAacFdk->setValue(a_pAdvancedConfig->value.toInt());
         break;
     case AudioEnc::eENCODE_TYPE_AAC_NERO:
-        ui->comboBoxAacNeroMode->setCurrentIndex(a_pAdvancedConfig->mode);
-        ui->comboBoxAacNeroProfile->setCurrentIndex(a_pAdvancedConfig->profile);
+        ui->comboBoxAacNeroMode->setCurrentIndex(static_cast<int>(a_pAdvancedConfig->mode));
+        ui->comboBoxAacNeroProfile->setCurrentIndex(static_cast<int>(a_pAdvancedConfig->profile));
         ui->horizontalSliderAacNero->setValue(a_pAdvancedConfig->value.toInt());
         break;
     case AudioEnc::eENCODE_TYPE_ALAC:
@@ -842,14 +846,14 @@ void AudioConfig::setConfig(AudioAdvancedConfig *a_pAdvancedConfig)
         ui->horizontalSliderFlac->setValue(a_pAdvancedConfig->value.toInt());
         break;
     case AudioEnc::eENCODE_TYPE_OPUS:
-        ui->comboBoxOpusMode->setCurrentIndex(a_pAdvancedConfig->mode);
+        ui->comboBoxOpusMode->setCurrentIndex(static_cast<int>(a_pAdvancedConfig->mode));
         ui->horizontalSliderOpus->setValue(a_pAdvancedConfig->value.toInt());
         break;
     case AudioEnc::eENCODE_TYPE_OGG_VORBIS:
         ui->horizontalSliderOggVorbis->setValue(a_pAdvancedConfig->value.toInt());
         break;
     case AudioEnc::eENCODE_TYPE_MP3:
-        ui->comboBoxMp3Mode->setCurrentIndex(a_pAdvancedConfig->mode);
+        ui->comboBoxMp3Mode->setCurrentIndex(static_cast<int>(a_pAdvancedConfig->mode));
         ui->horizontalSliderMp3->setValue(a_pAdvancedConfig->value.toInt());
         break;
     case AudioEnc::eENCODE_TYPE_AC3:
@@ -1055,7 +1059,7 @@ QString AudioConfig::processAccNero(void)
         }
         break;
     case eNEROAAC_MODE_VBR:
-        cmd.sprintf("%s -ignorelength -q %.2f -if - -of \"%1\"", exec.data(), (double)value / (int)eINDEX_100);
+        cmd.sprintf("%s -ignorelength -q %.2f -if - -of \"%1\"", exec.data(), static_cast<double>(value) / eINDEX_100);
         break;
     }
     return cmd;
@@ -1107,7 +1111,7 @@ QString AudioConfig::processOggVorbis(void)
     QByteArray exec = qvs::findFirstFilePath(AUDIO_CONFIG_EXEC_OGG_VORBIS).toUtf8();
 
     /* not support for bitrate mode in advanced config */
-    cmd.sprintf("%s - --ignorelength --quality %.2fk -o \"%1\"", exec.data(), ui->horizontalSliderOggVorbis->value() / (double)eINDEX_100);
+    cmd.sprintf("%s - --ignorelength --quality %.2fk -o \"%1\"", exec.data(), ui->horizontalSliderOggVorbis->value() / static_cast<double>(eINDEX_100));
     return cmd;
 }
 

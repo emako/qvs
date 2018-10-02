@@ -2,8 +2,8 @@
 #define COMMON_H
 
 #include "preferences.h"
-#include <windows.h>
 
+#include <Windows.h>
 #include <QDragEnterEvent>
 #include <QDragMoveEvent>
 #include <QDropEvent>
@@ -30,6 +30,9 @@
 #include <QResource>
 #include <QApplication>
 #include <QDebug>
+#include <QTextCodec>
+
+#define NULLSTR QString()
 
 #define KB (1024)
 #define MB (KB * KB)
@@ -46,11 +49,35 @@
 #define QT_PASS do{}while(false)
 #define PASS QT_PASS
 
-#if (QT_VERSION >= QT_VERSION_CHECK(5, 10, QT_VERSION_PATCH))
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 0, QT_VERSION_PATCH))
 #define QT_VERSION_TOO_LOW NUL
 #else
 #define QT_VERSION_TOO_LOW ARI
 #endif
+
+#define COLOR_WHITE_HEX     #FFFFFF //RGB(255, 255, 255)
+#define COLOR_SILVER_HEX	#C0C0C0	//RGB(192, 192, 192)
+#define COLOR_GRAY_HEX      #808080	//RGB(128, 128, 128)
+#define COLOR_BLACK_HEX     #000000	//RGB(0, 0, 0)
+#define COLOR_RED_HEX       #FF0000	//RGB(255, 0, 0)
+#define COLOR_MAROON_HEX	#800000	//RGB(128, 0, 0)
+#define COLOR_YELLOW_HEX	#FFFF00	//RGB(255, 255, 0)
+#define COLOR_OLIVE_HEX     #808000	//RGB(128, 128, 0)
+#define COLOR_LIME_HEX      #00FF00	//RGB(0, 255, 0)
+#define COLOR_GREEN_HEX     #008000	//RGB(0, 128, 0)
+#define COLOR_AQUA_HEX      #00FFFF	//RGB(0, 255, 255)
+#define COLOR_TEAL_HEX      #008080	//RGB(0, 128, 128)
+#define COLOR_BLUE_HEX      #0000FF	//RGB(0, 0, 255)
+#define COLOR_NAVY_HEX	    #000080	//RGB(0, 0, 128)
+#define COLOR_FUCHSIA_HEX	#FF00FF	//RGB(255, 0, 255)
+#define COLOR_PURPLE_HEX	#800080	//RGB(128, 0, 128)
+
+#define COLOR_LOGGING_DEFAULT QColor(0, 0, 0)
+#define COLOR_LOGGING_INFO QColor(0, 0, 128)
+#define COLOR_LOGGING_WARN QColor(255, 0, 0)
+#define COLOR_LOGGING_STATUS QColor(0, 128, 128)
+#define COLOR_LOGGING_STD_ERROR QColor(135, 45, 90)
+#define COLOR_LOGGING_STD_OUTPUT QColor(128, 0, 128)
 
 static const char QT_EMPTY[]            = "";
 static const char QT_BLANK[]            = " ";
@@ -94,6 +121,7 @@ enum EINDEX : int {
     eINDEX_10 = 10,
     eINDEX_16 = 16,
     eINDEX_24 = 24,
+    eINDEX_30 = 30,
     eINDEX_32 = 32,
     eINDEX_100 = 100,
     eINDEX_1000 = 1000,
@@ -121,13 +149,15 @@ namespace qvs
     QString chgFileExt(const QString &a_filename, QString a_ext);
     QString delFileExt(const QString &a_filename);
 
-    QString getFileText(const QString &a_filename);
+    QString getFileText(const QString &a_filename, const QString &a_codec = NULLSTR);
     bool setFileText(const QString &a_filename, const QString &a_text);
+
+    QByteArray getResource(const QString &a_filename);
+    QString fromResource(const QString &a_filename);
 
     QString timeToString(double a_seconds, bool a_fullFormat = false);      /* For Time Line Slider */
 
     QString currentTime(void);
-    QString currentTime(const QString &a_str);
     QString currentDateTime(void);
 
     QString fromStdBasicWString(const std::basic_string<wchar_t> &a_str);
@@ -137,7 +167,10 @@ namespace qvs
     std::basic_string<char> toStdBasicString(const QString &a_str);
 
     QString fromHtml(const QString &a_str);
-    QString toHtml(const QString &a_str, QColor a_color = QColor(0, 128, 128));
+    QString toHtml(const QString &a_str, QColor a_color = QColor(Qt::black), bool logging = false);
+    QString toHtmlText(const QString &a_str);
+
+    QString toNormalEol(const QString &a_str);
 
     QString convertFramesToTimecode(double a_frames, double a_fps);
     double convertFramesToTime(double a_frames, double a_fps);

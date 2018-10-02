@@ -33,7 +33,7 @@
     <item>
      <widget class="QTabWidget" name="tabWidget">
       <property name="currentIndex">
-       <number>3</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="tab_main">
        <attribute name="title">
@@ -337,11 +337,13 @@ QProgressBar::chunk {
          <number>2</number>
         </property>
         <item>
-         <widget class="QStackedWidget" name="stackedWidgetAudioEnc">
-          <property name="currentIndex">
-           <number>0</number>
+         <widget class="AudioEnc" name="widgetAudioEnc" native="true">
+          <property name="minimumSize">
+           <size>
+            <width>0</width>
+            <height>150</height>
+           </size>
           </property>
-          <widget class="QWidget" name="page_AudioEnc"/>
          </widget>
         </item>
         <item>
@@ -407,7 +409,7 @@ QProgressBar::chunk {
                     <bool>false</bool>
                    </property>
                    <property name="text">
-                    <string>Load...</string>
+                    <string>Open...</string>
                    </property>
                    <property name="icon">
                     <iconset resource="res/resources.qrc">
@@ -526,20 +528,10 @@ QProgressBar::chunk {
          <number>2</number>
         </property>
         <item>
-         <widget class="QStackedWidget" name="stackedWidgetMuxer">
-          <property name="currentIndex">
-           <number>0</number>
-          </property>
-          <widget class="QWidget" name="page_Muxer"/>
-         </widget>
+         <widget class="Muxer" name="widgetMuxer" native="true"/>
         </item>
         <item>
-         <widget class="QStackedWidget" name="stackedWidgetDemuxer">
-          <property name="currentIndex">
-           <number>0</number>
-          </property>
-          <widget class="QWidget" name="page_Demuxer"/>
-         </widget>
+         <widget class="Demuxer" name="widgetDemuxer" native="true"/>
         </item>
        </layout>
       </widget>
@@ -609,9 +601,7 @@ QProgressBar::chunk {
          <number>0</number>
         </property>
         <item>
-         <widget class="QStackedWidget" name="stackedWidgetMediaInfo">
-          <widget class="QWidget" name="page_MediaInfo"/>
-         </widget>
+         <widget class="MediaInfoDialog" name="widgetMediaInfo" native="true"/>
         </item>
        </layout>
       </widget>
@@ -651,7 +641,6 @@ QProgressBar::chunk {
       <iconset resource="res/resources.qrc">
        <normaloff>:/buttons/flag.png</normaloff>:/buttons/flag.png</iconset>
      </property>
-     <addaction name="separator"/>
      <addaction name="actionPostOp_PowerDown"/>
      <addaction name="actionPostOp_Hibernate"/>
      <addaction name="separator"/>
@@ -663,9 +652,8 @@ QProgressBar::chunk {
      </property>
      <property name="icon">
       <iconset resource="res/resources.qrc">
-       <normaloff>:/buttons/lang.png</normaloff>:/buttons/lang.png</iconset>
+       <normaloff>:/buttons/languages_menu.png</normaloff>:/buttons/languages_menu.png</iconset>
      </property>
-     <addaction name="separator"/>
      <addaction name="actionLanguageEnglish"/>
      <addaction name="actionLanguageChinese"/>
      <addaction name="actionLanguageJapanese"/>
@@ -774,8 +762,17 @@ QProgressBar::chunk {
     <addaction name="separator"/>
     <addaction name="actionVSedit"/>
    </widget>
+   <widget class="QMenu" name="menuView">
+    <property name="title">
+     <string>View</string>
+    </property>
+    <addaction name="actionMinimize"/>
+    <addaction name="separator"/>
+    <addaction name="actionJobsLog"/>
+   </widget>
    <addaction name="menuFile"/>
    <addaction name="menuJob"/>
+   <addaction name="menuView"/>
    <addaction name="menuTools"/>
    <addaction name="menuHelp"/>
   </widget>
@@ -1228,7 +1225,7 @@ QProgressBar::chunk {
   <action name="actionCommand_Line">
    <property name="icon">
     <iconset resource="res/resources.qrc">
-     <normaloff>:/buttons/application_xp_terminal.png</normaloff>:/buttons/application_xp_terminal.png</iconset>
+     <normaloff>:/buttons/terminal_code.png</normaloff>:/buttons/terminal_code.png</iconset>
    </property>
    <property name="text">
     <string>Terminal CLI</string>
@@ -1294,7 +1291,7 @@ QProgressBar::chunk {
    </property>
    <property name="icon">
     <iconset resource="res/resources.qrc">
-     <normaloff>:/buttons/lang_zh.ico</normaloff>:/buttons/lang_zh.ico</iconset>
+     <normaloff>:/buttons/flag_china.png</normaloff>:/buttons/flag_china.png</iconset>
    </property>
    <property name="text">
     <string>Chinese</string>
@@ -1309,7 +1306,7 @@ QProgressBar::chunk {
    </property>
    <property name="icon">
     <iconset resource="res/resources.qrc">
-     <normaloff>:/buttons/lang_en.ico</normaloff>:/buttons/lang_en.ico</iconset>
+     <normaloff>:/buttons/flag_great_britain.png</normaloff>:/buttons/flag_great_britain.png</iconset>
    </property>
    <property name="text">
     <string>English</string>
@@ -1321,10 +1318,28 @@ QProgressBar::chunk {
    </property>
    <property name="icon">
     <iconset resource="res/resources.qrc">
-     <normaloff>:/buttons/lang_ja.ico</normaloff>:/buttons/lang_ja.ico</iconset>
+     <normaloff>:/buttons/flag_japan.png</normaloff>:/buttons/flag_japan.png</iconset>
    </property>
    <property name="text">
     <string>Japanese</string>
+   </property>
+  </action>
+  <action name="actionMinimize">
+   <property name="icon">
+    <iconset resource="res/resources.qrc">
+     <normaloff>:/buttons/hide.png</normaloff>:/buttons/hide.png</iconset>
+   </property>
+   <property name="text">
+    <string>Minimize</string>
+   </property>
+  </action>
+  <action name="actionJobsLog">
+   <property name="icon">
+    <iconset resource="res/resources.qrc">
+     <normaloff>:/buttons/error_log.png</normaloff>:/buttons/error_log.png</iconset>
+   </property>
+   <property name="text">
+    <string>Jobs log</string>
    </property>
   </action>
  </widget>
@@ -1333,6 +1348,30 @@ QProgressBar::chunk {
    <class>Merge</class>
    <extends>QWidget</extends>
    <header location="global">./tools/merge.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>Muxer</class>
+   <extends>QWidget</extends>
+   <header location="global">./tools/muxer.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>Demuxer</class>
+   <extends>QWidget</extends>
+   <header location="global">./tools/demuxer.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>AudioEnc</class>
+   <extends>QWidget</extends>
+   <header location="global">./tools/audio_enc.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>MediaInfoDialog</class>
+   <extends>QWidget</extends>
+   <header location="global">./mediainfo/mediainfo_dialog.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

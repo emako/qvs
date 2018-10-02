@@ -1,6 +1,5 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
-
 #include <QMainWindow>
 #include <QApplication>
 #include <QStandardItemModel>
@@ -8,6 +7,7 @@
 #include <QScrollBar>
 #include <QDesktopServices>
 #include <QJsonDocument>
+#include <QSystemTrayIcon>
 
 #include "job/job_creator.h"
 #include "job/job_cmdlist.h"
@@ -15,6 +15,7 @@
 #include "job/job_item.h"
 #include "job/job_view_cmd.h"
 #include "com/common.h"
+#include "com/logging.h"
 #include "com/timer.h"
 #include "com/mail_box.h"
 #include "com/config.h"
@@ -42,17 +43,19 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 public:
-    explicit MainWindow(QWidget *parent = 0);
+    explicit MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
     friend class Timer;
     friend class AudioEnc;
     friend class Muxer;
     friend class Demuxer;
     friend class MediaInfo;
+    friend class AudioConfig;
     friend class ScriptPlayer;
     friend class InstallerDialog;
     friend class PreviewDialog;
     friend class ScriptCreator;
+    friend class StdWatcher;
 
     enum ETAB {
         eTAB_MAIN,
@@ -70,36 +73,42 @@ public:
     void execJobCreator(JobCreator::EJOB_RELOAD a_job_reload, QString filename = QT_EMPTY);
     void acceptedJobCreator(JobCreator::EJOB_RELOAD a_job_reload);
     void saveJob(JobItem a_job_item, JobCreator::EJOB_RELOAD a_job_reload);
-    void viewLog(JobChef::EJOB_LOG_TYPE a_log_type, QString a_log);
+    void viewLog(JobChef::EJOB_LOG_TYPE a_log_type, const QString &a_log);
+    void setDetailLog(const QString &a_log);
     bool isStarted(void);
     bool isPaused(void);
     bool isAborted(void);
     void reqJobStart(void);
     void setStartJobImmediately(bool a_set);
+    void logging(const QString &a_log);
 
     QList<JobItem> m_jobs;
     int m_jobs_index;
     JobChef *m_job_chef;
     Common *m_com;
+    Logging *m_logging;
     Timer *m_timer;
     MailBox *m_pMailBox;
-    AudioEnc *m_pAudioEnc;
-    Muxer *m_pMuxer;
-    Demuxer *m_pDemuxer;
-    MediaInfoDialog *m_pMediaInfoDialog;
     QMap<QUuid, ScriptPlayer *> m_pScriptPlayers;
     QMap<QUuid, MediaInfoDialog *> m_pMediaInfoDialogs;
     QMap<QUuid, PreviewDialog *> m_pPreviewDialogs;
     QMap<QUuid, ScriptCreator *> m_pScriptCreators;
     QMenu *m_pJobViewMenu;
     QMenu *m_pLogViewMenu;
+    QSystemTrayIcon *m_pSystemTray;
+    QMap<QUuid, QWidget *> m_pMinimizeWidgets;
 
     JobChef::EJOB_STATUS m_job_status_prev;
 
 signals:
     void ntfStartJob(void);
+    void ntfFailJob(void);
     void ntfStatusChanged(JobChef::EJOB_STATUS a_job_status);
     void ntfTimeout(Timer::ETIMER_SLOT a_timer);
+
+public slots:
+    void slotChildWindowClosed(QUuid a_uid);
+    bool slotMail(STMAILBOX* a_mail_box);
 
 private slots:
     bool isEmptyJobs(void);
@@ -108,6 +117,7 @@ private slots:
 
     void initJob(void);
     void startJob(void);
+    void failJob(void);
     void pauseJob(void);
     void resumeJob(void);
     void abortJob(void);
@@ -124,6 +134,7 @@ private slots:
     void showPreferences(void);
     void showInstaller(void);
     void statusChanged(JobChef::EJOB_STATUS a_job_status);
+    bool slotChildWindowClosedRemove(QUuid a_uid);
 
     void logCopy(void);
     void logClear(void);
@@ -139,6 +150,10 @@ private slots:
     void openScriptPlayer(void);
     void openVSedit(void);
     void selectOpenfile(void);
+
+    void slotMinimize(void);
+    void slotTrayActivated(QSystemTrayIcon::ActivationReason a_reason);
+    void slotViewJobsLog(void);
 
     void cleanUpAll(void);
     void cleanUpFinished(void);
@@ -182,7 +197,6 @@ private:
     void addItem(int a_row, int a_col, QString a_content);
     void addItem(int a_row, int a_col, QString a_content, QIcon a_icon);
     void releaseChildWindowsAll(void);
-
     void setInsertTextColor(QColor a_color, int a_length);
 
 protected:

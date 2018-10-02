@@ -11,11 +11,11 @@ extern QMap<QUuid, StdWatcher*> g_pStdWatch;
 
 ScriptPlayer::ScriptPlayer(QWidget *parent) :
     QWidget(parent),
+    m_script_path_index(NULL),
     ui(new Ui::ScriptPlayer),
     m_isPlayOnMounted(false),
     m_isPlayAvsWith32Bit(false),
-    m_reloadTitleShown(true),
-    m_script_path_index(NULL)
+    m_reloadTitleShown(true)
 {
     ui->setupUi(this);
     this->setupUi();
@@ -31,6 +31,7 @@ void ScriptPlayer::closeEvent(QCloseEvent *e)
 {
     StdManager::releaseStdWatch(m_uid_std);
     releasePreviewDialog(m_uid_preview);
+    mainUi->slotChildWindowClosed(m_uid_own);
     e->accept();
 }
 
@@ -44,6 +45,7 @@ void ScriptPlayer::releasePreviewDialog(const QUuid &a_uid)
 
 void ScriptPlayer::setupUi(void)
 {
+    this->setAttribute(Qt::WA_DeleteOnClose, true);
     ui->editInput->setReadOnly(true);
     ui->editMountMessage->setReadOnly(true);
     ui->labelMessage->clear();
@@ -90,7 +92,6 @@ void ScriptPlayer::reload(QString a_filename)
         }
         break;
     case eSCRIPT_TYPE_NOT_SCRIPT:
-    default:
         setNotScriptMessage(a_filename);
         break;
     }
@@ -163,7 +164,7 @@ void ScriptPlayer::on_buttonMount_clicked(bool a_checked)
 
     if(a_checked)
     {
-        switch((EINDEX)ui->comboBoxArch->currentIndex())
+        switch(ui->comboBoxArch->currentIndex())
         {
         case eINDEX_0:
         default:
@@ -186,7 +187,7 @@ void ScriptPlayer::on_buttonMount_clicked(bool a_checked)
         g_pStdWatch[m_uid_std]->mainUi = mainUi;
         g_pStdWatch[m_uid_std]->hide();
         g_pStdWatch[m_uid_std]->initJob(m_uid_std);
-        g_pStdWatch[m_uid_std]->setCloseTime((long)eINDEX_0);
+        g_pStdWatch[m_uid_std]->setCloseTime(static_cast<long>(eINDEX_0));
         g_pStdWatch[m_uid_std]->startJob(cmd);
         setErrorLog();
     }
@@ -217,7 +218,7 @@ bool ScriptPlayer::slotMail(STMAILBOX* a_mail_box)
 
     switch(a_mail_box->type)
     {
-    case eINDEX_0:
+    case eINDEX_0: // Tpye 0: Read error log file
         if(qvs::isFileExist(content.toString())) /* Errorlog filename. */
         {
             if(g_pStdWatch.contains(m_uid_std))
@@ -231,6 +232,8 @@ bool ScriptPlayer::slotMail(STMAILBOX* a_mail_box)
                 return true;
             }
         }
+        break;
+    default:
         break;
     }
     return false;
@@ -251,7 +254,7 @@ QString ScriptPlayer::getErrorLogFilename(void)
 
             if(!qvs::isFileExist(error_log_filename))
             {
-                m_script_path_index = i;
+                m_script_path_index = static_cast<uint>(i);
                 break;
             }
             else
@@ -325,7 +328,7 @@ void ScriptPlayer::on_buttonPlay_clicked()
 
     releasePreviewDialog(m_uid_preview);
 
-    switch((ESCRIPT_PLAYER_PLAYER)ui->comboBoxPlayer->currentIndex())
+    switch(static_cast<ESCRIPT_PLAYER_PLAYER>(ui->comboBoxPlayer->currentIndex()))
     {
     case eSCRIPT_PLAYER_PLAYER_SYSTEM:
     default:
@@ -397,7 +400,7 @@ void ScriptPlayer::showStdwatcher(bool a_isShow)
 
 void ScriptPlayer::on_buttonInput_clicked()
 {
-    QString filename = QFileDialog::getOpenFileName(this, tr("Open Script file"), NULL, tr("Script file (*.vpy *.avs *.avsi)"));
+    QString filename = QFileDialog::getOpenFileName(this, tr("Open Script file"), NULLSTR, tr("Script file (*.vpy *.avs *.avsi)"));
 
     if(!filename.isEmpty())
     {

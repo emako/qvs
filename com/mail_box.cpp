@@ -54,11 +54,16 @@ void MailBox::slotCheckUpMailBox(void)
 
         switch(i.key())
         {
+        case eMODULE_MAINWINDOW:
+            is_erase = mainUi->slotMail(mail_box);
+            break;
         case eMODULE_SCRIPT_PLAYER:
             is_erase = mainUi->m_pScriptPlayers[mail_box->uid]->slotMail(mail_box);
             break;
         case eMODULE_JOB_CHEF:
             is_erase = mainUi->m_job_chef->updatePriorty();
+            break;
+        default:
             break;
         }
 
@@ -75,8 +80,7 @@ void MailBox::slotCheckUpMailBox(void)
 
 void MailBox::slotDeleteMailBox(EMODULE a_module)
 {
-    /* Interrupt: Disable ergodic. */
-    slotInterruptMailBox(true);
+    slotInterruptMailBox(true); /* Interrupt: Disable ergodic. */
 
     if(g_pMailBox.contains(a_module))
     {
@@ -86,8 +90,7 @@ void MailBox::slotDeleteMailBox(EMODULE a_module)
         g_pMailBox.remove(a_module);
     }
 
-    /* Interrupt: Enable ergodic. */
-    slotInterruptMailBox(false);
+    slotInterruptMailBox(false); /* Interrupt: Enable ergodic. */
 }
 
 void MailBox::slotInterruptMailBox(bool a_state)

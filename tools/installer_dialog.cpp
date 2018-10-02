@@ -1,7 +1,6 @@
 #include "installer_dialog.h"
 #include "ui_installer_dialog.h"
 
-extern const char *c_config_installer_key[Config::eCONFIG_INSTALLER_MAX];
 const char BAT_INSTALLER_FILENAME[] = "qvs-installer-auto.bat";
 
 const char *c_content_to_arg[InstallerDialog::eINSTALLER_CONTENTS_MAX] = {
@@ -32,10 +31,11 @@ void InstallerDialog::setup(void)
 {
     g_pConfig->initInstallerConfig();
     this->loadInstallerConfig();
+    this->setAttribute(Qt::WA_DeleteOnClose, true);
     ui->treeWidgetModule->setHeaderHidden(false);
 
 #ifndef QVS_PORTABLE
-    int index = (int)eINDEX_0;
+    int index = eINDEX_0;
     QTreeWidgetItemIterator i(ui->treeWidgetModule);
 
     while(*i)
@@ -66,7 +66,7 @@ void InstallerDialog::loadInstallerConfig(void)
     m_checkstate.insert(Config::eCONFIG_INSTALLER_LAV, convertBoolToCheckState(g_pConfig->m_config_installer[Config::eCONFIG_INSTALLER_LAV].toBool()));
     m_checkstate.insert(Config::eCONFIG_INSTALLER_MEDIA, convertBoolToCheckState(g_pConfig->m_config_installer[Config::eCONFIG_INSTALLER_MEDIA].toBool()));
 
-    int index = (int)eINDEX_0;
+    int index = eINDEX_0;
     QTreeWidgetItemIterator i(ui->treeWidgetModule);
     while(*i)
     {
@@ -74,11 +74,11 @@ void InstallerDialog::loadInstallerConfig(void)
         {
             if(!ui->checkBoxUninstall->isChecked())
             {
-                (*i)->setCheckState(0, convertBoolToCheckState(!convertCheckStateToBool(m_checkstate[(Config::ECONFIG_INSTALLER)index])));
+                (*i)->setCheckState(0, convertBoolToCheckState(!convertCheckStateToBool(m_checkstate[static_cast<Config::ECONFIG_INSTALLER>(index)])));
             }
             else
             {
-                (*i)->setCheckState(0, (Qt::CheckState)m_checkstate[(Config::ECONFIG_INSTALLER)index]);
+                (*i)->setCheckState(0, static_cast<Qt::CheckState>(m_checkstate[static_cast<Config::ECONFIG_INSTALLER>(index)]));
             }
         }
         i++;
@@ -155,7 +155,7 @@ void InstallerDialog::on_buttonDefault_clicked()
 void InstallerDialog::on_buttonInstall_clicked()
 {
     QStringList arg;
-    int index = (int)eINDEX_0;
+    int index = eINDEX_0;
     QTreeWidgetItemIterator i(ui->treeWidgetModule);
     bool isChecked;
 
@@ -170,7 +170,7 @@ void InstallerDialog::on_buttonInstall_clicked()
             if(isChecked)
             {
                 arg << c_content_to_arg[index];
-                g_pConfig->setConfig((Config::ECONFIG_INSTALLER)index, true);
+                g_pConfig->setConfig(static_cast<Config::ECONFIG_INSTALLER>(index), true);
             }
             i++;
             index++;
@@ -187,7 +187,7 @@ void InstallerDialog::on_buttonInstall_clicked()
             if(isChecked)
             {
                 arg << c_content_to_arg[index];
-                g_pConfig->setConfig((Config::ECONFIG_INSTALLER)index, false);
+                g_pConfig->setConfig(static_cast<Config::ECONFIG_INSTALLER>(index), false);
             }
             i++;
             index++;
@@ -201,8 +201,8 @@ void InstallerDialog::on_buttonInstall_clicked()
     }
 
 #ifdef QVS_BRANCH_VS_RECOVERY
-    arg << c_content_to_arg[(int)eINSTALLER_CONTENTS_VSEDIT_RECOVERY];
-    arg << c_content_to_arg[(int)eINSTALLER_CONTENTS_VSEDIT_TEMPLATE];
+    arg << c_content_to_arg[static_cast<int>(eINSTALLER_CONTENTS_VSEDIT_RECOVERY)];
+    arg << c_content_to_arg[static_cast<int>(eINSTALLER_CONTENTS_VSEDIT_TEMPLATE)];
 #endif
 
     saveCmd("qvs-installer", arg);
@@ -303,7 +303,6 @@ void InstallerDialog::slotInstallerProcessError(QProcess::ProcessError a_error)
         qDebug() << "Installer Process write error occured.";
         break;
     case QProcess::UnknownError:
-    default:
         qDebug() << "Installer Process unknown error occured.";
         break;
     }

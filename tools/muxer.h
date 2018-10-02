@@ -16,7 +16,7 @@ class Muxer : public QWidget
     Q_OBJECT
 
 public:
-    explicit Muxer(QWidget *parent = 0);
+    explicit Muxer(QWidget *parent = nullptr);
     ~Muxer();
     friend class MainWindow;
     class MainWindow *mainUi;

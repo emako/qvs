@@ -98,15 +98,15 @@ void Config::initCommonConfigDefault(void)
 {
     m_config_common_default << QVariant(false); /* eCONFIG_COMMON_NOT_AUTO_NEXT_JOB */
     m_config_common_default << QVariant(false); /* eCONFIG_COMMON_PREFER_AVS_32BIT */
-    m_config_common_default << QVariant((int)eINDEX_NONE); /* eCONFIG_COMMON_STYLE_FACTORY */
+    m_config_common_default << QVariant(eINDEX_NONE); /* eCONFIG_COMMON_STYLE_FACTORY */
     m_config_common_default << QVariant(JobChef::ePROCESS_PRIORITY_NORMAL_INDEX); /* eCONFIG_COMMON_ENCODER_PRECESS_PRIORITY */
     m_config_common_default << QVariant(false); /* eCONFIG_COMMON_START_JOB_IMMEDIATELY */
-    m_config_common_default << QVariant((int)eINDEX_0); /*eCONFIG_COMMON_SCRIPT_PLAYER_PLAYER*/
-    m_config_common_default << QVariant((int)eINDEX_24); /*eCONFIG_COMMON_PREVIEW_FPS_LIMIT_CUSTOM*/
-    m_config_common_default << QVariant((int)eINDEX_2); /*eCONFIG_COMMON_PREVIEW_ZOOM_MODE*/
-    m_config_common_default << QVariant((int)eINDEX_1); /*eCONFIG_COMMON_PREVIEW_SCALE_MODE*/
-    m_config_common_default << QVariant((int)eINDEX_1); /*eCONFIG_COMMON_PREVIEW_TIMELINE_DISPLAY_MODE*/
-    m_config_common_default << QVariant(QString()); /*eCONFIG_COMMON_PREVIEW_LAST_SNAPSHOT_EXT*/
+    m_config_common_default << QVariant(eINDEX_0); /*eCONFIG_COMMON_SCRIPT_PLAYER_PLAYER*/
+    m_config_common_default << QVariant(eINDEX_24); /*eCONFIG_COMMON_PREVIEW_FPS_LIMIT_CUSTOM*/
+    m_config_common_default << QVariant(eINDEX_2); /*eCONFIG_COMMON_PREVIEW_ZOOM_MODE*/
+    m_config_common_default << QVariant(eINDEX_1); /*eCONFIG_COMMON_PREVIEW_SCALE_MODE*/
+    m_config_common_default << QVariant(eINDEX_1); /*eCONFIG_COMMON_PREVIEW_TIMELINE_DISPLAY_MODE*/
+    m_config_common_default << QVariant(NULLSTR); /*eCONFIG_COMMON_PREVIEW_LAST_SNAPSHOT_EXT*/
 }
 
 void Config::initCommonConfig(void)
@@ -114,7 +114,7 @@ void Config::initCommonConfig(void)
     initCommonConfigDefault();
     for(int i = eINDEX_0; i < eCONFIG_COMMON_MAX; i++)
     {
-        m_config_common.insert((ECONFIG_COMMON)i, value(c_config_common_key[(ECONFIG_COMMON)i], m_config_common_default.at((ECONFIG_COMMON)i)));
+        m_config_common.insert(static_cast<ECONFIG_COMMON>(i), value(c_config_common_key[static_cast<ECONFIG_COMMON>(i)], m_config_common_default.at(static_cast<ECONFIG_COMMON>(i))));
     }
     for(QMap<ECONFIG_COMMON, QVariant>::iterator i = m_config_common.begin(); i != m_config_common.end(); i++)
     {
@@ -278,7 +278,7 @@ QMap<JobCreator::EJOB_CONFIG, QVariant> Config::jsonToConfig(QJsonObject a_json)
 
     for(int i = eINDEX_0; i < JobCreator::eJOB_CONFIG_MAX; i++)
     {
-        JobCreator::EJOB_CONFIG key = (JobCreator::EJOB_CONFIG)i;
+        JobCreator::EJOB_CONFIG key = static_cast<JobCreator::EJOB_CONFIG>(i);
         QVariant value = a_json[c_config_key[i]].toVariant();
 
         if(skip_config.contains(key) || value.isNull())
@@ -345,16 +345,16 @@ AudioAdvancedConfig Config::jsonToAudioConfig(QJsonObject a_json)
         switch(key)
         {
         case AudioAdvancedConfig::eCONFIG_ADVANCED:
-            config.setEnable((uint)value.toBool());
+            config.setEnable(static_cast<uint>(value.toBool()));
             break;
         case AudioAdvancedConfig::eCONFIG_TYPE:
-            config.type = (uint)value.toInt();
+            config.type = static_cast<uint>(value.toInt());
             break;
         case AudioAdvancedConfig::eCONFIG_MODE:
-            config.mode = (uint)value.toInt();
+            config.mode = static_cast<uint>(value.toInt());
             break;
         case AudioAdvancedConfig::eCONFIG_PROFILE:
-            config.profile = (uint)value.toInt();
+            config.profile = static_cast<uint>(value.toInt());
             break;
         case AudioAdvancedConfig::eCONFIG_VALUE:
             config.value = value;
@@ -510,12 +510,12 @@ bool Config::setValue(const QString & a_key, const QVariant & a_value)
 
 bool Config::isStartSplashScreen(void)
 {
-    return (bool)m_config_first[eCONFIG_FIRST_SPLASH_SCREEN].toBool();
+    return m_config_first[eCONFIG_FIRST_SPLASH_SCREEN].toBool();
 }
 
 bool Config::isCheckGuardLocker(void)
 {
-    return (bool)m_config_first[eCONFIG_FIRST_GUARD_LOCKER].toBool();
+    return m_config_first[eCONFIG_FIRST_GUARD_LOCKER].toBool();
 }
 
 bool Config::isShowMainWindow(void)
@@ -641,18 +641,18 @@ void Config::reset(ECONFIG_TYPE a_config_type)
     case eCONFIG_TYPE_FIRST:
         for(int i = eINDEX_0; i < m_config_first_default.length(); i++)
         {
-            if((ECONFIG_FIRST)i == eCONFIG_FIRST_FIRST_LAUNCH)
+            if(static_cast<ECONFIG_FIRST>(i) == eCONFIG_FIRST_FIRST_LAUNCH)
             {
                 /*Not reset first launch flag.*/
                 continue;
             }
-            setConfig((ECONFIG_FIRST)i, m_config_first_default.at(i));
+            setConfig(static_cast<ECONFIG_FIRST>(i), m_config_first_default.at(i));
         }
         break;
     case eCONFIG_TYPE_COMMON:
         for(int i = eINDEX_0; i < m_config_common_default.length(); i++)
         {
-            setConfig((ECONFIG_COMMON)i, m_config_common_default.at(i));
+            setConfig(static_cast<ECONFIG_COMMON>(i), m_config_common_default.at(i));
         }
         mainUi->m_com->loadCommonConfig();
         break;
@@ -679,7 +679,7 @@ void Config::reset(ECONFIG_TYPE a_config_type)
     case eCONFIG_TYPE_MAX:
         for(int i = eINDEX_0; i < eCONFIG_TYPE_MAX; i++)
         {
-            reset((ECONFIG_TYPE)i);
+            reset(static_cast<ECONFIG_TYPE>(i));
         }
         break;
     }

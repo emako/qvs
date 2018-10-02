@@ -1,6 +1,6 @@
 #ifndef VERSION_H
 #define VERSION_H
 
-const char *QVS_VERSION = "r5";
+extern const char *QVS_VERSION;
 
 #endif // VERSION_H

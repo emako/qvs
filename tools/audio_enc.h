@@ -32,7 +32,7 @@ class AudioEnc : public QWidget
     Q_OBJECT
 
 public:
-    explicit AudioEnc(QWidget *parent = 0);
+    explicit AudioEnc(QWidget *parent = nullptr);
     ~AudioEnc();
     friend class MainWindow;
     friend class AudioConfig;

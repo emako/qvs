@@ -12,4 +12,6 @@ namespace StdManager
     void releaseStdWatchAll(void);
 }
 
+extern QMap<QUuid, StdWatcher*> g_pStdWatch;
+
 #endif // STD_MANAGER_H

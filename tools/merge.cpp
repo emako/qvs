@@ -23,6 +23,7 @@ Merge::~Merge()
 
 void Merge::setup(void)
 {
+    this->setAttribute(Qt::WA_DeleteOnClose, true);
     ui->stackedWidgetMode->setCurrentIndex(eMERGE_STACKED_WIDGET_MODE_CONTAINER);
     ui->labelCustomParam->setVisible(false);
     ui->editCustomParam->setVisible(false);
@@ -55,7 +56,7 @@ void Merge::load(void)
 {
     if(sender() == m_pContextMenu->actions().at(eCONTEXT_MENU_LOAD_FROM_FILES))
     {
-        QStringList filenames = QFileDialog::getOpenFileNames(this, tr("Open files"), NULL, tr("Files (*.*)"));
+        QStringList filenames = QFileDialog::getOpenFileNames(this, tr("Open files"), NULLSTR, tr("Files (*.*)"));
 
         if(!filenames.isEmpty())
         {
@@ -64,7 +65,7 @@ void Merge::load(void)
     }
     else if(sender() == m_pContextMenu->actions().at(eCONTEXT_MENU_LOAD_FROM_FILE_TEXT))
     {
-        QString filename = QFileDialog::getOpenFileName(this, tr("Open Text file"), NULL, tr("Text file (*.txt)"));
+        QString filename = QFileDialog::getOpenFileName(this, tr("Open Text file"), NULLSTR, tr("Text file (*.txt)"));
 
         if(!filename.isEmpty())
         {
@@ -128,7 +129,7 @@ void Merge::reload(const QStringList &a_filenames)
 QList<StdWatcherCmd> Merge::createCommand(void)
 {
     EMERGE_MODE mode = static_cast<EMERGE_MODE>(ui->comboBoxMode->currentIndex());
-    EMERGE_TYPE type;
+    EMERGE_TYPE type = eMERGE_TYPE_MULTIPLE_LINES;
     QStringList intputs;
     QString ext;
     QString cmd;
@@ -291,6 +292,8 @@ QList<StdWatcherCmd> Merge::createCommand(EMERGE_TYPE type, QStringList a_inputs
             cmds << cmd;
         }while(false);
         break;
+    default:
+        break;
     }
 
 #ifdef QT_DEBUG
@@ -372,6 +375,8 @@ void Merge::on_comboBoxMode_currentIndexChanged(int a_index)
         ui->stackedWidgetMode->setEnabled(true);
         ui->stackedWidgetMode->setCurrentIndex(eMERGE_STACKED_WIDGET_MODE_CUSTOM);
         break;
+    default:
+        break;
     }
 }
 
@@ -386,6 +391,8 @@ void Merge::on_comboBoxCustomType_currentIndexChanged(int a_index)
     case eMERGE_TYPE_SINGLE_LINE:
         ui->labelCustomParam->setVisible(true);
         ui->editCustomParam->setVisible(true);
+        break;
+    default:
         break;
     }
 }

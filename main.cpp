@@ -32,7 +32,7 @@ int main(int argc, char *argv[])
         if(!guard.isLocked())
         {
             qCritical("Couldn't start the qvs.\nAnother instance is probably already running.");
-            return (int)eINDEX_NONE;
+            return eINDEX_NONE;
         }
     }
 

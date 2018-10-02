@@ -3,7 +3,7 @@
 
 #include <QString>
 
-#define QL QStringLiteral
+//#define QL QStringLiteral
 
 extern const char *c_qss_line_edit_read_only;
 extern const char *c_qss_label_under_line;

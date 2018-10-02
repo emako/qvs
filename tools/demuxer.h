@@ -63,7 +63,7 @@ class Demuxer : public QWidget
     Q_OBJECT
 
 public:
-    explicit Demuxer(QWidget *parent = 0);
+    explicit Demuxer(QWidget *parent = nullptr);
     ~Demuxer();
     friend class MainWindow;
     class MainWindow *mainUi;

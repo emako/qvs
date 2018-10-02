@@ -42,6 +42,7 @@ class MediaInfoLoader
 public:
     MediaInfoLoader();
     MediaInfoLoader(const QString &a_filename);
+    virtual ~MediaInfoLoader();
 
     enum EMEDIA_PROP {
         eMEDIA_PROP_ALL,
@@ -98,11 +99,11 @@ public:
     QString inform(bool a_complete);
     QString inform(bool a_complete, EFORMAT a_format);
 
-    QString get(EMEDIA_PROP a_prop = eMEDIA_PROP_ALL, stream_t a_streamType = Stream_Video, size_t a_streamNumber = (size_t)eINDEX_0);
-    QString get(const String & a_param, stream_t a_streamType = Stream_Video, size_t a_streamNumber = (size_t)eINDEX_0, info_t a_infoKind = Info_Text, info_t a_SearchKind = Info_Name);
-    QString get(size_t a_param, stream_t a_streamType = Stream_Video, size_t a_streamNumber = (size_t)eINDEX_0, info_t a_infoKind = Info_Text);
+    QString get(EMEDIA_PROP a_prop = eMEDIA_PROP_ALL, stream_t a_streamType = Stream_Video, size_t a_streamNumber = static_cast<size_t>(eINDEX_0));
+    QString get(const String & a_param, stream_t a_streamType = Stream_Video, size_t a_streamNumber = static_cast<size_t>(eINDEX_0), info_t a_infoKind = Info_Text, info_t a_SearchKind = Info_Name);
+    QString get(size_t a_param, stream_t a_streamType = Stream_Video, size_t a_streamNumber = static_cast<size_t>(eINDEX_0), info_t a_infoKind = Info_Text);
 
-    size_t count(stream_t a_streamType = Stream_Video, size_t a_streamNumber = (size_t)eINDEX_NONE);
+    size_t count(stream_t a_streamType = Stream_Video, size_t a_streamNumber = static_cast<size_t>(eINDEX_NONE));
 
     virtual void close(void);
 

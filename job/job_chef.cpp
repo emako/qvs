@@ -2,6 +2,7 @@
 #include "mainwindow.h"
 
 static const int PROCESS_EXIT_CODE_AUTO_SKIP = 'A'+'u'+'t'+'o'+'S'+'k'+'i'+'p';
+static const int PROCESS_EXIT_CODE_SUCCESS = eINDEX_0;
 static const DWORD c_priortyIndexToPriorty[JobChef::ePROCESS_PRIORITY_INDEX_MAX] = {
     JobChef::ePROCESS_PRIORITY_IIDLE,
     JobChef::ePROCESS_PRIORITY_BELOW_NORMAL,
@@ -21,7 +22,7 @@ JobChef::JobChef(QObject *parent) :
 
 void JobChef::setup(void)
 {
-    m_job_cmd_list_count = (int)eINDEX_0;
+    m_job_cmd_list_count = eINDEX_0;
 
     connect(&m_process_job_info, SIGNAL(started()),this, SLOT(slotInfoProcessStarted()));
     connect(&m_process_job_info, SIGNAL(finished(int,QProcess::ExitStatus)), this, SLOT(slotInfoProcessFinished(int, QProcess::ExitStatus)));
@@ -47,26 +48,22 @@ void JobChef::setup(void)
 void JobChef::loadCommonConfig(void)
 {
     setNotAutoNextJob(g_pConfig->getConfig(Config::eCONFIG_COMMON_NOT_AUTO_NEXT_JOB).toBool());
-    setPriorty((EPROCESS_PRIORITY_INDEX)g_pConfig->getConfig(Config::eCONFIG_COMMON_ENCODER_PRECESS_PRIORITY).toInt());
+    setPriorty(static_cast<EPROCESS_PRIORITY_INDEX>(g_pConfig->getConfig(Config::eCONFIG_COMMON_ENCODER_PRECESS_PRIORITY).toInt()));
 }
 
 void JobChef::initJob(QList<JobCmdList> a_cmds)
 {
     m_cmds = a_cmds;
     m_process_catch_vs_frames = false;
-    m_process_vs_frames = QString::number((int)eINDEX_0);
-    m_job_cmd_list_count = (int)eINDEX_0;
+    m_process_vs_frames = QString::number(eINDEX_0);
+    m_job_cmd_list_count = eINDEX_0;
 
     m_cmds_flag = QList<bool>();
-    for(int i = (int)eINDEX_0; i < a_cmds.length(); i++)
+    for(int i = eINDEX_0; i < a_cmds.length(); i++)
     {
         m_cmds_flag.append(false);
     }
-
-#ifdef QT_DEBUG
-    mainUi->viewLog(eJOB_LOG_TYPE_INFO, ">-----------------------------------<");
-    mainUi->viewLog(eJOB_LOG_TYPE_DEBUG, "Job Init Complete");
-#endif
+    mainUi->setDetailLog(tr("Job Initialised."));
 }
 
 void JobChef::startJob(void)
@@ -84,7 +81,7 @@ void JobChef::startJob(void)
         return;
     }
 
-    if(i != (int)eINDEX_0)
+    if(i != eINDEX_0)
     {
         m_process_catch_vs_frames = false;
     }
@@ -100,7 +97,7 @@ void JobChef::startJob(void)
     else if(m_cmds.at(i).type == JobCmdList::eJOB_CMD_TYPE_PIPER)
     {
         int encoder_cmd_list_count = lookupJobEncoder(m_cmds, m_cmds.at(i).uid);
-        if(encoder_cmd_list_count >= (int)eINDEX_0)
+        if(encoder_cmd_list_count >= eINDEX_0)
         {
             QString cmd = QString(m_cmds.at(encoder_cmd_list_count).cmd).arg(m_process_vs_frames);
 
@@ -139,9 +136,9 @@ void JobChef::abortJobs(void)
     m_process_job_encoder.kill();
     m_process_job_piper.kill();
     m_process_job_info.kill();
-    m_process_job_encoder.waitForFinished(-1);
-    m_process_job_piper.waitForFinished(-1);
-    m_process_job_info.waitForFinished(-1);
+    m_process_job_encoder.waitForFinished(eINDEX_NONE);
+    m_process_job_piper.waitForFinished(eINDEX_NONE);
+    m_process_job_info.waitForFinished(eINDEX_NONE);
     emit mainUi->ntfStatusChanged(JobChef::eJOB_STATUS_ABORTED);
 }
 
@@ -149,7 +146,7 @@ void JobChef::setFlag(int a_index)
 {
     QList<bool> at_cmds_flag;
 
-    for(int i = (int)eINDEX_0; i < m_cmds_flag.length(); i++)
+    for(int i = eINDEX_0; i < m_cmds_flag.length(); i++)
     {
         if(i == a_index)
         {
@@ -165,7 +162,7 @@ void JobChef::setFlag(int a_index)
 
 int JobChef::lookupJobEncoder(QList<JobCmdList> a_cmds, QUuid a_uid)
 {
-    int job_cmd_list_count = (int)eINDEX_NONE;
+    int job_cmd_list_count = eINDEX_NONE;
 
     for(int i = m_job_cmd_list_count; i < a_cmds.length(); i++)
     {
@@ -261,12 +258,12 @@ void JobChef::slotInfoProcessReadyReadStandardError()
 QString JobChef::catchVspipeFrames(QString a_std)
 {
     /* Catch frames from vspipe. */
-    QString frames = QString::number((int)eINDEX_0);
+    QString frames = QString::number(eINDEX_0);
     QStringList stds = a_std.split(QT_NOR_EOL);
 
-    if(stds.length() >= (int)eINDEX_3)
+    if(stds.length() >= eINDEX_3)
     {
-        QString frames_text = stds.at((int)eINDEX_2);
+        QString frames_text = stds.at(eINDEX_2);
         int frames_blank_index = frames_text.indexOf(QT_BLANK);
         frames = frames_text.right(frames_text.length() - frames_blank_index).simplified();
     }
@@ -284,6 +281,11 @@ void JobChef::slotInfoProcessFinished(int a_exitCode, QProcess::ExitStatus a_exi
     }
 
     mainUi->viewLog(eJOB_LOG_TYPE_JOB_STATUS, QString("%1 Exit code: %2").arg(message).arg(a_exitCode));
+    if(a_exitCode != PROCESS_EXIT_CODE_SUCCESS)
+    {
+        mainUi->ntfFailJob(); /* Failed detected, now to abort jobs. */
+        return;
+    }
 
     if(mainUi->isAborted())
     {
@@ -310,8 +312,12 @@ void JobChef::slotPiperProcessFinished(int a_exitCode, QProcess::ExitStatus a_ex
     }
 
     mainUi->viewLog(eJOB_LOG_TYPE_JOB_STATUS, QString("%1 Exit code: %2").arg(message).arg(a_exitCode));
+    if(a_exitCode != PROCESS_EXIT_CODE_SUCCESS)
+    {
+        mainUi->ntfFailJob(); /* Failed detected, now to abort jobs. */
+        return;
+    }
 }
-
 
 void JobChef::slotEncoderProcessFinished(int a_exitCode, QProcess::ExitStatus a_exitStatus)
 {
@@ -330,6 +336,11 @@ void JobChef::slotEncoderProcessFinished(int a_exitCode, QProcess::ExitStatus a_
     else
     {
         mainUi->viewLog(eJOB_LOG_TYPE_JOB_STATUS, QString("%1 Exit code: %2").arg(message).arg(a_exitCode));
+        if(a_exitCode != PROCESS_EXIT_CODE_SUCCESS)
+        {
+            mainUi->ntfFailJob(); /* Failed detected, now to abort jobs. */
+            return;
+        }
     }
 
     if(mainUi->isAborted())
@@ -343,7 +354,7 @@ void JobChef::slotEncoderProcessFinished(int a_exitCode, QProcess::ExitStatus a_
     }
     else if(!isNotAutoNextJob())
     {
-        mainUi->viewLog(eJOB_LOG_TYPE_JOB_STATUS, "Job Completed!");
+        mainUi->viewLog(eJOB_LOG_TYPE_JOB_STATUS, tr("Job Completed!"));
         mainUi->viewLog(eJOB_LOG_TYPE_JOB_STATUS, QT_EMPTY);
         emit mainUi->ntfStartJob();
     }
@@ -353,7 +364,7 @@ bool JobChef::isAllProcessCompleted(void)
 {
     bool is_completed = true;
 
-    if(m_job_cmd_list_count < m_cmds.length() - (int)eINDEX_1)
+    if(m_job_cmd_list_count < m_cmds.length() - eINDEX_1)
     {
         is_completed = false;
     }
@@ -422,7 +433,6 @@ void JobChef::slotPiperProcessError(QProcess::ProcessError a_error)
         mainUi->viewLog(eJOB_LOG_TYPE_DEBUG, tr("Piper Process write error occured."));
         break;
     case QProcess::UnknownError:
-    default:
         mainUi->viewLog(eJOB_LOG_TYPE_DEBUG, tr("Piper Process unknown error occured."));
         break;
     }
@@ -449,7 +459,6 @@ void JobChef::slotEncoderProcessError(QProcess::ProcessError a_error)
         mainUi->viewLog(eJOB_LOG_TYPE_DEBUG, tr("Encoder Process write error occured."));
         break;
     case QProcess::UnknownError:
-    default:
         mainUi->viewLog(eJOB_LOG_TYPE_DEBUG, tr("Encoder Process unknown error occured."));
         break;
     }
@@ -476,7 +485,6 @@ void JobChef::slotInfoProcessError(QProcess::ProcessError a_error)
         mainUi->viewLog(eJOB_LOG_TYPE_DEBUG, tr("Info Process write error occured."));
         break;
     case QProcess::UnknownError:
-    default:
         mainUi->viewLog(eJOB_LOG_TYPE_DEBUG, tr("Info Process unknown error occured."));
         break;
     }
@@ -491,11 +499,11 @@ bool JobChef::updateProgress(QString a_text)
     if(rex_match.hasMatch())
     {
         QStringList rex_match_texts = rex_match.capturedTexts();
-        if(rex_match_texts.length() == (int)eINDEX_2)
+        if(rex_match_texts.length() == eINDEX_2)
         {
             is_match = true;
-            mainUi->viewLog(eJOB_LOG_TYPE_JOB_STD_PROGRESS, rex_match_texts.at(rex_match_texts.length() - (int)eINDEX_1));
-            mainUi->viewLog(eJOB_LOG_TYPE_JOB_STD_DETAILS, rex_match_texts.at((int)eINDEX_0));
+            mainUi->viewLog(eJOB_LOG_TYPE_JOB_STD_PROGRESS, rex_match_texts.at(rex_match_texts.length() - eINDEX_1));
+            mainUi->viewLog(eJOB_LOG_TYPE_JOB_STD_DETAILS, rex_match_texts.at(eINDEX_0));
         }
     }
 
@@ -538,7 +546,7 @@ void JobChef::setPriorty(EPROCESS_PRIORITY a_priority)
 
 void JobChef::setPriorty(EPROCESS_PRIORITY_INDEX a_priority)
 {
-    m_priority = (EPROCESS_PRIORITY)c_priortyIndexToPriorty[a_priority];
+    m_priority = static_cast<EPROCESS_PRIORITY>(c_priortyIndexToPriorty[a_priority]);
 }
 
 JobChef::EPROCESS_PRIORITY JobChef::getPriorty(void)
@@ -548,7 +556,7 @@ JobChef::EPROCESS_PRIORITY JobChef::getPriorty(void)
 
 bool JobChef::updatePriorty(void)
 {
-    setPriorty((EPROCESS_PRIORITY_INDEX)g_pConfig->getConfig(Config::eCONFIG_COMMON_ENCODER_PRECESS_PRIORITY).toInt());
+    setPriorty(static_cast<EPROCESS_PRIORITY_INDEX>(g_pConfig->getConfig(Config::eCONFIG_COMMON_ENCODER_PRECESS_PRIORITY).toInt()));
 
     if(m_prev_priority != m_priority)
     {
@@ -556,9 +564,9 @@ bool JobChef::updatePriorty(void)
 
         for(QList<qint64>::iterator i = processIds.begin(); i != processIds.end(); ++i)
         {
-            if((bool)mainUi->m_com->setPriortyClass((DWORD)*i, (DWORD)m_priority))
+            if(mainUi->m_com->setPriortyClass(static_cast<DWORD>(*i), static_cast<DWORD>(m_priority)) == TRUE)
             {
-                mainUi->viewLog(eJOB_LOG_TYPE_JOB_STATUS,  tr("Priority updated. PID %1.").arg(QString::number((DWORD)*i)));
+                mainUi->viewLog(eJOB_LOG_TYPE_JOB_STATUS,  tr("Priority updated. PID %1.").arg(QString::number(static_cast<DWORD>(*i))));
             }
         }
         m_prev_priority = m_priority;

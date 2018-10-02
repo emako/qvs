@@ -23,6 +23,7 @@ Demuxer::~Demuxer()
 
 void Demuxer::setupUi(void)
 {
+    this->setAttribute(Qt::WA_DeleteOnClose, true);
     reloadParamUi(eRELOAD_TYPE_FFMPEG);
     ui->editDemuxerVideoInput->setStyleSheet(c_qss_line_edit_read_only);
     connect(&m_process_job_encoder, SIGNAL(started()),this, SLOT(slotEncoderProcessStarted()));
@@ -116,7 +117,7 @@ void Demuxer::reload(ERELOAD_TYPE a_reload_type, QString a_filename)
 void Demuxer::abortJob(void)
 {
     m_process_job_encoder.kill();
-    m_process_job_encoder.waitForFinished(-1);
+    m_process_job_encoder.waitForFinished(eINDEX_NONE);
 }
 
 void Demuxer::slotEncoderProcessStarted()
@@ -141,7 +142,7 @@ void Demuxer::slotEncoderProcessFinished(int a_exitCode, QProcess::ExitStatus a_
     }
 
     viewLog(JobChef::eJOB_LOG_TYPE_JOB_STATUS, QString("%1 Exit code: %2").arg(message).arg(a_exitCode));
-    reloadInfo((ERELOAD_TYPE)ui->comboBoxDemuxerFormat->currentIndex());
+    reloadInfo(static_cast<ERELOAD_TYPE>(ui->comboBoxDemuxerFormat->currentIndex()));
 }
 
 void Demuxer::slotEncoderProcessReadyReadStandardError()
@@ -185,7 +186,6 @@ void Demuxer::slotEncoderProcessError(QProcess::ProcessError a_error)
         viewLog(JobChef::eJOB_LOG_TYPE_WARN, "Encoder Process write error occured.");
         break;
     case QProcess::UnknownError:
-    default:
         viewLog(JobChef::eJOB_LOG_TYPE_WARN, "Encoder Process unknown error occured.");
         break;
     }
@@ -204,7 +204,6 @@ void Demuxer::viewLog(JobChef::EJOB_LOG_TYPE a_log_type, QString a_log)
     case JobChef::eJOB_LOG_TYPE_JOB_STD_ERROR:
         break;
     case JobChef::eJOB_LOG_TYPE_JOB_STD_OUTPUT:
-//        qDebug()<<a_log;
         break;
     case JobChef::eJOB_LOG_TYPE_JOB_STD_PROGRESS:
     case JobChef::eJOB_LOG_TYPE_JOB_STD_DETAILS:
@@ -233,13 +232,12 @@ void Demuxer::reloadInfo(ERELOAD_TYPE a_reload_type)
     {
     case eRELOAD_TYPE_FFMPEG:
     default:
-#if !QT_VERSION_TOO_LOW
         do{
             QJsonObject json = qvs::getJsonFromString(m_track_raw.trimmed().simplified());
             DemuxerItem item;
-            int item_video_count = (int)eINDEX_0;
-            int item_audio_count = (int)eINDEX_0;
-            int item_other_count = (int)eINDEX_0;
+            int item_video_count = eINDEX_0;
+            int item_audio_count = eINDEX_0;
+            int item_other_count = eINDEX_0;
 
             for(QJsonObject::Iterator i = json.begin(); i != json.end(); i++)
             {
@@ -249,22 +247,22 @@ void Demuxer::reloadInfo(ERELOAD_TYPE a_reload_type)
                {
                     QJsonValue stream_info =  streams[j.i];
 
-                    QString codec_type = stream_info["codec_type"].toString();
+                    QString codec_type = stream_info.toObject().value("codec_type").toString();
                     QString track;
                     if(codec_type.isEmpty())
                         continue;
                     if(codec_type == "video")
                     {
                         track = QString("Track ID %1: %2 (%3,%4x%5,%6,%7,%8bit,%9s)")
-                                .arg(stream_info["index"].toInt())
+                                .arg(stream_info.toObject().value("index").toInt())
                                 .arg(codec_type)
-                                .arg(stream_info["codec_name"].toString())
-                                .arg(stream_info["coded_width"].toInt())
-                                .arg(stream_info["coded_height"].toInt())
-                                .arg(stream_info["pix_fmt"].toString())
-                                .arg(stream_info["r_frame_rate"].toString())
-                                .arg(stream_info["bits_per_raw_sample"].toString())
-                                .arg(stream_info["duration"].toString());
+                                .arg(stream_info.toObject().value("codec_name").toString())
+                                .arg(stream_info.toObject().value("coded_width").toInt())
+                                .arg(stream_info.toObject().value("coded_height").toInt())
+                                .arg(stream_info.toObject().value("pix_fmt").toString())
+                                .arg(stream_info.toObject().value("r_frame_rate").toString())
+                                .arg(stream_info.toObject().value("bits_per_raw_sample").toString())
+                                .arg(stream_info.toObject().value("duration").toString());
                         item.text = track;
                         item.type = DemuxerItem::eMEDIA_TYPE_VIDEO;
                         item.type_track_num = item_video_count;
@@ -276,27 +274,27 @@ void Demuxer::reloadInfo(ERELOAD_TYPE a_reload_type)
                     else if(codec_type == "audio")
                     {
                         track = QString("Track ID %1: %2 (%3,%4ch,%5,%6hz,%7s)")
-                                .arg(stream_info["index"].toInt())
+                                .arg(stream_info.toObject().value("index").toInt())
                                 .arg(codec_type)
-                                .arg(stream_info["codec_name"].toString())
-                                .arg(stream_info["channels"].toInt())
-                                .arg(stream_info["channel_layout"].toString())
-                                .arg(stream_info["sample_rate"].toString())
-                                .arg(stream_info["duration"].toString());
+                                .arg(stream_info.toObject().value("codec_name").toString())
+                                .arg(stream_info.toObject().value("channels").toInt())
+                                .arg(stream_info.toObject().value("channel_layout").toString())
+                                .arg(stream_info.toObject().value("sample_rate").toString())
+                                .arg(stream_info.toObject().value("duration").toString());
                         item.text = track;
                         item.type = DemuxerItem::eMEDIA_TYPE_AUDIO;
                         item.type_track_num = item_audio_count;
                         item.track_num = j.i;
                         item.track_info = QString("audio%1").arg(item_audio_count);
-                        item.ext = stream_info["codec_name"].toString();
+                        item.ext = stream_info.toObject().value("codec_name").toString();
                         item_audio_count++;
                     }
                     else
                     {
                         track = QString("Track ID %1: %2 (%3)")
-                                .arg(stream_info["index"].toInt())
+                                .arg(stream_info.toObject().value("index").toInt())
                                 .arg(codec_type)
-                                .arg(stream_info["codec_name"].toString());
+                                .arg(stream_info.toObject().value("codec_name").toString());
                         item.text = track;
                         item.type = DemuxerItem::eMEDIA_TYPE_DISABLE;
                         item.type_track_num = item_other_count;
@@ -312,27 +310,26 @@ void Demuxer::reloadInfo(ERELOAD_TYPE a_reload_type)
                 }
             }
         }while(false);
-#endif
         break;
     case eRELOAD_TYPE_EAC3TO:
         do{
             QStringList meta_list = m_track_raw.split(QString(QT_META));
-            int track_num = (int)eINDEX_0; /* Real track num. */
+            int track_num = eINDEX_0; /* Real track num. */
 
-            for(int i = (int)eINDEX_0; i < meta_list.length(); i++)
+            for(int i = eINDEX_0; i < meta_list.length(); i++)
             {
                 DemuxerItem item;
                 QString meta = meta_list.at(i).simplified();
 
                 if(!meta.isEmpty() && !meta.startsWith(QString(QT_HYPHEN)))
                 {
-                    if(i != (int)eINDEX_0)
+                    if(i != eINDEX_0)
                     {
                         QStringList track_nums = meta.split(QString(QT_COLON));
 
-                        if(track_nums.length() > (int)eINDEX_1)
+                        if(track_nums.length() > eINDEX_1)
                         {
-                            QString track_num = track_nums.at((int)eINDEX_0);
+                            QString track_num = track_nums.at(eINDEX_0);
 
                             if(!mainUi->m_com->hadNumber(track_num))
                             {
@@ -346,7 +343,7 @@ void Demuxer::reloadInfo(ERELOAD_TYPE a_reload_type)
                     }
                     item.text = meta;
                     item.track_num = track_num;
-                    if(i == (int)eINDEX_0)
+                    if(i == eINDEX_0)
                     {
                         item.type = DemuxerItem::eMEDIA_TYPE_DISABLE;
                     }
@@ -363,11 +360,11 @@ void Demuxer::reloadInfo(ERELOAD_TYPE a_reload_type)
     case eRELOAD_TYPE_MKVEXTRACT:
         do{
             QStringList track_list = m_track_raw.split(QString(QT_OTR_EOL));
-            int standard_track_num = (int)eINDEX_0;
-            int attachment_track_num = (int)eINDEX_1; /* Attachment track num is start from 1. */
+            int standard_track_num = eINDEX_0;
+            int attachment_track_num = eINDEX_1; /* Attachment track num is started from 1. */
 
             DemuxerItem item;
-            for(int i = (int)eINDEX_0; i < track_list.length(); i++)
+            for(int i = eINDEX_0; i < track_list.length(); i++)
             {
                 QString track_info = track_list.at(i);
 
@@ -375,14 +372,14 @@ void Demuxer::reloadInfo(ERELOAD_TYPE a_reload_type)
                 item.text = track_info;
                 item.type = DemuxerItem::eMEDIA_TYPE_DISABLE;
                 item.ext = "mkv";
-                if(track_info.startsWith("Track") && track_info.indexOf("video") != (int)eINDEX_NONE)
+                if(track_info.startsWith("Track") && track_info.indexOf("video") != eINDEX_NONE)
                 {
                     item.track_num = standard_track_num;
                     item.track_info = QString("track%1").arg(i);
                     item.type = DemuxerItem::eMEDIA_TYPE_VIDEO;
                     standard_track_num++;
                 }
-                else if(track_info.startsWith("Track") && track_info.indexOf("audio") != (int)eINDEX_NONE)
+                else if(track_info.startsWith("Track") && track_info.indexOf("audio") != eINDEX_NONE)
                 {
                     item.ext = "mka";
                     item.track_num = standard_track_num;
@@ -390,7 +387,7 @@ void Demuxer::reloadInfo(ERELOAD_TYPE a_reload_type)
                     item.type = DemuxerItem::eMEDIA_TYPE_AUDIO;
                     standard_track_num++;
                 }
-                else if(track_info.startsWith("Track") && track_info.indexOf("subtitles") != (int)eINDEX_NONE)
+                else if(track_info.startsWith("Track") && track_info.indexOf("subtitles") != eINDEX_NONE)
                 {
                     item.ext = getMkvextractSubtitlesExt(track_info);
                     item.track_num = standard_track_num;
@@ -480,7 +477,7 @@ QString Demuxer::getEac3toDelayMillisecond(QString a_track_info)
     for(QString delayMsEach : delayMsList)
     {
         int indexMs = delayMsEach.indexOf("ms");
-        if(indexMs != (int)eINDEX_NONE)
+        if(indexMs != eINDEX_NONE)
         {
             delayMs = delayMsEach.left(indexMs).simplified();
             break;
@@ -612,7 +609,7 @@ void Demuxer::on_listWidgetTrack_currentRowChanged(int a_row)
     {
         return;
     }
-    if( (a_row == eINDEX_0) && ((ERELOAD_TYPE)ui->comboBoxDemuxerFormat->currentIndex() == eRELOAD_TYPE_EAC3TO) )
+    if( (a_row == eINDEX_0) && (static_cast<ERELOAD_TYPE>(ui->comboBoxDemuxerFormat->currentIndex()) == eRELOAD_TYPE_EAC3TO) )
     {
         /* Track 0 in eac3to is disable. */
         return;
@@ -626,9 +623,9 @@ QString Demuxer::getOutput(QString a_input, DemuxerItem a_item)
     QString output;
     QString ext = a_item.ext;
 
-    if((ERELOAD_TYPE)ui->comboBoxDemuxerFormat->currentIndex() == eRELOAD_TYPE_MKVEXTRACT)
+    if(static_cast<ERELOAD_TYPE>(ui->comboBoxDemuxerFormat->currentIndex()) == eRELOAD_TYPE_MKVEXTRACT)
     {
-        switch((EINDEX)ui->comboBoxDemuxerParam->currentIndex())
+        switch(static_cast<EINDEX>(ui->comboBoxDemuxerParam->currentIndex()))
         {
         case eINDEX_0:/* Tracks */
         default:
@@ -652,7 +649,7 @@ QString Demuxer::getOutput(QString a_input, DemuxerItem a_item)
 
 void Demuxer::on_comboBoxDemuxerParam_currentIndexChanged(int)
 {
-    switch((ERELOAD_TYPE)ui->comboBoxDemuxerFormat->currentIndex())
+    switch(static_cast<ERELOAD_TYPE>(ui->comboBoxDemuxerFormat->currentIndex()))
     {
     case eRELOAD_TYPE_FFMPEG:
     case eRELOAD_TYPE_EAC3TO:
@@ -674,6 +671,7 @@ void Demuxer::on_buttonDemuxerStart_clicked()
     int index = ui->listWidgetTrack->currentRow();
     QString input = ui->editDemuxerVideoInput->text();
     QString output = ui->editDemuxerOutput->text();
+    StdWatcher::EDATA_TYPE dataType = StdWatcher::eDATA_TYPE_UTF8;
     QString cmd;
 
     if(isItemModule()) /* Failed Save Must */
@@ -714,7 +712,7 @@ void Demuxer::on_buttonDemuxerStart_clicked()
         return;
     }
 
-    switch((ERELOAD_TYPE)ui->comboBoxDemuxerFormat->currentIndex())
+    switch(static_cast<ERELOAD_TYPE>(ui->comboBoxDemuxerFormat->currentIndex()))
     {
     case eRELOAD_TYPE_FFMPEG:
     default:
@@ -756,7 +754,7 @@ void Demuxer::on_buttonDemuxerStart_clicked()
             {
                 QString param = "tracks";
 
-                if(param_index == (int)eINDEX_1)
+                if(param_index == eINDEX_1)
                 {
                     param = "timestamps_v2";
                 }
@@ -764,7 +762,7 @@ void Demuxer::on_buttonDemuxerStart_clicked()
             }
             else if(item.type == DemuxerItem::eMEDIA_TYPE_ATTACHMENT)
             {
-                if(param_index != (int)eINDEX_0)
+                if(param_index != eINDEX_0)
                 {
                     QMessageBox::information(this, tr("Information"), tr("Can't be extracked from attachments!"), QMessageBox::Ok);
                     return;
@@ -773,7 +771,7 @@ void Demuxer::on_buttonDemuxerStart_clicked()
             }
             else if(item.type == DemuxerItem::eMEDIA_TYPE_CHAPTER)
             {
-                if(param_index != (int)eINDEX_0)
+                if(param_index != eINDEX_0)
                 {
                     QMessageBox::information(this, tr("Information"), tr("Can't be extracked from chapters!"), QMessageBox::Ok);
                     return;
@@ -782,7 +780,7 @@ void Demuxer::on_buttonDemuxerStart_clicked()
             }
             else if(item.type == DemuxerItem::eMEDIA_TYPE_TAG)
             {
-                if(param_index != (int)eINDEX_0)
+                if(param_index != eINDEX_0)
                 {
                     QMessageBox::information(this, tr("Information"), tr("Can't be extracked from tags!"), QMessageBox::Ok);
                     return;
@@ -794,6 +792,7 @@ void Demuxer::on_buttonDemuxerStart_clicked()
     case eRELOAD_TYPE_TSDEMUXER:
         /* Not set output filename for auto set DELAY value by program. */
         cmd = QString("%1 -i \"%2\" -encode %3 -quit").arg(qvs::findFirstFilePath("tsdemux")).arg(input).arg(qvs::toStringFirstUpper(ui->comboBoxDemuxerParam->currentText()));
+        dataType = StdWatcher::eDATA_TYPE_LOCAL;
         break;
     case eRELOAD_TYPE_CAPTION2ASS:
         cmd = QString("%1 -format %2 \"%3\" \"%4\"").arg(qvs::findFirstFilePath("Caption2Ass_PCR")).arg(ui->comboBoxDemuxerParam->currentText()).arg(input).arg(qvs::delFileExt(output));
@@ -804,6 +803,7 @@ void Demuxer::on_buttonDemuxerStart_clicked()
     {
         QUuid uid = StdManager::createStdWatch();
         g_pStdWatch[uid]->show();
+        g_pStdWatch[uid]->setDataType(dataType);
         g_pStdWatch[uid]->initJob(uid);
         g_pStdWatch[uid]->startJob(cmd);
     }
@@ -813,7 +813,7 @@ bool Demuxer::isItemModule(void)
 {
     bool is_item_module = true;
 
-    switch((ERELOAD_TYPE)ui->comboBoxDemuxerFormat->currentIndex())
+    switch(static_cast<ERELOAD_TYPE>(ui->comboBoxDemuxerFormat->currentIndex()))
     {
     case eRELOAD_TYPE_FFMPEG:
     case eRELOAD_TYPE_EAC3TO:
@@ -830,12 +830,12 @@ bool Demuxer::isItemModule(void)
 
 void Demuxer::on_buttonDemuxerVideoInput_clicked()
 {
-    QString filename = QFileDialog::getOpenFileName(this, tr("Open Mediafile"), NULL, tr("Media (*.*)"));
+    QString filename = QFileDialog::getOpenFileName(this, tr("Open Mediafile"), NULLSTR, tr("Media (*.*)"));
 
     if(!filename.isEmpty())
     {
         filename = QDir::toNativeSeparators(filename);
-        reload((ERELOAD_TYPE)ui->comboBoxDemuxerFormat->currentIndex(), filename);
+        reload(static_cast<ERELOAD_TYPE>(ui->comboBoxDemuxerFormat->currentIndex()), filename);
     }
 }
 

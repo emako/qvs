@@ -16,7 +16,7 @@ class ScriptPlayer : public QWidget
     Q_OBJECT
 
 public:
-    explicit ScriptPlayer(QWidget *parent = 0);
+    explicit ScriptPlayer(QWidget *parent = nullptr);
     ~ScriptPlayer();
     friend class MainWindow;
     class MainWindow *mainUi;

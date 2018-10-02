@@ -28,6 +28,9 @@ public:
         clear();
     }
 
+    virtual ~VideoInfo() {
+    }
+
     enum ScanType {
         Progressive,
         Interlaced,
@@ -40,14 +43,14 @@ public:
 
     virtual void clear(void)
     {
-        frameCount    = (int)eINDEX_0;
-        frameWidth    = (int)eINDEX_0;
-        frameHeight   = (int)eINDEX_0;
-        fpsCV         = (double)eINDEX_0;
-        fps           = (double)eINDEX_0;
-        fpsNum        = (double)eINDEX_0;
-        fpsDen        = (double)eINDEX_0;
-        depth         = (int)eINDEX_NONE;
+        frameCount    = eINDEX_0;
+        frameWidth    = eINDEX_0;
+        frameHeight   = eINDEX_0;
+        fpsCV         = static_cast<double>(eINDEX_0);
+        fps           = static_cast<double>(eINDEX_0);
+        fpsNum        = eINDEX_0;
+        fpsDen        = eINDEX_0;
+        depth         = eINDEX_NONE;
         isVFR         = false;
         scanType      = Progressive;
         scanOrder     = TFF;
@@ -80,9 +83,9 @@ public:
     {
         int gcd;
 
-        if( (fpsNum == 0) && (fpsDen == 0) && (fps != 0) )
+        if( (fpsNum == 0) && (fpsDen == 0) && (static_cast<int>(fps) != 0) )
         {
-            fpsNum = fps * eINDEX_1000;
+            fpsNum = static_cast<int>(fps * eINDEX_1000);
             fpsDen = eINDEX_1000;
             gcd = getGreatestCommonDivisor(fpsNum, fpsDen);
             if(gcd != 0)
@@ -164,7 +167,7 @@ class PreviewDialog : public QMainWindow
     Q_OBJECT
 
 public:
-    explicit PreviewDialog(QWidget *parent = 0);
+    explicit PreviewDialog(QWidget *parent = nullptr);
     ~PreviewDialog();
     friend class MainWindow;
     class MainWindow *mainUi;

@@ -21,6 +21,7 @@ Muxer::~Muxer()
 
 void Muxer::setup(void)
 {
+    this->setAttribute(Qt::WA_DeleteOnClose, true);
     ui->editMuxerVideoInput->setStyleSheet(c_qss_line_edit_read_only);
     ui->editMuxerAudioInput->setStyleSheet(c_qss_line_edit_read_only);
 }
@@ -67,7 +68,7 @@ void Muxer::reload(EOUTPUT_TYPE a_reload_type)
 
 QString Muxer::getOutputFilename(const QString a_basename)
 {
-    return QDir::toNativeSeparators(QString("%1_mux.%2").arg(qvs::delFileExt(a_basename)).arg(getOutputFileExt((EOUTPUT_TYPE)ui->comboBoxMuxerFormat->currentIndex())));
+    return QDir::toNativeSeparators(QString("%1_mux.%2").arg(qvs::delFileExt(a_basename)).arg(getOutputFileExt(static_cast<EOUTPUT_TYPE>(ui->comboBoxMuxerFormat->currentIndex()))));
 }
 
 QString Muxer::getOutputFileExt(EOUTPUT_TYPE a_output_type)
@@ -92,7 +93,7 @@ QString Muxer::getOutputFileExt(EOUTPUT_TYPE a_output_type)
 
 void Muxer::on_comboBoxMuxerFormat_activated(int a_index)
 {
-    reload((EOUTPUT_TYPE)a_index);
+    reload(static_cast<EOUTPUT_TYPE>(a_index));
 }
 
 void Muxer::on_buttonMuxerStart_clicked()
@@ -127,7 +128,7 @@ void Muxer::on_buttonMuxerStart_clicked()
         }
     }
 
-    switch((EOUTPUT_TYPE)ui->comboBoxMuxerFormat->currentIndex())
+    switch(static_cast<EOUTPUT_TYPE>(ui->comboBoxMuxerFormat->currentIndex()))
     {
     case eOUTPUT_TYPE_MP4BOX:
     default:
@@ -169,7 +170,7 @@ void Muxer::on_comboBoxMuxerFormat_currentIndexChanged(int)
 
 void Muxer::on_buttonMuxerVideoInput_clicked()
 {
-    QString filename = QFileDialog::getOpenFileName(this, tr("Open Mediafile"), NULL, tr("Media (*.*)"));
+    QString filename = QFileDialog::getOpenFileName(this, tr("Open Mediafile"), NULLSTR, tr("Media (*.*)"));
 
     if(!filename.isEmpty())
     {
@@ -180,7 +181,7 @@ void Muxer::on_buttonMuxerVideoInput_clicked()
 
 void Muxer::on_buttonMuxerAudioInput_clicked()
 {
-    QString filename = QFileDialog::getOpenFileName(this, tr("Open Mediafile"), NULL, tr("Media (*.*)"));
+    QString filename = QFileDialog::getOpenFileName(this, tr("Open Mediafile"), NULLSTR, tr("Media (*.*)"));
 
     if(!filename.isEmpty())
     {

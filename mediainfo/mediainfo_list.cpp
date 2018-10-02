@@ -1,6 +1,6 @@
 //--------------------------------------------------------------------
 //
-// Source File created by Python3.6.4 2018-09-08T23:50:47
+// Source File created by Python3.6.4 2018-09-30T06:25:31
 // For MediaInfo v18.08 or greater version.
 // The macro definition is derived from the CSV files in Developers/List_Of_Parameters.
 // More: https://github.com/MediaArea/MediaInfoLib/blob/master/Source/MediaInfo/File__Analyse_Automatic.h
@@ -1586,12 +1586,3 @@ QList<QPair<QString, QList<QPair<MediaInfoDLL::String, QPair<QString, bool>>>>> 
 	{ "Image",   g_mediainfo_list_image   },  // Stream_Image
 	{ "Menu",    g_mediainfo_list_menu    },  // Stream_Menu
 };
-
-//extern QList<QPair<MediaInfoDLL::String, QPair<QString, bool>>> g_mediainfo_list_general;
-//extern QList<QPair<MediaInfoDLL::String, QPair<QString, bool>>> g_mediainfo_list_video;
-//extern QList<QPair<MediaInfoDLL::String, QPair<QString, bool>>> g_mediainfo_list_audio;
-//extern QList<QPair<MediaInfoDLL::String, QPair<QString, bool>>> g_mediainfo_list_text;
-//extern QList<QPair<MediaInfoDLL::String, QPair<QString, bool>>> g_mediainfo_list_other;
-//extern QList<QPair<MediaInfoDLL::String, QPair<QString, bool>>> g_mediainfo_list_image;
-//extern QList<QPair<MediaInfoDLL::String, QPair<QString, bool>>> g_mediainfo_list_menu;
-//extern QList<QPair<QString, QList<QPair<MediaInfoDLL::String, QPair<QString, bool>>>>> g_mediainfo_lists;

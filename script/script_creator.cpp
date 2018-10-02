@@ -23,9 +23,10 @@ void ScriptCreator::setup(void)
     ui->scriptEditor->setFont(QFont("Consolas"));
     setSyntax();
     this->setAcceptDrops(true);
+    this->setAttribute(Qt::WA_DeleteOnClose, true);
     ui->checkBoxSourceFilterLSMASH->setCheckState(Qt::PartiallyChecked);
-    ui->tabWidget->setCurrentIndex((int)eINDEX_0);
-    ui->stackedWidgetSourceFilter->setCurrentIndex((int)eINDEX_0);
+    ui->tabWidget->setCurrentIndex(eINDEX_0);
+    ui->stackedWidgetSourceFilter->setCurrentIndex(eINDEX_0);
     ui->labelSourcePreview->installEventFilter(this);
     ui->dotGridFFMS2->setStyleSheet(c_qss_label_bk_dot_grid);
     ui->dotGridDGNV->setStyleSheet(c_qss_label_bk_dot_grid);
@@ -41,7 +42,6 @@ void ScriptCreator::reload(const ReloadFileType &a_fileType, const QString &a_fi
     switch(a_fileType)
     {
     case ReloadFileSource:
-    default:
         m_sourceFilename = a_filename;
         reload(a_filename);
         break;
@@ -381,6 +381,7 @@ void ScriptCreator::closeEvent(QCloseEvent *e)
 {
     release(m_uid_preview_source);
     release(m_uid_preview_script);
+    mainUi->slotChildWindowClosed(m_uid_own);
     e->accept();
 }
 
@@ -394,7 +395,7 @@ inline void ScriptCreator::createScript(void)
     }
     for(int i = eINDEX_0; i < ScriptCreateMax; i++)
     {
-        script += createScript((ScriptCreateFilter)i);
+        script += createScript(static_cast<ScriptCreateFilter>(i));
     }
     ui->scriptEditor->setPlainText(script);
 }
@@ -413,7 +414,7 @@ inline QString ScriptCreator::createScript(const ScriptCreateFilter &a_filter)
                  "core = vs.get_core()";
         break;
     case ScriptCreateSource:
-        script = createScriptSource((SourceFilter)ui->comboBoxSourceFilter->currentIndex());
+        script = createScriptSource(static_cast<SourceFilter>(ui->comboBoxSourceFilter->currentIndex()));
         break;
     case ScriptCreateCrop:
         if(ui->checkBoxCrop->isChecked())
@@ -428,13 +429,13 @@ inline QString ScriptCreator::createScript(const ScriptCreateFilter &a_filter)
         }
         break;
     case ScriptCreateResize:
-        script = createScriptResize((ResizeFilter)ui->comboBoxResizeFilter->currentIndex());
+        script = createScriptResize(static_cast<ResizeFilter>(ui->comboBoxResizeFilter->currentIndex()));
         break;
     case ScriptCreateFramesPerSecond:
-        script = createScriptFPS((FramesPerSecondFilter)ui->comboBoxFPSFilter->currentIndex());
+        script = createScriptFPS(static_cast<FramesPerSecondFilter>(ui->comboBoxFPSFilter->currentIndex()));
         break;
     case ScriptCreateDeinterlacing:
-        script = createScriptDeinterlacing((SourceType)ui->comboBoxDeinterlacingSourceType->currentIndex());
+        script = createScriptDeinterlacing(static_cast<SourceType>(ui->comboBoxDeinterlacingSourceType->currentIndex()));
         break;
     case ScriptCreateDelogo:
         if(ui->checkBoxDeleteLogoDataInput->isChecked())
@@ -449,12 +450,12 @@ inline QString ScriptCreator::createScript(const ScriptCreateFilter &a_filter)
             QString h = PY_NONE;
             QString an = PY_NONE;
 
-            if( (m_logoInfo.frameWidth != (int)eINDEX_0) && (m_logoInfo.frameHeight != (int)eINDEX_0) )
+            if( (m_logoInfo.frameWidth != eINDEX_0) && (m_logoInfo.frameHeight != eINDEX_0) )
             {
                 w = QString::number(m_logoInfo.frameWidth);
                 h = QString::number(m_logoInfo.frameHeight);
             }
-            if(ui->spinBoxAddLogoAlignment->value() != (int)eINDEX_0)
+            if(ui->spinBoxAddLogoAlignment->value() != eINDEX_0)
             {
                 an = QString::number(ui->spinBoxAddLogoAlignment->value());
             }
@@ -462,13 +463,15 @@ inline QString ScriptCreator::createScript(const ScriptCreateFilter &a_filter)
         }
         break;
     case ScriptCreateDenoise:
-        script = createScriptDenoise((DenoiseFilter)ui->comboBoxDenoise->currentIndex());
+        script = createScriptDenoise(static_cast<DenoiseFilter>(ui->comboBoxDenoise->currentIndex()));
         break;
     case ScriptCreateSubtitle:
-        script = createScriptSubtitle((SubtitleFilter)ui->comboBoxSubtitle->currentIndex());
+        script = createScriptSubtitle(static_cast<SubtitleFilter>(ui->comboBoxSubtitle->currentIndex()));
         break;
     case ScriptCreateFinished:
         script = "src.set_output()";
+        break;
+    default:
         break;
     }
     if(!script.isEmpty())
@@ -485,13 +488,12 @@ inline QString ScriptCreator::createScriptSource(const SourceFilter &a_filterSou
     switch(a_filterSource)
     {
     case LWLibavSource:
-    default:
         do{
             QString funcName = "LWLibavSource";
             QString format;
             QString decoder;
-            int fpsNum = (int)eINDEX_0;
-            int fpsDen = (int)eINDEX_1;
+            int fpsNum = eINDEX_0;
+            int fpsDen = eINDEX_1;
 
             if(isLsmash())
             {
@@ -502,11 +504,11 @@ inline QString ScriptCreator::createScriptSource(const SourceFilter &a_filterSou
                 fpsNum = ui->spinBoxSourceFilterLWLFpsnum->value();
                 fpsDen = ui->spinBoxSourceFilterLWLFpsden->value();
             }
-            if(ui->comboBoxSourceFilterLWLFormat->currentIndex() != (int)eINDEX_0)
+            if(ui->comboBoxSourceFilterLWLFormat->currentIndex() != eINDEX_0)
             {
                 format = ui->comboBoxSourceFilterLWLFormat->currentText();
             }
-            if(ui->comboBoxSourceFilterLWLDecoder->currentIndex() != (int)eINDEX_0)
+            if(ui->comboBoxSourceFilterLWLDecoder->currentIndex() != eINDEX_0)
             {
                 decoder = ui->comboBoxSourceFilterLWLDecoder->currentText();
             }
@@ -515,8 +517,8 @@ inline QString ScriptCreator::createScriptSource(const SourceFilter &a_filterSou
         break;
     case FFmpegSource:
         do{
-            int fpsNum = (int)eINDEX_NONE;
-            int fpsDen = (int)eINDEX_1;
+            int fpsNum = eINDEX_NONE;
+            int fpsDen = eINDEX_1;
 
             if(ui->checkBoxSourceFilterFFmpegFPS->isChecked())
             {
@@ -528,8 +530,8 @@ inline QString ScriptCreator::createScriptSource(const SourceFilter &a_filterSou
         break;
     case DGSourceNV:
         do{
-            int width = (int)eINDEX_0;
-            int height = (int)eINDEX_0;
+            int width = eINDEX_0;
+            int height = eINDEX_0;
 
             if(ui->checkBoxSourceFilterDGNVResizer->isChecked())
             {
@@ -607,7 +609,6 @@ inline bool ScriptCreator::isLsmash(void)
         isLsmash = true;
         break;
     case Qt::Unchecked:
-    default:
         isLsmash = false;
         break;
     }
@@ -627,7 +628,6 @@ inline QString ScriptCreator::createScriptFPS(const FramesPerSecondFilter &a_fil
     switch(a_filterFPS)
     {
     case ChangeFPS:
-    default:
         script = QString("src = haf.ChangeFPS(src, fpsnum=%1, fpsden=%2)").arg(fpsnum).arg(fpsden);
         break;
     case AssumeFPS:
@@ -659,7 +659,6 @@ inline QString ScriptCreator::createScriptResize(const ResizeFilter &a_filterRes
     case LanczosResize:
     case Spline16Resize:
     case Spline36Resize:
-    default:
         do{
             QStringList funcNameCore;
             funcNameCore << "Bilinear" << "Bicubic" << "Point" << "Lanczos" << "Spline16" << "Spline36";
@@ -680,13 +679,12 @@ inline QString ScriptCreator::createScriptDeinterlacing(const SourceType &a_filt
     switch(a_filterDeinterlacing)
     {
     case Progressive:
-    default:
         break;
     case Interlaced:
-        script = createScriptInterlaced((InterlacedFilter)ui->comboBoxDeinterlacingFilter->currentIndex());
+        script = createScriptInterlaced(static_cast<InterlacedFilter>(ui->comboBoxDeinterlacingFilter->currentIndex()));
         break;
     case Telecine:
-        script = createScriptTelecine((TelecineFilter)ui->comboBoxDeinterlacingFilter->currentIndex());
+        script = createScriptTelecine(static_cast<TelecineFilter>(ui->comboBoxDeinterlacingFilter->currentIndex()));
         break;
     }
     return script;
@@ -695,39 +693,38 @@ inline QString ScriptCreator::createScriptDeinterlacing(const SourceType &a_filt
 inline QString ScriptCreator::createScriptInterlaced(const InterlacedFilter &a_filterInterlaced)
 {
     QString script;
-    FieldOrder fieldOrder = (FieldOrder)ui->comboBoxDeinterlacingFieldOrder->currentIndex();
-    FrameRate frameRate = (FrameRate)ui->comboBoxDeinterlacingFrameRate->currentIndex();
+    FieldOrder fieldOrder = static_cast<FieldOrder>(ui->comboBoxDeinterlacingFieldOrder->currentIndex());
+    FrameRate frameRate = static_cast<FrameRate>(ui->comboBoxDeinterlacingFrameRate->currentIndex());
 
     switch(a_filterInterlaced)
     {
     case Yadifmod:
-    default:
-        script = QString("src = qvs.Yadifmod(src, order='%1', mode=%2)").arg(pyFieldOrder(fieldOrder)).arg((int)frameRate);
+        script = QString("src = qvs.Yadifmod(src, order='%1', mode=%2)").arg(pyFieldOrder(fieldOrder)).arg(static_cast<int>(frameRate));
         break;
     case QTGMC:
         do{
-            int frameRateParm = (int)eINDEX_1;   /*DoubleRate*/
+            int frameRateParm = eINDEX_1;   /*DoubleRate*/
 
             if(frameRate == SingleRate)
             {
-                frameRateParm = (int)eINDEX_2;   /*SingleRate*/
+                frameRateParm = eINDEX_2;   /*SingleRate*/
             }
             script = QString("src = haf.QTGMC(src, Preset='%1', TFF=%2, FPSDivisor=%3, opencl=True)").arg(ui->comboBoxDeinterlacingPreset->currentText()).arg(pyBool2String(fieldOrder == FieldOrder::TFF)).arg(frameRateParm);
         }while(false);
         break;
     case DGBob:
         do{
-            int fieldOrderParm = (int)eINDEX_NONE;  /*Take order from Avisynth*/
+            int fieldOrderParm = eINDEX_NONE;  /*Take order from Avisynth*/
 
             if(fieldOrder == FieldOrder::TFF)
             {
-                fieldOrderParm = (int)eINDEX_1;
+                fieldOrderParm = eINDEX_1;
             }
             else if(fieldOrder == FieldOrder::BFF)
             {
-                fieldOrderParm = (int)eINDEX_0;
+                fieldOrderParm = eINDEX_0;
             }
-            script = QString("src = qvs.DGBob(src, order=%1, mode=%2, device=255, pv=False)").arg(fieldOrderParm).arg((int)frameRate);
+            script = QString("src = qvs.DGBob(src, order=%1, mode=%2, device=255, pv=False)").arg(fieldOrderParm).arg(static_cast<int>(frameRate));
         }while(false);
         break;
     }
@@ -741,18 +738,17 @@ inline QString ScriptCreator::createScriptTelecine(const TelecineFilter &a_filte
     switch(a_filterTelecine)
     {
     case VIVTC:
-    default:
         do{
-            FieldOrder fieldOrder = (FieldOrder)ui->comboBoxDeinterlacingFieldOrder->currentIndex();
-            int fieldOrderParm = (int)eINDEX_1;
+            FieldOrder fieldOrder = static_cast<FieldOrder>(ui->comboBoxDeinterlacingFieldOrder->currentIndex());
+            int fieldOrderParm = eINDEX_1;
 
             if(fieldOrder == FieldOrder::TFF)
             {
-                fieldOrderParm = (int)eINDEX_1;
+                fieldOrderParm = eINDEX_1;
             }
             else if(fieldOrder == FieldOrder::BFF)
             {
-                fieldOrderParm = (int)eINDEX_0;
+                fieldOrderParm = eINDEX_0;
             }
             script = QString("src = qvs.VIVTC(src, order=%1)").arg(fieldOrderParm);
         }while(false);
@@ -775,7 +771,6 @@ inline QString ScriptCreator::createScriptDenoise(const DenoiseFilter &a_filterD
     switch(a_filterDenoise)
     {
     case DGDenoise:
-    default:
         script = QString ("src = qvs.DGDenoise(src, strength=0.15, blend=0.1, chroma=True, searchw=5, device=255)");
         break;
     }
@@ -793,7 +788,6 @@ inline QString ScriptCreator::createScriptSubtitle(const SubtitleFilter &a_filte
     switch(a_filterSubtitle)
     {
     case VSFilter:
-    default:
         script = QString("src = core.vsf.TextSub(src, file=u'%1')").arg(m_subtitleFilename);
         break;
     case VSFilterMod:
@@ -844,7 +838,7 @@ inline QString ScriptCreator::pyFieldOrder(const FieldOrder &a_fieldOrder)
 
 void ScriptCreator::on_buttonBrowseSource_clicked()
 {
-    QString filename = QFileDialog::getOpenFileName(this, tr("Open Media/Project file"), NULL, tr("Media/Project (*.*)"));
+    QString filename = QFileDialog::getOpenFileName(this, tr("Open Media/Project file"), NULLSTR, tr("Media/Project (*.*)"));
 
     if(!filename.isEmpty())
     {
@@ -864,7 +858,7 @@ void ScriptCreator::on_buttonBrowseOutput_clicked()
 
 void ScriptCreator::on_buttonBrowseTimeCodeFile_clicked()
 {
-    QString filename = QFileDialog::getOpenFileName(this, tr("Open TimeCode file"), NULL, tr("TimeCode (*.txt *.tc)"));
+    QString filename = QFileDialog::getOpenFileName(this, tr("Open TimeCode file"), NULLSTR, tr("TimeCode (*.txt *.tc)"));
 
     if(!filename.isEmpty())
     {
@@ -874,7 +868,7 @@ void ScriptCreator::on_buttonBrowseTimeCodeFile_clicked()
 
 void ScriptCreator::on_buttonBrowseDeleteLogoDataInput_clicked()
 {
-    QString filename = QFileDialog::getOpenFileName(this, tr("Open LogoData file"), NULL, tr("LogoData (*.lgd *.lgd2)"));
+    QString filename = QFileDialog::getOpenFileName(this, tr("Open LogoData file"), NULLSTR, tr("LogoData (*.lgd *.lgd2)"));
 
     if(!filename.isEmpty())
     {
@@ -884,7 +878,7 @@ void ScriptCreator::on_buttonBrowseDeleteLogoDataInput_clicked()
 
 void ScriptCreator::on_buttonBrowseAddLogoDataInput_clicked()
 {
-    QString filename = QFileDialog::getOpenFileName(this, tr("Open Image/LogoData file"), NULL, tr("Image/LogoData (*.png *.lgd *.lgd2)"));
+    QString filename = QFileDialog::getOpenFileName(this, tr("Open Image/LogoData file"), NULLSTR, tr("Image/LogoData (*.png *.lgd *.lgd2)"));
 
     if(!filename.isEmpty())
     {
@@ -894,7 +888,7 @@ void ScriptCreator::on_buttonBrowseAddLogoDataInput_clicked()
 
 void ScriptCreator::on_buttonBrowseSubtitle_clicked()
 {
-    QString filename = QFileDialog::getOpenFileName(this, tr("Open Subtitle file"), NULL, tr("Subtitle (*.ass *.ssa *.sup *.srt *.idx)"));
+    QString filename = QFileDialog::getOpenFileName(this, tr("Open Subtitle file"), NULLSTR, tr("Subtitle (*.ass *.ssa *.sup *.srt *.idx)"));
 
     if(!filename.isEmpty())
     {
@@ -1159,11 +1153,10 @@ void ScriptCreator::on_checkBoxFPS_stateChanged(int a_state)
 
 void ScriptCreator::on_comboBoxFPSFilter_currentIndexChanged(int a_index)
 {
-    switch((FramesPerSecondFilter)a_index)
+    switch(static_cast<FramesPerSecondFilter>(a_index))
     {
     case ChangeFPS:
     case AssumeFPS:
-    default:
         ui->editTimeCodeFile->setDisabled(true);
         ui->buttonBrowseTimeCodeFile->setDisabled(true);
         break;
@@ -1187,10 +1180,9 @@ void ScriptCreator::on_spinBoxFPSFilterFpsden_valueChanged(int)
 
 void ScriptCreator::on_comboBoxDeinterlacingSourceType_currentIndexChanged(int a_index)
 {
-    switch((SourceType)a_index)
+    switch(static_cast<SourceType>(a_index))
     {
     case Progressive:
-    default:
         ui->comboBoxDeinterlacingFilter->clear();
         ui->labelDeinterlacingFilter->setDisabled(true);
         ui->comboBoxDeinterlacingFilter->setDisabled(true);
@@ -1241,8 +1233,8 @@ void ScriptCreator::on_comboBoxDeinterlacingFrameRate_currentIndexChanged(int)
 
 void ScriptCreator::on_comboBoxDeinterlacingFilter_currentIndexChanged(int a_index)
 {
-    if( ((SourceType)ui->comboBoxDeinterlacingSourceType->currentIndex() == Interlaced)
-     && ((InterlacedFilter)a_index == QTGMC) )
+    if( (static_cast<SourceType>(ui->comboBoxDeinterlacingSourceType->currentIndex()) == Interlaced)
+     && (static_cast<InterlacedFilter>(a_index) == QTGMC) )
     {
         ui->labelDeinterlacingPreset->setEnabled(true);
         ui->comboBoxDeinterlacingPreset->setEnabled(true);

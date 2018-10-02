@@ -2,11 +2,10 @@
 
 #include <QtWidgets>
 
-
 ScriptEditor::ScriptEditor(QWidget *parent)
-    : QPlainTextEdit(parent)
+    : QPlainTextEdit(parent),
+      m_pLineNumberArea(new LineNumberArea(this))
 {
-    m_pLineNumberArea = new LineNumberArea(this);
     connect(this, SIGNAL(blockCountChanged(int)), this, SLOT(updateLineNumberAreaWidth(int)));
     connect(this, SIGNAL(updateRequest(QRect, int)), this, SLOT(updateLineNumberArea(QRect, int)));
     connect(this, SIGNAL(cursorPositionChanged()), this, SLOT(highlightCurrentLine()));
@@ -64,7 +63,7 @@ void ScriptEditor::highlightCurrentLine()
     {
         QTextEdit::ExtraSelection selection;
 
-        QColor lineColor = QColor((int)ColorHighlight::r, (int)ColorHighlight::g, (int)ColorHighlight::b);
+        QColor lineColor = QColor(ColorHighlight::r, ColorHighlight::g, ColorHighlight::b);
 
         selection.format.setBackground(lineColor);
         selection.format.setProperty(QTextFormat::FullWidthSelection, true);
@@ -80,25 +79,25 @@ void ScriptEditor::highlightCurrentLine()
 void ScriptEditor::lineNumberAreaPaintEvent(QPaintEvent *event)
 {
     QPainter painter(m_pLineNumberArea);
-    painter.fillRect(event->rect(), QColor((int)ColorLineNumArea::r, (int)ColorLineNumArea::g, (int)ColorLineNumArea::b));
+    painter.fillRect(event->rect(), QColor(ColorLineNumArea::r, ColorLineNumArea::g, ColorLineNumArea::b));
 
     QTextBlock block = firstVisibleBlock();
     int blockNumber = block.blockNumber();
-    int top = (int) blockBoundingGeometry(block).translated(contentOffset()).top();
-    int bottom = top + (int) blockBoundingRect(block).height();
+    int top = static_cast<int>(blockBoundingGeometry(block).translated(contentOffset()).top());
+    int bottom = top + static_cast<int>(blockBoundingRect(block).height());
 
     while (block.isValid() && top <= event->rect().bottom())
     {
         if (block.isVisible() && bottom >= event->rect().top())
         {
             QString number = QString::number(blockNumber + 1);
-            painter.setPen(QColor((int)ColorLineNum::r, (int)ColorLineNum::g, (int)ColorLineNum::b));
+            painter.setPen(QColor(ColorLineNum::r, ColorLineNum::g, ColorLineNum::b));
             painter.drawText(0, top, m_pLineNumberArea->width(), fontMetrics().height(), Qt::AlignRight, number);
         }
 
         block = block.next();
         top = bottom;
-        bottom = top + (int) blockBoundingRect(block).height();
+        bottom = top + static_cast<int>(blockBoundingRect(block).height());
         ++blockNumber;
     }
 }

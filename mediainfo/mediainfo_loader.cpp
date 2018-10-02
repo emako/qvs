@@ -13,6 +13,10 @@ MediaInfoLoader::MediaInfoLoader(const QString &a_filename)
     open();
 }
 
+MediaInfoLoader::~MediaInfoLoader()
+{
+}
+
 QString MediaInfoLoader::option(const String &a_option, const String &a_value)
 {
     return fromStd(m_mediainfo.Option(a_option, a_value));
@@ -36,17 +40,17 @@ QString MediaInfoLoader::traversal(EFORMAT a_format)
 
     if(a_format == eFORMAT_INI)
     {
-        for(size_t i = (size_t)eINDEX_0; i < (size_t)g_mediainfo_lists.length(); i++)
+        for(size_t i = static_cast<size_t>(eINDEX_0); i < static_cast<size_t>(g_mediainfo_lists.length()); i++)
         {
-            QList<QPair<MediaInfoDLL::String, QPair<QString, bool>>> context = g_mediainfo_lists.at((int)i).second;
+            QList<QPair<MediaInfoDLL::String, QPair<QString, bool>>> context = g_mediainfo_lists.at(static_cast<int>(i)).second;
             size_t streamCount = count(static_cast<stream_t>(i));
 
-            for(size_t k = (size_t)0; k < streamCount; k++)
+            for(size_t k = static_cast<size_t>(eINDEX_0); k < streamCount; k++)
             {
-                QString group = QString("[%1%2]").arg(g_mediainfo_lists.at((int)i).first).arg(streamCount >= (size_t)eINDEX_2 ? QString::number(k + (size_t)eINDEX_1) : QT_EMPTY);;
+                QString group = QString("[%1%2]").arg(g_mediainfo_lists.at(static_cast<int>(i)).first).arg(streamCount >= static_cast<size_t>(eINDEX_2) ? QString::number(k + static_cast<size_t>(eINDEX_1)) : QT_EMPTY);
 
                 inform += group + QT_NOR_EOL;
-                for(int j = (size_t)eINDEX_0; j < context.length(); j++)
+                for(int j = static_cast<size_t>(eINDEX_0); j < context.length(); j++)
                 {
                     QString key = context.at(j).second.first;
                     QString value = get(context.at(j).first, static_cast<stream_t>(i), k);
@@ -67,17 +71,17 @@ QString MediaInfoLoader::traversal(EFORMAT a_format)
     {
         QJsonObject infoArray;
 
-        for(size_t i = (size_t)eINDEX_0; i < (size_t)g_mediainfo_lists.length(); i++)
+        for(size_t i = static_cast<size_t>(eINDEX_0); i < static_cast<size_t>(g_mediainfo_lists.length()); i++)
         {
-            QList<QPair<MediaInfoDLL::String, QPair<QString, bool>>> context = g_mediainfo_lists.at((int)i).second;
+            QList<QPair<MediaInfoDLL::String, QPair<QString, bool>>> context = g_mediainfo_lists.at(static_cast<int>(i)).second;
             size_t streamCount = count(static_cast<stream_t>(i));
             QJsonObject info;
 
-            for(size_t k = (size_t)0; k < streamCount; k++)
+            for(size_t k = static_cast<size_t>(eINDEX_0); k < streamCount; k++)
             {
-                QString group = QString("%1%2").arg(g_mediainfo_lists.at((int)i).first).arg(streamCount >= (size_t)eINDEX_2 ? QString::number(k + (size_t)eINDEX_1) : QT_EMPTY);;
+                QString group = QString("%1%2").arg(g_mediainfo_lists.at(static_cast<int>(i)).first).arg(streamCount >= static_cast<size_t>(eINDEX_2) ? QString::number(k + static_cast<size_t>(eINDEX_1)) : QT_EMPTY);
 
-                for(int j = (int)eINDEX_0; j < context.length(); j++)
+                for(int j = static_cast<size_t>(eINDEX_0); j < context.length(); j++)
                 {
                     QString key = context.at(j).second.first;
                     QString value = get(context.at(j).first, static_cast<stream_t>(i), k);
@@ -149,11 +153,11 @@ QString MediaInfoLoader::get(EMEDIA_PROP a_prop, stream_t a_streamType, size_t a
     case eMEDIA_PROP_ALL_COMPLETE:
         option(MI_OPTION_COMPLETE, MI_VALUE_TRUE);
         return inform();
-        break;
+        ///@break;
     case eMEDIA_PROP_ALL:
         option(MI_OPTION_COMPLETE, MI_VALUE_FALSE);
         return inform();
-        break;
+        ///@break;
     case eMEDIA_PROP_FORMAT_CODE:
         info = m_mediainfo.Get(a_streamType, a_streamNumber, MEDIA_PROP_FORMAT);
         break;
@@ -223,6 +227,8 @@ QString MediaInfoLoader::get(EMEDIA_PROP a_prop, stream_t a_streamType, size_t a
     case eMEDIA_PROP_SCAN_ORDER:
         info = m_mediainfo.Get(a_streamType, a_streamNumber, MEDIA_PROP_SCAN_ORDER);
         break;
+    default:
+        break;
     }
     return fromStd(info);
 }
@@ -257,9 +263,7 @@ QString MediaInfoLoader::version(void)
 
 QString MediaInfoLoader::language(const QString &a_language)
 {
-    QResource resource(QString(":/strings/mediainfo/language/%1.csv").arg(a_language));
-    QByteArray data((const char *)resource.data(), resource.size());
-    QString language_list = QString::fromUtf8(data);
+    QString language_list = qvs::fromResource(QString(":/strings/mediainfo/language/%1.csv").arg(a_language));
     QString info;
 
     if(a_language == MEDIA_LANGUAGE_DEFAULT)
@@ -297,7 +301,6 @@ QString MediaInfoLoader::format(EFORMAT a_format)
     switch(a_format)
     {
     case eFORMAT_TREE:
-    default:
         info = format(fromStd(MI_VALUE_TREE));
         break;
     case eFORMAT_CSV:

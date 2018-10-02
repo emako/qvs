@@ -72,9 +72,9 @@ void Timer::stop(ETIMER_TYPE a_timer_type)
 
 void Timer::stopAll(void)
 {
-    for(int i = (int)eINDEX_0; i < (int)ETIMER_TYPE_MAX; i++)
+    for(int i = eINDEX_0; i < ETIMER_TYPE_MAX; i++)
     {
-        stop((ETIMER_TYPE)i);
+        stop(static_cast<ETIMER_TYPE>(i));
     }
 }
 
@@ -86,11 +86,11 @@ void Timer::slotOneShotTimerOut(void)
     {
     case ETIMER_SLOT_CALC_MD5:
         do{
-            QString md5 = mainUi->m_com->getHashMd5(mainUi->m_pMediaInfoDialog->getPath());
+            QString md5 = mainUi->m_com->getHashMd5(mainUi->ui->widgetMediaInfo->getPath());
 
-            mainUi->m_pMediaInfoDialog->clear();
-            mainUi->m_pMediaInfoDialog->append(tr("Filename: ") + QFileInfo(mainUi->m_pMediaInfoDialog->getPath()).fileName());
-            mainUi->m_pMediaInfoDialog->append(tr("MD5: ") + md5);
+            mainUi->ui->widgetMediaInfo->clear();
+            mainUi->ui->widgetMediaInfo->append(tr("Filename: ") + QFileInfo(mainUi->ui->widgetMediaInfo->getPath()).fileName());
+            mainUi->ui->widgetMediaInfo->append(tr("MD5: ") + md5);
         }while(false);
         break;
     case ETIMER_SLOT_PROGURM_QUIT:
@@ -108,6 +108,8 @@ void Timer::slotCyclicTimerOut(void)
     {
     case ETIMER_SLOT_SYSTEM_SHUTDOWN:
         mainUi->setShutCountMessage();
+        break;
+    default:
         break;
     }
 }

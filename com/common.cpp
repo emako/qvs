@@ -45,12 +45,16 @@ QString qvs::delFileExt(const QString &a_filename)
     return filename;
 }
 
-QString qvs::getFileText(const QString &a_filename)
+QString qvs::getFileText(const QString &a_filename, const QString &a_codec)
 {
     QFile file(a_filename);
     QTextStream in(&file);
     QString text;
 
+    if(!a_codec.isEmpty())
+    {
+        in.setCodec(a_codec.toStdString().data());
+    }
     if (!file.open(QIODevice::ReadOnly))
     {
         return text;
@@ -76,6 +80,18 @@ bool qvs::setFileText(const QString &a_filename, const QString &a_text)
     return true;
 }
 
+QByteArray qvs::getResource(const QString &a_filename)
+{
+    QResource resource(a_filename);
+
+    return QByteArray(reinterpret_cast<const char *>(resource.data()), static_cast<int>(resource.size()));
+}
+
+QString qvs::fromResource(const QString &a_filename)
+{
+    return QString::fromUtf8(getResource(a_filename));
+}
+
 QString qvs::timeToString(double a_seconds, bool a_fullFormat)
 {
     if(a_seconds <= 0.0)
@@ -85,12 +101,12 @@ QString qvs::timeToString(double a_seconds, bool a_fullFormat)
     a_seconds = std::round(a_seconds * 1000.0) / 1000.0;
 
     // Seconds
-    uint64_t integer = (uint64_t)a_seconds;
+    uint64_t integer = static_cast<uint64_t>(a_seconds);
     int seconds = integer % 60ll;
     integer /= 60ll;
     int minutes = integer % 60ll;
     integer /= 60ll;
-    int hours = integer;
+    int hours = static_cast<int>(integer);
 
     QString timeString;
 
@@ -123,36 +139,24 @@ QString qvs::currentDateTime(void)
     return QDateTime::currentDateTime().toString("yyyy-MM-dd, hh:mm:ss");
 }
 
-QString qvs::currentTime(const QString &a_str)
-{
-    QString time = currentTime();
-    QString str = a_str;
-
-    str.replace(QT_OTR_EOL, QT_NOR_EOL);
-    str.replace(QT_MAC_EOL, QT_NOR_EOL);
-    str.replace(QT_NOR_EOL, QT_NOR_EOL + time);
-    str = time + str;
-    return str;
-}
-
 QString qvs::fromStdBasicWString(const std::basic_string<wchar_t> &a_str)
 {
-    return QString::fromStdWString((std::wstring)a_str);
+    return QString::fromStdWString(static_cast<std::wstring>(a_str));
 }
 
 std::basic_string<wchar_t> qvs::toStdBasicWString(const QString &a_str)
 {
-    return (std::basic_string<wchar_t>)a_str.toStdWString();
+    return static_cast<std::basic_string<wchar_t>>(a_str.toStdWString());
 }
 
 QString qvs::fromStdBasicString(const std::basic_string<char> &a_str)
 {
-    return QString::fromStdString((std::string)a_str);
+    return QString::fromStdString(static_cast<std::string>(a_str));
 }
 
 std::basic_string<char> qvs::toStdBasicString(const QString &a_str)
 {
-    return (std::basic_string<char>)a_str.toStdString();
+    return static_cast<std::basic_string<char>>(a_str.toStdString());
 }
 
 QString qvs::fromHtml(const QString &a_str)
@@ -163,32 +167,63 @@ QString qvs::fromHtml(const QString &a_str)
     return editor.toPlainText();
 }
 
-QString qvs::toHtml(const QString &a_str, QColor a_color)
+
+QString qvs::toHtmlText(const QString &a_str)
 {
-    QString html;
-    QByteArray color;
-    QString str;
+    QString input = a_str;
+    QString output;
 
-    color.append(a_color.red());
-    color.append(a_color.green());
-    color.append(a_color.blue());
-
-    for(const QChar ch : a_str)
+    for(const QChar &ch : input)
     {
         switch (ch.unicode())
         {
-        case '<':  str += QString::fromLatin1("&lt;");   break;
-        case '>':  str += QString::fromLatin1("&gt;");   break;
-        case '&':  str += QString::fromLatin1("&amp;");  break;
-        case '"':  str += QString::fromLatin1("&quot;"); break;
-        case '\'': str += QString::fromLatin1("&apos;"); break;
-        case '\n': str += QString::fromLatin1("<br/>");  break;
-        default:   str += ch;                            break;
+        case '<':  output += QString::fromLatin1("&lt;");   break;
+        case '>':  output += QString::fromLatin1("&gt;");   break;
+        case '&':  output += QString::fromLatin1("&amp;");  break;
+        case '"':  output += QString::fromLatin1("&quot;"); break;
+        case '\'': output += QString::fromLatin1("&apos;"); break;
+        case '\n': output += QString::fromLatin1("<br/>");  break;
+        default:   output += ch;                            break;
         }
     }
+    return output;
+}
 
-    html = QString("<span style=\" color:#%1;\">%2</span>").arg(QString(color.toHex())).arg(str);
+QString qvs::toHtml(const QString &a_str, QColor a_color, bool logging)
+{
+    QString html;
+    QString inputs = toNormalEol(a_str);
+    QByteArray color = QByteArray().append(static_cast<char>(a_color.red()))
+                                   .append(static_cast<char>(a_color.green()))
+                                   .append(static_cast<char>(a_color.blue()));
+    int count = eINDEX_0;
+
+    for(QString input : inputs.split(QT_NOR_EOL))
+    {
+        if(logging)
+        {
+            html += QString("<span style=\"color:#000000;\">%1</span>").arg(toHtmlText(currentTime()));
+        }
+        input = toHtmlText(input);
+
+        if(count != inputs.split(QT_NOR_EOL).length() - eINDEX_1)
+        {
+            input += toHtmlText(QT_NOR_EOL); /* No appending of EOL at last line. */
+        }
+
+        html += QString("<span style=\"color:#%1;\">%2</span>").arg(QString(color.toHex())).arg(input);
+        count++;
+    }
     return html;
+}
+
+QString qvs::toNormalEol(const QString &a_str)
+{
+    QString str = a_str;
+
+    str.replace(QT_OTR_EOL, QT_NOR_EOL);
+    str.replace(QT_MAC_EOL, QT_NOR_EOL);
+    return str;
 }
 
 QString qvs::convertFramesToTimecode(double a_frames, double a_fps)
@@ -198,21 +233,21 @@ QString qvs::convertFramesToTimecode(double a_frames, double a_fps)
 
 double qvs::convertFramesToTime(double a_frames, double a_fps)
 {
-    return (a_fps == (double)eINDEX_0) ? (double)eINDEX_0 : a_frames * ((double)eINDEX_1 / a_fps);
+    return (static_cast<int>(a_fps) == eINDEX_0) ? static_cast<double>(eINDEX_0) : a_frames * (static_cast<double>(eINDEX_1) / a_fps);
 }
 
 QString qvs::convertSecondToTimecode(double a_timeSec)
 {
-    if(a_timeSec < (double)eINDEX_0)
+    if(a_timeSec < static_cast<double>(eINDEX_0))
     {
-        a_timeSec = (double)eINDEX_0;
+        a_timeSec = static_cast<double>(eINDEX_0);
     }
 
     QString timecode;
-    int h  = (int)a_timeSec / HOUR;
-    int m  = ((int)a_timeSec % HOUR) / MINUTE;
-    int s  = ((int)a_timeSec % HOUR) % MINUTE;
-    int ms = (int)((double)(a_timeSec - (int)a_timeSec) * SECOND_TO_MILLISECOND_UNIT);
+    int h  = static_cast<int>(a_timeSec) / HOUR;
+    int m  = (static_cast<int>(a_timeSec) % HOUR) / MINUTE;
+    int s  = (static_cast<int>(a_timeSec) % HOUR) % MINUTE;
+    int ms = static_cast<int>(static_cast<double>(a_timeSec - static_cast<int>(a_timeSec)) * SECOND_TO_MILLISECOND_UNIT);
 
     timecode.sprintf("%02d:%02d:%02d.%03d", h, m, s, ms);
     return timecode;
@@ -256,10 +291,6 @@ QString qvs::findFirstFilePath(QString a_filename, QString a_path)
     QString path;
     QFileInfoList fileInfoList;
 
-    if(a_path == NULL)
-    {
-        a_path = QDir::currentPath();
-    }
     if(a_path.isEmpty() || a_filename.isEmpty())
     {
         return path;
@@ -310,7 +341,7 @@ QList<DWORD> Common::getProcessID(QString a_filename)
         if(out.length() >= eINDEX_2)
         {
             QString processIdStr = out.at(eINDEX_1);
-            DWORD processId = processIdStr.replace("\"", QT_EMPTY).toInt();
+            DWORD processId = static_cast<DWORD>(processIdStr.replace("\"", QT_EMPTY).toInt());
             processIdList << processId;
         }
     }
@@ -340,7 +371,7 @@ QList<DWORD> Common::getProcessID(QStringList a_filename_list)
                 if(processName.startsWith(a_processName))
                 {
                     QString processIdStr = out.at(eINDEX_1);
-                    DWORD processId = processIdStr.replace("\"", QT_EMPTY).toInt();
+                    DWORD processId = static_cast<DWORD>(processIdStr.replace("\"", QT_EMPTY).toInt());
                     processIdList << processId;
                 }
             }
@@ -388,7 +419,7 @@ void Common::moveRow(QList<JobItem> *a_list, int a_from, int a_to)
 
 void Common::moveRow(QTableWidget *a_pTable, int a_from, int a_to)
 {
-    if(a_pTable == NULL)
+    if(a_pTable == nullptr)
     {
         return;
     }
@@ -440,7 +471,7 @@ int Common::hadNumber(QString a_text)
             return i;
         }
     }
-    return (int)eINDEX_NONE;
+    return eINDEX_NONE;
 }
 
 QString qvs::toStringFirstUpper(QString a_str)
@@ -688,7 +719,7 @@ bool Common::isVaildIndex(int a_length, int a_index)
 
 void Common::loadCommonConfig(void)
 {
-    EINDEX at_style_index = (EINDEX)g_pConfig->getConfig(Config::eCONFIG_COMMON_STYLE_FACTORY).toInt();
+    EINDEX at_style_index = static_cast<EINDEX>(g_pConfig->getConfig(Config::eCONFIG_COMMON_STYLE_FACTORY).toInt());
     EINDEX at_style_index_def = eINDEX_NONE;
 
     if(isVaildIndex(QStyleFactory::keys().length(), at_style_index))
@@ -697,7 +728,7 @@ void Common::loadCommonConfig(void)
     }
     else
     {
-        at_style_index_def = (EINDEX)getStringListIndex(QStyleFactory::keys(), c_default_style);
+        at_style_index_def = static_cast<EINDEX>(getStringListIndex(QStyleFactory::keys(), c_default_style));
 
         if(at_style_index_def != eINDEX_NONE)
         {

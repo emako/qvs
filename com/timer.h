@@ -5,6 +5,8 @@
 #include <QObject>
 #include <QTimer>
 
+#define TIMER_INTERVAL_MAIL 500
+
 class MainWindow;
 
 class Timer : public QObject
@@ -32,7 +34,7 @@ public:
         ETIMER_SLOT_MAX,
     };
 
-    void start(ETIMER_TYPE a_timer_type, ETIMER_SLOT a_timer, int a_msec = (int)eINDEX_0);
+    void start(ETIMER_TYPE a_timer_type, ETIMER_SLOT a_timer, int a_msec = eINDEX_0);
     void stop(ETIMER_TYPE a_timer_type);
     void stopAll(void);
 

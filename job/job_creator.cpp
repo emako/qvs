@@ -99,9 +99,9 @@ void JobCreator::reloadConfig(QMap<EJOB_CONFIG, QVariant> a_job_config)
 {
     if(a_job_config.isEmpty())
     {
-        for(int i = eINDEX_0; i <= (int)eJOB_CONFIG_MAX; i++)
+        for(int i = eINDEX_0; i <= eJOB_CONFIG_MAX; i++)
         {
-            setEncoderConfig((EJOB_ENCODER)ui->cbxEncoderType->currentIndex(), (EJOB_CONFIG)i);
+            setEncoderConfig(static_cast<EJOB_ENCODER>(ui->cbxEncoderType->currentIndex()), static_cast<EJOB_CONFIG>(i));
         }
         ui->cbxEncoderType->clear();
         ui->cbxEncoderType->addItems(getEncoderItems());
@@ -152,7 +152,7 @@ void JobCreator::setupUi(void)
     /*Macro*/
     m_job_type = eJOB_PIPER_VSPIPE;
     m_job_reload = eJOB_RELOAD_NEW;
-    m_job_output_suffix = getOutputFileSuffixList().at((int)eINDEX_0);
+    m_job_output_suffix = getOutputFileSuffixList().at(eINDEX_0);
 
     /*Property*/
     this->setMaximumHeight(eINDEX_10);
@@ -161,9 +161,9 @@ void JobCreator::setupUi(void)
     this->installEventFilter(this);
 
     /*Ui*/
-    for(int i = eINDEX_0; i <= (int)eJOB_CONFIG_MAX; i++)
+    for(int i = eINDEX_0; i <= eJOB_CONFIG_MAX; i++)
     {
-        setEncoderConfig((EJOB_ENCODER)ui->cbxEncoderType->currentIndex(), (EJOB_CONFIG)i);
+        setEncoderConfig(static_cast<EJOB_ENCODER>(ui->cbxEncoderType->currentIndex()), static_cast<EJOB_CONFIG>(i));
     }
     ui->cbxEncoderType->clear();
     ui->cbxEncoderType->addItems(getEncoderItems());
@@ -272,7 +272,7 @@ void JobCreator::reloadOutput(QString a_fileName)
 
 void JobCreator::on_buttonBrowseSource_clicked()
 {
-    QString fileName = QFileDialog::getOpenFileName(this, tr("Select File"), NULL, "All Files (*.*)");
+    QString fileName = QFileDialog::getOpenFileName(this, tr("Select File"), NULLSTR, tr("All Files (*.*)"));
 
     if(fileName.isEmpty())
     {
@@ -285,20 +285,21 @@ void JobCreator::on_buttonBrowseOutput_clicked()
 {
     QList<QPair<QString, QString>> fileExtMap =
     {
-        {OUTPUT_EXT_MP4,  tr("MPEG-4 (*.mp4)")},
-        {OUTPUT_EXT_MKV,  tr("Matroska (*.mkv)")},
-        {OUTPUT_EXT_H264, tr("AVC Raw (*.h264)")},
-        {OUTPUT_EXT_HEVC, tr("HEVC Raw (*.hevc)")},
+        { OUTPUT_EXT_MP4,  tr("MPEG-4 (*.mp4)")   },
+        { OUTPUT_EXT_MKV,  tr("Matroska (*.mkv)") },
+        { OUTPUT_EXT_H264, tr("AVC Raw (*.h264)") },
+        { OUTPUT_EXT_HEVC, tr("HEVC Raw (*.hevc)")},
     };
 
     QStringList fileExtList;
+    QString selectedFilter = QString(fileExtMap.at(eINDEX_0).second);
 
     for(int i = eINDEX_0; i < fileExtMap.length(); i++)
     {
         fileExtList << fileExtMap.at(i).second;
     }
 
-    QString fileName = QFileDialog::getSaveFileName(this, tr("Edit Filename"), ui->editOutput->text(), fileExtList.join(";;"), &QString(fileExtMap.at(eINDEX_0).second));
+    QString fileName = QFileDialog::getSaveFileName(this, tr("Edit Filename"), ui->editOutput->text(), fileExtList.join(";;"), &selectedFilter);
 
     if(fileName.isEmpty())
     {
@@ -393,6 +394,7 @@ QStringList JobCreator::getEncoderConfigMode(EJOB_ENCODER a_encoder)
         break;
     case eJOB_ENCODER_QSVENCC:
         items << "CQP" << "VQP" << "ICQ" << "VBR" << "AVBR" << "QVBR" << "VCM" << "CBR";
+        break;
     case eJOB_ENCODER_VCEENCC:
         items << "CQP" << "VBR" << "CBR";
         break;
@@ -419,7 +421,7 @@ bool JobCreator::getEncoderConfigModeCtrlType(EJOB_ENCODER a_encoder, EINDEX a_m
     case eJOB_ENCODER_AVC:
     case eJOB_ENCODER_HEVC:
         //items << "CRF" << "CQP" << "ABR" << "2PASS";
-        if((a_mode_index == (int)eINDEX_0) || (a_mode_index == (int)eINDEX_1))
+        if((a_mode_index == eINDEX_0) || (a_mode_index == eINDEX_1))
         {
             is_enable_bitrate = false;
         }
@@ -430,7 +432,7 @@ bool JobCreator::getEncoderConfigModeCtrlType(EJOB_ENCODER a_encoder, EINDEX a_m
         break;
     case eJOB_ENCODER_NVENCC:
         //items << "CQP" << "VBR" << "VBRHQ" << "CBR" << "CBRHQ";
-        if(a_mode_index == (int)eINDEX_0)
+        if(a_mode_index == eINDEX_0)
         {
             is_enable_bitrate = false;
         }
@@ -441,7 +443,7 @@ bool JobCreator::getEncoderConfigModeCtrlType(EJOB_ENCODER a_encoder, EINDEX a_m
         break;
     case eJOB_ENCODER_QSVENCC:
         //items << "CQP" << "VQP" << "ICQ" << "VBR" << "AVBR" << "QVBR" << "VCM" << "CBR";
-        if((a_mode_index == (int)eINDEX_0) || (a_mode_index == (int)eINDEX_1) || (a_mode_index == (int)eINDEX_2))
+        if((a_mode_index == eINDEX_0) || (a_mode_index == eINDEX_1) || (a_mode_index == eINDEX_2))
         {
             is_enable_bitrate = false;
         }
@@ -449,9 +451,10 @@ bool JobCreator::getEncoderConfigModeCtrlType(EJOB_ENCODER a_encoder, EINDEX a_m
         {
             is_enable_bitrate = true;
         }
+        break;
     case eJOB_ENCODER_VCEENCC:
         //items << "CQP" << "VBR" << "CBR";
-        if(a_mode_index == (int)eINDEX_0)
+        if(a_mode_index == eINDEX_0)
         {
             is_enable_bitrate = false;
         }
@@ -468,13 +471,13 @@ bool JobCreator::getEncoderConfigModeCtrlType(EJOB_ENCODER a_encoder, EINDEX a_m
 
 void JobCreator::setEncoderConfigModeCtrlType(EJOB_ENCODER a_encoder)
 {
-    EINDEX mode_index = (EINDEX)ui->cbxRateControlMode->currentIndex();
+    EINDEX mode_index = static_cast<EINDEX>(ui->cbxRateControlMode->currentIndex());
     bool is_enable_bitrate = getEncoderConfigModeCtrlType(a_encoder, mode_index);
 
     ui->spinQuantizer->setEnabled(!is_enable_bitrate);
     ui->spinBitrate->setEnabled(is_enable_bitrate);
 
-    if((a_encoder == eJOB_ENCODER_QSVENCC) && (mode_index == (int)eINDEX_5))
+    if((a_encoder == eJOB_ENCODER_QSVENCC) && (mode_index == eINDEX_5))
     {
         ui->spinQuantizer->setEnabled(true);
         ui->spinBitrate->setEnabled(true);
@@ -619,7 +622,7 @@ QStringList JobCreator::getEncoderConfigProfile(EJOB_ENCODER a_encoder, EINDEX a
 void JobCreator::setEncoderConfigProfile(EJOB_ENCODER a_encoder)
 {
     ui->cbxProfile->clear();
-    ui->cbxProfile->addItems(getEncoderConfigProfile(a_encoder, (EINDEX)ui->cbxEncoderVariant->currentIndex()));
+    ui->cbxProfile->addItems(getEncoderConfigProfile(a_encoder, static_cast<EINDEX>(ui->cbxEncoderVariant->currentIndex())));
 }
 
 void JobCreator::setEncoderConfig(EJOB_ENCODER a_encoder, EJOB_CONFIG a_config)
@@ -652,27 +655,27 @@ void JobCreator::setEncoderConfig(EJOB_ENCODER a_encoder, EJOB_CONFIG a_config)
 
 void JobCreator::on_cbxEncoderType_currentIndexChanged(int a_index)
 {
-    for(int i = eINDEX_0; i <= (int)eJOB_CONFIG_MAX; i++)
+    for(int i = eINDEX_0; i <= eJOB_CONFIG_MAX; i++)
     {
-        setEncoderConfig((EJOB_ENCODER)a_index, (EJOB_CONFIG)i);
+        setEncoderConfig(static_cast<EJOB_ENCODER>(a_index), static_cast<EJOB_CONFIG>(i));
     }
 }
 
 void JobCreator::on_cbxEncoderVariant_currentIndexChanged(int)
 {
-    setEncoderConfigProfile((EJOB_ENCODER)ui->cbxEncoderType->currentIndex());
+    setEncoderConfigProfile(static_cast<EJOB_ENCODER>(ui->cbxEncoderType->currentIndex()));
 }
 
 void JobCreator::on_cbxRateControlMode_currentIndexChanged(int)
 {
-    setEncoderConfigModeCtrlType((EJOB_ENCODER)ui->cbxEncoderType->currentIndex());
+    setEncoderConfigModeCtrlType(static_cast<EJOB_ENCODER>(ui->cbxEncoderType->currentIndex()));
 }
 
 bool JobCreator::isTwoPartMode(QMap<EJOB_CONFIG, QVariant> a_job_config)
 {
     bool is_2part_mode = false;
-    EINDEX encoder_index = (EINDEX)a_job_config[eJOB_CONFIG_ENCODER].toInt();
-    EINDEX mode_index = (EINDEX)a_job_config[eJOB_CONFIG_MODE].toInt();
+    EINDEX encoder_index = static_cast<EINDEX>(a_job_config[eJOB_CONFIG_ENCODER].toInt());
+    EINDEX mode_index = static_cast<EINDEX>(a_job_config[eJOB_CONFIG_MODE].toInt());
 
     if( ( (encoder_index == eINDEX_0) || (encoder_index == eINDEX_1) ) && (mode_index == eINDEX_3) )
     {
@@ -687,14 +690,14 @@ bool JobCreator::eventFilter(QObject *o, QEvent *e)
     {
         JobCreatorHelp job_help_dlg;
         job_help_dlg.mainUi = this;
-        job_help_dlg.showHelp((JobCreatorHelp::EJOB_ENCODER)ui->cbxEncoderType->currentIndex());
+        job_help_dlg.showHelp(static_cast<JobCreatorHelp::EJOB_ENCODER>(ui->cbxEncoderType->currentIndex()));
         job_help_dlg.exec();
     }
     else if((o == ui->labelHelpScreenCustomPiperParams) && (e->type() == QEvent::MouseButtonPress))
     {
         JobCreatorHelp job_help_dlg;
         job_help_dlg.mainUi = this;
-        job_help_dlg.showHelp((JobCreatorHelp::EJOB_PIPER)m_job_type);
+        job_help_dlg.showHelp(static_cast<JobCreatorHelp::EJOB_PIPER>(m_job_type));
         job_help_dlg.exec();
     }
     else if((o == ui->editCustomEncoderParams) && (e->type() == QEvent::FocusOut))
@@ -751,14 +754,14 @@ QList<JobCmdList> JobCreator::splitPipeCommand(QString a_cmd)
     if(a_cmd.indexOf(QT_PIPE) >= 0)
     {
         QStringList tmp = a_cmd.split(QT_PIPE);
-        for(int i = (int)eINDEX_0; i < tmp.length(); i++)
+        for(int i = eINDEX_0; i < tmp.length(); i++)
         {
             cmd.cmd = tmp.at(i).simplified();
-            if(i == (int)eINDEX_0)
+            if(i == eINDEX_0)
             {
                 cmd.type = JobCmdList::eJOB_CMD_TYPE_PIPER;
             }
-            else if(i == (int)eINDEX_1)
+            else if(i == eINDEX_1)
             {
                 cmd.type = JobCmdList::eJOB_CMD_TYPE_ENCODER;
             }
@@ -778,7 +781,7 @@ QString JobCreator::getConfigArch(QMap<EJOB_CONFIG, QVariant> a_job_config)
 {
     QString arch;
 
-    switch((EINDEX)a_job_config[eJOB_CONFIG_ARCH].toInt())
+    switch(a_job_config[eJOB_CONFIG_ARCH].toInt())
     {
     case eINDEX_0:
         arch = "x64";
@@ -820,9 +823,9 @@ QList<JobCmdList> JobCreator::configToCommandX26X(QMap<EJOB_CONFIG, QVariant> a_
     /* Encode Command */
     if(is_two_part_mode)
     {
-        for(int i = (int)eINDEX_1; i <= (int)eINDEX_2; i++)
+        for(int i = eINDEX_1; i <= eINDEX_2; i++)
         {
-            a_job_config[eJOB_CONFIG_PASS_NUM] = (EINDEX)i;
+            a_job_config[eJOB_CONFIG_PASS_NUM] = static_cast<EINDEX>(i);
             if(a_encoder == eJOB_ENCODER_AVC)
             {
                 QList<JobCmdList> at_cmds = splitPipeCommand(configToCommandAVC(a_job_config).join(QT_BLANK).simplified());
@@ -904,7 +907,7 @@ QList<JobCmdList> JobCreator::configToCommandGPU(QMap<EJOB_CONFIG, QVariant> a_j
     //QSVEncC  -c hevc --cqp 23  --profile main -i "input"  -o "output"
 
     /*Encoder*/
-    switch((EINDEX)a_job_config[eJOB_CONFIG_ARCH].toInt())
+    switch(a_job_config[eJOB_CONFIG_ARCH].toInt())
     {
     case eINDEX_0:
         arch = "64";
@@ -952,7 +955,7 @@ QList<JobCmdList> JobCreator::configToCommandGPU(QMap<EJOB_CONFIG, QVariant> a_j
     /*Mode*/
     int at_mode_index = a_job_config[eJOB_CONFIG_MODE].toInt();
     QStringList at_mode_items = getEncoderConfigMode(a_encoder);
-    bool at_mode_is_bitrate = getEncoderConfigModeCtrlType(a_encoder, (EINDEX)at_mode_index);
+    bool at_mode_is_bitrate = getEncoderConfigModeCtrlType(a_encoder, static_cast<EINDEX>(at_mode_index));
     if( (at_mode_index >= eINDEX_0) && (at_mode_index < at_mode_items.length()) )
     {
         int at_mode_value;
@@ -975,7 +978,7 @@ QList<JobCmdList> JobCreator::configToCommandGPU(QMap<EJOB_CONFIG, QVariant> a_j
 
     /*Profile*/
     int at_profile_index = a_job_config[eJOB_CONFIG_PROFILE].toInt();
-    QStringList at_profile_items = getEncoderConfigProfile((EJOB_ENCODER)a_job_config[eJOB_CONFIG_ENCODER].toInt(), (EINDEX)a_job_config[eJOB_CONFIG_VARIANT].toInt());
+    QStringList at_profile_items = getEncoderConfigProfile(static_cast<EJOB_ENCODER>(a_job_config[eJOB_CONFIG_ENCODER].toInt()), static_cast<EINDEX>(a_job_config[eJOB_CONFIG_VARIANT].toInt()));
 
     if( (at_profile_index >= eINDEX_0) && (at_profile_index < at_profile_items.length()) )
     {
@@ -1016,13 +1019,13 @@ QList<JobCmdList> JobCreator::configToCommandGPU(QMap<EJOB_CONFIG, QVariant> a_j
 
 QString JobCreator::getJobItemName(QMap<EJOB_CONFIG, QVariant> a_job_config)
 {
-    EJOB_ENCODER encoder = (EJOB_ENCODER)a_job_config[eJOB_CONFIG_ENCODER].toInt();
+    EJOB_ENCODER encoder = static_cast<EJOB_ENCODER>(a_job_config[eJOB_CONFIG_ENCODER].toInt());
     QString job_name = QFileInfo(a_job_config[eJOB_CONFIG_INPUT].toString()).completeBaseName();
     QStringList job_encoders = getEncoderItems(true);
     QString job_encoder = (job_encoders.length() > encoder) ? job_encoders.at(encoder) : QString();
     QStringList job_modes = getEncoderConfigMode(encoder);
     QString job_mode = (job_modes.length() > a_job_config[eJOB_CONFIG_MODE].toInt()) ? job_modes.at(a_job_config[eJOB_CONFIG_MODE].toInt()) : QString();
-    QString job_value = (getEncoderConfigModeCtrlType(encoder, (EINDEX)a_job_config[eJOB_CONFIG_MODE].toInt())) ? a_job_config[eJOB_CONFIG_BITRATE].toString() : a_job_config[eJOB_CONFIG_QUANTIZER].toString();
+    QString job_value = (getEncoderConfigModeCtrlType(encoder, static_cast<EINDEX>(a_job_config[eJOB_CONFIG_MODE].toInt()))) ? a_job_config[eJOB_CONFIG_BITRATE].toString() : a_job_config[eJOB_CONFIG_QUANTIZER].toString();
 
     return QString("%1 [%2, %3@%4]").arg(job_name).arg(job_encoder).arg(job_mode).arg(job_value);
 }
@@ -1031,7 +1034,7 @@ QList<JobCmdList> JobCreator::configToCommand(QMap<EJOB_CONFIG, QVariant> a_job_
 {
     QList<JobCmdList> cmds;
 
-    switch((EJOB_ENCODER)a_job_config[eJOB_CONFIG_ENCODER].toInt())
+    switch(static_cast<EJOB_ENCODER>(a_job_config[eJOB_CONFIG_ENCODER].toInt()))
     {
     case eJOB_ENCODER_AVC:
         cmds = configToCommandX26X(a_job_config, eJOB_ENCODER_AVC);
@@ -1085,7 +1088,7 @@ QStringList JobCreator::configToCommandAVC(QMap<EJOB_CONFIG, QVariant> a_job_con
     EJOB_PIPER job_piper = getEncoderPiper(a_job_config);
 
     /*Encoder*/
-    switch((EINDEX)a_job_config[eJOB_CONFIG_ARCH].toInt())
+    switch(a_job_config[eJOB_CONFIG_ARCH].toInt())
     {
     case eINDEX_0:
         arch = "x64";
@@ -1110,7 +1113,7 @@ QStringList JobCreator::configToCommandAVC(QMap<EJOB_CONFIG, QVariant> a_job_con
 
     /*Variant*/
     cmds << "--output-depth";
-    switch ((EINDEX)a_job_config[eJOB_CONFIG_VARIANT].toInt())
+    switch (a_job_config[eJOB_CONFIG_VARIANT].toInt())
     {
     case eINDEX_0:
         cmds << QString::number(eINDEX_8);
@@ -1124,7 +1127,7 @@ QStringList JobCreator::configToCommandAVC(QMap<EJOB_CONFIG, QVariant> a_job_con
     }
 
     /*Mode*/
-    switch((EINDEX)a_job_config[eJOB_CONFIG_MODE].toInt())
+    switch(a_job_config[eJOB_CONFIG_MODE].toInt())
     {
     case eINDEX_0:
         crf_frc = modf(a_job_config[eJOB_CONFIG_QUANTIZER].toDouble(), &crf_int);
@@ -1141,7 +1144,7 @@ QStringList JobCreator::configToCommandAVC(QMap<EJOB_CONFIG, QVariant> a_job_con
         QMessageBox::information(this, tr("Fatal"), tr("Unknown rate-control mode!"));
         isFatalError = true;
     }
-    EINDEX pass = (EINDEX)a_job_config[eJOB_CONFIG_PASS_NUM].toInt();
+    int pass = a_job_config[eJOB_CONFIG_PASS_NUM].toInt();
     if((pass == eINDEX_1) || (pass == eINDEX_2))
     {
         cmds << "--pass"  << QString::number(pass);
@@ -1150,14 +1153,14 @@ QStringList JobCreator::configToCommandAVC(QMap<EJOB_CONFIG, QVariant> a_job_con
 
     /*Preset*/
     int presetIndex = a_job_config[eJOB_CONFIG_PRESET].toInt();
-    items = getEncoderConfigPreset((EJOB_ENCODER)a_job_config[eJOB_CONFIG_ENCODER].toInt());
+    items = getEncoderConfigPreset(static_cast<EJOB_ENCODER>(a_job_config[eJOB_CONFIG_ENCODER].toInt()));
 
-    if(presetIndex > items.length() - (int)eINDEX_1)
+    if(presetIndex > items.length() - eINDEX_1)
     {
         QMessageBox::information(this, tr("Fatal"), tr("Unknown encoder preset!"));
         isFatalError = true;
     }
-    else if(presetIndex != (int)eINDEX_0)
+    else if(presetIndex != eINDEX_0)
     {
         cmds << "--preset" << QString(items.at(presetIndex)).toLower();
     }
@@ -1165,13 +1168,13 @@ QStringList JobCreator::configToCommandAVC(QMap<EJOB_CONFIG, QVariant> a_job_con
     /*Tuning*/
     int tuningIndex = a_job_config[eJOB_CONFIG_TUNING].toInt();
 
-    items = getEncoderConfigTuning((EJOB_ENCODER)a_job_config[eJOB_CONFIG_ENCODER].toInt());
-    if(tuningIndex > items.length() - (int)eINDEX_1)
+    items = getEncoderConfigTuning(static_cast<EJOB_ENCODER>(a_job_config[eJOB_CONFIG_ENCODER].toInt()));
+    if(tuningIndex > items.length() - eINDEX_1)
     {
         QMessageBox::information(this, tr("Fatal"), tr("Unknown encoder tune!"));
         isFatalError = true;
     }
-    else if(tuningIndex != (int)eINDEX_0)
+    else if(tuningIndex != eINDEX_0)
     {
         cmds << "--tune" << QString(items.at(tuningIndex)).toLower();
     }
@@ -1179,13 +1182,13 @@ QStringList JobCreator::configToCommandAVC(QMap<EJOB_CONFIG, QVariant> a_job_con
     /*Profile*/
     int profileIndex = a_job_config[eJOB_CONFIG_PROFILE].toInt();
 
-    items = getEncoderConfigProfile((EJOB_ENCODER)a_job_config[eJOB_CONFIG_ENCODER].toInt(), (EINDEX)a_job_config[eJOB_CONFIG_VARIANT].toInt());
-    if(profileIndex > items.length() - (int)eINDEX_1)
+    items = getEncoderConfigProfile(static_cast<EJOB_ENCODER>(a_job_config[eJOB_CONFIG_ENCODER].toInt()), static_cast<EINDEX>(a_job_config[eJOB_CONFIG_VARIANT].toInt()));
+    if(profileIndex > items.length() - eINDEX_1)
     {
         QMessageBox::information(this, tr("Fatal"), tr("Unknown encoder profile!"));
         isFatalError = true;
     }
-    else if(profileIndex != (int)eINDEX_0)
+    else if(profileIndex != eINDEX_0)
     {
         cmds << "--profile" << QString(items.at(profileIndex)).toLower();
     }
@@ -1223,16 +1226,16 @@ QStringList JobCreator::configToCommandAVC(QMap<EJOB_CONFIG, QVariant> a_job_con
     switch(job_piper)
     {
     case eJOB_PIPER_VSPIPE:
-        cmds.insert((int)eINDEX_0, qvs::findFirstFilePath(QString("vspipe")));
-        cmds.insert((int)eINDEX_1, "--y4m");
-        cmds.insert((int)eINDEX_2, QString("\"%1\"").arg(a_job_config[eJOB_CONFIG_INPUT].toString()));
-        cmds.insert((int)eINDEX_3, "-");
-        cmds.insert((int)eINDEX_4, QT_PIPE);
+        cmds.insert(eINDEX_0, qvs::findFirstFilePath(QString("vspipe")));
+        cmds.insert(eINDEX_1, "--y4m");
+        cmds.insert(eINDEX_2, QString("\"%1\"").arg(a_job_config[eJOB_CONFIG_INPUT].toString()));
+        cmds.insert(eINDEX_3, "-");
+        cmds.insert(eINDEX_4, QT_PIPE);
         break;
     case eJOB_PIPER_AVS4X26X:
-        cmds.insert((int)eINDEX_0, qvs::findFirstFilePath(QString("avs4x26x_%1").arg(arch)));
-        cmds.insert((int)eINDEX_1, "--x264-binary");
-        cmds.insert((int)eINDEX_2, a_job_config[eJOB_CONFIG_CUSTOM_PIPER_PARM].toString());
+        cmds.insert(eINDEX_0, qvs::findFirstFilePath(QString("avs4x26x_%1").arg(arch)));
+        cmds.insert(eINDEX_1, "--x264-binary");
+        cmds.insert(eINDEX_2, a_job_config[eJOB_CONFIG_CUSTOM_PIPER_PARM].toString());
         break;
     case eJOB_PIPER_DIRECT:
     default:
@@ -1256,7 +1259,7 @@ QStringList JobCreator::configToCommandHEVC(QMap<EJOB_CONFIG, QVariant> a_job_co
     EJOB_PIPER job_piper = getEncoderPiper(a_job_config);
 
     /*Encoder*/
-    switch((EINDEX)a_job_config[eJOB_CONFIG_ARCH].toInt())
+    switch(a_job_config[eJOB_CONFIG_ARCH].toInt())
     {
     case eINDEX_0:
         arch = "x64";
@@ -1281,7 +1284,7 @@ QStringList JobCreator::configToCommandHEVC(QMap<EJOB_CONFIG, QVariant> a_job_co
 
     /*Variant*/
     cmds << "-D";
-    switch ((EINDEX)a_job_config[eJOB_CONFIG_VARIANT].toInt())
+    switch (a_job_config[eJOB_CONFIG_VARIANT].toInt())
     {
     case eINDEX_0:
         cmds << QString::number(eINDEX_8);
@@ -1295,7 +1298,7 @@ QStringList JobCreator::configToCommandHEVC(QMap<EJOB_CONFIG, QVariant> a_job_co
     }
 
     /*Mode*/
-    switch((EINDEX)a_job_config[eJOB_CONFIG_MODE].toInt())
+    switch(a_job_config[eJOB_CONFIG_MODE].toInt())
     {
     case eINDEX_0:
         crf_frc = modf(a_job_config[eJOB_CONFIG_QUANTIZER].toDouble(), &crf_int);
@@ -1312,7 +1315,7 @@ QStringList JobCreator::configToCommandHEVC(QMap<EJOB_CONFIG, QVariant> a_job_co
         QMessageBox::information(this, tr("Fatal"), tr("Unknown rate-control mode!"));
         isFatalError = true;
     }
-    EINDEX pass = (EINDEX)a_job_config[eJOB_CONFIG_PASS_NUM].toInt();
+    int pass = a_job_config[eJOB_CONFIG_PASS_NUM].toInt();
     if((pass == eINDEX_1) || (pass == eINDEX_2))
     {
         cmds << "--pass"  << QString::number(pass);
@@ -1321,14 +1324,14 @@ QStringList JobCreator::configToCommandHEVC(QMap<EJOB_CONFIG, QVariant> a_job_co
 
     /*Preset*/
     int presetIndex = a_job_config[eJOB_CONFIG_PRESET].toInt();
-    items = getEncoderConfigPreset((EJOB_ENCODER)a_job_config[eJOB_CONFIG_ENCODER].toInt());
+    items = getEncoderConfigPreset(static_cast<EJOB_ENCODER>(a_job_config[eJOB_CONFIG_ENCODER].toInt()));
 
-    if(presetIndex > items.length() - (int)eINDEX_1)
+    if(presetIndex > items.length() - eINDEX_1)
     {
         QMessageBox::information(this, tr("Fatal"), tr("Unknown encoder preset!"));
         isFatalError = true;
     }
-    else if(presetIndex != (int)eINDEX_0)
+    else if(presetIndex != eINDEX_0)
     {
         cmds << "--preset" << QString(items.at(presetIndex)).toLower();
     }
@@ -1336,13 +1339,13 @@ QStringList JobCreator::configToCommandHEVC(QMap<EJOB_CONFIG, QVariant> a_job_co
     /*Tuning*/
     int tuningIndex = a_job_config[eJOB_CONFIG_TUNING].toInt();
 
-    items = getEncoderConfigTuning((EJOB_ENCODER)a_job_config[eJOB_CONFIG_ENCODER].toInt());
-    if(tuningIndex > items.length() - (int)eINDEX_1)
+    items = getEncoderConfigTuning(static_cast<EJOB_ENCODER>(a_job_config[eJOB_CONFIG_ENCODER].toInt()));
+    if(tuningIndex > items.length() - eINDEX_1)
     {
         QMessageBox::information(this, tr("Fatal"), tr("Unknown encoder tune!"));
         isFatalError = true;
     }
-    else if(tuningIndex != (int)eINDEX_0)
+    else if(tuningIndex != eINDEX_0)
     {
         cmds << "--tune" << QString(items.at(tuningIndex)).toLower();
     }
@@ -1350,13 +1353,13 @@ QStringList JobCreator::configToCommandHEVC(QMap<EJOB_CONFIG, QVariant> a_job_co
     /*Profile*/
     int profileIndex = a_job_config[eJOB_CONFIG_PROFILE].toInt();
 
-    items = getEncoderConfigProfile((EJOB_ENCODER)a_job_config[eJOB_CONFIG_ENCODER].toInt(), (EINDEX)a_job_config[eJOB_CONFIG_VARIANT].toInt());
-    if(profileIndex > items.length() - (int)eINDEX_1)
+    items = getEncoderConfigProfile(static_cast<EJOB_ENCODER>(a_job_config[eJOB_CONFIG_ENCODER].toInt()), static_cast<EINDEX>(a_job_config[eJOB_CONFIG_VARIANT].toInt()));
+    if(profileIndex > items.length() - eINDEX_1)
     {
         QMessageBox::information(this, tr("Fatal"), tr("Unknown encoder profile!"));
         isFatalError = true;
     }
-    else if(profileIndex != (int)eINDEX_0)
+    else if(profileIndex != eINDEX_0)
     {
         cmds << "--profile" << QString(items.at(profileIndex)).toLower();
     }
@@ -1400,16 +1403,16 @@ QStringList JobCreator::configToCommandHEVC(QMap<EJOB_CONFIG, QVariant> a_job_co
     switch(job_piper)
     {
     case eJOB_PIPER_VSPIPE:
-        cmds.insert((int)eINDEX_0, qvs::findFirstFilePath(QString("vspipe")));
-        cmds.insert((int)eINDEX_1, "--y4m");
-        cmds.insert((int)eINDEX_2, QString("\"%1\"").arg(a_job_config[eJOB_CONFIG_INPUT].toString()));
-        cmds.insert((int)eINDEX_3, "-");
-        cmds.insert((int)eINDEX_4, QT_PIPE);
+        cmds.insert(eINDEX_0, qvs::findFirstFilePath(QString("vspipe")));
+        cmds.insert(eINDEX_1, "--y4m");
+        cmds.insert(eINDEX_2, QString("\"%1\"").arg(a_job_config[eJOB_CONFIG_INPUT].toString()));
+        cmds.insert(eINDEX_3, "-");
+        cmds.insert(eINDEX_4, QT_PIPE);
         break;
     case eJOB_PIPER_AVS4X26X:
-        cmds.insert((int)eINDEX_0, qvs::findFirstFilePath(QString("avs4x26x_%1").arg(arch)));
-        cmds.insert((int)eINDEX_1, "--x265-binary");
-        cmds.insert((int)eINDEX_2, a_job_config[eJOB_CONFIG_CUSTOM_PIPER_PARM].toString());
+        cmds.insert(eINDEX_0, qvs::findFirstFilePath(QString("avs4x26x_%1").arg(arch)));
+        cmds.insert(eINDEX_1, "--x265-binary");
+        cmds.insert(eINDEX_2, a_job_config[eJOB_CONFIG_CUSTOM_PIPER_PARM].toString());
         break;
     case eJOB_PIPER_DIRECT:
     default:
@@ -1494,7 +1497,7 @@ void JobCreator::loadCommonConfig(void)
 
 void JobCreator::on_checkBoxStartJobImmediately_stateChanged(int a_state)
 {
-    g_pConfig->setConfig(Config::eCONFIG_COMMON_START_JOB_IMMEDIATELY, (bool)a_state);
+    g_pConfig->setConfig(Config::eCONFIG_COMMON_START_JOB_IMMEDIATELY, static_cast<bool>(a_state));
 }
 
 void JobCreator::setPreferAvisynthWith32Bit(bool a_is32Bit)

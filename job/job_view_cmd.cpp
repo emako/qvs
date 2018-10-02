@@ -33,8 +33,8 @@ const char *c_config_type[JobCmdList::eJOB_CMD_TYPE_MAX] = {
 JobViewCmd::JobViewCmd(QDialog *parent) :
     QDialog(parent),
     ui(new Ui::JobViewCmd),
-    m_pViewMenu(nullptr),
-    m_mode(eRELOAD_MODE_NONE)
+    m_mode(eRELOAD_MODE_NONE),
+    m_pViewMenu(nullptr)
 {
     ui->setupUi(this);
     this->setup();
@@ -76,6 +76,12 @@ void JobViewCmd::reload(QStringList a_job_item)
     ui->checkBoxShowDetail->setEnabled(false);
 }
 
+void JobViewCmd::reload(QString a_html)
+{
+    ui->plainTextEdit->appendHtml(a_html);
+    ui->checkBoxShowDetail->setEnabled(false);
+}
+
 void JobViewCmd::reload(QList<StdWatcherCmd> a_job_item)
 {
     m_mode = eRELOAD_MODE_STD_WATCHER_CMD_LIST;
@@ -113,7 +119,7 @@ QString JobViewCmd::createCommand(bool a_is_detail)
                 if(m_job_item.job_cmds.at(i).type == JobCmdList::eJOB_CMD_TYPE_PIPER)
                 {
                     int encoder_cmd_list_count = lookupJobEncoder(m_job_item.job_cmds, m_job_item.job_cmds.at(i).uid);
-                    if(encoder_cmd_list_count >= (int)eINDEX_0)
+                    if(encoder_cmd_list_count >= eINDEX_0)
                     {
                         QString cmd = QString(m_job_item.job_cmds.at(encoder_cmd_list_count).cmd).remove("--frames %1");
                         cmds << QString("%1 | %2").arg(m_job_item.job_cmds.at(i).cmd).arg(cmd);
@@ -141,7 +147,7 @@ QString JobViewCmd::createCommand(bool a_is_detail)
                 qDebug() << i.key() << ":" << i.value();
 #endif
                 QString format = "%1(%2)=%3";
-                if(i.value().type() == QMetaType::QString)
+                if(i.value().type() == QVariant::String)
                 {
                     format = "%1(%2)=\"%3\"";
                 }
@@ -170,7 +176,7 @@ QString JobViewCmd::createCommand(bool a_is_detail)
 
 int JobViewCmd::lookupJobEncoder(QList<JobCmdList> a_cmds, QUuid a_uid)
 {
-    int job_cmd_list_count = (int)eINDEX_NONE;
+    int job_cmd_list_count = eINDEX_NONE;
 
     for(int i = 0; i < a_cmds.length(); i++)
     {
@@ -193,7 +199,7 @@ void JobViewCmd::showCommand(bool a_is_detail)
 
 void JobViewCmd::on_checkBoxShowDetail_stateChanged(int a_state)
 {
-    showCommand((bool)a_state);
+    showCommand(static_cast<bool>(a_state));
 }
 
 void JobViewCmd::on_buttonSave_clicked()

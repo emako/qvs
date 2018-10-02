@@ -31,7 +31,7 @@ class SyntaxHighlighter : public QSyntaxHighlighter
 {
     Q_OBJECT
 public:
-    SyntaxHighlighter(QTextDocument *parent = 0);
+    SyntaxHighlighter(QTextDocument *parent = nullptr);
     ~SyntaxHighlighter();
 
     enum ECOMMENT_TYPE {
@@ -40,7 +40,7 @@ public:
         eCOMMENT_TYPE_MAX,
     };
 
-    enum EHIGHLIGHTER_COLOR {
+    enum EHIGHLIGHTER_COLOR : int{
         eHIGHLIGHTER_COLOR_KEYWORD_R = 14,
         eHIGHLIGHTER_COLOR_KEYWORD_G = 170,
         eHIGHLIGHTER_COLOR_KEYWORD_B = 149,

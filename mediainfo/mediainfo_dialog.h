@@ -23,7 +23,7 @@ class MediaInfoDialog : public QWidget
     Q_OBJECT
 
 public:
-    explicit MediaInfoDialog(QWidget *parent = 0);
+    explicit MediaInfoDialog(QWidget *parent = nullptr);
     ~MediaInfoDialog();
     friend class MainWindow;
     class MainWindow *mainUi;

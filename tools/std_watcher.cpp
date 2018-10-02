@@ -8,8 +8,9 @@ extern QMap<QUuid, StdWatcher*> g_pStdWatch;
 StdWatcher::StdWatcher(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::StdWatcher),
-    m_pContextMenu(nullptr),
-    m_isBatch(false)
+    m_isBatch(false),
+    m_dataType(eDATA_TYPE_UTF8),
+    m_pContextMenu(nullptr)
 {
     ui->setupUi(this);
     this->setupUi();
@@ -31,7 +32,7 @@ void StdWatcher::setCloseTime(const long a_msec)
 void StdWatcher::initJob(QUuid a_uid)
 {
     m_uid = a_uid;
-    m_cmds_index = (long)eINDEX_0;
+    m_cmds_index = eINDEX_0;
 }
 
 void StdWatcher::startJob(QString a_cmd)
@@ -91,9 +92,9 @@ void StdWatcher::abortJob()
     {
         m_process_job_encoder.kill();
     }
-    m_process_job_info.waitForFinished(-1);
-    m_process_job_piper.waitForFinished(-1);
-    m_process_job_encoder.waitForFinished(-1);
+    m_process_job_info.waitForFinished(eINDEX_NONE);
+    m_process_job_piper.waitForFinished(eINDEX_NONE);
+    m_process_job_encoder.waitForFinished(eINDEX_NONE);
 }
 
 bool StdWatcher::isRunning(void)
@@ -130,13 +131,6 @@ bool StdWatcher::isStarted(void)
     return false;
 }
 
-void StdWatcher::releaseJob(void)
-{
-    abortJob();
-    releaseCloseTimer();
-    StdManager::releaseStdWatch(m_uid);
-}
-
 void StdWatcher::pauseJob(void)
 {
     QList<qint64> processIds = getAllProcessID();
@@ -149,15 +143,15 @@ void StdWatcher::pauseJob(void)
 
     for(QList<qint64>::iterator i = processIds.begin(); i != processIds.end(); ++i)
     {
-        BOOL result = DebugActiveProcess((DWORD)*i);
+        BOOL result = DebugActiveProcess(static_cast<DWORD>(*i));
 
         if(result)
         {
-            viewLog(JobChef::eJOB_LOG_TYPE_JOB_STATUS, tr("Paused. PID %1.").arg(QString::number((DWORD)*i)));
+            viewLog(JobChef::eJOB_LOG_TYPE_JOB_STATUS, tr("Paused. PID %1.").arg(QString::number(static_cast<DWORD>(*i))));
         }
         else
         {
-            viewLog(JobChef::eJOB_LOG_TYPE_WARN, tr("Paused failed. PID %1. Error %2.").arg(QString::number((DWORD)*i)).arg(GetLastError()));
+            viewLog(JobChef::eJOB_LOG_TYPE_WARN, tr("Paused failed. PID %1. Error %2.").arg(QString::number(static_cast<DWORD>(*i))).arg(GetLastError()));
         }
     }
 }
@@ -187,15 +181,15 @@ void StdWatcher::resumeJob(void)
 
     for(QList<qint64>::iterator i = processIds.begin(); i != processIds.end(); ++i)
     {
-        BOOL result = DebugActiveProcessStop((DWORD)*i);
+        BOOL result = DebugActiveProcessStop(static_cast<DWORD>(*i));
 
         if(result)
         {
-            viewLog(JobChef::eJOB_LOG_TYPE_JOB_STATUS, tr("Resumed. PID %1.").arg(QString::number((DWORD)*i)));
+            viewLog(JobChef::eJOB_LOG_TYPE_JOB_STATUS, tr("Resumed. PID %1.").arg(QString::number(static_cast<DWORD>(*i))));
         }
         else
         {
-            viewLog(JobChef::eJOB_LOG_TYPE_JOB_STATUS, tr("Failed to resume. PID %1. Error %2.").arg(QString::number((DWORD)*i)).arg(GetLastError()));
+            viewLog(JobChef::eJOB_LOG_TYPE_JOB_STATUS, tr("Failed to resume. PID %1. Error %2.").arg(QString::number(static_cast<DWORD>(*i))).arg(GetLastError()));
         }
     }
 }
@@ -242,6 +236,7 @@ void StdWatcher::setupUi(void)
     connect(at_action_copy, SIGNAL(triggered()), this, SLOT(copyCommand()));
     connect(at_action_enable_line_wrapping, SIGNAL(triggered(bool)), this, SLOT(setWrapped(bool)));
 
+    this->setAttribute(Qt::WA_DeleteOnClose, true);
     initCloseTimerParm();
     m_pCloseTimer = new QTimer(this);
     connect(m_pCloseTimer, SIGNAL(timeout()), this, SLOT(checkClose()));
@@ -265,26 +260,28 @@ void StdWatcher::viewLog(JobChef::EJOB_LOG_TYPE a_log_type, const QString a_log)
 {
     switch(a_log_type)
     {
-    case JobChef::eJOB_LOG_TYPE_WARN:
-        ui->logView->appendHtml(qvs::toHtml(qvs::currentTime(a_log), QColor(255, 0, 0)));
-        break;
-    case JobChef::eJOB_LOG_TYPE_JOB_STATUS:
-        ui->logView->appendHtml(qvs::currentTime()+qvs::toHtml(a_log, QColor(0, 128, 128)));
-        break;
     case JobChef::eJOB_LOG_TYPE_DEBUG:
         qDebug() << a_log;
         break;
     case JobChef::eJOB_LOG_TYPE_INFO:
-        ui->logView->appendHtml(qvs::currentTime()+qvs::toHtml(a_log, QColor(23, 81, 144)));
+        ui->logView->appendHtml(qvs::toHtml(a_log, COLOR_LOGGING_INFO, false));
         break;
+    case JobChef::eJOB_LOG_TYPE_WARN:
     case JobChef::eJOB_LOG_TYPE_ERROE:
     case JobChef::eJOB_LOG_TYPE_FATAL:
+        ui->logView->appendHtml(qvs::toHtml(a_log, COLOR_LOGGING_WARN, false));
+        break;
+    case JobChef::eJOB_LOG_TYPE_JOB_STATUS:
+        ui->logView->appendHtml(qvs::toHtml(a_log, COLOR_LOGGING_STATUS, false));
+        break;
     case JobChef::eJOB_LOG_TYPE_JOB_STD_ERROR:
+        ui->logView->appendHtml(qvs::toHtml(a_log, COLOR_LOGGING_STD_ERROR, false));
+        break;
     case JobChef::eJOB_LOG_TYPE_JOB_STD_OUTPUT:
-    case JobChef::eJOB_LOG_TYPE_JOB_STD_PROGRESS:
-    case JobChef::eJOB_LOG_TYPE_JOB_STD_DETAILS:
+        ui->logView->appendHtml(qvs::toHtml(a_log, COLOR_LOGGING_STD_OUTPUT, false));
+        break;
     default:
-        ui->logView->appendPlainText(qvs::currentTime(a_log));
+        ui->logView->appendHtml(qvs::toHtml(a_log, COLOR_LOGGING_DEFAULT, false));
         break;
     }
 }
@@ -312,7 +309,6 @@ void StdWatcher::slotEncoderProcessStarted()
     if(!m_process_job_encoder.isReadable())
     {
         viewLog(JobChef::eJOB_LOG_TYPE_WARN, "Encoder process is not Writable.");
-        //abortJob();
         return;
     }
 }
@@ -340,14 +336,21 @@ void StdWatcher::slotEncoderProcessFinished(int a_exitCode, QProcess::ExitStatus
 
     if(ui->checkBoxExitCompleted->isChecked())
     {
-        m_pCloseTimer->start(m_close_time_min);
+        if(this->isHidden())
+        {
+            close();
+        }
+        else
+        {
+            m_pCloseTimer->start(m_close_time_min);
+        }
     }
 }
 
 void StdWatcher::slotEncoderProcessReadyReadStandardError()
 {
     QByteArray standardError = m_process_job_encoder.readAllStandardError();
-    QString standardErrorText = QString::fromUtf8(standardError);
+    QString standardErrorText = fromStandard(standardError);
     standardErrorText = standardErrorText.trimmed();
     if(!standardErrorText.isEmpty())
     {
@@ -358,7 +361,7 @@ void StdWatcher::slotEncoderProcessReadyReadStandardError()
 void StdWatcher::slotEncoderProcessReadyReadStandardOutput()
 {
     QByteArray standardOutput = m_process_job_encoder.readAllStandardOutput();
-    QString standardOutputText = QString::fromUtf8(standardOutput);
+    QString standardOutputText = fromStandard(standardOutput);
     standardOutputText = standardOutputText.trimmed();
     if(!standardOutputText.isEmpty())
     {
@@ -371,35 +374,33 @@ void StdWatcher::slotEncoderProcessError(QProcess::ProcessError a_error)
     switch(a_error)
     {
     case QProcess::FailedToStart:
-        viewLog(JobChef::eJOB_LOG_TYPE_WARN, "Encoder Process has failed to start.");
+        viewLog(JobChef::eJOB_LOG_TYPE_WARN, tr("Encoder Process has failed to start."));
         break;
     case QProcess::Crashed:
-        viewLog(JobChef::eJOB_LOG_TYPE_WARN, "Encoder Process has crashed.");
+        viewLog(JobChef::eJOB_LOG_TYPE_WARN, tr("Encoder Process has crashed."));
         break;
     case QProcess::Timedout:
-        viewLog(JobChef::eJOB_LOG_TYPE_WARN, "Encoder Process timeout.");
+        viewLog(JobChef::eJOB_LOG_TYPE_WARN, tr("Encoder Process timeout."));
         break;
     case QProcess::ReadError:
-        viewLog(JobChef::eJOB_LOG_TYPE_WARN, "Encoder Process read error occured.");
+        viewLog(JobChef::eJOB_LOG_TYPE_WARN, tr("Encoder Process read error occured."));
         break;
     case QProcess::WriteError:
-        viewLog(JobChef::eJOB_LOG_TYPE_WARN, "Encoder Process write error occured.");
+        viewLog(JobChef::eJOB_LOG_TYPE_WARN, tr("Encoder Process write error occured."));
         break;
     case QProcess::UnknownError:
-    default:
-        viewLog(JobChef::eJOB_LOG_TYPE_WARN, "Encoder Process unknown error occured.");
+        viewLog(JobChef::eJOB_LOG_TYPE_WARN, tr("Encoder Process unknown error occured."));
         break;
     }
 }
 
 void StdWatcher::slotPiperProcessStarted()
 {
-    viewLog(JobChef::eJOB_LOG_TYPE_JOB_STATUS, "Piper Process started.");
+    viewLog(JobChef::eJOB_LOG_TYPE_JOB_STATUS, tr("Piper Process started."));
 
     if(!m_process_job_piper.isReadable())
     {
-        viewLog(JobChef::eJOB_LOG_TYPE_WARN, "Piper process is not Writable.");
-        //abortJob();
+        viewLog(JobChef::eJOB_LOG_TYPE_WARN, tr("Piper process is not Writable."));
         return;
     }
 }
@@ -413,13 +414,13 @@ void StdWatcher::slotPiperProcessFinished(int a_exitCode, QProcess::ExitStatus a
         message = tr("Piper Process has crashed.");
     }
 
-    viewLog(JobChef::eJOB_LOG_TYPE_JOB_STATUS, QString("%1 Exit code: %2").arg(message).arg(a_exitCode));
+    viewLog(JobChef::eJOB_LOG_TYPE_JOB_STATUS, tr("%1 Exit code: %2").arg(message).arg(a_exitCode));
 }
 
 void StdWatcher::slotPiperProcessReadyReadStandardError()
 {
     QByteArray standardError = m_process_job_piper.readAllStandardError();
-    QString standardErrorText = QString::fromUtf8(standardError);
+    QString standardErrorText = fromStandard(standardError);
     standardErrorText = standardErrorText.trimmed();
     if(!standardErrorText.isEmpty())
     {
@@ -430,7 +431,7 @@ void StdWatcher::slotPiperProcessReadyReadStandardError()
 void StdWatcher::slotPiperProcessReadyReadStandardOutput()
 {
     QByteArray standardOutput = m_process_job_piper.readAllStandardOutput();
-    QString standardOutputText = QString::fromUtf8(standardOutput);
+    QString standardOutputText = fromStandard(standardOutput);
     standardOutputText = standardOutputText.trimmed();
     if(!standardOutputText.isEmpty())
     {
@@ -443,30 +444,29 @@ void StdWatcher::slotPiperProcessError(QProcess::ProcessError a_error)
     switch(a_error)
     {
     case QProcess::FailedToStart:
-        viewLog(JobChef::eJOB_LOG_TYPE_WARN, "Piper Process has failed to start.");
+        viewLog(JobChef::eJOB_LOG_TYPE_WARN, tr("Piper Process has failed to start."));
         break;
     case QProcess::Crashed:
-        viewLog(JobChef::eJOB_LOG_TYPE_WARN, "Piper Process has crashed.");
+        viewLog(JobChef::eJOB_LOG_TYPE_WARN, tr("Piper Process has crashed."));
         break;
     case QProcess::Timedout:
-        viewLog(JobChef::eJOB_LOG_TYPE_WARN, "Piper Process timeout.");
+        viewLog(JobChef::eJOB_LOG_TYPE_WARN, tr("Piper Process timeout."));
         break;
     case QProcess::ReadError:
-        viewLog(JobChef::eJOB_LOG_TYPE_WARN, "Piper Process read error occured.");
+        viewLog(JobChef::eJOB_LOG_TYPE_WARN, tr("Piper Process read error occured."));
         break;
     case QProcess::WriteError:
-        viewLog(JobChef::eJOB_LOG_TYPE_WARN, "Piper Process write error occured.");
+        viewLog(JobChef::eJOB_LOG_TYPE_WARN, tr("Piper Process write error occured."));
         break;
     case QProcess::UnknownError:
-    default:
-        viewLog(JobChef::eJOB_LOG_TYPE_WARN, "Piper Process unknown error occured.");
+        viewLog(JobChef::eJOB_LOG_TYPE_WARN, tr("Piper Process unknown error occured."));
         break;
     }
 }
 
 void StdWatcher::on_btnClose_clicked()
 {
-    releaseJob();
+    close();
 }
 
 void StdWatcher::on_btnPause_clicked(bool a_checked)
@@ -484,7 +484,7 @@ void StdWatcher::on_btnPause_clicked(bool a_checked)
 void StdWatcher::initCloseTimerParm(void)
 {
     long var_close_time_unit;
-    if(m_close_time_set == (long)eINDEX_NONE)
+    if(m_close_time_set == static_cast<long>(eINDEX_NONE))
     {
         /* Close time not be set. */
         var_close_time_unit = c_close_time;
@@ -493,29 +493,29 @@ void StdWatcher::initCloseTimerParm(void)
     {
         var_close_time_unit = m_close_time_set;
     }
-    m_close_time_min = c_close_time_unit;
-    m_close_time = m_close_time_max = var_close_time_unit * c_close_time_unit;
+    m_close_time_min = SECOND_TO_MILLISECOND_UNIT;
+    m_close_time = m_close_time_max = var_close_time_unit * SECOND_TO_MILLISECOND_UNIT;
 }
 
 void StdWatcher::checkClose(void)
 {
     m_close_time -= m_close_time_min;
-    if(m_close_time < m_close_time_min)
+    if( (m_close_time < m_close_time_min) || this->isHidden() )
     {
-        m_pCloseTimer->stop();
-        emit ui->btnClose->clicked();
+        this->setWindowTitle(StdWatcherMoudleName);
+        close();
     }
     else
     {
-        this->setWindowTitle(tr("StdWatcher - closed in %1s").arg(m_close_time / c_close_time_unit));
+        this->setWindowTitle(tr("%1 - closed in %2s").arg(StdWatcherMoudleName).arg(m_close_time / SECOND_TO_MILLISECOND_UNIT));
     }
 }
 
 void StdWatcher::on_checkBoxExitCompleted_stateChanged(int a_state)
 {
-    if((bool)a_state)
+    if(static_cast<bool>(a_state))
     {
-        QT_PASS;
+        PASS;
     }
     else
     {
@@ -523,9 +523,17 @@ void StdWatcher::on_checkBoxExitCompleted_stateChanged(int a_state)
         {
             m_pCloseTimer->stop();
             initCloseTimerParm();
-            this->setWindowTitle(tr("StdWatcher"));
+            this->setWindowTitle(StdWatcherMoudleName);
         }
     }
+}
+
+void StdWatcher::releaseJob(void)
+{
+    abortJob();
+    releaseCloseTimer();
+    StdManager::releaseStdWatch(m_uid); /* Notify -> Close Event, because this will be closed. */
+    mainUi->slotChildWindowClosed(m_uid);
 }
 
 void StdWatcher::releaseCloseTimer()
@@ -538,11 +546,35 @@ void StdWatcher::releaseCloseTimer()
 
 void StdWatcher::closeEvent(QCloseEvent *e)
 {
-    abortJob();
+    releaseJob();
     e->accept();
 }
 
 void StdWatcher::on_logView_customContextMenuRequested(const QPoint &)
 {
     m_pContextMenu->exec(QCursor::pos());
+}
+
+inline QString StdWatcher::fromStandard(const QByteArray &a_data) const
+{
+    QString data;
+
+    switch(m_dataType)
+    {
+    case eDATA_TYPE_UTF8:
+        data = QString::fromUtf8(a_data);
+        break;
+    case eDATA_TYPE_LOCAL:
+        data = QString::fromLocal8Bit(a_data);
+        break;
+    case eDATA_TYPE_LATIN1:
+        data = QString::fromLatin1(a_data);
+        break;
+    }
+    return data;
+}
+
+void StdWatcher::setDataType(EDATA_TYPE a_dataType)
+{
+    m_dataType = a_dataType;
 }

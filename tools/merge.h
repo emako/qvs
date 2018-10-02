@@ -26,7 +26,7 @@ class Merge : public QWidget
     Q_OBJECT
 
 public:
-    explicit Merge(QWidget *parent = 0);
+    explicit Merge(QWidget *parent = nullptr);
     ~Merge();
     friend class MainWindow;
     class MainWindow *mainUi;

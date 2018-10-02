@@ -24,18 +24,13 @@ SyntaxHighlighter::~SyntaxHighlighter()
 
 void SyntaxHighlighter::setup(void)
 {
-    m_keywordFormat.setForeground(QColor((int)eHIGHLIGHTER_COLOR_KEYWORD_R, (int)eHIGHLIGHTER_COLOR_KEYWORD_G, (int)eHIGHLIGHTER_COLOR_KEYWORD_B));
+    m_keywordFormat.setForeground(QColor(eHIGHLIGHTER_COLOR_KEYWORD_R, eHIGHLIGHTER_COLOR_KEYWORD_G, eHIGHLIGHTER_COLOR_KEYWORD_B));
     m_keywordFormat.setFontWeight(QFont::Bold);
-
-    m_operatorFormat.setForeground(QColor((int)eHIGHLIGHTER_COLOR_OPERATOR_R, (int)eHIGHLIGHTER_COLOR_OPERATOR_G, (int)eHIGHLIGHTER_COLOR_OPERATOR_B));
-
-    m_commentFormat.setForeground(QColor((int)eHIGHLIGHTER_COLOR_COMMENT_R, (int)eHIGHLIGHTER_COLOR_COMMENT_G, (int)eHIGHLIGHTER_COLOR_COMMENT_B));
-
-    m_functionFormat.setForeground(QColor((int)eHIGHLIGHTER_COLOR_FUNCTION_R, (int)eHIGHLIGHTER_COLOR_FUNCTION_G, (int)eHIGHLIGHTER_COLOR_FUNCTION_B));
-
-    m_stringFormat.setForeground(QColor((int)eHIGHLIGHTER_COLOR_STRING_R, (int)eHIGHLIGHTER_COLOR_STRING_G, (int)eHIGHLIGHTER_COLOR_STRING_B));
-
-    m_numberFormat.setForeground(QColor((int)eHIGHLIGHTER_COLOR_NUMBER_R, (int)eHIGHLIGHTER_COLOR_NUMBER_G, (int)eHIGHLIGHTER_COLOR_NUMBER_B));
+    m_operatorFormat.setForeground(QColor(eHIGHLIGHTER_COLOR_OPERATOR_R, eHIGHLIGHTER_COLOR_OPERATOR_G, eHIGHLIGHTER_COLOR_OPERATOR_B));
+    m_commentFormat.setForeground(QColor(eHIGHLIGHTER_COLOR_COMMENT_R, eHIGHLIGHTER_COLOR_COMMENT_G, eHIGHLIGHTER_COLOR_COMMENT_B));
+    m_functionFormat.setForeground(QColor(eHIGHLIGHTER_COLOR_FUNCTION_R, eHIGHLIGHTER_COLOR_FUNCTION_G, eHIGHLIGHTER_COLOR_FUNCTION_B));
+    m_stringFormat.setForeground(QColor(eHIGHLIGHTER_COLOR_STRING_R, eHIGHLIGHTER_COLOR_STRING_G, eHIGHLIGHTER_COLOR_STRING_B));
+    m_numberFormat.setForeground(QColor(eHIGHLIGHTER_COLOR_NUMBER_R, eHIGHLIGHTER_COLOR_NUMBER_G, eHIGHLIGHTER_COLOR_NUMBER_B));
 
     m_keywordsList << "False" << "None" << "True" << "and" << "as" <<
         "assert" << "break" << "class" << "continue" << "def" << "del" <<
@@ -79,8 +74,8 @@ void SyntaxHighlighter::highlightBlock(const QString &a_text)
 //------Long string continuation, single quotes---------------------------------
 
         if((i == 0) && (
-            (previousBlockState() == (int)BlockState::LongStringSingleStart) ||
-            (previousBlockState() == (int)BlockState::LongStringSingleMiddle)))
+            (previousBlockState() == static_cast<int>(BlockState::LongStringSingleStart)) ||
+            (previousBlockState() == static_cast<int>(BlockState::LongStringSingleMiddle))))
         {
             bool foundMatchingQuotes = false;
             for(j = i; j < textLength - 2; ++j)
@@ -103,7 +98,7 @@ void SyntaxHighlighter::highlightBlock(const QString &a_text)
             }
             else
             {
-                setCurrentBlockState((int)BlockState::LongStringSingleMiddle);
+                setCurrentBlockState(static_cast<int>(BlockState::LongStringSingleMiddle));
                 setFormat(0, a_text.length(), m_stringFormat);
                 return;
             }
@@ -112,8 +107,8 @@ void SyntaxHighlighter::highlightBlock(const QString &a_text)
 //------Long string continuation, double quotes---------------------------------
 
         if((i == 0) && (
-            (previousBlockState() == (int)BlockState::LongStringDoubleStart) ||
-            (previousBlockState() == (int)BlockState::LongStringDoubleMiddle)))
+            (previousBlockState() == static_cast<int>(BlockState::LongStringDoubleStart)) ||
+            (previousBlockState() == static_cast<int>(BlockState::LongStringDoubleMiddle))))
         {
             bool foundMatchingQuotes = false;
             for(j = i; j < textLength - 2; ++j)
@@ -136,7 +131,7 @@ void SyntaxHighlighter::highlightBlock(const QString &a_text)
             }
             else
             {
-                setCurrentBlockState((int)BlockState::LongStringDoubleMiddle);
+                setCurrentBlockState(static_cast<int>(BlockState::LongStringDoubleMiddle));
                 setFormat(0, a_text.length(), m_stringFormat);
                 return;
             }
@@ -176,7 +171,7 @@ void SyntaxHighlighter::highlightBlock(const QString &a_text)
                 j = textLength - i;
                 Token newToken(a_text.mid(i, j), i, j, TokenType::String);
                 tokens.push_back(newToken);
-                setCurrentBlockState((int)BlockState::LongStringSingleStart);
+                setCurrentBlockState(static_cast<int>(BlockState::LongStringSingleStart));
                 break;
             }
         }
@@ -216,7 +211,7 @@ void SyntaxHighlighter::highlightBlock(const QString &a_text)
                 j = textLength - i;
                 Token newToken(a_text.mid(i, j), i, j, TokenType::String);
                 tokens.push_back(newToken);
-                setCurrentBlockState((int)BlockState::LongStringDoubleStart);
+                setCurrentBlockState(static_cast<int>(BlockState::LongStringDoubleStart));
                 break;
             }
         }

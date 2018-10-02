@@ -2,22 +2,49 @@
 #define CODEEDITOR_H
 
 #include <QPlainTextEdit>
-#include <QObject>
+#include <QWidget>
+#include <QSize>
+#include <QPaintEvent>
+#include <QResizeEvent>
 
-class QPaintEvent;
-class QResizeEvent;
-class QSize;
-class QWidget;
+namespace EditorColor
+{
+    namespace ColorLineNumArea
+    {
+        enum Color{
+            r = 240,
+            g = 240,
+            b = 240,
+        };
+    };
 
-class LineNumberArea;
+    namespace ColorLineNum
+    {
+        enum Color{
+            r = 140,
+            g = 140,
+            b = 140,
+        };
+    };
 
+    namespace ColorHighlight
+    {
+        enum Color{
+            r = 232,
+            g = 232,
+            b = 255,
+        };
+    };
+}
+
+using namespace EditorColor;
 
 class ScriptEditor : public QPlainTextEdit
 {
     Q_OBJECT
 
 public:
-    ScriptEditor(QWidget *parent = 0);
+    ScriptEditor(QWidget *parent = nullptr);
 
     void lineNumberAreaPaintEvent(QPaintEvent *event);
     int lineNumberAreaWidth();
@@ -39,40 +66,24 @@ private:
 class LineNumberArea : public QWidget
 {
 public:
-    LineNumberArea(ScriptEditor *editor) : QWidget(editor) {
+    LineNumberArea(ScriptEditor *editor) : QWidget(editor)
+    {
         m_pScriptEditor = editor;
     }
 
-    QSize sizeHint() const override {
+    QSize sizeHint() const override
+    {
         return QSize(m_pScriptEditor->lineNumberAreaWidth(), 0);
     }
 
 protected:
-    void paintEvent(QPaintEvent *event) override {
+    void paintEvent(QPaintEvent *event) override
+    {
         m_pScriptEditor->lineNumberAreaPaintEvent(event);
     }
 
 private:
     ScriptEditor *m_pScriptEditor;
 };
-
-enum class ColorLineNumArea{
-    r = 240,
-    g = 240,
-    b = 240,
-};
-
-enum class ColorLineNum{
-    r = 140,
-    g = 140,
-    b = 140,
-};
-
-enum class ColorHighlight{
-    r = 232,
-    g = 232,
-    b = 255,
-};
-
 
 #endif

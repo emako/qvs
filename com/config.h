@@ -29,13 +29,9 @@
 #define REG_KEY_AVS_INIT_DIR          "initialplugindir"
 #define REG_KEY_AVS_PLUGIN_DIR        "plugindir2_5"
 
-extern const char *c_config_key[JobCreator::eJOB_CONFIG_MAX];
-
 class MainWindow;
 class JobCreator;
 class Config;
-
-extern Config *g_pConfig;
 
 class Config : public QObject
 {
@@ -189,5 +185,11 @@ private:
 
 public slots:
 };
+
+extern Config *g_pConfig;
+extern const char *c_config_common_key[Config::eCONFIG_COMMON_MAX];
+extern const char *c_config_first_key[Config::eCONFIG_FIRST_MAX];
+extern const char *c_config_installer_key[Config::eCONFIG_INSTALLER_MAX];
+extern const char *c_config_python_key[Config::eCONFIG_PYTHON_MAX];
 
 #endif // CONFIG_H

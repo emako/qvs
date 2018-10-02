@@ -11,6 +11,7 @@
 
 class MainWindow;
 class AudioEnc;
+class AudioAdvancedConfig;
 
 namespace Ui {
 class AudioConfig;
@@ -78,7 +79,7 @@ class AudioConfig : public QDialog
     Q_OBJECT
 
 public:
-    explicit AudioConfig(QDialog *parent = 0);
+    explicit AudioConfig(QDialog *parent = nullptr);
     ~AudioConfig();
     friend class MainWindow;
     friend class AudioEnc;
@@ -88,49 +89,49 @@ public:
         eDEFAULT_MODE = eINDEX_0,
 
         eQAAC_MODE_LC_AAC_TRUE_VBR = eINDEX_0,
-        eQAAC_MODE_LC_AAC_CONSTRAINED_VBR,
-        eQAAC_MODE_LC_AAC_ABR,
-        eQAAC_MODE_LC_AAC_CBR,
+        eQAAC_MODE_LC_AAC_CONSTRAINED_VBR = eINDEX_1,
+        eQAAC_MODE_LC_AAC_ABR = eINDEX_2,
+        eQAAC_MODE_LC_AAC_CBR = eINDEX_3,
 
         eQAAC_MODE_HE_AAC_CONSTRAINED_VBR = eINDEX_0,
-        eQAAC_MODE_HE_AAC_ABR,
-        eQAAC_MODE_HE_AAC_CBR,
+        eQAAC_MODE_HE_AAC_ABR = eINDEX_1,
+        eQAAC_MODE_HE_AAC_CBR = eINDEX_2,
 
         eFDKAAC_MODE_CBR = eINDEX_0,
-        eFDKAAC_MODE_VBR,
+        eFDKAAC_MODE_VBR = eINDEX_1,
 
         eNEROAAC_MODE_ABR = eINDEX_0,
-        eNEROAAC_MODE_CBR,
-        eNEROAAC_MODE_VBR,
+        eNEROAAC_MODE_CBR = eINDEX_1,
+        eNEROAAC_MODE_VBR = eINDEX_2,
 
         eOPUS_MODE_VBR = eINDEX_0,
-        eOPUS_MODE_CONSTRAINED_VBR,
-        eOPUS_MODE_HARD_CBR,
+        eOPUS_MODE_CONSTRAINED_VBR = eINDEX_1,
+        eOPUS_MODE_HARD_CBR = eINDEX_2,
 
         eMP3_MODE_CBR = eINDEX_0,
-        eMP3_MODE_ABR,
-        eMP3_MODE_VBR,
+        eMP3_MODE_ABR = eINDEX_1,
+        eMP3_MODE_VBR = eINDEX_2,
     };
 
     enum EAUDIO_CONFIG_PROFILE {
         eDEFAULT_PROFILE = eINDEX_0,
 
         eQAAC_PROFILE_LC_AAC = eINDEX_0,
-        eQAAC_PROFILE_HE_AAC,
+        eQAAC_PROFILE_HE_AAC = eINDEX_1,
 
         eFDKAAC_PROFILE_MPEG_4_LC_AAC = eINDEX_0,
-        eFDKAAC_PROFILE_MPEG_4_HE_AAC,
-        eFDKAAC_PROFILE_MPEG_4_HE_AAC_V2,
-        eFDKAAC_PROFILE_MPEG_4_AAC_LD,
-        eFDKAAC_PROFILE_MPEG_4_AAC_ELD,
-        eFDKAAC_PROFILE_MPEG_2_LC_AAC,
-        eFDKAAC_PROFILE_MPEG_2_HE_AAC,
-        eFDKAAC_PROFILE_MPEG_2_HE_AAC_V2,
+        eFDKAAC_PROFILE_MPEG_4_HE_AAC = eINDEX_1,
+        eFDKAAC_PROFILE_MPEG_4_HE_AAC_V2 = eINDEX_2,
+        eFDKAAC_PROFILE_MPEG_4_AAC_LD = eINDEX_3,
+        eFDKAAC_PROFILE_MPEG_4_AAC_ELD = eINDEX_4,
+        eFDKAAC_PROFILE_MPEG_2_LC_AAC = eINDEX_5,
+        eFDKAAC_PROFILE_MPEG_2_HE_AAC = eINDEX_6,
+        eFDKAAC_PROFILE_MPEG_2_HE_AAC_V2 = eINDEX_7,
 
         eNEROAAC_PROFILE_AUTO = eINDEX_0,
-        eNEROAAC_PROFILE_HE_AAC_PS,
-        eNEROAAC_PROFILE_HE_AAC,
-        eNEROAAC_PROFILE_LC_AAC,
+        eNEROAAC_PROFILE_HE_AAC_PS = eINDEX_1,
+        eNEROAAC_PROFILE_HE_AAC = eINDEX_2,
+        eNEROAAC_PROFILE_LC_AAC = eINDEX_3,
     };
 
     AudioAdvancedConfig getDefaultConfig(const uint &a_type = eINDEX_0, const QVariant &a_value = DEFAULT_BITRATE);
@@ -200,7 +201,7 @@ private:
     void setup(void);
     void setupUi(void);
     void loadConfig(void);
-    void fitValue(QSlider *a_slider, const int &a_maxValue, const int &a_minValue = (int)eINDEX_0);
+    void fitValue(QSlider *a_slider, const int &a_maxValue, const int &a_minValue = eINDEX_0);
     QStringList getTemplateKeys(void);
 };
 

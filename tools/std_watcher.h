@@ -5,6 +5,8 @@
 #include <QTimer>
 #include "../job/job_chef.h"
 
+#define StdWatcherMoudleName QObject::tr("StdWatcher")
+
 class JobChef;
 class MainWindow;
 
@@ -24,7 +26,7 @@ class StdWatcher : public QWidget
     Q_OBJECT
 
 public:
-    explicit StdWatcher(QWidget *parent = 0);
+    explicit StdWatcher(QWidget *parent = nullptr);
     ~StdWatcher();
     class MainWindow *mainUi;
 
@@ -33,6 +35,12 @@ public:
         eHANDLER_TYPE_ERROR,
         eHANDLER_TYPE_FINISHED,
         eHANDLER_TYPE_MAX,
+    };
+
+    enum EDATA_TYPE {
+        eDATA_TYPE_UTF8,
+        eDATA_TYPE_LOCAL,
+        eDATA_TYPE_LATIN1,
     };
 
     void initJob(QUuid a_uid);
@@ -48,6 +56,7 @@ public:
     bool isStarted(void);
     void viewLog(JobChef::EJOB_LOG_TYPE a_log_type, const QString a_log);
     void setCloseTime(const long a_msec);
+    void setDataType(EDATA_TYPE a_dataType);
 
     QProcess m_process_job_info;
     QProcess m_process_job_piper;
@@ -59,21 +68,23 @@ private:
     void releaseCloseTimer(void);
     void initCloseTimerParm(void);
     void setInsertTextColor(QColor a_color, int a_length);
+    inline QString fromStandard(const QByteArray &a_data) const;
+
     QUuid m_uid;
     QString m_cmd;
     QString m_pipe;
     QList<StdWatcherCmd> m_cmds;
     long m_cmds_index;
     bool m_isBatch;
+    EDATA_TYPE m_dataType;
 
     QTimer *m_pCloseTimer;
     QMenu *m_pContextMenu;
     long m_close_time;
     long m_close_time_min;
     long m_close_time_max;
-    long m_close_time_set = (long)eINDEX_NONE;
-    const long c_close_time = (long)(eINDEX_3 * eINDEX_10) + eINDEX_1;
-    const long c_close_time_unit = (long)(eINDEX_10 * eINDEX_10 * eINDEX_10);
+    long m_close_time_set = eINDEX_NONE;
+    const long c_close_time = eINDEX_10 + eINDEX_1;
 
 private slots:
     /*Piper Process*/

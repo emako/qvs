@@ -26,6 +26,7 @@ AudioEnc::~AudioEnc()
 
 void AudioEnc::setup(void)
 {
+    this->setAttribute(Qt::WA_DeleteOnClose, true);
     setDefaultConfig();
     setMode(m_pAdvancedConfig->isEnable());
     ui->editAudioInput->setStyleSheet(c_qss_line_edit_read_only);
@@ -36,9 +37,9 @@ void AudioEnc::setDefaultConfig(void)
     /* @AudioConfig::getDefaultConfig */
 
     m_pAdvancedConfig->setDisable(true);
-    m_pAdvancedConfig->type = (uint)eENCODE_TYPE_AAC_APPLE;
-    m_pAdvancedConfig->mode = (uint)AudioConfig::eQAAC_MODE_LC_AAC_CBR;
-    m_pAdvancedConfig->profile = (uint)AudioConfig::eQAAC_PROFILE_LC_AAC;
+    m_pAdvancedConfig->type = static_cast<uint>(eENCODE_TYPE_AAC_APPLE);
+    m_pAdvancedConfig->mode = static_cast<uint>(AudioConfig::eQAAC_MODE_LC_AAC_CBR);
+    m_pAdvancedConfig->profile = static_cast<uint>(AudioConfig::eQAAC_PROFILE_LC_AAC);
     m_pAdvancedConfig->value = DEFAULT_BITRATE;
     m_pAdvancedConfig->value2 = false;
 }
@@ -84,13 +85,13 @@ void AudioEnc::setMode(const bool &a_advancedMode)
 void AudioEnc::reload(QString a_filename)
 {
     ui->editAudioInput->setText(a_filename);
-    ui->editAudioOutput->setText(getAudioOutputPath((EENCODE_TYPE)ui->comboBoxAudioEncoder->currentIndex(), a_filename));
+    ui->editAudioOutput->setText(getAudioOutputPath(static_cast<EENCODE_TYPE>(ui->comboBoxAudioEncoder->currentIndex()), a_filename));
 }
 
 void AudioEnc::reload(void)
 {
     QString filename = ui->editAudioInput->text();
-    ui->editAudioOutput->setText(getAudioOutputPath((EENCODE_TYPE)ui->comboBoxAudioEncoder->currentIndex(), filename));
+    ui->editAudioOutput->setText(getAudioOutputPath(static_cast<EENCODE_TYPE>(ui->comboBoxAudioEncoder->currentIndex()), filename));
 }
 
 QString AudioEnc::getAudioOutputPath(EENCODE_TYPE a_type, QString a_filename)
@@ -257,7 +258,7 @@ void AudioEnc::on_buttonAudioStart_clicked()
 
 void AudioEnc::on_buttonAudioInput_clicked()
 {
-    QString filename = QFileDialog::getOpenFileName(this, tr("Open Audio file"), NULL, tr("Audio (*.*)"));
+    QString filename = QFileDialog::getOpenFileName(this, tr("Open Audio file"), NULLSTR, tr("Audio (*.*)"));
 
     if(!filename.isEmpty())
     {
@@ -313,7 +314,7 @@ void AudioEnc::on_comboBoxAudioEncoder_activated(int a_index)
     {
         return;
     }
-    ui->editAudioOutput->setText(getAudioOutputPath((EENCODE_TYPE)a_index, input));
+    ui->editAudioOutput->setText(getAudioOutputPath(static_cast<EENCODE_TYPE>(a_index), input));
 }
 
 void AudioEnc::on_comboBoxAudioEncoder_currentIndexChanged(int a_index)
@@ -322,7 +323,7 @@ void AudioEnc::on_comboBoxAudioEncoder_currentIndexChanged(int a_index)
 
     bool bitrateMode = true;
 
-    switch((EENCODE_TYPE)a_index)
+    switch(static_cast<EENCODE_TYPE>(a_index))
     {
     case eENCODE_TYPE_ALAC:
     case eENCODE_TYPE_FLAC:
@@ -336,5 +337,5 @@ void AudioEnc::on_comboBoxAudioEncoder_currentIndexChanged(int a_index)
     ui->comboBoxAudioBitrate->setEnabled(bitrateMode);
     ui->labelAudioKbps->setEnabled(bitrateMode);
 
-    m_pAdvancedConfig->type = (uint)a_index;
+    m_pAdvancedConfig->type = static_cast<uint>(a_index);
 }

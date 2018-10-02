@@ -20,7 +20,7 @@ class InstallerDialog : public QDialog
     Q_OBJECT
 
 public:
-    explicit InstallerDialog(QWidget *parent = 0);
+    explicit InstallerDialog(QWidget *parent = nullptr);
     ~InstallerDialog();
     class MainWindow *mainUi;
     friend class MainWindow;
@@ -64,5 +64,7 @@ private:
     void loadInstallerConfig(void);
     bool saveCmd(QString a_exec, QStringList a_args);
 };
+
+extern const char *c_content_to_arg[InstallerDialog::eINSTALLER_CONTENTS_MAX];
 
 #endif // INSTALLER_DIALOG_H

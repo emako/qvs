@@ -118,19 +118,6 @@ def main():
 	for filename in input:
 		todo(filename)
 	
-	with open(output_header, 'w') as f:
-		f.write('#ifndef MEDIAINFO_DEFINE_QT_H\n')
-		f.write('#define MEDIAINFO_DEFINE_QT_H\n')
-		f.write(get_comment_header())
-		f.write('\n')
-		f.write('#include "{h}"\n'.format(h=output))
-		f.write('#include <QObject>\n')
-		f.write('\n')
-		for data in datas:
-			f.write(data+'\n')
-		f.write('\n')
-		f.write('#endif // MEDIAINFO_DEFINE_QT_H\n')
-		
 	with open(output_source, 'w') as f:
 		f.write(get_comment_source())
 		f.write('\n')
@@ -145,8 +132,19 @@ def main():
 		f.write(pair_define(pairs_image, 'Image'))
 		f.write(pair_define(pairs_menu, 'Menu'))
 		f.write(pair_list())
+	
+	with open(output_header, 'w') as f:
+		f.write('#ifndef MEDIAINFO_DEFINE_QT_H\n')
+		f.write('#define MEDIAINFO_DEFINE_QT_H\n')
+		f.write(get_comment_header())
+		f.write('\n')
+		f.write('#include "{h}"\n'.format(h=output))
+		f.write('#include <QObject>\n')
 		f.write('\n')
 		for extern in externs:
-			f.write('//'+extern+'\n')
-	
+			f.write(extern+'\n')
+		f.write('\n')
+		for data in datas:
+			f.write(data+'\n')
+		f.write('#endif // MEDIAINFO_DEFINE_QT_H\n')
 main()

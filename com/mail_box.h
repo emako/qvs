@@ -1,15 +1,15 @@
 #ifndef MAIL_BOX_H
 #define MAIL_BOX_H
 
+#include "common.h"
 #include <QObject>
 #include <QVariant>
 #include <QUuid>
+#include <QMap>
 
 class MainWindow;
 class MailBox;
-
 struct STMAILBOX;
-enum EINDEX;
 
 class MailBox
 {
@@ -58,5 +58,7 @@ struct STMAILBOX
     QVariant content_sub;
     bool is_cyclic;
 };
+
+extern QMap<MailBox::EMODULE, STMAILBOX*> g_pMailBox;
 
 #endif // MAIL_BOX_H

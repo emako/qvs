@@ -20,7 +20,6 @@
         <file>buttons/door_in.png</file>
         <file>buttons/error.png</file>
         <file>buttons/exclamation.png</file>
-        <file>buttons/exclamation_small.png</file>
         <file>buttons/find.png</file>
         <file>buttons/flag.png</file>
         <file>buttons/folder_add.png</file>
@@ -149,11 +148,16 @@
         <file>strings/mediainfo/language/zh-CN.csv</file>
         <file>strings/mediainfo/language/zh-HK.csv</file>
         <file>strings/mediainfo/language/zh-TW.csv</file>
-        <file>buttons/lang.png</file>
-        <file>buttons/lang_en.ico</file>
-        <file>buttons/lang_ja.ico</file>
-        <file>buttons/lang_zh.ico</file>
         <file>buttons/debugging.png</file>
         <file>buttons/clipboard_sign_out.png</file>
+        <file>buttons/flag_china.png</file>
+        <file>buttons/flag_great_britain.png</file>
+        <file>buttons/flag_japan.png</file>
+        <file>buttons/error_log.png</file>
+        <file>buttons/terminal_code.png</file>
+        <file>buttons/hide.png</file>
+        <file>buttons/language_focus.png</file>
+        <file>buttons/languages_menu.png</file>
+        <file>strings/log4j/log4j.properties</file>
     </qresource>
 </RCC>

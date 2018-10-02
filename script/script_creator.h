@@ -26,7 +26,7 @@ class ScriptCreator : public QWidget
     Q_OBJECT
 
 public:
-    explicit ScriptCreator(QWidget *parent = 0);
+    explicit ScriptCreator(QWidget *parent = nullptr);
     ~ScriptCreator();
     friend class MainWindow;
     class MainWindow *mainUi;

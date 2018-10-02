@@ -8,6 +8,8 @@ QT += core gui
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
+#include(./log4qt/log4qt.pri)
+
 CONFIG += no_batch
 
 TEMPLATE = app
@@ -31,14 +33,16 @@ RC_ICONS = $${COMMON_DIRECTORY}/res/icons/qvs.ico
 
 OPENCV_LIB = $${PROJECT_DIRECTORY}/opencv/lib
 OPENCV_HEADER = $${PROJECT_DIRECTORY}/opencv/include
-
 FFMPEG_LIB = $${PROJECT_DIRECTORY}/ffmpeg/lib
 FFMPEG_HEADER = $${PROJECT_DIRECTORY}/ffmpeg/include
+LOG4QT_LIB = $${PROJECT_DIRECTORY}/log4qt/lib
+LOG4QT_HEADER = $${PROJECT_DIRECTORY}/log4qt/include
 
 INCLUDEPATH += $${OPENCV_HEADER}
 INCLUDEPATH += $${OPENCV_HEADER}/opencv
 INCLUDEPATH += $${OPENCV_HEADER}/opencv2
 INCLUDEPATH += $${FFMPEG_HEADER}
+INCLUDEPATH += $${LOG4QT_HEADER}
 
 VERSION_MESSAGE = "QT version is too low"
 greaterThan(QT_MAJOR_VERSION, 5)|equals(QT_MAJOR_VERSION, 5){
@@ -62,9 +66,9 @@ CONFIG(debug, debug|release) {
             OBJECTS_DIR = $${PROJECT_DIRECTORY}/generated/obj-debug-32bit-gcc
         }
 
-#        QMAKE_CXXFLAGS += -O0
-#        QMAKE_CXXFLAGS += -g
-#        QMAKE_CXXFLAGS += -ggdb3
+        QMAKE_CXXFLAGS += -O0
+        QMAKE_CXXFLAGS += -g
+        QMAKE_CXXFLAGS += -ggdb3
     }
 
     contains(QMAKE_COMPILER, msvc) {
@@ -79,6 +83,7 @@ CONFIG(debug, debug|release) {
         }
     }
     LIBS += -L$${OPENCV_LIB} -lopencv_world343d
+    LIBS += -L$${LOG4QT_LIB} -llog4qtd
 
 } else {
 
@@ -93,9 +98,9 @@ CONFIG(debug, debug|release) {
             OBJECTS_DIR = $${PROJECT_DIRECTORY}/generated/obj-release-32bit-gcc
         }
 
-#        QMAKE_CXXFLAGS += -O2
-#        QMAKE_CXXFLAGS += -fexpensive-optimizations
-#        QMAKE_CXXFLAGS += -funit-at-a-time
+        QMAKE_CXXFLAGS += -O2
+        QMAKE_CXXFLAGS += -fexpensive-optimizations
+        QMAKE_CXXFLAGS += -funit-at-a-time
     }
 
     contains(QMAKE_COMPILER, msvc) {
@@ -110,9 +115,19 @@ CONFIG(debug, debug|release) {
         }
     }
     LIBS += -L$${OPENCV_LIB} -lopencv_world343
+    LIBS += -L$${LOG4QT_LIB} -llog4qt
 
     DEFINES += NDEBUG
 }
+
+#LIBS += -L$${FFMPEG_LIB} -lavcodec
+#LIBS += -L$${FFMPEG_LIB} -lavdevice
+#LIBS += -L$${FFMPEG_LIB} -lavfilter
+#LIBS += -L$${FFMPEG_LIB} -lavformat
+#LIBS += -L$${FFMPEG_LIB} -lavutil
+#LIBS += -L$${FFMPEG_LIB} -lpostproc
+#LIBS += -L$${FFMPEG_LIB} -lswresample
+#LIBS += -L$${FFMPEG_LIB} -lswscale
 
 S = $${DIR_SEPARATOR}
 
@@ -141,15 +156,6 @@ win32 {
         }
     }
 }
-
-#LIBS += -L$${FFMPEG_LIB} -lavcodec
-#LIBS += -L$${FFMPEG_LIB} -lavdevice
-#LIBS += -L$${FFMPEG_LIB} -lavfilter
-#LIBS += -L$${FFMPEG_LIB} -lavformat
-#LIBS += -L$${FFMPEG_LIB} -lavutil
-#LIBS += -L$${FFMPEG_LIB} -lpostproc
-#LIBS += -L$${FFMPEG_LIB} -lswresample
-#LIBS += -L$${FFMPEG_LIB} -lswscale
 
 SOURCES += \
     main.cpp \
@@ -182,7 +188,9 @@ SOURCES += \
     preview/preview_timeline_slider.cpp \
     com/style_sheet.cpp \
     mediainfo/mediainfo_list.cpp \
-    tools/merge.cpp
+    tools/merge.cpp \
+    com/version.cpp \
+    com/logging.cpp
 
 HEADERS += \
     mainwindow.h \
@@ -211,7 +219,6 @@ HEADERS += \
     script/syntax_highlighter.h \
     script/script_creator.h \
     script/number_matcher.h \
-    com/version.h \
     tools/audio_config.h \
     preview/preview_timeline_slider.h \
     com/style_sheet.h \
@@ -219,7 +226,9 @@ HEADERS += \
     job/job_item.h \
     mediainfo/mediainfo_list.h \
     mediainfo/mediainfo_enum.h \
-    tools/merge.h
+    tools/merge.h \
+    com/version.h \
+    com/logging.h
 
 FORMS += \
     mainwindow.ui \
