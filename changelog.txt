@@ -1,0 +1,51 @@
+qvs changelog
+
+version alpha1.0
+ - init alpha version
+
+version alpha1.1
+ - fixed ffprobe from mediainfo can not be used
+ - fixed lsmash filter checker
+ - added using ffmpeg or ffmpeg32 by prefer config
+
+version alpha1.2
+ - cleaned project
+
+version alpha1.3
+ - fixed audio encode output error
+ - added eac3to unknown type ext
+ - added qvs python module
+
+version alpha1.6
+ - fixed custom parameters of gpu-encoder can not be used
+ - fixed script player can not be detected
+ - fixed mediainfo loader any char type supported
+ - fixed lnk4042
+ - fixed audio batch file can not be dropped
+ - added audio advanced config
+ - added mediainfo list of parameters
+ - added mediainfo define python program
+ - changed installer dialog will not be shown when vs has been installed
+
+version r1
+ - upadated mediainfo to v18.08
+ - added mediainfo language
+
+version r2
+ - fixed audio slider bug
+
+version r3
+ - added job cmd log
+ - added language config
+
+version r4
+ - fixed bugs
+
+version r5
+ - fixed bugs
+
+version r6
+ - fixed bugs
+ - fixed warnings
+ - fixed log html format
+ - added view menu
