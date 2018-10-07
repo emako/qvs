@@ -39,6 +39,7 @@ version r3
  - added language config
 
 version r4
+ - added merge tool
  - fixed bugs
 
 version r5
@@ -49,3 +50,8 @@ version r6
  - fixed warnings
  - fixed log html format
  - added view menu
+ - upadated qt to 5.11.2
+ - upadated mediainfo to v18.08.1
+
+version r7
+ - upadated bontsdemux to msvc2017x64

@@ -3,17 +3,9 @@ import havsfunc as haf
 import mvsfunc as mvf
 import muvsfunc as muvf
 import nnedi3_resample
-import nnedi3_resampleCL as nncl
+import nnedi3_resampleCL
 import xvs
-import sys
-import os
-import re
-import math
-import glob
-import functools
-import subprocess
-import shutil
-import configparser
+import sys, os, re, math, glob, functools, subprocess, shutil, configparser
 
 """*********************************************
 Scripts functions:
@@ -127,7 +119,6 @@ Assistant functions:
 	RightStr
 	LeftStr
 	ConvertToTimecode
-	ToAscii
 	Roma
 ************************************************
 Command functions:
@@ -1592,12 +1583,12 @@ def SincResize(clip, w, h, depth=None):
 def Nnedi3Resize(clip, w, h, cl=False, device=2, list_device=False):
 	if cl:
 		try:
-			last = nncl.nnedi3_resample(input=clip, target_width=w, target_height=h, device=device, list_device=list_device)
+			last = nnedi3_resampleCL.nnedi3_resample(input=clip, target_width=w, target_height=h, device=device, list_device=list_device)
 		except:
 			try:
-				last = nncl.nnedi3_resample(input=clip, target_width=w, target_height=h, device=1, list_device=list_device)
+				last = nnedi3_resampleCL.nnedi3_resample(input=clip, target_width=w, target_height=h, device=1, list_device=list_device)
 			except:
-				last = nncl.nnedi3_resample(input=clip, target_width=w, target_height=h, device=0, list_device=list_device)
+				last = nnedi3_resampleCL.nnedi3_resample(input=clip, target_width=w, target_height=h, device=0, list_device=list_device)
 	else:
 		last = nnedi3_resample.nnedi3_resample(input=clip, target_width=w, target_height=h)
 	return last
@@ -4286,14 +4277,14 @@ def TestSuite():
 
 
 ##################################################################################################
-### Function  : ToAscii
+### Function  : toAscii
 ### Author    : ema
 ### Version   : v0.1
 ### Release   : 2018.05.26
 ##################################################################################################
 ### Delete chr which is out of ascii table.
 ##################################################################################################
-def ToAscii(filename):
+def toAscii(filename):
 	pattern = r"([0-9|a-z|A-Z|_|!|#|$|%|\^|&|\(|\)|\+|,|\-|\.|;|=|@|\[|\]|`|\{|\}|~|'|\\\\|/| ]|:)"
 	result_list = re.compile(pattern, re.ASCII).findall(filename)
 	new_filename = ''
@@ -4320,23 +4311,7 @@ def ToAscii(filename):
 def Roma(filename, space=False):
 	old_filename = filename
 	
-	try:
-		from pykakasi import kakasi as kks
-	except ModuleNotFoundError:
-		ExtractModule(module='pykakasi')
-		ExtractModule(module='semidbm')
-	finally:
-		from pykakasi import kakasi as kks
-	
-	kks = kks()
-	kks.setMode('H', 'a')  # Hiragana to ascii, default: no conversion.
-	kks.setMode('K', 'a')  # Katakana to ascii, default: no conversion.
-	kks.setMode('J', 'a')  # Japanese to ascii, default: no conversion.
-	kks.setMode("s", space) # add space, default: no separator.
-
-	conv = kks.getConverter()
-	filename = conv.do(filename) # Convert to Romaji.
-	new_filename = ToAscii(filename) # Delete chr which is out of ascii table.
+	new_filename = toRoma(filename)
 
 	# Make new file dir
 	new_dir = os.path.dirname(new_filename)
@@ -4358,6 +4333,25 @@ def Roma(filename, space=False):
 	
 	return new_filename
 
+def toRoma(filename, space=False):
+	try:
+		from pykakasi import kakasi as kks
+	except ModuleNotFoundError:
+		ExtractModule(module='pykakasi')
+		ExtractModule(module='semidbm')
+	finally:
+		from pykakasi import kakasi as kks
+	
+	kks = kks()
+	kks.setMode('H', 'a')  # Hiragana to ascii, default: no conversion.
+	kks.setMode('K', 'a')  # Katakana to ascii, default: no conversion.
+	kks.setMode('J', 'a')  # Japanese to ascii, default: no conversion.
+	kks.setMode("s", space) # add space, default: no separator.
+
+	conv = kks.getConverter()
+	filename = conv.do(filename) # Convert to Romaji.
+	new_filename = toAscii(filename) # Delete chr which is out of ascii table.
+	return new_filename
 
 ##################################################################################################
 ### Function  : ExtractModule
