@@ -11,6 +11,9 @@
 #include <QFileInfo>
 #include <QUuid>
 
+#define MEDIAINFO_DIALOG_EXEC_FFPROBE "ffprobe"
+#define MEDIAINFO_DIALOG_EXEC_MEDIAINFO "mediainfo"
+
 class MainWindow;
 class MediaInfoLoader;
 

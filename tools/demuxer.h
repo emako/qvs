@@ -7,6 +7,15 @@
 #include "std_manager.h"
 #include "../job/job_chef.h"
 
+#define DEMUXER_EXEC_FFMPEG "ffmpeg"
+#define DEMUXER_EXEC_FFPROBE "ffprobe"
+#define DEMUXER_EXEC_MKVMERGE "mkvmerge"
+#define DEMUXER_EXEC_MKVEXTRACT "mkvextract"
+#define DEMUXER_EXEC_EAC3TO "eac3to"
+#define DEMUXER_EXEC_BONTSDEMUXC "BonTsDemuxC"
+#define DEMUXER_EXEC_BONTSDEMUXC64 "BonTsDemuxC64"
+#define DEMUXER_EXEC_CAPTION2ASS_PCR "Caption2Ass_PCR"
+
 class Demuxer;
 class MainWindow;
 class JobChef;

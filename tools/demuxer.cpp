@@ -88,13 +88,13 @@ void Demuxer::reload(ERELOAD_TYPE a_reload_type, QString a_filename)
     {
     case eRELOAD_TYPE_FFMPEG:
     default:
-        cmd = QString("%1 -show_streams -of json \"%2\"").arg(qvs::findFirstFilePath("ffprobe")).arg(a_filename);
+        cmd = QString("%1 -show_streams -of json \"%2\"").arg(qvs::findFirstFilePath(DEMUXER_EXEC_FFPROBE)).arg(a_filename);
         break;
     case eRELOAD_TYPE_EAC3TO:
-        cmd = QString("%1 \"%2\"").arg(qvs::findFirstFilePath("eac3to")).arg(a_filename);
+        cmd = QString("%1 \"%2\"").arg(qvs::findFirstFilePath(DEMUXER_EXEC_EAC3TO)).arg(a_filename);
         break;
     case eRELOAD_TYPE_MKVEXTRACT:
-        cmd = QString("%1 -i \"%2\"").arg(qvs::findFirstFilePath("mkvmerge")).arg(a_filename);
+        cmd = QString("%1 -i \"%2\"").arg(qvs::findFirstFilePath(DEMUXER_EXEC_MKVMERGE)).arg(a_filename);
         break;
     case eRELOAD_TYPE_TSDEMUXER:
         ui->listWidgetTrack->setCursor(Qt::ArrowCursor);
@@ -734,7 +734,7 @@ void Demuxer::on_buttonDemuxerStart_clicked()
                 QMessageBox::information(this, tr("Information"), tr("Output file can't be the same as input file!"), QMessageBox::Ok);
                 return;
             }
-            cmd = QString("%1 -i \"%2\" %3 copy -y %4 \"%5\"").arg(qvs::findFirstFilePath("ffmpeg")).arg(input).arg(filter).arg(track).arg(output);
+            cmd = QString("%1 -i \"%2\" %3 copy -y %4 \"%5\"").arg(qvs::findFirstFilePath(DEMUXER_EXEC_FFMPEG)).arg(input).arg(filter).arg(track).arg(output);
         }while(false);
         break;
     case eRELOAD_TYPE_EAC3TO:
@@ -744,7 +744,7 @@ void Demuxer::on_buttonDemuxerStart_clicked()
             QMessageBox::information(this, tr("Information"), tr("The selected track is disable!"), QMessageBox::Ok);
             return;
         }
-        cmd = QString("%1 \"%2\" %3: \"%4\"").arg(qvs::findFirstFilePath("eac3to")).arg(input).arg(index).arg(output);
+        cmd = QString("%1 \"%2\" %3: \"%4\"").arg(qvs::findFirstFilePath(DEMUXER_EXEC_EAC3TO)).arg(input).arg(index).arg(output);
         break;
     case eRELOAD_TYPE_MKVEXTRACT:
         do{
@@ -758,7 +758,7 @@ void Demuxer::on_buttonDemuxerStart_clicked()
                 {
                     param = "timestamps_v2";
                 }
-                cmd = QString("%1 \"%2\" %3 %4:\"%5\"").arg(qvs::findFirstFilePath("mkvextract")).arg(input).arg(param).arg(item.track_num).arg(output);
+                cmd = QString("%1 \"%2\" %3 %4:\"%5\"").arg(qvs::findFirstFilePath(DEMUXER_EXEC_MKVEXTRACT)).arg(input).arg(param).arg(item.track_num).arg(output);
             }
             else if(item.type == DemuxerItem::eMEDIA_TYPE_ATTACHMENT)
             {
@@ -767,7 +767,7 @@ void Demuxer::on_buttonDemuxerStart_clicked()
                     QMessageBox::information(this, tr("Information"), tr("Can't be extracked from attachments!"), QMessageBox::Ok);
                     return;
                 }
-                cmd = QString("%1 --gui-mode --ui-language en attachments \"%2\" %3:\"%4\"").arg(qvs::findFirstFilePath("mkvextract")).arg(input).arg(item.track_num).arg(output);
+                cmd = QString("%1 --gui-mode --ui-language en attachments \"%2\" %3:\"%4\"").arg(qvs::findFirstFilePath(DEMUXER_EXEC_MKVEXTRACT)).arg(input).arg(item.track_num).arg(output);
             }
             else if(item.type == DemuxerItem::eMEDIA_TYPE_CHAPTER)
             {
@@ -776,7 +776,7 @@ void Demuxer::on_buttonDemuxerStart_clicked()
                     QMessageBox::information(this, tr("Information"), tr("Can't be extracked from chapters!"), QMessageBox::Ok);
                     return;
                 }
-                cmd = QString("%1 --gui-mode --ui-language en chapters \"%2\"").arg(qvs::findFirstFilePath("mkvextract")).arg(input);
+                cmd = QString("%1 --gui-mode --ui-language en chapters \"%2\"").arg(qvs::findFirstFilePath(DEMUXER_EXEC_MKVEXTRACT)).arg(input);
             }
             else if(item.type == DemuxerItem::eMEDIA_TYPE_TAG)
             {
@@ -785,17 +785,17 @@ void Demuxer::on_buttonDemuxerStart_clicked()
                     QMessageBox::information(this, tr("Information"), tr("Can't be extracked from tags!"), QMessageBox::Ok);
                     return;
                 }
-                cmd = QString("%1 --gui-mode --ui-language en tags \"%2\"").arg(qvs::findFirstFilePath("mkvextract")).arg(input);
+                cmd = QString("%1 --gui-mode --ui-language en tags \"%2\"").arg(qvs::findFirstFilePath(DEMUXER_EXEC_MKVEXTRACT)).arg(input);
             }
         }while(false);
         break;
     case eRELOAD_TYPE_TSDEMUXER:
         /* Not set output filename for auto set DELAY value by program. */
-        cmd = QString("%1 -i \"%2\" -encode %3 -quit").arg(qvs::findFirstFilePath("tsdemux")).arg(input).arg(qvs::toStringFirstUpper(ui->comboBoxDemuxerParam->currentText()));
+        cmd = QString("%1 -i \"%2\" -encode %3 -quit").arg(qvs::findFirstFilePath(DEMUXER_EXEC_BONTSDEMUXC64)).arg(input).arg(qvs::toStringFirstUpper(ui->comboBoxDemuxerParam->currentText()));
         dataType = StdWatcher::eDATA_TYPE_LOCAL;
         break;
     case eRELOAD_TYPE_CAPTION2ASS:
-        cmd = QString("%1 -format %2 \"%3\" \"%4\"").arg(qvs::findFirstFilePath("Caption2Ass_PCR")).arg(ui->comboBoxDemuxerParam->currentText()).arg(input).arg(qvs::delFileExt(output));
+        cmd = QString("%1 -format %2 \"%3\" \"%4\"").arg(qvs::findFirstFilePath(DEMUXER_EXEC_CAPTION2ASS_PCR)).arg(ui->comboBoxDemuxerParam->currentText()).arg(input).arg(qvs::delFileExt(output));
         break;
     }
 

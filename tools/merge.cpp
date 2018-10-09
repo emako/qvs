@@ -162,7 +162,7 @@ QList<StdWatcherCmd> Merge::createCommand(void)
                 codec = "-c:v copy -c:a aac -strict -2";
             }
             type = eMERGE_TYPE_MULTIPLE_LINES;
-            cmd.sprintf("%s -i %1 %s \"%2\" -y", toStdStringData(qvs::findFirstFilePath("ffmpeg")), toStdStringData(codec));
+            cmd.sprintf("%s -i %1 %s \"%2\" -y", toStdStringData(qvs::findFirstFilePath(MERGE_EXEC_FFMPEG)), toStdStringData(codec));
             param = QT_EMPTY;
         }while(false);
         break;
@@ -174,22 +174,22 @@ QList<StdWatcherCmd> Merge::createCommand(void)
             ext = ui->comboBoxContainer->currentText().toLower();
             if(ext == MERGE_EXT_MP4)
             {
-                cmd.sprintf("%s -cat %1 \"%s\"", toStdStringData(qvs::findFirstFilePath("mp4box")), toStdStringData(output));
+                cmd.sprintf("%s -cat %1 \"%s\"", toStdStringData(qvs::findFirstFilePath(MERGE_EXEC_MP4BOX)), toStdStringData(output));
                 param = " -cat ";
             }
             else if(ext == MERGE_EXT_MKV)
             {
-                cmd.sprintf("%s -o \"%s\" %1", toStdStringData(qvs::findFirstFilePath("mkvmerge")), toStdStringData(output));
+                cmd.sprintf("%s -o \"%s\" %1", toStdStringData(qvs::findFirstFilePath(MERGE_EXEC_MKVMERGE)), toStdStringData(output));
                 param = " + ";
             }
             else if(ext == MERGE_EXT_FLV)
             {
-                cmd.sprintf("%s -i %1 -o \"%s\"", toStdStringData(qvs::findFirstFilePath("yamdi64")), toStdStringData(output));
+                cmd.sprintf("%s -i %1 -o \"%s\"", toStdStringData(qvs::findFirstFilePath(MERGE_EXEC_YAMDI64)), toStdStringData(output));
                 param = " -i ";
             }
             else
             {
-                cmd.sprintf("%s -i concat:\"%1\" -c copy \"%s\" -y", toStdStringData(qvs::findFirstFilePath("ffmpeg")), toStdStringData(output));
+                cmd.sprintf("%s -i concat:\"%1\" -c copy \"%s\" -y", toStdStringData(qvs::findFirstFilePath(MERGE_EXEC_FFMPEG)), toStdStringData(output));
                 param = QT_PIPE;
             }
         }while(false);

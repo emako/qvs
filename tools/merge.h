@@ -3,6 +3,12 @@
 
 #include <QWidget>
 
+#define MERGE_EXEC_FFMPEG "ffmpeg"
+#define MERGE_EXEC_MP4BOX "mp4box"
+#define MERGE_EXEC_MKVMERGE "mkvmerge"
+#define MERGE_EXEC_YAMDI "yamdi"
+#define MERGE_EXEC_YAMDI64 "yamdi64"
+
 #define MERGE_EXT_MP4 "mp4"
 #define MERGE_EXT_MKV "mkv"
 #define MERGE_EXT_FLV "flv"

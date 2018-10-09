@@ -132,17 +132,17 @@ void Muxer::on_buttonMuxerStart_clicked()
     {
     case eOUTPUT_TYPE_MP4BOX:
     default:
-        cmd = QString("%1 -add \"%2#trackID=1\" -add \"%3:delay=%4\" -new \"%5\"").arg(qvs::findFirstFilePath(QString("mp4box"))).arg(input_video).arg(input_audio).arg(ui->spinBoxMuxerDelay->value()).arg(output);
+        cmd = QString("%1 -add \"%2#trackID=1\" -add \"%3:delay=%4\" -new \"%5\"").arg(qvs::findFirstFilePath(QString(MUXER_EXEC_MP4BOX))).arg(input_video).arg(input_audio).arg(ui->spinBoxMuxerDelay->value()).arg(output);
         break;
     case eOUTPUT_TYPE_LSMASH:
-        //cmd = QString("%1 --file-format mp4 -i \"%2\" -i \"%3\"?encoder-delay=%4, -o \"%5\"").arg(qvs::findFirstFilePath(QString("muxer.exe"))).arg(input_video).arg(input_audio).arg(ui->spinBoxMuxerDelay->value()).arg(output);
-        cmd = QString("%1 --file-format mp4 -i \"%2\" -i \"%3\" -o \"%5\"").arg(qvs::findFirstFilePath(QString("muxer.exe"))).arg(input_video).arg(input_audio).arg(output);
+        //cmd = QString("%1 --file-format mp4 -i \"%2\" -i \"%3\"?encoder-delay=%4, -o \"%5\"").arg(qvs::findFirstFilePath(QString(MUXER_EXEC_LSMASH_MUXER))).arg(input_video).arg(input_audio).arg(ui->spinBoxMuxerDelay->value()).arg(output);
+        cmd = QString("%1 --file-format mp4 -i \"%2\" -i \"%3\" -o \"%5\"").arg(qvs::findFirstFilePath(QString(MUXER_EXEC_LSMASH_MUXER))).arg(input_video).arg(input_audio).arg(output);
         break;
     case eOUTPUT_TYPE_FFMPEG:
-        cmd = QString("%1 -i \"%2\" -i \"%3\" -c copy \"%4\" -y").arg(qvs::findFirstFilePath(QString("ffmpeg"))).arg(input_audio).arg(input_video).arg(output);
+        cmd = QString("%1 -i \"%2\" -i \"%3\" -c copy \"%4\" -y").arg(qvs::findFirstFilePath(QString(MUXER_EXEC_FFMPEG))).arg(input_audio).arg(input_video).arg(output);
         break;
     case eOUTPUT_TYPE_MKVMERGE:
-        cmd = QString("%1 -o \"%2\" --no-audio \"%3\" --no-video \"%4\"").arg(qvs::findFirstFilePath(QString("mkvmerge"))).arg(output).arg(input_video).arg(input_audio);
+        cmd = QString("%1 -o \"%2\" --no-audio \"%3\" --no-video \"%4\"").arg(qvs::findFirstFilePath(QString(MUXER_EXEC_MKVMERGE))).arg(output).arg(input_video).arg(input_audio);
         break;
     }
     qDebug() << cmd;

@@ -180,7 +180,7 @@ void ScriptPlayer::on_buttonMount_clicked(bool a_checked)
             arch = "x86";
         }
 
-        cmd = QString("%1 -d \"%2\"").arg(qvs::findFirstFilePath(QString("avfs_%1").arg(arch))).arg(m_filename);
+        cmd = QString("%1 -d \"%2\"").arg(qvs::findFirstFilePath(QString("%1_%2").arg(SCRIPT_PLAYER_EXEC_AVFS).arg(arch))).arg(m_filename);
 
         StdManager::releaseStdWatch(m_uid_std);
         m_uid_std = StdManager::createStdWatch();
@@ -348,7 +348,7 @@ void ScriptPlayer::on_buttonPlay_clicked()
         }while(false);
         break;
     case eSCRIPT_PLAYER_PLAYER_VIRTUAL_DUB64:
-        QProcess::startDetached(QString("%1 \"%2\"").arg(qvs::findFirstFilePath("VirtualDub64")).arg(filename));
+        QProcess::startDetached(QString("%1 \"%2\"").arg(qvs::findFirstFilePath(SCRIPT_PLAYER_EXEC_VIRTUALDUB64)).arg(filename));
         break;
     }
 }

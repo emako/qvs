@@ -5,6 +5,11 @@
 #include "std_watcher.h"
 #include "std_manager.h"
 
+#define MUXER_EXEC_MP4BOX "mp4box"
+#define MUXER_EXEC_LSMASH_MUXER "muxer"
+#define MUXER_EXEC_FFMPEG "ffmpeg"
+#define MUXER_EXEC_MKVMERGE "mkvmerge"
+
 class MainWindow;
 
 namespace Ui {

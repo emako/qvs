@@ -4,6 +4,10 @@
 #include <QWidget>
 #include "../tools/std_manager.h"
 
+#define SCRIPT_PLAYER_EXEC_AVFS "avfs"
+#define SCRIPT_PLAYER_EXEC_VIRTUALDUB "virtualdub"
+#define SCRIPT_PLAYER_EXEC_VIRTUALDUB64 "virtualdub64"
+
 class MainWindow;
 struct STMAILBOX;
 

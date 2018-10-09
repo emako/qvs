@@ -16,6 +16,14 @@
 #include "job_cmdlist.h"
 #include "com/common.h"
 
+#define JOB_CREATOR_EXEC_X264 "x264"
+#define JOB_CREATOR_EXEC_X265 "x265"
+#define JOB_CREATOR_EXEC_VSPIPE "vspipe"
+#define JOB_CREATOR_EXEC_AVSMETER "avsmeter"
+#define JOB_CREATOR_EXEC_AVS4X26X "avs4x26x"
+#define JOB_CREATOR_EXEC_FFMPEG "ffmpeg"
+#define JOB_CREATOR_EXEC_FFMPEG32 "ffmpeg32"
+
 #define OUTPUT_EXT_MP4 "mp4"
 #define OUTPUT_EXT_MKV "mkv"
 #define OUTPUT_EXT_H264 "h264"

@@ -807,12 +807,12 @@ QList<JobCmdList> JobCreator::configToCommandX26X(QMap<EJOB_CONFIG, QVariant> a_
     {
     case eJOB_PIPER_VSPIPE:
         cmd.type = JobCmdList::eJOB_CMD_TYPE_INFO;
-        cmd.cmd = QString("%1 --info \"%2\" -").arg(qvs::findFirstFilePath(QString("vspipe"))).arg(a_job_config[eJOB_CONFIG_INPUT].toString());
+        cmd.cmd = QString("%1 --info \"%2\" -").arg(qvs::findFirstFilePath(JOB_CREATOR_EXEC_VSPIPE)).arg(a_job_config[eJOB_CONFIG_INPUT].toString());
         cmds << cmd;
         break;
     case eJOB_PIPER_AVS4X26X:
         cmd.type = JobCmdList::eJOB_CMD_TYPE_INFO;
-        cmd.cmd = QString("%1 \"%2\" -info").arg(qvs::findFirstFilePath(QString("AvsMeter_%1").arg(getConfigArch(a_job_config)))).arg(a_job_config[eJOB_CONFIG_INPUT].toString());
+        cmd.cmd = QString("%1 \"%2\" -info").arg(qvs::findFirstFilePath(QString("%1_%2").arg(JOB_CREATOR_EXEC_AVSMETER).arg(getConfigArch(a_job_config)))).arg(a_job_config[eJOB_CONFIG_INPUT].toString());
         cmds << cmd;
         break;
     case eJOB_PIPER_DIRECT:
@@ -882,7 +882,7 @@ QList<JobCmdList> JobCreator::configToCommandX26X(QMap<EJOB_CONFIG, QVariant> a_
             if(qvs::getFileExt(at_output).toLower() != OUTPUT_EXT_HEVC)
             {
                 cmd.clear();
-                cmd.cmd = QString("%1 -i \"%2\" -c copy \"%3\"").arg(qvs::findFirstFilePath(QString("ffmpeg"))).arg(at_output + QT_EXT_SPLITE + QString(OUTPUT_EXT_HEVC)).arg(at_output);
+                cmd.cmd = QString("%1 -i \"%2\" -c copy \"%3\" -y").arg(qvs::findFirstFilePath(JOB_CREATOR_EXEC_FFMPEG)).arg(at_output + QT_EXT_SPLITE + QString(OUTPUT_EXT_HEVC)).arg(at_output);
                 cmd.type = JobCmdList::eJOB_CMD_TYPE_REMUXER;
                 cmds << cmd;
             }
@@ -1101,7 +1101,7 @@ QStringList JobCreator::configToCommandAVC(QMap<EJOB_CONFIG, QVariant> a_job_con
         isFatalError = true;
         break;
     }
-    cmds << qvs::findFirstFilePath(QString("x264_%1").arg(arch));
+    cmds << qvs::findFirstFilePath(QString("%1_%2").arg(JOB_CREATOR_EXEC_X264).arg(arch));
 
     /*Demuxer (for VSPipe)*/
     if(job_piper == eJOB_PIPER_VSPIPE)
@@ -1226,14 +1226,14 @@ QStringList JobCreator::configToCommandAVC(QMap<EJOB_CONFIG, QVariant> a_job_con
     switch(job_piper)
     {
     case eJOB_PIPER_VSPIPE:
-        cmds.insert(eINDEX_0, qvs::findFirstFilePath(QString("vspipe")));
+        cmds.insert(eINDEX_0, qvs::findFirstFilePath(QString(JOB_CREATOR_EXEC_VSPIPE)));
         cmds.insert(eINDEX_1, "--y4m");
         cmds.insert(eINDEX_2, QString("\"%1\"").arg(a_job_config[eJOB_CONFIG_INPUT].toString()));
         cmds.insert(eINDEX_3, "-");
         cmds.insert(eINDEX_4, QT_PIPE);
         break;
     case eJOB_PIPER_AVS4X26X:
-        cmds.insert(eINDEX_0, qvs::findFirstFilePath(QString("avs4x26x_%1").arg(arch)));
+        cmds.insert(eINDEX_0, qvs::findFirstFilePath(QString("%1_%2").arg(JOB_CREATOR_EXEC_AVS4X26X).arg(arch)));
         cmds.insert(eINDEX_1, "--x264-binary");
         cmds.insert(eINDEX_2, a_job_config[eJOB_CONFIG_CUSTOM_PIPER_PARM].toString());
         break;
@@ -1272,7 +1272,7 @@ QStringList JobCreator::configToCommandHEVC(QMap<EJOB_CONFIG, QVariant> a_job_co
         isFatalError = true;
         break;
     }
-    cmds << qvs::findFirstFilePath(QString("x265_%1").arg(arch));
+    cmds << qvs::findFirstFilePath(QString("%1_%2").arg(JOB_CREATOR_EXEC_X265).arg(arch));
 
     /*Demuxer (for VSPipe)*/
     if(job_piper == eJOB_PIPER_VSPIPE)
@@ -1403,14 +1403,14 @@ QStringList JobCreator::configToCommandHEVC(QMap<EJOB_CONFIG, QVariant> a_job_co
     switch(job_piper)
     {
     case eJOB_PIPER_VSPIPE:
-        cmds.insert(eINDEX_0, qvs::findFirstFilePath(QString("vspipe")));
+        cmds.insert(eINDEX_0, qvs::findFirstFilePath(QString(JOB_CREATOR_EXEC_VSPIPE)));
         cmds.insert(eINDEX_1, "--y4m");
         cmds.insert(eINDEX_2, QString("\"%1\"").arg(a_job_config[eJOB_CONFIG_INPUT].toString()));
         cmds.insert(eINDEX_3, "-");
         cmds.insert(eINDEX_4, QT_PIPE);
         break;
     case eJOB_PIPER_AVS4X26X:
-        cmds.insert(eINDEX_0, qvs::findFirstFilePath(QString("avs4x26x_%1").arg(arch)));
+        cmds.insert(eINDEX_0, qvs::findFirstFilePath(QString("%1_%2").arg(JOB_CREATOR_EXEC_AVS4X26X).arg(arch)));
         cmds.insert(eINDEX_1, "--x265-binary");
         cmds.insert(eINDEX_2, a_job_config[eJOB_CONFIG_CUSTOM_PIPER_PARM].toString());
         break;
