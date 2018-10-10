@@ -58,6 +58,7 @@ Deinterlacing functions:
 Inverse Telecine functions:
 	VIVTC
 	DGIVTC
+	DGTelecide
 ************************************************
 Resizing functions:
 	GammaResize
@@ -79,6 +80,9 @@ Resizing functions:
 Denoise functions:
 	DGDenoise
 	SMDegrain
+************************************************
+Sharpen functions:
+	DGSharpen
 ************************************************
 Format Conversion functions:
 	ConvertToYV24
@@ -121,7 +125,7 @@ Assistant functions:
 	ConvertToTimecode
 	Roma
 ************************************************
-Command functions:
+Command Line functions:
 	AddDefEnv
 	AddParm
 	ToDict
@@ -2935,6 +2939,88 @@ def DGIVTC(src, dir=None, core=None, pthresh=3.5, device=255):
 
 
 ##################################################################################################
+### Function  : DGTelecide
+### Author    : ema
+### Version   : v0.1
+### Release   : 2018.10.10
+##################################################################################################
+### DGTelecide() is a fast stand-alone CUDA filter that implements field matching and adaptive deinterlacing.
+### The input clip must be in the YV12 format.
+### Note that DGTelecide() requires the field order to be properly specified.
+### The safest policy is to always set the correct order using AssumeTFF()/AssumeBFF().
+### AVISource() is dangerous without doing so because it always sets BFF.
+### Note that DGSource() sets the correct field order,
+### so when it is used as the source filter it is not necessary to manually set the field order.
+### 
+### DGTelecide() reconstructs the original progressive frames by properly matching fields.
+### Sometimes, due for example to bad edits, a good match cannot be found and a progressive frame cannot be reconstructed.
+### In that case, if postprocessing is enabled (mode = 1), the frame will be deinterlaced so that a bad frame is not delivered.
+### DGTelecide() also provides modes for pure adaptive deinterlacing without field matching.
+### Refer to the description for the mode parameter for details.
+###
+### dir [str, Default: None]
+### ------------------
+###    The dir of DGIndexNV.
+###    Get from qvs.conf -> 'python' : 'dgnv'.
+###
+### mode [int, Default: 0]
+### ------------------
+###    Mode of operation:
+###     Mode 0: Field matching without adaptive deinterlacing of frames with a bad match (no postprocessing).
+###     Mode 1: Field matching with adaptive deinterlacing of frames with a bad match (postprocessing).
+###     Mode 2: Adaptive deinterlacing of all frames (unconditional deinterlacing).
+###     Mode 3: Adaptive deinterlacing of frames determined to be combed (conditional deinterlacing).
+###
+### pthresh [float, Default: 0.0]
+### ------------------
+###    Threshold for postprocessing.
+###    If the metric for a matched frame exceeds pthresh, the frame will be deinterlaced.
+###    Use the show option to see the metrics and thereby set an appropriate pthresh value.
+###    Postprocessing applies only to frames with no good match and it allows DGTelecide() to deliver reasonable looking frames in such instances. 
+###
+### dthresh [float, Default: 10.0]
+### ------------------
+###    Threshold for adaptive deinterlacing.
+###    This threshold is used to detect interlaced lines.
+###    Lower values deinterlace more of the frame, while higher values deinterlace less.
+###    Use the map option to visualize the lines detected as interlaced and thereby set an appropriate dthresh value. 
+###
+### blend [bint, Default: False]
+### ------------------
+###    When blend=true deinterlaced frames are deinterlaced using field blending.
+###    When blend=false deinterlaced frames are deinterlaced using field interpolation. 
+###
+### map [bint, Default: False]
+### ------------------
+###    When set to true, then for deinterlced frames, lines detected as interlaced are shown in white.
+###    Use this option to appropriately set your deinterlacing threshold dthresh.
+###
+### show [bint, Default: False]
+### ------------------
+###    When set to true, metrics information is overlaid onto the frame.
+###
+### device [int, Default: 255]
+### ------------------
+###    When set to 255, the first GPU found is used.
+###    When set to any other value the GPU with that ordinal value is used.
+###
+### +----------------+
+### |  REQUIREMENTS  |
+### +----------------+
+### -> DGDecodeNV.dll
+###    -> license.txt
+##################################################################################################
+def DGTelecide(src, dir=None, core=None, pthresh=0.0, dthresh=10.0, blend=False, map=False, show=False, device=255):
+	core = Default(core, vs.get_core())
+	bin_path = GetConfig(section='python', options='dgnv')
+	dir = Default(dir, bin_path)
+	if not core is None:
+		if not CheckRegFunc('DGTelecide'):
+			SetWorkingDir(core=core, path=dir, isAvs=True)
+	return core.avs.DGTelecide(src, mode=1, pthresh=pthresh, dthresh=dthresh, blend=blend, map=map, show=show, device=device)
+
+
+##################################################################################################
 ### Function  : DGDenoise
 ### Author    : ema
 ### Version   : v0.1
@@ -2989,8 +3075,7 @@ def DGDenoise(src, dir=None, core=None, strength=0.15, blend=0.1, chroma=True, s
 	if not core is None:
 		if not CheckRegFunc('DGDenoise'):
 			SetWorkingDir(core=core, path=dir, isAvs=True)
-	last = core.avs.DGDenoise(src, strength=strength, blend=blend, chroma=chroma, searchw=searchw, device=device)
-	return last
+	return core.avs.DGDenoise(src, strength=strength, blend=blend, chroma=chroma, searchw=searchw, device=device)
 
 
 ##################################################################################################
@@ -3042,8 +3127,7 @@ def DGDecimate(src, dir=None, core=None, cycle=5, keep=4, device=255, show=False
 	if not core is None:
 		if not CheckRegFunc('DGDecimate'):
 			SetWorkingDir(core=core, path=dir, isAvs=True)
-	last = core.avs.DGDecimate(src, cycle=cycle, keep=keep, device=device, show=show)
-	return last
+	return core.avs.DGDecimate(src, cycle=cycle, keep=keep, device=device, show=show)
 
 
 ##################################################################################################
@@ -3100,6 +3184,69 @@ def DGBob(src, dir=None, core=None, order=-1, mode=0, device=255, pv=False):
 	else:
 		last = core.avs.PVBob(src, mode=mode, order=order, device=device)
 	return last
+
+
+
+##################################################################################################
+### Function  : DGSharpen
+### Author    : ema
+### Version   : v0.1
+### Release   : 2018.10.10
+##################################################################################################
+### DGSharpen() is a fast stand-alone CUDA filter that implements limited sharpening
+### like the well-known filter LimitedSharpenFaster().
+### The input clip must be in the YV12 format.
+###
+### dir [str, Default: None]
+### ------------------
+###    The dir of DGIndexNV.
+###    Get from qvs.conf -> 'python' : 'dgnv'.
+###
+### strength [float, Default: 0.15, Range: 0.1-1.0]
+### ------------------
+###    Strength of the Non-Local Means (NLM) denoising.
+###    Typical values for strength are in the range 0.1-1.0.
+###    Note that if you have interlaced source you should deinterlace with deinterlace=1 or deinterlace=2.
+###    If you have hard pulldown, or you have soft pulldown that is being honored,
+###    then invoke it through DGDenoise() after performing external IVTC.
+###    The essential point to remember is that denoising should be applied to progressive frames.
+###    If you must retain interlacing, then separate the fields, apply DGDenoise(),
+###    and then re-weave the fields.
+###
+### blend [float, Default: 0.1]
+### ------------------
+###    Blending coefficient for the NLM denoising with range 0.0 to 1.0.
+###    Use lower values to blend in less of the original pixel.
+###
+### chroma [bint, Default: False]
+### ------------------
+###    Blending coefficient for the NLM denoising with range 0.0 to 1.0.
+###    Use lower values to blend in less of the original pixel.
+###
+### searchw [int, Default: 5, Range: 5/7/9]
+### ------------------
+###    Width of the search window for the NLM denoising.
+###    Wider windows may improve quality at the expense of speed.
+###
+### device [int, Default: 255]
+### ------------------
+###    When set to 255, the first GPU found is used.
+###    When set to any other value the GPU with that ordinal value is used.
+###
+### +----------------+
+### |  REQUIREMENTS  |
+### +----------------+
+### -> DGDecodeNV.dll
+###    -> license.txt
+##################################################################################################
+def DGSharpen(src, dir=None, core=None, strength=0.15, blend=0.1, chroma=False, searchw=5, device=255, pv=False):
+	core = Default(core, vs.get_core())
+	bin_path = GetConfig(section='python', options='dgnv')
+	dir = Default(dir, bin_path)
+	if not core is None:
+		if not CheckRegFunc('DGSharpen'):
+			SetWorkingDir(core=core, path=dir, isAvs=True)
+	return core.avs.DGSharpen(src, strength=strength, blend=blend, chroma=chroma, searchw=searchw, device=device)
 
 
 ##################################################################################################
@@ -4227,7 +4374,7 @@ def CheckRegFunc(func_name, avs=True):
 ### Release   : 2018.02.14
 ##################################################################################################
 ### Read Mpls file and get source with ffm2.
-### Caching in temp dir, like 'x:/Users/ema/AppData/Local/Temp'.
+### Caching in temp dir, like 'C:/Users/ema/AppData/Local/Temp'.
 ###
 ### +----------------+
 ### |  REQUIREMENTS  |
