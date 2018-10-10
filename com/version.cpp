@@ -1,3 +1,3 @@
 #include "version.h"
 
-const char *QVS_VERSION = "r6";
+const char *QVS_VERSION = "r7";

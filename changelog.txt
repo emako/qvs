@@ -54,4 +54,6 @@ version r6
  - upadated mediainfo to v18.08.1
 
 version r7
- - upadated bontsdemux to msvc2017x64
+ - fixed ffmpeg endless waiting when muxing hevc
+ - added python dgnv sharpen and dgnv telecide functions
+ - upadated bontsdemux to msvc2017
