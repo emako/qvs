@@ -142,7 +142,7 @@ void Muxer::on_buttonMuxerStart_clicked()
         cmd = QString("%1 -i \"%2\" -i \"%3\" -c copy \"%4\" -y").arg(qvs::findFirstFilePath(QString(MUXER_EXEC_FFMPEG))).arg(input_audio).arg(input_video).arg(output);
         break;
     case eOUTPUT_TYPE_MKVMERGE:
-        cmd = QString("%1 -o \"%2\" --no-audio \"%3\" --no-video \"%4\"").arg(qvs::findFirstFilePath(QString(MUXER_EXEC_MKVMERGE))).arg(output).arg(input_video).arg(input_audio);
+        cmd = QString("%1 -o \"%2\" --no-audio \"%3\" --no-video --sync 0:%4 \"%5\"").arg(qvs::findFirstFilePath(QString(MUXER_EXEC_MKVMERGE))).arg(output).arg(input_video).arg(ui->spinBoxMuxerDelay->value()).arg(input_audio);
         break;
     }
     qDebug() << cmd;
