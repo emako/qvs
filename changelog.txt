@@ -56,4 +56,5 @@ version r6
 version r7
  - fixed ffmpeg endless waiting when muxing hevc
  - added python dgnv sharpen and dgnv telecide functions
+ - added mkvmerge delay param in muxer
  - upadated bontsdemux to msvc2017
