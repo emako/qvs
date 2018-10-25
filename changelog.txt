@@ -58,3 +58,7 @@ version r7
  - added python dgnv sharpen and dgnv telecide functions
  - added mkvmerge delay param in muxer
  - upadated bontsdemux to msvc2017
+ - upadated mkvtoolnix to 27.0.0
+
+version r8
+ - upadated qvs.py functions about gamma resize

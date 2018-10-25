@@ -4,6 +4,7 @@ import mvsfunc as mvf
 import muvsfunc as muvf
 import nnedi3_resample
 import nnedi3_resampleCL
+import resamplehq
 import xvs
 import sys, os, re, math, glob, functools, subprocess, shutil, configparser
 
@@ -62,19 +63,12 @@ Inverse Telecine functions:
 ************************************************
 Resizing functions:
 	GammaResize
-	BoxResize
+	PointResize
 	BlinearResize
 	BicubicResize
 	LanczosResize
-	Lanczos4Resize
-	BlackmanResize
-	BlackmanminlobeResize
 	Spline16Resize
 	Spline36Resize
-	Spline64Resize
-	SplineResize
-	GaussResize
-	SincResize
 	Nnedi3Resize
 ************************************************
 Denoise functions:
@@ -118,7 +112,7 @@ Assistant functions:
 	Default
 	SplitClip
 	FrameType
-	JudgeMatrix
+	Matrix
 	RemoveFileExt
 	RightStr
 	LeftStr
@@ -1170,8 +1164,124 @@ def AvsTest(proxy32=True):
 
 ##################################################################################################
 ### Function  : GammaResize
+### Author    : ema
+### Version   : v0.1
+### Release   : 2018.10.25
+##################################################################################################
+### Gamma correct resizing in linear light (RGB).
+###
+### kernel [str, default: 'spline36']
+### ------------------
+###    The kernel to use while resizing.
+###    Types:
+###     'point'
+###     'linear' or 'bilinear'
+###     'cubic' or 'bicubic'
+###     'lanczos'
+###     'spline16'
+###     'spline36'
+###
+### matrix [str, default: '709']
+### ------------------
+###   The source matrix.
+###   Ignored if source colorspace is RGB.
+###
+### transfer [str, default: '709']
+### ------------------
+###   The transfer matrix.
+###
+### src_left/src_top [int, default: 0]
+### ------------------
+###   A subpixel offset to crop the source from the left/top.
+###
+### src_width [str, default: None]
+### ------------------
+###   A subpixel width to crop the source to.
+###      If negative, specifies offset from the right.
+###      Default is source width−src_left.
+###
+### src_height [str, default: None]
+### ------------------
+###   A subpixel height to crop the source to.
+###      If negative, specifies offset from the bottom.
+###      Default is source height − src_top.
+###
+### descale [bint, default: False]
+### ------------------
+###   Activates the kernel inversion mode, allowing to "undo" a previous upsizing
+###   by compensating the loss in high frequencies, giving a sharper and more accurate output
+###   than classic kernels, closer to the original. Default is False.
+###
+### filter_param_a [float, default: None]
+### ------------------
+###   For the bicubic filter, filter_param_a represent the "b" parameter,
+###   for the lanczos filter, it represents the number of taps.
+###
+### filter_param_b [float, default: None]
+### ------------------
+###   For the bicubic filter, it represent the "c" parameter.
+###
+### range_in [str, default: 'limited']
+### ------------------
+###   Range of the input video, either 'limited' or 'full'.
+###
+### precision [bint, default: 1]
+### ------------------
+###   0 uses half float precision,
+###   1 uses single float precision.
+###
+### +----------------+
+### |  REQUIREMENTS  |
+### +----------------+
+### -> resamplehq.py
+### 	-> resample_hq
+##################################################################################################
+def GammaResize(clip, width=None, height=None, kernel='spline36', matrix='709', transfer='709',
+				descale=False, filter_param_a=None, filter_param_b=None, range_in=None, precision=1):
+	
+	matrix = Default(matrix, Matrix(width, height))
+	transfer = Default(transfer, matrix)
+
+	return resamplehq.resample_hq(clip, width=width, height=height, kernel=kernel, matrix=matrix, transfer=transfer, src_left=None, src_top=None, src_width=None, src_height=None, descale=descale, filter_param_a=filter_param_a, filter_param_b=filter_param_b, range_in=range_in, precision=precision)
+
+
+##################################################################################################
+### Function  : PointResize
+### Function  : BlinearResize
+### Function  : BicubicResize
+### Function  : LanczosResize
+### Function  : Spline16Resize
+### Function  : Spline36Resize
+### Author    : ema
+### Version   : v0.1
+### Release   : 2018.10.26
+##################################################################################################
+### Resize clip with the func name algorithm.
+##################################################################################################
+def PointResize(clip, width=None, height=None, descale=False, filter_param_a=None, filter_param_b=None, range_in=None, precision=1):
+	return GammaResize(clip, width=width, height=height, kernel='point', descale=descale, filter_param_a=filter_param_a, filter_param_b=filter_param_b, range_in=range_in, precision=precision)
+
+def BlinearResize(clip, width=None, height=None, descale=False, filter_param_a=None, filter_param_b=None, range_in=None, precision=1):
+	return GammaResize(clip, width=width, height=height, kernel='bilinear', descale=descale, filter_param_a=filter_param_a, filter_param_b=filter_param_b, range_in=range_in, precision=precision)
+
+def BicubicResize(clip, width=None, height=None, descale=False, filter_param_a=None, filter_param_b=None, range_in=None, precision=1):
+	return GammaResize(clip, width=width, height=height, kernel='bicubic', descale=descale, filter_param_a=filter_param_a, filter_param_b=filter_param_b, range_in=range_in, precision=precision)
+
+def LanczosResize(clip, width=None, height=None, descale=False, filter_param_a=None, filter_param_b=None, range_in=None, precision=1):
+	return GammaResize(clip, width=width, height=height, kernel='lanczos', descale=descale, filter_param_a=filter_param_a, filter_param_b=filter_param_b, range_in=range_in, precision=precision)
+
+def Spline16Resize(clip, width=None, height=None, descale=False, filter_param_a=None, filter_param_b=None, range_in=None, precision=1):
+	return GammaResize(clip, width=width, height=height, kernel='spline16', descale=descale, filter_param_a=filter_param_a, filter_param_b=filter_param_b, range_in=range_in, precision=precision)
+
+def Spline36Resize(clip, width=None, height=None, descale=False, filter_param_a=None, filter_param_b=None, range_in=None, precision=1):
+	return GammaResize(clip, width=width, height=height, kernel='spline36', descale=descale, filter_param_a=filter_param_a, filter_param_b=filter_param_b, range_in=range_in, precision=precision)
+
+
+"""
+##################################################################################################
+### Function  : GammaResize
 ### Author    : 787633258
-### Version   : v1.03
+### Version   : v1.03 deprecated
 ### Release   : 2017.08.17
 ### Modified  : ema
 ##################################################################################################
@@ -1398,175 +1508,92 @@ def GammaResize(input, target_width=None, target_height=None, depth=None, transs
 		last = mvf.ToYUV(last, css=prev_format)
 	
 	return last
+"""
 
-
+"""
 ##################################################################################################
 ### Function  : BoxResize
+### Function  : BlinearResize
+### Function  : BicubicResize
+### Function  : LanczosResize
+### Function  : Lanczos4Resize
+### Function  : BlackmanResize
+### Function  : BlackmanminlobeResize
+### Function  : Spline16Resize
+### Function  : Spline36Resize
+### Function  : Spline64Resize
+### Function  : SplineResize
+### Function  : GaussResize
+### Function  : SincResize
 ### Author    : ema
-### Version   : v0.1
+### Version   : v0.1 deprecated
 ### Release   : 2018.01.16
 ##################################################################################################
 ### Resize clip with rect/box algorithm.
+### Resize clip with linear/bilinear algorithm.
+### Resize clip with cubic/bicubic algorithm.
+### Resize clip with lanczos algorithm.
+### Resize clip with lanczos4 algorithm.
+### Resize clip with blackman algorithm.
+### Resize clip with blackmanminlobe algorithm.
+### Resize clip with spline16 algorithm.
+### Resize clip with spline36 algorithm.
+### Resize clip with spline algorithm.
+### Resize clip with gauss/gaussian algorithm.
+### Resize clip with sinc algorithm.
 ##################################################################################################
 def BoxResize(clip, w, h, depth=None):
 	depth = Default(depth, clip.format.bits_per_sample)
 	return GammaResize(input=clip, target_width=w, target_height=h, depth=depth, k='box', k_c='box')
 
-
-##################################################################################################
-### Function  : BlinearResize
-### Author    : ema
-### Version   : v0.1
-### Release   : 2018.01.16
-##################################################################################################
-### Resize clip with linear/bilinear algorithm.
-##################################################################################################
 def BlinearResize(clip, w, h, depth=None):
 	depth = Default(depth, clip.format.bits_per_sample)
 	return GammaResize(input=clip, target_width=w, target_height=h, depth=depth, k='bilinear', k_c='bilinear')
 
-
-##################################################################################################
-### Function  : BicubicResize
-### Author    : ema
-### Version   : v0.1
-### Release   : 2018.01.16
-##################################################################################################
-### Resize clip with cubic/bicubic algorithm.
-##################################################################################################
 def BicubicResize(clip, w, h, depth=None):
 	depth = Default(depth, clip.format.bits_per_sample)
 	return GammaResize(input=clip, target_width=w, target_height=h, depth=depth, k='bicubic', k_c='bicubic')
 
-
-##################################################################################################
-### Function  : LanczosResize
-### Author    : ema
-### Version   : v0.1
-### Release   : 2018.02.12
-##################################################################################################
-### Resize clip with lanczos algorithm.
-##################################################################################################
 def LanczosResize(clip, w, h, depth=None):
 	depth = Default(depth, clip.format.bits_per_sample)
 	return GammaResize(input=clip, target_width=w, target_height=h, depth=depth, k='lanczos', k_c='lanczos')
 
-
-##################################################################################################
-### Function  : LanczosResize
-### Author    : ema
-### Version   : v0.1
-### Release   : 2018.01.16
-##################################################################################################
-### Resize clip with lanczos algorithm.
-##################################################################################################
 def Lanczos4Resize(clip, w, h, depth=None):
 	depth = Default(depth, clip.format.bits_per_sample)
 	return GammaResize(input=clip, target_width=w, target_height=h, depth=depth, k='lanczos', k_c='lanczos', taps=4)
 
-
-##################################################################################################
-### Function  : BlackmanResize
-### Author    : ema
-### Version   : v0.1
-### Release   : 2018.01.16
-##################################################################################################
-### Resize clip with blackman algorithm.
-##################################################################################################
 def BlackmanResize(clip, w, h, depth=None):
 	depth = Default(depth, clip.format.bits_per_sample)
 	return GammaResize(input=clip, target_width=w, target_height=h, depth=depth, k='blackman', k_c='blackman')
 
-
-##################################################################################################
-### Function  : BlackmanminlobeResize
-### Author    : ema
-### Version   : v0.1
-### Release   : 2018.01.16
-##################################################################################################
-### Resize clip with blackmanminlobe algorithm.
-##################################################################################################
 def BlackmanminlobeResize(clip, w, h, depth=None):
 	depth = Default(depth, clip.format.bits_per_sample)
 	return GammaResize(input=clip, target_width=w, target_height=h, depth=depth, k='blackmanminlobe', k_c='blackmanminlobe')
 
-
-##################################################################################################
-### Function  : Spline16Resize
-### Author    : ema
-### Version   : v0.1
-### Release   : 2018.01.16
-##################################################################################################
-### Resize clip with spline16 algorithm.
-##################################################################################################
 def Spline16Resize(clip, w, h, depth=None):
 	depth = Default(depth, clip.format.bits_per_sample)
 	return GammaResize(input=clip, target_width=w, target_height=h, depth=depth, k='spline16', k_c='spline16')
 
-
-##################################################################################################
-### Function  : Spline36Resize
-### Author    : ema
-### Version   : v0.1
-### Release   : 2018.01.16
-##################################################################################################
-### Resize clip with spline36 algorithm.
-##################################################################################################
 def Spline36Resize(clip, w, h, depth=None):
 	depth = Default(depth, clip.format.bits_per_sample)
 	return GammaResize(input=clip, target_width=w, target_height=h, depth=depth, k='spline36', k_c='spline36')
 
-
-##################################################################################################
-### Function  : Spline64Resize
-### Author    : ema
-### Version   : v0.1
-### Release   : 2018.01.16
-##################################################################################################
-### Resize clip with spline64 algorithm.
-##################################################################################################
 def Spline64Resize(clip, w, h, depth=None):
 	depth = Default(depth, clip.format.bits_per_sample)
 	return GammaResize(input=clip, target_width=w, target_height=h, depth=depth, k='spline64', k_c='spline64')
 
-
-##################################################################################################
-### Function  : SplineResize
-### Author    : ema
-### Version   : v0.1
-### Release   : 2018.01.16
-##################################################################################################
-### Resize clip with spline algorithm.
-##################################################################################################
 def SplineResize(clip, w, h, depth=None):
 	depth = Default(depth, clip.format.bits_per_sample)
 	return GammaResize(input=clip, target_width=w, target_height=h, depth=depth, k='spline', k_c='spline')
 
-
-##################################################################################################
-### Function  : GaussResize
-### Author    : ema
-### Version   : v0.1
-### Release   : 2018.01.16
-##################################################################################################
-### Resize clip with gauss/gaussian algorithm.
-##################################################################################################
 def GaussResize(clip, w, h, depth=None):
 	depth = Default(depth, clip.format.bits_per_sample)
 	return GammaResize(input=clip, target_width=w, target_height=h, depth=depth, k='gauss', k_c='gauss')
 
-
-##################################################################################################
-### Function  : SincResize
-### Author    : ema
-### Version   : v0.1
-### Release   : 2018.01.16
-##################################################################################################
-### Resize clip with sinc algorithm.
-##################################################################################################
 def SincResize(clip, w, h, depth=None):
 	depth = Default(depth, clip.format.bits_per_sample)
 	return GammaResize(input=clip, target_width=w, target_height=h, depth=depth, k='sinc', k_c='sinc')
+"""
 
 
 ##################################################################################################
@@ -2231,23 +2258,16 @@ def ChangeFPS(src, fps, dec=None):
 
 
 ##################################################################################################
-### Function  : ChangeFPS
+### Function  : AssumeFPS
 ### Author    : ema
 ### Version   : v0.2
 ### Release   : 2018.01.01
 ##################################################################################################
-### Redesign ChangeFPS from havsfunc.py
-### Enable float val when using fps.
+### Returns a clip with the framerate changed.
 ###
 ### fps [float]
 ### ------------------
 ###    FrameRate.
-###
-### +----------------+
-### |  REQUIREMENTS  |
-### +----------------+
-### -> havsfunc.py
-###		-> ChangeFPS
 ##################################################################################################
 def AssumeFPS(src, fps, dec=None):
 	core = vs.get_core()
@@ -2338,20 +2358,20 @@ def QTGMC(src, Preset='slow', TFF=True, FPSDivisor=2, opencl=False):
 
 
 ##################################################################################################
-### Function  : JudgeMatrix
+### Function  : Matrix
 ### Author    : ema
-### Version   : v0.1
-### Release   : 2018.08.13
+### Version   : v0.2
+### Release   : 2018.10.25
 ##################################################################################################
 ### Judge matrix of input clip.
 ##################################################################################################
-def JudgeMatrix(a, b):
-	if a <= 1024 and b <= 576:
-		return "601"
-	elif a <= 2048 and b <= 1536:
-		return "709"
+def Matrix(width, height):
+	if width <= 1024 and height <= 576:
+		return '601'
+	elif width <= 2048 and height <= 1536:
+		return '709'
 	else:
-		return "2020"
+		return '2020'
 
 
 ##################################################################################################
