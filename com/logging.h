@@ -24,13 +24,15 @@ public:
 
     void init(void);
 
-    Logger &log(const QString &a_rName = QLatin1String("logger"));
+    static Logger &log(const QString &a_rName = QLatin1String("logger"));
 
     bool configure(const QString &a_configFilename);
 
     QString history(void);
 
     bool remove(void);
+
+    static void test(void);
 };
 
 #endif // LOGGING_H

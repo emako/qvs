@@ -42,3 +42,17 @@ bool Logging::remove(void)
 {
     return QFile(DEFAULT_LOG_FILENAME).remove();
 }
+
+void Logging::test(void)
+{
+    log().debug("o*****");
+    log().debug("*o****");
+    log().debug("**o***");
+    log().debug("***o**");
+    log().debug("****o*");
+    log().debug("*****o");
+    log().debug("****o*");
+    log().debug("***o**");
+    log().debug("**o***");
+    log().debug("*o****");
+}
