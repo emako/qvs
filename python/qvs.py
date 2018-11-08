@@ -796,8 +796,8 @@ def Overlay(clipa, clipb, x=0, y=0, mask=None, opacity=1):
 ##################################################################################################
 ### Function  : Overlaymod
 ### Author    : ema
-### Version   : v0.1
-### Release   : 2018.01.01
+### Version   : v0.2
+### Release   : 2018.11.08
 ##################################################################################################
 ### Redesign the Overlaymod function to increase the opacity parameter.
 ###
@@ -809,14 +809,14 @@ def Overlay(clipa, clipb, x=0, y=0, mask=None, opacity=1):
 ##################################################################################################
 def Overlaymod(clipa, clipb, x=0, y=0, alpha=None, opacity=1, aa=False):
 	core = vs.get_core()
-	return core.std.Merge(clipa, xvs.Overlaymod(clipa, clipb, alpha=alpha, aa=False), weight=[opacity, opacity])
+	return core.std.Merge(clipa, xvs.Overlaymod(clipa, clipb, x=x, y=y, alpha=alpha, aa=False), weight=[opacity, opacity])
 
 
 ##################################################################################################
 ### Function  : AddLogo
 ### Author    : ema
-### Version   : v0.1
-### Release   : 2018.01.01
+### Version   : v0.2
+### Release   : 2018.11.08
 ##################################################################################################
 ### Add image logo otherwise using *.lgd.
 ###
@@ -843,9 +843,9 @@ def AddLogo(src, path, w=None, h=None, an=None, x=0, y=0, opacity=1, aa=False):
 		return core.delogo.AddLogo(clip=src, logofile=path)
 	img, img_alpha = core.imwri.Read(path, alpha=True)
 	img = mvf.ToYUV(img, css='444')
-	if w is not None:
-		if h is not None:
-			img = core.resize.Lanczos(img, w, h)
+	if (w is not None) and (h is not None):
+		img = core.resize.Lanczos(img, w, h)
+		img_alpha = core.resize.Lanczos(img_alpha, w, h)
 	if an is not None:
 		if an == 1 | an == 4 | an == 7:
 			x = 0

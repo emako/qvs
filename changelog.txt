@@ -61,4 +61,5 @@ version r7
  - upadated mkvtoolnix to 27.0.0
 
 version r8
- - upadated qvs.py functions about gamma resize
+ - upadated qvs.py functions about gamma resize, add logo and overlaymod
+ - fixed logging properties

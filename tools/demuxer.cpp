@@ -745,6 +745,7 @@ void Demuxer::on_buttonDemuxerStart_clicked()
             return;
         }
         cmd = QString("%1 \"%2\" %3: \"%4\"").arg(qvs::findFirstFilePath(DEMUXER_EXEC_EAC3TO)).arg(input).arg(index).arg(output);
+        dataType = StdWatcher::eDATA_TYPE_LOCAL;
         break;
     case eRELOAD_TYPE_MKVEXTRACT:
         do{
