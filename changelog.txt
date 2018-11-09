@@ -61,8 +61,11 @@ version r7
  - upadated mkvtoolnix to 27.0.0
 
 version r8
+ - uUpdated vapoursynth to r45
+ - uUpdated python to 3.7.1
  - upadated qvs.py functions about gamma resize, add logo and overlaymod
  - updated x264 to revision 2935 (API v157)
- - uUpdated x265 to version 2.9+1
+ - updated x265 to version 2.9+1
+ - added ffmpeg 32bit named ffmpeg32
  - fixed make portable dialog closing crash
  - fixed logging properties
