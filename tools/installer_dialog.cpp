@@ -14,7 +14,7 @@ const char *c_content_to_arg[InstallerDialog::eINSTALLER_CONTENTS_MAX] = {
     "all",                /* eINSTALLER_CONTENTS_ALL */
 };
 
-InstallerDialog::InstallerDialog(QWidget *parent) :
+InstallerDialog::InstallerDialog(QDialog *parent) :
     QDialog(parent),
     ui(new Ui::InstallerDialog)
 {
@@ -31,7 +31,6 @@ void InstallerDialog::setup(void)
 {
     g_pConfig->initInstallerConfig();
     this->loadInstallerConfig();
-    this->setAttribute(Qt::WA_DeleteOnClose, true);
     ui->treeWidgetModule->setHeaderHidden(false);
 
 #ifndef QVS_PORTABLE

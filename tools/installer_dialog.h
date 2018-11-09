@@ -20,7 +20,7 @@ class InstallerDialog : public QDialog
     Q_OBJECT
 
 public:
-    explicit InstallerDialog(QWidget *parent = nullptr);
+    explicit InstallerDialog(QDialog *parent = nullptr);
     ~InstallerDialog();
     class MainWindow *mainUi;
     friend class MainWindow;
