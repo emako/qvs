@@ -338,6 +338,10 @@ void Merge::on_buttonStart_clicked()
 
     QUuid uid = StdManager::createStdWatch();
 
+    if(isLocalDataType())
+    {
+        g_pStdWatch[uid]->setDataType(StdWatcher::eDATA_TYPE_LOCAL);
+    }
     g_pStdWatch[uid]->show();
     g_pStdWatch[uid]->initJob(uid);
     g_pStdWatch[uid]->startJob(cmds);
@@ -400,4 +404,20 @@ void Merge::on_comboBoxCustomType_currentIndexChanged(int a_index)
 void Merge::on_listWidget_customContextMenuRequested(const QPoint &)
 {
     m_pContextMenu->exec(QCursor::pos());
+}
+
+bool Merge::isLocalDataType(void)
+{
+    bool localDataType = false;
+
+    switch(static_cast<EMERGE_MODE>(ui->comboBoxMode->currentIndex()))
+    {
+    case eMERGE_MODE_COPY:
+    case eMERGE_MODE_CAT:
+        localDataType = true;
+        break;
+    default:
+        break;
+    }
+    return localDataType;
 }

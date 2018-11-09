@@ -97,6 +97,7 @@ private:
     Ui::Merge *ui;
     QMenu *m_pContextMenu;
     void setup(void);
+    bool isLocalDataType(void);
 };
 
 #endif // MERGE_H
