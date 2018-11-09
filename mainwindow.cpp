@@ -1343,6 +1343,11 @@ void MainWindow::on_buttonAudioBatchClear_clicked()
 
 void MainWindow::on_buttonAudioBatchStart_clicked()
 {
+    if(ui->listViewAudioBatch->count() <= eINDEX_0)
+    {
+        return;
+    }
+
     QList<StdWatcherCmd> cmds;
     QUuid uid = StdManager::createStdWatch();
 
