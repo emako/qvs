@@ -35,6 +35,7 @@ void ScriptCreator::setup(void)
     ui->comboBoxDenoise->addItems(QStringList() << "DGDenoise");
     ui->comboBoxSubtitle->addItems(QStringList() << "VSFilter" << "VSFilterMod" << "Subtext");
     ui->labelSourcePreview->setStyleSheet(c_qss_label_under_line);
+    ui->scriptEditor->setTabStopDistance(QFontMetrics(ui->scriptEditor->font()).width(QT_BLANK) * eINDEX_4);
 }
 
 void ScriptCreator::reload(const ReloadFileType &a_fileType, const QString &a_filename)

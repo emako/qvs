@@ -33,6 +33,7 @@
 #include <QTextCodec>
 
 #define NULLSTR QString()
+#define NULLSTRS QStringList()
 
 #define KB (1024)
 #define MB (KB * KB)
