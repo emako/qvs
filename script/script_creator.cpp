@@ -20,6 +20,7 @@ ScriptCreator::~ScriptCreator()
 
 void ScriptCreator::setup(void)
 {
+    this->loadCommonConfig();
     ui->scriptEditor->setFont(QFont("Consolas"));
     setSyntax();
     this->setAcceptDrops(true);
@@ -33,9 +34,14 @@ void ScriptCreator::setup(void)
     ui->dotGridDSS->setStyleSheet(c_qss_label_bk_dot_grid);
     ui->comboBoxResizeFilter->addItems(QStringList() << "Bilinear" << "Bicubic" << "Point" << "Lanczos" << "Spline16" << "Spline36" << "Nnedi3");
     ui->comboBoxDenoise->addItems(QStringList() << "DGDenoise");
-    ui->comboBoxSubtitle->addItems(QStringList() << "VSFilter" << "VSFilterMod" << "Subtext");
+    ui->comboBoxSubtitle->addItems(QStringList() << "VSFilter" << "VSFilterMod" << "TcasFilter" << "Subtext");
     ui->labelSourcePreview->setStyleSheet(c_qss_label_under_line);
     ui->scriptEditor->setTabStopDistance(QFontMetrics(ui->scriptEditor->font()).width(QT_BLANK) * eINDEX_4);
+}
+
+void ScriptCreator::loadCommonConfig(void)
+{
+    ui->checkBoxNotAddJobOnSaved->setChecked(!g_pConfig->getConfig(Config::eCONFIG_COMMON_ADD_JOB_IMMEDIATELY).toBool());
 }
 
 void ScriptCreator::reload(const ReloadFileType &a_fileType, const QString &a_filename)
@@ -65,6 +71,7 @@ void ScriptCreator::reload(const ReloadFileType &a_fileType, const QString &a_fi
     case ReloadFileSubtitle:
         m_subtitleFilename = a_filename;
         ui->editSubtitle->setText(QDir::toNativeSeparators(a_filename));
+        selectSubFilter(); // called after UI set text
         break;
     }
     createScript();
@@ -190,6 +197,7 @@ void ScriptCreator::on_buttonSave_clicked()
         this->close();
         return;
     }
+    g_pConfig->setConfig(Config::eCONFIG_COMMON_ADD_JOB_IMMEDIATELY, !ui->checkBoxNotAddJobOnSaved->isChecked());
     this->close();
 }
 
@@ -788,11 +796,15 @@ inline QString ScriptCreator::createScriptSubtitle(const SubtitleFilter &a_filte
     }
     switch(a_filterSubtitle)
     {
+    default:
     case VSFilter:
         script = QString("src = core.vsf.TextSub(src, file=u'%1')").arg(m_subtitleFilename);
         break;
     case VSFilterMod:
         script = QString("src = core.vsfm.TextSubMod(src, file=u'%1')").arg(m_subtitleFilename);
+        break;
+    case TcasFilter:
+        script = QString("src = qvs.TcasSub(src, file=u'%1')").arg(m_subtitleFilename);
         break;
     case Subtext:
         do{
@@ -889,7 +901,7 @@ void ScriptCreator::on_buttonBrowseAddLogoDataInput_clicked()
 
 void ScriptCreator::on_buttonBrowseSubtitle_clicked()
 {
-    QString filename = QFileDialog::getOpenFileName(this, tr("Open Subtitle file"), NULLSTR, tr("Subtitle (*.ass *.ssa *.sup *.srt *.idx)"));
+    QString filename = QFileDialog::getOpenFileName(this, tr("Open Subtitle file"), NULLSTR, tr("Subtitle (*.ass *.ssa *.sup *.srt *.idx *.tcas)"));
 
     if(!filename.isEmpty())
     {
@@ -1359,4 +1371,50 @@ void ScriptCreator::on_comboBoxResizeFilter_currentIndexChanged(int)
 void ScriptCreator::on_checkBoxSourceFilterLSMASH_stateChanged(int)
 {
     createScript();
+}
+
+void ScriptCreator::selectSubFilter(void)
+{
+    static const QMap<QString, SubtitleFilter> s_subtitleExtRecommendFilter = {
+        { EXT_ASS,  VSFilter   },
+        { EXT_SSA,  VSFilter   },
+        { EXT_SUP,  Subtext    },
+        { EXT_SRT,  VSFilter   },
+        { EXT_IDX,  Subtext    },
+        { EXT_TCAS, TcasFilter },
+    };
+
+    static const QMap<SubtitleFilter, QList<QString>> s_subtitleFilterSupportExt = {
+        { VSFilter,    { EXT_ASS, EXT_SSA, EXT_SRT          } },
+        { VSFilterMod, { EXT_ASS, EXT_SSA, EXT_SRT          } },
+        { TcasFilter,  { EXT_TCAS                           } },
+        { Subtext,     { EXT_ASS, EXT_SSA, EXT_SRT, EXT_SUP } },
+    };
+
+    SubtitleFilter currentFilter = static_cast<SubtitleFilter>(ui->comboBoxSubtitle->currentIndex());
+    QString loadedFileExt = QFileInfo(ui->editSubtitle->text()).suffix().toLower();
+    QList<QString> currentFilterSupportExt = s_subtitleFilterSupportExt[currentFilter];
+    bool supportedExt = false;
+
+    for(int i = eINDEX_0; i < currentFilterSupportExt.length(); i++)
+    {
+        if(loadedFileExt == currentFilterSupportExt.at(i))
+        {
+            supportedExt = true;
+            break;
+        }
+    }
+
+    if(!supportedExt)
+    {
+        if(s_subtitleExtRecommendFilter.contains(loadedFileExt))
+        {
+            SubtitleFilter supportedFilter = s_subtitleExtRecommendFilter[loadedFileExt];
+
+            if(supportedFilter >= static_cast<SubtitleFilter>(eINDEX_0) && supportedFilter < SubtitleFilterMax)
+            {
+                ui->comboBoxSubtitle->setCurrentIndex(supportedFilter);
+            }
+        }
+    }
 }

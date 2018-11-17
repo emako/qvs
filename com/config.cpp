@@ -19,6 +19,7 @@ const char *c_config_common_key[Config::eCONFIG_COMMON_MAX] = {
     "style_factory",                    /*eCONFIG_COMMON_STYLE_FACTORY*/
     "encoder_precess_priority",         /*eCONFIG_COMMON_ENCODER_PRECESS_PRIORITY*/
     "start_job_immediately",            /*eCONFIG_COMMON_START_JOB_IMMEDIATELY*/
+    "add_job_immediately",              /*eCONFIG_COMMON_ADD_JOB_IMMEDIATELY*/
     "script_player_player",             /*eCONFIG_COMMON_SCRIPT_PLAYER_PLAYER*/
     "preview_custom_fps",               /*eCONFIG_COMMON_PREVIEW_FPS_LIMIT_CUSTOM*/
     "preview_zoom_mode",                /*eCONFIG_COMMON_PREVIEW_ZOOM_MODE*/
@@ -73,7 +74,7 @@ void Config::initArgs(QStringList a_args)
 void Config::initFirstConfigDefault(void)
 {
     m_config_first_default << QVariant((m_launchMode == eLAUNCH_MODE_NORMAL) ? true : false); /*eCONFIG_FIRST_GUARD_LOCKER*/
-    m_config_first_default << QVariant(true); /*eCONFIG_FIRST_SPLASH_SCREEN*/
+    m_config_first_default << QVariant(false); /*eCONFIG_FIRST_SPLASH_SCREEN*/
     m_config_first_default << QVariant(QT_EMPTY); /*eCONFIG_FIRST_CLI_FILENAME: Can't insert config after init arguments.*/
     m_config_first_default << QVariant(true); /*eCONFIG_FIRST_FIRST_LAUNCH*/
     m_config_first_default << QVariant(eLANGUAGE_EN); /*eCONFIG_FIRST_LANGUAGE*/
@@ -101,6 +102,7 @@ void Config::initCommonConfigDefault(void)
     m_config_common_default << QVariant(eINDEX_NONE); /* eCONFIG_COMMON_STYLE_FACTORY */
     m_config_common_default << QVariant(JobChef::ePROCESS_PRIORITY_NORMAL_INDEX); /* eCONFIG_COMMON_ENCODER_PRECESS_PRIORITY */
     m_config_common_default << QVariant(false); /* eCONFIG_COMMON_START_JOB_IMMEDIATELY */
+    m_config_common_default << QVariant(false); /* eCONFIG_COMMON_ADD_JOB_IMMEDIATELY */
     m_config_common_default << QVariant(eINDEX_0); /*eCONFIG_COMMON_SCRIPT_PLAYER_PLAYER*/
     m_config_common_default << QVariant(eINDEX_24); /*eCONFIG_COMMON_PREVIEW_FPS_LIMIT_CUSTOM*/
     m_config_common_default << QVariant(eINDEX_2); /*eCONFIG_COMMON_PREVIEW_ZOOM_MODE*/

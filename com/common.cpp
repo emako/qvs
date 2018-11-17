@@ -167,7 +167,6 @@ QString qvs::fromHtml(const QString &a_str)
     return editor.toPlainText();
 }
 
-
 QString qvs::toHtmlText(const QString &a_str)
 {
     QString input = a_str;
@@ -274,9 +273,9 @@ QString qvs::getStringFromJson(const QJsonObject& a_json)
 QFileInfoList qvs::getFileList(QString a_path)
 {
     QDir dir(a_path);
-
     QFileInfoList file_list = dir.entryInfoList(QDir::Files | QDir::Hidden | QDir::NoSymLinks);
     QFileInfoList folder_list = dir.entryInfoList(QDir::Dirs | QDir::NoDotAndDotDot);
+
     for(int i = 0; i != folder_list.size(); i++)
     {
         QString name = folder_list.at(i).absoluteFilePath();

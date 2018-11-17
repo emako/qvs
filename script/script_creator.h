@@ -13,6 +13,13 @@
 #define PY_ORDER_TFF "tff"
 #define PY_ORDER_BFF "bff"
 
+#define EXT_ASS "ass"
+#define EXT_SSA "ssa"
+#define EXT_SUP "sup"
+#define EXT_SRT "srt"
+#define EXT_IDX "idx"
+#define EXT_TCAS "tcas"
+
 class MainWindow;
 class VideoInfo;
 class SyntaxHighlighter;
@@ -128,7 +135,9 @@ public:
     enum SubtitleFilter {
         VSFilter,
         VSFilterMod,
+        TcasFilter,
         Subtext,
+        SubtitleFilterMax,
     };
 
     void reload(const ReloadFileType &a_fileType, const QString &a_filename);
@@ -235,6 +244,8 @@ private:
     QString m_subtitleFilename;         /* Unix   */
 
     void setup(void);
+    void loadCommonConfig(void);
+    void selectSubFilter(void);
     inline bool isLsmash(void);
     inline QString pyBool2String(bool a_bint);
     inline QString pyFieldOrder(const FieldOrder &a_fieldOrder);
