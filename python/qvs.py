@@ -27,7 +27,6 @@ Scripts functions:
 	SelectHalf
 	StackVertical
 	StackHorizontal
-	Subtitle
 	ChangeFPS
 	AssumeFPS
 	OverlayM
@@ -107,6 +106,10 @@ Configure functions:
 	TestSuite
 	PathSplit
 	FindFirstFilePath
+************************************************
+Subtitle functions:
+	Subtitle
+	TcasSub
 ************************************************
 Assistant functions:
 	Default
@@ -2019,6 +2022,45 @@ def Subtitle(src, text, an=7):
 	core = vs.get_core()
 	src = core.text.Text(src, str(text), alignment=an)
 	return src
+
+
+##################################################################################################
+### Function  : TcasSub
+### Author    : ema
+### Version   : v0.1
+### Release   : 2018.11.17
+##################################################################################################
+###	Parse Tcas subtilte for tcax project.
+### See here about Tcas: http://www.tcax.org/docs/tcas-spec.htm
+###
+### file [str]
+### ------------------
+###    The alignment parameter takes a number from 1 to 9, corresponding to the positions of the keys on a numpad.
+###
+### fps [float, default: 0.0]
+### ------------------
+###    if fps <  0.0 then using TCAS default frame rate(fpsNum=-1 and fpsDen=1).
+###    if fps == 0.0 then base on clip.
+###
+### max_frame [int, default: 0]
+### ------------------
+###    Frame cache will be used when max_frame > 0.
+###
+### memory_max [int, default: 0 (32~1024)] 
+### ------------------
+###    If memory_max value is not set then iMemoryMax is 0.
+###
+### +----------------+
+### |  REQUIREMENTS  |
+### +----------------+
+###	-> avsproxy.dll (32bit, REQUEST_IN_32BIT_AVS)
+###	-> tcasFilter.dll (32bit, REQUEST_IN_32BIT_AVS)
+##################################################################################################
+def TcasSub(clip, file, fps=0, max_frame=0, memory_max=0, avisynth=None, slave=None, log=None):
+	core = vs.get_core()
+	avs_script = 'TcasSub(file="{file}", fps={fps}, max_frame={max_frame}, memory_max={memory_max})'.format(file=file, fps=str(fps), max_frame=str(max_frame), memory_max=str(memory_max))
+	avs_script = 'LoadPlugin("{avsplugins}\\tcasFilter.dll") {avs_script}'.format(avsplugins=GetLibPath(lib='./../avisynth32/plugins'), avs_script=avs_script)
+	return core.avsw.Eval(avs_script, clips=[clip], clip_names=['last'], avisynth=avisynth, slave=slave, slave_log=log)
 
 
 ##################################################################################################
