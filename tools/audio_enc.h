@@ -2,6 +2,8 @@
 #define AUDIO_ENC_H
 
 #include <QWidget>
+#include <QValidator>
+#include <QRegExpValidator>
 
 #define AUDIO_CONFIG_EXEC_PIPER "ffmpeg"
 #define AUDIO_CONFIG_EXEC_PIPER_32 "ffmpeg32"
@@ -52,6 +54,7 @@ public:
         eENCODER_MAX,
     };
 
+    void init(void);
     void reload(QString a_filename);
     void reload(void);
     QString getAudioOutputPath(EENCODE_TYPE a_type, QString a_filename);
@@ -67,6 +70,7 @@ private slots:
     void on_buttonAudioStart_clicked();
     void on_comboBoxAudioEncoder_activated(int a_index);
     void on_comboBoxAudioEncoder_currentIndexChanged(int a_index);
+    void on_comboBoxAudioBitrate_currentTextChanged(const QString &a_text);
     void on_buttonAudioInput_clicked();
     void on_buttonAudioOutput_clicked();
     void on_buttonAudioConfig_clicked();
@@ -74,8 +78,10 @@ private slots:
 private:
     Ui::AudioEnc *ui;
     AudioAdvancedConfig *m_pAdvancedConfig;
+    QValidator *m_validatorBitrate;
     void setup(void);
     void setDefaultConfig(void);
+    void saveCurrentAdvancedConfig(void);
 };
 
 #endif // AUDIO_ENC_H

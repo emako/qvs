@@ -92,6 +92,7 @@ void MainWindow::setupUi(void)
     m_pSystemTray->setToolTip(this->windowTitle());
     m_pSystemTray->show();
     m_pSystemTray->hide();
+    ui->widgetAudioEnc->init();
 
     /*Ui*/
     ui->progressBar->setStyleSheet(c_qss_process_bar_pink_lady);
@@ -789,10 +790,10 @@ void MainWindow::dropEvent(QDropEvent* e)
         foreach(QUrl url, e->mimeData()->urls())
         {
             QFileInfo file(url.toLocalFile());
-            QString filename = file.canonicalFilePath();
-            filename = QDir::toNativeSeparators(filename);
+            QString filename = QDir::toNativeSeparators(file.canonicalFilePath());
             QPoint pos;
             QRect ret;
+
             if(!QFileInfo(filename).isFile())
             {
                 continue;

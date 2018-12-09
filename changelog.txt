@@ -28,7 +28,7 @@ version alpha1.6
  - changed installer dialog will not be shown when vs has been installed
 
 version r1
- - upadated mediainfo to v18.08
+ - updated mediainfo to v18.08
  - added mediainfo language
 
 version r2
@@ -50,22 +50,27 @@ version r6
  - fixed warnings
  - fixed log html format
  - added view menu
- - upadated qt to 5.11.2
- - upadated mediainfo to v18.08.1
+ - updated qt to 5.11.2
+ - updated mediainfo to v18.08.1
 
 version r7
  - fixed ffmpeg endless waiting when muxing hevc
  - added python dgnv sharpen and dgnv telecide functions
  - added mkvmerge delay param in muxer
- - upadated bontsdemux to msvc2017
- - upadated mkvtoolnix to 27.0.0
+ - updated bontsdemux to msvc2017
+ - updated mkvtoolnix to 27.0.0
 
 version r8
- - uUpdated vapoursynth to r45
- - uUpdated python to 3.7.1
- - upadated qvs.py functions about gamma resize, add logo and overlaymod
+ - updated vapoursynth to r45
+ - updated python to 3.7.1
+ - updated qvs.py functions about gamma resize, add logo and overlaymod
  - updated x264 to revision 2935 (API v157)
  - updated x265 to version 2.9+1
  - added ffmpeg 32bit named ffmpeg32
  - fixed make portable dialog closing crash
  - fixed logging properties
+
+version r9
+ - added tcas filter support
+ - added framechapter.py
+ - added audio config auto save

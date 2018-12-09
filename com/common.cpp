@@ -736,7 +736,7 @@ void Common::loadCommonConfig(void)
         }
         else
         {
-            g_pConfig->setConfig(Config::eCONFIG_COMMON_STYLE_FACTORY, (int)eINDEX_0);
+            g_pConfig->setConfig(Config::eCONFIG_COMMON_STYLE_FACTORY, eINDEX_0);
         }
     }
 }

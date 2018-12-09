@@ -12,7 +12,8 @@ extern QMap<QUuid, StdWatcher*> g_pStdWatch;
 AudioEnc::AudioEnc(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::AudioEnc),
-    m_pAdvancedConfig(new AudioAdvancedConfig(false))
+    m_pAdvancedConfig(new AudioAdvancedConfig(false)),
+    m_validatorBitrate(new QRegExpValidator(QRegExp("(\\d?){0,6}"), nullptr))
 {
     ui->setupUi(this);
     this->setup();
@@ -30,6 +31,7 @@ void AudioEnc::setup(void)
     setDefaultConfig();
     setMode(m_pAdvancedConfig->isEnable());
     ui->editAudioInput->setStyleSheet(c_qss_line_edit_read_only);
+    ui->comboBoxAudioBitrate->lineEdit()->setValidator(m_validatorBitrate);
 }
 
 void AudioEnc::setDefaultConfig(void)
@@ -56,6 +58,8 @@ void AudioEnc::setConfig(const AudioAdvancedConfig &a_advancedConfig)
     m_pAdvancedConfig->value = a_advancedConfig.value;
     m_pAdvancedConfig->value2 = a_advancedConfig.value2;
 
+    g_pConfig->setConfig(Config::eCONFIG_COMMON_ENCODING_AUDIO_CURRENT_PRESETS, qvs::getStringFromJson(g_pConfig->audioConfigToJson(a_advancedConfig)).simplified());
+
 #ifndef QT_DEBUG
     m_pAdvancedConfig->print();
 #endif
@@ -80,6 +84,36 @@ void AudioEnc::setMode(const bool &a_advancedMode)
         ui->comboBoxAudioEncoder->setEnabled(true);
     }
     m_pAdvancedConfig->setEnable(a_advancedMode);
+}
+
+void AudioEnc::init(void)
+{
+    QString jsonStr = g_pConfig->getConfig(Config::eCONFIG_COMMON_ENCODING_AUDIO_CURRENT_PRESETS).toString();
+    AudioAdvancedConfig config;
+
+    if(jsonStr.isEmpty())
+    {
+        return;
+    }
+
+    config = g_pConfig->jsonToAudioConfig(qvs::getJsonFromString(jsonStr));
+
+    if( config.isEnable() || (true) )
+    {
+        AudioConfig widgetAudioConfig;
+
+        widgetAudioConfig.mainUi = mainUi;
+        widgetAudioConfig.hide();
+        widgetAudioConfig.setConfig(config);
+        emit widgetAudioConfig.ui->buttonAccept->clicked();
+    }
+
+    /* AudioConfig will not set the value on disable. */
+    if(!config.isEnable())
+    {
+        m_pAdvancedConfig->value = config.value;
+        ui->comboBoxAudioBitrate->setCurrentText(config.value.toString());
+    }
 }
 
 void AudioEnc::reload(QString a_filename)
@@ -338,4 +372,22 @@ void AudioEnc::on_comboBoxAudioEncoder_currentIndexChanged(int a_index)
     ui->labelAudioKbps->setEnabled(bitrateMode);
 
     m_pAdvancedConfig->type = static_cast<uint>(a_index);
+    saveCurrentAdvancedConfig();
+}
+
+void AudioEnc::on_comboBoxAudioBitrate_currentTextChanged(const QString &)
+{
+    saveCurrentAdvancedConfig();
+}
+
+void AudioEnc::saveCurrentAdvancedConfig(void)
+{
+    AudioAdvancedConfig config;
+
+    config.setEnable(false);
+    config.type = static_cast<uint>(ui->comboBoxAudioEncoder->currentIndex());
+    config.value = ui->comboBoxAudioBitrate->currentText().toInt();
+    config.value2 = NULLSTR;
+
+    g_pConfig->setConfig(Config::eCONFIG_COMMON_ENCODING_AUDIO_CURRENT_PRESETS, qvs::getStringFromJson(g_pConfig->audioConfigToJson(config)).simplified());
 }
