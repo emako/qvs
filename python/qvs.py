@@ -2679,14 +2679,19 @@ def DGSource(path, dir=None, index_bin='DGIndex', d2v_out=None, force_index=Fals
 ##################################################################################################
 ### Function  : DGSourceNV
 ### Author    : ema
-### Version   : v0.1
-### Release   : 2018.01.21
+### Version   : v0.2
+### Release   : 2018.12.15
 ##################################################################################################
 ### DGIndexNV, part of the DGDecNV package, is primarily designed to create an index of an AVC/HEVC/MPG/VC1 video stream, 
 ### containing the location of each frame in the input stream, and some additional information about each frame. 
 ### This index, or project file, is used by the companion Avisynth filter DGDecodeNV to provide frame-accurate serving of the video via an Avisynth script. 
 ### DGDecNV can also be used with Vapoursynth because Vapoursynth can load and use Avisynth source filters. 
 ### DGIndexNV can open AVC/HEVC/MPG/VC1 video in elementary streams, and in program, transport, Matroska, and MP4 containers.
+### 
+### Changelog:
+### ------------------
+### v0.1(2018.01.21): init ver.
+### v0.2(2018.12.15): updated dgnv API.
 ### 
 ### path [str]
 ### ------------------
@@ -2775,6 +2780,14 @@ def DGSource(path, dir=None, index_bin='DGIndex', d2v_out=None, force_index=Fals
 ###    Note that if leading orphaned B frames exist at the beginning of the stream, they are replaced with copies of the first I frame, and so the overlay will show data for the first I frame for each of the leading orphaned B frames.
 ###    Also note that the frame numbers appropriately reflect the setting of the fieldop option.
 ###
+### show2 [str, Default: '']
+### ------------------
+###    Modifies the display of the show parameter (show must be set to true for this to have any effect).
+###    The control string has this format: "x,y,custom", where x and y give the offset in the frame for display of the show information,
+###    and custom is a string that will be displayed as the last line of the displayed information.
+###    If no custom string is needed, leave that field blank.
+###    It is the users responsibility to ensure that the displayed information is not pushed off the frame as that will cause a crash (error checking for this will be added in a future version).
+###
 ### fulldepth [bint, Default: False]
 ### ------------------
 ###    When fulldepth=true and the encoded video is HEVC 10-bit or 12-bit, then DGSource() delivers 16-bit data to Avisynth with the unused lower bits zeroed.
@@ -2791,7 +2804,7 @@ def DGSource(path, dir=None, index_bin='DGIndex', d2v_out=None, force_index=Fals
 ##################################################################################################
 def DGSourceNV(path, dir=None, index_bin='DGIndexNV', audio=True, dgi_out=None, force_index=False, options='', log=False, bad=True,
 				plugin_path='', core=None, i420=False, deinterlace=0, use_top_field=True, use_pf=False, 
-				crop_t=0, crop_b=0, crop_l=0, crop_r=0, resize_w=0, resize_h=0, fieldop=0, show=False, fulldepth=False):
+				crop_t=0, crop_b=0, crop_l=0, crop_r=0, resize_w=0, resize_h=0, fieldop=0, show=False, show2='', fulldepth=False):
 	core = Default(core, vs.get_core())
 	bin_path = GetConfig(section='python', options='dgnv')
 	dir = Default(dir, bin_path)
@@ -2827,7 +2840,7 @@ def DGSourceNV(path, dir=None, index_bin='DGIndexNV', audio=True, dgi_out=None, 
 				os.remove(dgi_out+'.fix.txt')
 			except:
 				pass
-	return core.avs.DGSource(dgi=dgi_out+'.dgi', i420=i420, deinterlace=deinterlace, use_top_field=use_top_field, use_pf=use_pf, crop_t=crop_t, crop_b=crop_b, crop_l=crop_l, crop_r=crop_r,resize_w=resize_w, resize_h=resize_h, fieldop=fieldop, show=show, fulldepth=fulldepth)
+	return core.avs.DGSource(dgi=dgi_out+'.dgi', i420=i420, deinterlace=deinterlace, use_top_field=use_top_field, use_pf=use_pf, ct=crop_t, cb=crop_b, cl=crop_l, cr=crop_r, rw=resize_w, rh=resize_h, fieldop=fieldop, show=show, show2=show2, fulldepth=fulldepth)
 
 
 ##################################################################################################
