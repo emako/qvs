@@ -804,7 +804,7 @@ inline QString ScriptCreator::createScriptSubtitle(const SubtitleFilter &a_filte
         script = QString("src = core.vsfm.TextSubMod(src, file=u'%1')").arg(m_subtitleFilename);
         break;
     case TcasFilter:
-        script = QString("src = qvs.TcasSub(src, file=u'%1')").arg(m_subtitleFilename);
+        script = QString("src = core.tcax.TcasSub(src, file=u'%1')").arg(m_subtitleFilename);
         break;
     case Subtext:
         do{
