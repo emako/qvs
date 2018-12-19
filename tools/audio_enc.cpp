@@ -22,6 +22,7 @@ AudioEnc::AudioEnc(QWidget *parent) :
 AudioEnc::~AudioEnc()
 {
     delete m_pAdvancedConfig;
+    delete m_validatorBitrate;
     delete ui;
 }
 

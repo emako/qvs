@@ -37,6 +37,7 @@
 
 # Qt
 *.user
+*.4.8-pre1
 /generated
 /build
 
