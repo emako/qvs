@@ -2,7 +2,7 @@
 #define MEDIAINFO_DEFINE_QT_H
 //--------------------------------------------------------------------
 //
-// Header File created by Python3.6.4 2018-09-30T06:25:31
+// Header File created by Python3.7.1 2018-12-21T12:33:16
 // For MediaInfo v18.08 or greater version.
 // The macro definition is derived from the CSV files in Developers/List_Of_Parameters.
 //
@@ -692,15 +692,42 @@ extern QList<QPair<QString, QList<QPair<MediaInfoDLL::String, QPair<QString, boo
 #define MI_QT_VIDEO_TAGGED_DATE QObject::tr("Tagged_Date")
 #define MI_QT_VIDEO_ENCRYPTION QObject::tr("Encryption")
 #define MI_QT_VIDEO_BUFFERSIZE QObject::tr("BufferSize")
-#define MI_QT_VIDEO_COLOUR_RANGE QObject::tr("colour_range")
 #define MI_QT_VIDEO_COLOUR_DESCRIPTION_PRESENT QObject::tr("colour_description_present")
-#define MI_QT_VIDEO_COLOUR_PRIMARIES QObject::tr("colour_primaries")
-#define MI_QT_VIDEO_TRANSFER_CHARACTERISTICS QObject::tr("transfer_characteristics")
-#define MI_QT_VIDEO_MATRIX_COEFFICIENTS QObject::tr("matrix_coefficients")
+#define MI_QT_VIDEO_COLOUR_DESCRIPTION_PRESENT_SOURCE QObject::tr("colour_description_present_Source")
 #define MI_QT_VIDEO_COLOUR_DESCRIPTION_PRESENT_ORIGINAL QObject::tr("colour_description_present_Original")
+#define MI_QT_VIDEO_COLOUR_DESCRIPTION_PRESENT_ORIGINAL_SOURCE QObject::tr("colour_description_present_Original_Source")
+#define MI_QT_VIDEO_COLOUR_RANGE QObject::tr("colour_range")
+#define MI_QT_VIDEO_COLOUR_RANGE_SOURCE QObject::tr("colour_range_Source")
+#define MI_QT_VIDEO_COLOUR_RANGE_ORIGINAL QObject::tr("colour_range_Original")
+#define MI_QT_VIDEO_COLOUR_RANGE_ORIGINAL_SOURCE QObject::tr("colour_range_Original_Source")
+#define MI_QT_VIDEO_COLOUR_PRIMARIES QObject::tr("colour_primaries")
+#define MI_QT_VIDEO_COLOUR_PRIMARIES_SOURCE QObject::tr("colour_primaries_Source")
 #define MI_QT_VIDEO_COLOUR_PRIMARIES_ORIGINAL QObject::tr("colour_primaries_Original")
+#define MI_QT_VIDEO_COLOUR_PRIMARIES_ORIGINAL_SOURCE QObject::tr("colour_primaries_Original_Source")
+#define MI_QT_VIDEO_TRANSFER_CHARACTERISTICS QObject::tr("transfer_characteristics")
+#define MI_QT_VIDEO_TRANSFER_CHARACTERISTICS_SOURCE QObject::tr("transfer_characteristics_Source")
 #define MI_QT_VIDEO_TRANSFER_CHARACTERISTICS_ORIGINAL QObject::tr("transfer_characteristics_Original")
+#define MI_QT_VIDEO_TRANSFER_CHARACTERISTICS_ORIGINAL_SOURCE QObject::tr("transfer_characteristics_Original_Source")
+#define MI_QT_VIDEO_MATRIX_COEFFICIENTS QObject::tr("matrix_coefficients")
+#define MI_QT_VIDEO_MATRIX_COEFFICIENTS_SOURCE QObject::tr("matrix_coefficients_Source")
 #define MI_QT_VIDEO_MATRIX_COEFFICIENTS_ORIGINAL QObject::tr("matrix_coefficients_Original")
+#define MI_QT_VIDEO_MATRIX_COEFFICIENTS_ORIGINAL_SOURCE QObject::tr("matrix_coefficients_Original_Source")
+#define MI_QT_VIDEO_MASTERINGDISPLAY_COLORPRIMARIES QObject::tr("MasteringDisplay_ColorPrimaries")
+#define MI_QT_VIDEO_MASTERINGDISPLAY_COLORPRIMARIES_SOURCE QObject::tr("MasteringDisplay_ColorPrimaries_Source")
+#define MI_QT_VIDEO_MASTERINGDISPLAY_COLORPRIMARIES_ORIGINAL QObject::tr("MasteringDisplay_ColorPrimaries_Original")
+#define MI_QT_VIDEO_MASTERINGDISPLAY_COLORPRIMARIES_ORIGINAL_SOURCE QObject::tr("MasteringDisplay_ColorPrimaries_Original_Source")
+#define MI_QT_VIDEO_MASTERINGDISPLAY_LUMINANCE QObject::tr("MasteringDisplay_Luminance")
+#define MI_QT_VIDEO_MASTERINGDISPLAY_LUMINANCE_SOURCE QObject::tr("MasteringDisplay_Luminance_Source")
+#define MI_QT_VIDEO_MASTERINGDISPLAY_LUMINANCE_ORIGINAL QObject::tr("MasteringDisplay_Luminance_Original")
+#define MI_QT_VIDEO_MASTERINGDISPLAY_LUMINANCE_ORIGINAL_SOURCE QObject::tr("MasteringDisplay_Luminance_Original_Source")
+#define MI_QT_VIDEO_MAXCLL QObject::tr("MaxCLL")
+#define MI_QT_VIDEO_MAXCLL_SOURCE QObject::tr("MaxCLL_Source")
+#define MI_QT_VIDEO_MAXCLL_ORIGINAL QObject::tr("MaxCLL_Original")
+#define MI_QT_VIDEO_MAXCLL_ORIGINAL_SOURCE QObject::tr("MaxCLL_Original_Source")
+#define MI_QT_VIDEO_MAXFALL QObject::tr("MaxFALL")
+#define MI_QT_VIDEO_MAXFALL_SOURCE QObject::tr("MaxFALL_Source")
+#define MI_QT_VIDEO_MAXFALL_ORIGINAL QObject::tr("MaxFALL_Original")
+#define MI_QT_VIDEO_MAXFALL_ORIGINAL_SOURCE QObject::tr("MaxFALL_Original_Source")
 
 /// -> Audio.csv
 #define MI_QT_AUDIO_COUNT QObject::tr("Count")

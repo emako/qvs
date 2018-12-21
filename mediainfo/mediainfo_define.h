@@ -2,7 +2,7 @@
 #define MEDIAINFO_DEFINE_H
 //--------------------------------------------------------------------
 //
-// Header File created by Python3.6.4 2018-09-08T23:47:50
+// Header File created by Python3.7.1 2018-12-21T12:32:30
 // For MediaInfo v18.08 or greater version.
 // The macro definition is derived from the CSV files in Developers/List_Of_Parameters.
 //
@@ -862,15 +862,42 @@
 #define MI_VIDEO_TAGGED_DATE __T("Tagged_Date")
 #define MI_VIDEO_ENCRYPTION __T("Encryption")
 #define MI_VIDEO_BUFFERSIZE __T("BufferSize")
-#define MI_VIDEO_COLOUR_RANGE __T("colour_range")
 #define MI_VIDEO_COLOUR_DESCRIPTION_PRESENT __T("colour_description_present")
-#define MI_VIDEO_COLOUR_PRIMARIES __T("colour_primaries")
-#define MI_VIDEO_TRANSFER_CHARACTERISTICS __T("transfer_characteristics")
-#define MI_VIDEO_MATRIX_COEFFICIENTS __T("matrix_coefficients")
+#define MI_VIDEO_COLOUR_DESCRIPTION_PRESENT_SOURCE __T("colour_description_present_Source")
 #define MI_VIDEO_COLOUR_DESCRIPTION_PRESENT_ORIGINAL __T("colour_description_present_Original")
+#define MI_VIDEO_COLOUR_DESCRIPTION_PRESENT_ORIGINAL_SOURCE __T("colour_description_present_Original_Source")
+#define MI_VIDEO_COLOUR_RANGE __T("colour_range")
+#define MI_VIDEO_COLOUR_RANGE_SOURCE __T("colour_range_Source")
+#define MI_VIDEO_COLOUR_RANGE_ORIGINAL __T("colour_range_Original")
+#define MI_VIDEO_COLOUR_RANGE_ORIGINAL_SOURCE __T("colour_range_Original_Source")
+#define MI_VIDEO_COLOUR_PRIMARIES __T("colour_primaries")
+#define MI_VIDEO_COLOUR_PRIMARIES_SOURCE __T("colour_primaries_Source")
 #define MI_VIDEO_COLOUR_PRIMARIES_ORIGINAL __T("colour_primaries_Original")
+#define MI_VIDEO_COLOUR_PRIMARIES_ORIGINAL_SOURCE __T("colour_primaries_Original_Source")
+#define MI_VIDEO_TRANSFER_CHARACTERISTICS __T("transfer_characteristics")
+#define MI_VIDEO_TRANSFER_CHARACTERISTICS_SOURCE __T("transfer_characteristics_Source")
 #define MI_VIDEO_TRANSFER_CHARACTERISTICS_ORIGINAL __T("transfer_characteristics_Original")
+#define MI_VIDEO_TRANSFER_CHARACTERISTICS_ORIGINAL_SOURCE __T("transfer_characteristics_Original_Source")
+#define MI_VIDEO_MATRIX_COEFFICIENTS __T("matrix_coefficients")
+#define MI_VIDEO_MATRIX_COEFFICIENTS_SOURCE __T("matrix_coefficients_Source")
 #define MI_VIDEO_MATRIX_COEFFICIENTS_ORIGINAL __T("matrix_coefficients_Original")
+#define MI_VIDEO_MATRIX_COEFFICIENTS_ORIGINAL_SOURCE __T("matrix_coefficients_Original_Source")
+#define MI_VIDEO_MASTERINGDISPLAY_COLORPRIMARIES __T("MasteringDisplay_ColorPrimaries")
+#define MI_VIDEO_MASTERINGDISPLAY_COLORPRIMARIES_SOURCE __T("MasteringDisplay_ColorPrimaries_Source")
+#define MI_VIDEO_MASTERINGDISPLAY_COLORPRIMARIES_ORIGINAL __T("MasteringDisplay_ColorPrimaries_Original")
+#define MI_VIDEO_MASTERINGDISPLAY_COLORPRIMARIES_ORIGINAL_SOURCE __T("MasteringDisplay_ColorPrimaries_Original_Source")
+#define MI_VIDEO_MASTERINGDISPLAY_LUMINANCE __T("MasteringDisplay_Luminance")
+#define MI_VIDEO_MASTERINGDISPLAY_LUMINANCE_SOURCE __T("MasteringDisplay_Luminance_Source")
+#define MI_VIDEO_MASTERINGDISPLAY_LUMINANCE_ORIGINAL __T("MasteringDisplay_Luminance_Original")
+#define MI_VIDEO_MASTERINGDISPLAY_LUMINANCE_ORIGINAL_SOURCE __T("MasteringDisplay_Luminance_Original_Source")
+#define MI_VIDEO_MAXCLL __T("MaxCLL")
+#define MI_VIDEO_MAXCLL_SOURCE __T("MaxCLL_Source")
+#define MI_VIDEO_MAXCLL_ORIGINAL __T("MaxCLL_Original")
+#define MI_VIDEO_MAXCLL_ORIGINAL_SOURCE __T("MaxCLL_Original_Source")
+#define MI_VIDEO_MAXFALL __T("MaxFALL")
+#define MI_VIDEO_MAXFALL_SOURCE __T("MaxFALL_Source")
+#define MI_VIDEO_MAXFALL_ORIGINAL __T("MaxFALL_Original")
+#define MI_VIDEO_MAXFALL_ORIGINAL_SOURCE __T("MaxFALL_Original_Source")
 
 /// -> Audio.csv
 #define MI_AUDIO_COUNT __T("Count")
