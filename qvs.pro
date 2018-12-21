@@ -191,7 +191,6 @@ SOURCES += \
     com/style_sheet.cpp \
     mediainfo/mediainfo_list.cpp \
     tools/merge.cpp \
-    com/version.cpp \
     com/logging.cpp
 
 HEADERS += \

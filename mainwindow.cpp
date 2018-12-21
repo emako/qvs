@@ -1688,6 +1688,14 @@ void MainWindow::slotViewJobsLog(void)
     JobViewCmd job_view_cmd;
 
     job_view_cmd.mainUi = this;
+
+    if(QFile(m_logging->loggingPath()).size() > 10 * MB)
+    {
+        if(QMessageBox::question(this, tr("Question"), tr("Log file size larger than 10MB.\nReading will take some time.\nContinue?"), QMessageBox::Ok|QMessageBox::No) == QMessageBox::No)
+        {
+            return;
+        }
+    }
     job_view_cmd.reload(m_logging->history());
     job_view_cmd.exec();
 }

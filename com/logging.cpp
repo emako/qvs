@@ -38,6 +38,11 @@ QString Logging::history(void)
     return qvs::getFileText(DEFAULT_LOG_FILENAME);
 }
 
+QString Logging::loggingPath(void)
+{
+    return DEFAULT_LOG_FILENAME;
+}
+
 bool Logging::remove(void)
 {
     return QFile(DEFAULT_LOG_FILENAME).remove();

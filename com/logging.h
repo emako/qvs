@@ -30,6 +30,8 @@ public:
 
     QString history(void);
 
+    QString loggingPath(void);
+
     bool remove(void);
 
     static void test(void);

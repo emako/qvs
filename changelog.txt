@@ -1,46 +1,46 @@
 qvs changelog
 
 version alpha1.0
- - init alpha version
+ - init alpha version.
 
 version alpha1.1
- - fixed ffprobe from mediainfo can not be used
- - fixed lsmash filter checker
- - added using ffmpeg or ffmpeg32 by prefer config
+ - fixed ffprobe from mediainfo can not be used.
+ - fixed lsmash filter checker.
+ - added using ffmpeg or ffmpeg32 by prefer config.
 
 version alpha1.2
- - cleaned project
+ - cleaned project.
 
 version alpha1.3
- - fixed audio encode output error
- - added eac3to unknown type ext
- - added qvs python module
+ - fixed audio encode output error.
+ - added eac3to unknown type ext.
+ - added qvs python module.
 
 version alpha1.6
- - fixed custom parameters of gpu-encoder can not be used
- - fixed script player can not be detected
- - fixed mediainfo loader any char type supported
- - fixed lnk4042
- - fixed audio batch file can not be dropped
- - added audio advanced config
- - added mediainfo list of parameters
- - added mediainfo define python program
- - changed installer dialog will not be shown when vs has been installed
+ - fixed custom parameters of gpu-encoder can not be used.
+ - fixed script player can not be detected.
+ - fixed mediainfo loader any char type supported.
+ - fixed lnk4042.
+ - fixed audio batch file can not be dropped.
+ - added audio advanced config.
+ - added mediainfo list of parameters.
+ - added mediainfo define python program.
+ - changed installer dialog will not be shown when vs has been installed.
 
 version r1
- - updated mediainfo to v18.08
- - added mediainfo language
+ - updated mediainfo to v18.08.
+ - added mediainfo language.
 
 version r2
- - fixed audio slider bug
+ - fixed audio slider bug.
 
 version r3
- - added job cmd log
- - added language config
+ - added job cmd log.
+ - added language config.
 
 version r4
- - added merge tool
- - fixed bugs
+ - added merge tool.
+ - fixed bugs.
 
 version r5
  - fixed bugs
@@ -54,23 +54,29 @@ version r6
  - updated mediainfo to v18.08.1
 
 version r7
- - fixed ffmpeg endless waiting when muxing hevc
- - added python dgnv sharpen and dgnv telecide functions
- - added mkvmerge delay param in muxer
- - updated bontsdemux to msvc2017
- - updated mkvtoolnix to 27.0.0
+ - fixed ffmpeg endless waiting when muxing hevc.
+ - added python dgnv sharpen and dgnv telecide functions.
+ - added mkvmerge delay param in muxer.
+ - updated bontsdemux to msvc2017.
+ - updated mkvtoolnix to 27.0.0.
 
 version r8
- - updated vapoursynth to r45
- - updated python to 3.7.1
- - updated qvs.py functions about gamma resize, add logo and overlaymod
- - updated x264 to revision 2935 (API v157)
- - updated x265 to version 2.9+1
- - added ffmpeg 32bit named ffmpeg32
- - fixed make portable dialog closing crash
- - fixed logging properties
+ - updated vapoursynth to r45.
+ - updated python to 3.7.1.
+ - updated qvs.py functions about gamma resize, add logo and overlaymod.
+ - updated x264 to revision 2935 (API v157).
+ - updated x265 to version 2.9+1.
+ - added ffmpeg 32bit named ffmpeg32.
+ - fixed make portable dialog closing crash.
+ - fixed logging properties.
 
 version r9
- - added tcas filter support
- - added framechapter.py
- - added audio config auto save
+ - added tcas filter support.
+ - added framechapter.py.
+ - added audio config auto save.
+
+version r10
+ - updated mediainfo to v18.12.
+ - changed tcas filter loaded from vs plugins.
+ - added logging file size tip on loading.
+
