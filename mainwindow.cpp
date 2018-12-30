@@ -254,7 +254,8 @@ void MainWindow::setAcctions(void)
     /* Tools */
     connect(ui->actionScriptCreator, SIGNAL(triggered()), this, SLOT(openScriptCreator()));
     connect(ui->actionScriptPlayer, SIGNAL(triggered()), this, SLOT(openScriptPlayer()));
-    connect(ui->actionVSedit, SIGNAL(triggered()), this, SLOT(openVSedit()));
+    connect(ui->actionVSedit, SIGNAL(triggered()), this, SLOT(openTools()));
+    connect(ui->actionD2VWitch, SIGNAL(triggered()), this, SLOT(openTools()));
     connect(ui->actionPreviewDialog, SIGNAL(triggered()), this, SLOT(openPreviewDialog()));
 
     /* Help */
@@ -1302,9 +1303,16 @@ void MainWindow::openScriptPlayer(void)
     m_pScriptPlayers.insert(at_pScriptPlayer->m_uid_own, at_pScriptPlayer);
 }
 
-void MainWindow::openVSedit(void)
+void MainWindow::openTools(void)
 {
-    QProcess::startDetached("vsedit");
+    if(sender() == ui->actionVSedit)
+    {
+        QProcess::startDetached("vsedit");
+    }
+    else if(sender() == ui->actionD2VWitch)
+    {
+        QProcess::startDetached("d2vwitch");
+    }
 }
 
 void MainWindow::releaseChildWindowsAll(void)

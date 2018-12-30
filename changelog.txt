@@ -79,4 +79,5 @@ version r10
  - updated mediainfo to v18.12.
  - changed tcas filter loaded from vs plugins.
  - added logging file size tip on loading.
-
+ - added dv2witch v2 mod to release.
+ - fixed job moved bug on pausing mode.

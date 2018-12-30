@@ -148,7 +148,7 @@ private slots:
     void openPreviewDialog(void);
     void openScriptCreator(void);
     void openScriptPlayer(void);
-    void openVSedit(void);
+    void openTools(void);
     void selectOpenfile(void);
 
     void slotMinimize(void);

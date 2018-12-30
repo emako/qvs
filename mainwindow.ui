@@ -761,6 +761,7 @@ QProgressBar::chunk {
     <addaction name="actionPreviewDialog"/>
     <addaction name="separator"/>
     <addaction name="actionVSedit"/>
+    <addaction name="actionD2VWitch"/>
    </widget>
    <widget class="QMenu" name="menuView">
     <property name="title">
@@ -1340,6 +1341,15 @@ QProgressBar::chunk {
    </property>
    <property name="text">
     <string>Jobs log</string>
+   </property>
+  </action>
+  <action name="actionD2VWitch">
+   <property name="icon">
+    <iconset resource="res/resources.qrc">
+     <normaloff>:/buttons/ffmpeg.png</normaloff>:/buttons/ffmpeg.png</iconset>
+   </property>
+   <property name="text">
+    <string>D2V Witch</string>
    </property>
   </action>
  </widget>
