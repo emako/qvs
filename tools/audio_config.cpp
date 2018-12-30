@@ -1189,7 +1189,7 @@ void AudioConfig::on_buttonSaveTemplate_clicked()
 
     if(key == c_template_key_default)
     {
-        QMessageBox::warning(this, tr("Rejection"), tr("Can't save as default template!\nPlease rename template."), QMessageBox::Ok);
+        QMessageBox::warning(this, MESSAGE_REJECTION, tr("Can't save as default template!\nPlease rename template."), QMessageBox::Ok);
         return;
     }
 
@@ -1198,7 +1198,7 @@ void AudioConfig::on_buttonSaveTemplate_clicked()
         ui->comboBoxTemplate->addItem(key);
     }
     g_pConfig->setConfigAudioEncodeTemplate(key, getConfig());
-    QMessageBox::information(this, tr("Information"), tr("Template saved!"), QMessageBox::Ok);
+    QMessageBox::information(this, MESSAGE_INFORMATION, tr("Template saved!"), QMessageBox::Ok);
 }
 
 void AudioConfig::on_buttonDeleteTemplate_clicked()
@@ -1213,7 +1213,7 @@ void AudioConfig::on_buttonDeleteTemplate_clicked()
 
     if( (key == c_template_key_default) || (index == eINDEX_0) )
     {
-        QMessageBox::warning(this, tr("Rejection"), tr("Can't delete the default template!"), QMessageBox::Ok);
+        QMessageBox::warning(this, MESSAGE_REJECTION, tr("Can't delete the default template!"), QMessageBox::Ok);
         return;
     }
 

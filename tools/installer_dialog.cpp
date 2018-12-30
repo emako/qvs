@@ -195,7 +195,7 @@ void InstallerDialog::on_buttonInstall_clicked()
 
     if(arg.length() <= eINDEX_1)
     {
-        QMessageBox::information(this, tr("Warn"), tr("Please select the module!"), QMessageBox::Ok);
+        QMessageBox::information(this, MESSAGE_WARNING, tr("Please select the module!"), QMessageBox::Ok);
         return;
     }
 
@@ -249,7 +249,7 @@ void InstallerDialog::slotInstallerProcessFinished(int a_exitCode, QProcess::Exi
 
     QFile(BAT_INSTALLER_FILENAME).remove();
 
-    int apply = QMessageBox::information(this, tr("Done"), message, QMessageBox::Ok, QMessageBox::Cancel);
+    int apply = QMessageBox::information(this, MESSAGE_DONE, message, QMessageBox::Ok, QMessageBox::Cancel);
     if(apply == QMessageBox::Ok)
     {
         this->close();
@@ -287,7 +287,7 @@ void InstallerDialog::slotInstallerProcessError(QProcess::ProcessError a_error)
     {
     case QProcess::FailedToStart:
         qDebug() << "Encoder Process has failed to start.";
-        QMessageBox::information(this, tr("Failed"), tr("Installer has failed to start.\nPlease run Qvs as admin!"));
+        QMessageBox::information(this, MESSAGE_FAILED, tr("Installer has failed to start.\nPlease run Qvs as admin!"));
         break;
     case QProcess::Crashed:
         qDebug() << "Installer Process has crashed.";

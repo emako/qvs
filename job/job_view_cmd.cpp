@@ -223,7 +223,7 @@ void JobViewCmd::on_buttonSave_clicked()
     out << createCommand() << endl;
     out << "pause" << endl;
     file.close();
-    QMessageBox::information(this, tr("information"), tr("File \"%1\" was saved!").arg(filename));
+    QMessageBox::information(this, MESSAGE_INFORMATION, tr("File \"%1\" was saved!").arg(filename));
 }
 
 void JobViewCmd::on_buttonCopy_clicked()

@@ -251,23 +251,23 @@ void AudioEnc::on_buttonAudioStart_clicked()
 
     if(input.isEmpty())
     {
-        QMessageBox::warning(this, tr("Warning"), tr("Input file is empty!"), QMessageBox::Ok);
+        QMessageBox::warning(this, MESSAGE_WARNING, tr("Input file is empty!"), QMessageBox::Ok);
         return;
     }
     if(output.isEmpty())
     {
-        QMessageBox::warning(this, tr("Warning"), tr("Output file is empty!"), QMessageBox::Ok);
+        QMessageBox::warning(this, MESSAGE_WARNING, tr("Output file is empty!"), QMessageBox::Ok);
         return;
     }
     if(qvs::isFile(output))
     {
         if(output == input)
         {
-            QMessageBox::critical(this, tr("Are you BAKA?"), tr("Output file can't be the same as source file!"), QMessageBox::Cancel);
+            QMessageBox::critical(this, MESSAGE_ARE_YOU_BAKA, tr("Output file can't be the same as source file!"), QMessageBox::Cancel);
             return;
         }
 
-        int reply = QMessageBox::question(this, tr("Question"), tr("Output file already exists! Overwrite?"), QMessageBox::Yes | QMessageBox::Cancel);
+        int reply = QMessageBox::question(this, MESSAGE_QUESTION, tr("Output file already exists! Overwrite?"), QMessageBox::Yes | QMessageBox::Cancel);
 
         if(reply == QMessageBox::Cancel)
         {

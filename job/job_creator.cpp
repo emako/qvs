@@ -24,23 +24,23 @@ void JobCreator::on_buttonAccept_clicked()
 {
     if(ui->editSource->text().isEmpty())
     {
-        QMessageBox::warning(this, tr("Warning"), tr("Source file is empty!"), QMessageBox::Ok);
+        QMessageBox::warning(this, MESSAGE_WARNING, tr("Source file is empty!"), QMessageBox::Ok);
         return;
     }
     if(ui->editOutput->text().isEmpty())
     {
-        QMessageBox::warning(this, tr("Warning"), tr("Output file is empty!"), QMessageBox::Ok);
+        QMessageBox::warning(this, MESSAGE_WARNING, tr("Output file is empty!"), QMessageBox::Ok);
         return;
     }
     if(qvs::isFile(ui->editOutput->text()))
     {
         if(ui->editOutput->text() == ui->editSource->text())
         {
-            QMessageBox::critical(this, tr("Are you BAKA?"), tr("Output file can't be the same as source file!"), QMessageBox::Cancel);
+            QMessageBox::critical(this, MESSAGE_ARE_YOU_BAKA, tr("Output file can't be the same as source file!"), QMessageBox::Cancel);
             return;
         }
 
-        int reply = QMessageBox::question(this, tr("Question"), tr("Output file already exists! Overwrite?"), QMessageBox::Yes | QMessageBox::Cancel);
+        int reply = QMessageBox::question(this, MESSAGE_QUESTION, tr("Output file already exists! Overwrite?"), QMessageBox::Yes | QMessageBox::Cancel);
 
         if(reply == QMessageBox::Cancel)
         {
@@ -263,7 +263,7 @@ void JobCreator::reloadOutput(QString a_fileName)
     if( ( (ui->cbxEncoderType->currentIndex() == eINDEX_0) && (fileInfo.suffix().toLower() == OUTPUT_EXT_HEVC) )
      || ( (ui->cbxEncoderType->currentIndex() == eINDEX_1) && (fileInfo.suffix().toLower() == OUTPUT_EXT_H264) ) )
     {
-        QMessageBox::information(this, tr("Warning"), tr("Invaild type for selected encoder!"));
+        QMessageBox::information(this, MESSAGE_WARNING, tr("Invaild type for selected encoder!"));
         return;
     }
 
@@ -916,7 +916,7 @@ QList<JobCmdList> JobCreator::configToCommandGPU(QMap<EJOB_CONFIG, QVariant> a_j
         arch = QT_EMPTY;
         break;
     default:
-        QMessageBox::information(this, tr("Fatal"), tr("Unknown encoder arch!"));
+        QMessageBox::information(this, MESSAGE_FATAL, tr("Unknown encoder arch!"));
         isFatalError = true;
         break;
     }
@@ -948,7 +948,7 @@ QList<JobCmdList> JobCreator::configToCommandGPU(QMap<EJOB_CONFIG, QVariant> a_j
     }
     else
     {
-        QMessageBox::information(this, tr("Fatal"), tr("Unknown encoder variant!"));
+        QMessageBox::information(this, MESSAGE_FATAL, tr("Unknown encoder variant!"));
         isFatalError = true;
     }
 
@@ -972,7 +972,7 @@ QList<JobCmdList> JobCreator::configToCommandGPU(QMap<EJOB_CONFIG, QVariant> a_j
     }
     else
     {
-        QMessageBox::information(this, tr("Fatal"), tr("Unknown encoder mode!"));
+        QMessageBox::information(this, MESSAGE_FATAL, tr("Unknown encoder mode!"));
         isFatalError = true;
     }
 
@@ -989,7 +989,7 @@ QList<JobCmdList> JobCreator::configToCommandGPU(QMap<EJOB_CONFIG, QVariant> a_j
     }
     else
     {
-        QMessageBox::information(this, tr("Fatal"), tr("Unknown encoder profile!"));
+        QMessageBox::information(this, MESSAGE_FATAL, tr("Unknown encoder profile!"));
         isFatalError = true;
     }
 
@@ -1097,7 +1097,7 @@ QStringList JobCreator::configToCommandAVC(QMap<EJOB_CONFIG, QVariant> a_job_con
         arch = "x86";
         break;
     default:
-        QMessageBox::information(this, tr("Fatal"), tr("Unknown encoder arch!"));
+        QMessageBox::information(this, MESSAGE_FATAL, tr("Unknown encoder arch!"));
         isFatalError = true;
         break;
     }
@@ -1122,7 +1122,7 @@ QStringList JobCreator::configToCommandAVC(QMap<EJOB_CONFIG, QVariant> a_job_con
         cmds << QString::number(eINDEX_10);
         break;
     default:
-        QMessageBox::information(this, tr("Fatal"), tr("Unknown encoder variant!"));
+        QMessageBox::information(this, MESSAGE_FATAL, tr("Unknown encoder variant!"));
         isFatalError = true;
     }
 
@@ -1141,7 +1141,7 @@ QStringList JobCreator::configToCommandAVC(QMap<EJOB_CONFIG, QVariant> a_job_con
         cmds << "--bitrate" << QString::number(a_job_config[eJOB_CONFIG_BITRATE].toInt());
         break;
     default:
-        QMessageBox::information(this, tr("Fatal"), tr("Unknown rate-control mode!"));
+        QMessageBox::information(this, MESSAGE_FATAL, tr("Unknown rate-control mode!"));
         isFatalError = true;
     }
     int pass = a_job_config[eJOB_CONFIG_PASS_NUM].toInt();
@@ -1157,7 +1157,7 @@ QStringList JobCreator::configToCommandAVC(QMap<EJOB_CONFIG, QVariant> a_job_con
 
     if(presetIndex > items.length() - eINDEX_1)
     {
-        QMessageBox::information(this, tr("Fatal"), tr("Unknown encoder preset!"));
+        QMessageBox::information(this, MESSAGE_FATAL, tr("Unknown encoder preset!"));
         isFatalError = true;
     }
     else if(presetIndex != eINDEX_0)
@@ -1171,7 +1171,7 @@ QStringList JobCreator::configToCommandAVC(QMap<EJOB_CONFIG, QVariant> a_job_con
     items = getEncoderConfigTuning(static_cast<EJOB_ENCODER>(a_job_config[eJOB_CONFIG_ENCODER].toInt()));
     if(tuningIndex > items.length() - eINDEX_1)
     {
-        QMessageBox::information(this, tr("Fatal"), tr("Unknown encoder tune!"));
+        QMessageBox::information(this, MESSAGE_FATAL, tr("Unknown encoder tune!"));
         isFatalError = true;
     }
     else if(tuningIndex != eINDEX_0)
@@ -1185,7 +1185,7 @@ QStringList JobCreator::configToCommandAVC(QMap<EJOB_CONFIG, QVariant> a_job_con
     items = getEncoderConfigProfile(static_cast<EJOB_ENCODER>(a_job_config[eJOB_CONFIG_ENCODER].toInt()), static_cast<EINDEX>(a_job_config[eJOB_CONFIG_VARIANT].toInt()));
     if(profileIndex > items.length() - eINDEX_1)
     {
-        QMessageBox::information(this, tr("Fatal"), tr("Unknown encoder profile!"));
+        QMessageBox::information(this, MESSAGE_FATAL, tr("Unknown encoder profile!"));
         isFatalError = true;
     }
     else if(profileIndex != eINDEX_0)
@@ -1268,7 +1268,7 @@ QStringList JobCreator::configToCommandHEVC(QMap<EJOB_CONFIG, QVariant> a_job_co
         arch = "x86";
         break;
     default:
-        QMessageBox::information(this, tr("Fatal"), tr("Unknown encoder arch!"));
+        QMessageBox::information(this, MESSAGE_FATAL, tr("Unknown encoder arch!"));
         isFatalError = true;
         break;
     }
@@ -1293,7 +1293,7 @@ QStringList JobCreator::configToCommandHEVC(QMap<EJOB_CONFIG, QVariant> a_job_co
         cmds << QString::number(eINDEX_10);
         break;
     default:
-        QMessageBox::information(this, tr("Fatal"), tr("Unknown encoder variant!"));
+        QMessageBox::information(this, MESSAGE_FATAL, tr("Unknown encoder variant!"));
         isFatalError = true;
     }
 
@@ -1312,7 +1312,7 @@ QStringList JobCreator::configToCommandHEVC(QMap<EJOB_CONFIG, QVariant> a_job_co
         cmds << "--bitrate" << QString::number(a_job_config[eJOB_CONFIG_BITRATE].toInt());
         break;
     default:
-        QMessageBox::information(this, tr("Fatal"), tr("Unknown rate-control mode!"));
+        QMessageBox::information(this, MESSAGE_FATAL, tr("Unknown rate-control mode!"));
         isFatalError = true;
     }
     int pass = a_job_config[eJOB_CONFIG_PASS_NUM].toInt();
@@ -1328,7 +1328,7 @@ QStringList JobCreator::configToCommandHEVC(QMap<EJOB_CONFIG, QVariant> a_job_co
 
     if(presetIndex > items.length() - eINDEX_1)
     {
-        QMessageBox::information(this, tr("Fatal"), tr("Unknown encoder preset!"));
+        QMessageBox::information(this, MESSAGE_FATAL, tr("Unknown encoder preset!"));
         isFatalError = true;
     }
     else if(presetIndex != eINDEX_0)
@@ -1342,7 +1342,7 @@ QStringList JobCreator::configToCommandHEVC(QMap<EJOB_CONFIG, QVariant> a_job_co
     items = getEncoderConfigTuning(static_cast<EJOB_ENCODER>(a_job_config[eJOB_CONFIG_ENCODER].toInt()));
     if(tuningIndex > items.length() - eINDEX_1)
     {
-        QMessageBox::information(this, tr("Fatal"), tr("Unknown encoder tune!"));
+        QMessageBox::information(this, MESSAGE_FATAL, tr("Unknown encoder tune!"));
         isFatalError = true;
     }
     else if(tuningIndex != eINDEX_0)
@@ -1356,7 +1356,7 @@ QStringList JobCreator::configToCommandHEVC(QMap<EJOB_CONFIG, QVariant> a_job_co
     items = getEncoderConfigProfile(static_cast<EJOB_ENCODER>(a_job_config[eJOB_CONFIG_ENCODER].toInt()), static_cast<EINDEX>(a_job_config[eJOB_CONFIG_VARIANT].toInt()));
     if(profileIndex > items.length() - eINDEX_1)
     {
-        QMessageBox::information(this, tr("Fatal"), tr("Unknown encoder profile!"));
+        QMessageBox::information(this, MESSAGE_FATAL, tr("Unknown encoder profile!"));
         isFatalError = true;
     }
     else if(profileIndex != eINDEX_0)
@@ -1437,7 +1437,7 @@ void JobCreator::on_buttonSaveTemplate_clicked()
 
     if(key == c_template_key_default)
     {
-        QMessageBox::warning(this, tr("Rejection"), tr("Can't save as default template!\nPlease rename template."), QMessageBox::Ok);
+        QMessageBox::warning(this, MESSAGE_REJECTION, tr("Can't save as default template!\nPlease rename template."), QMessageBox::Ok);
         return;
     }
 
@@ -1446,7 +1446,7 @@ void JobCreator::on_buttonSaveTemplate_clicked()
         ui->cbxTemplate->addItem(key);
     }
     g_pConfig->setConfigEncodeTemplate(key, getConfig());
-    QMessageBox::information(this, tr("Information"), tr("Template saved!"), QMessageBox::Ok);
+    QMessageBox::information(this, MESSAGE_INFORMATION, tr("Template saved!"), QMessageBox::Ok);
 }
 
 void JobCreator::on_buttonDeleteTemplate_clicked()
@@ -1460,7 +1460,7 @@ void JobCreator::on_buttonDeleteTemplate_clicked()
 
     if(key == c_template_key_default)
     {
-        QMessageBox::warning(this, tr("Rejection"), tr("Can't delete the default template!"), QMessageBox::Ok);
+        QMessageBox::warning(this, MESSAGE_REJECTION, tr("Can't delete the default template!"), QMessageBox::Ok);
         return;
     }
 

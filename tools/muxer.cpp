@@ -116,11 +116,11 @@ void Muxer::on_buttonMuxerStart_clicked()
     {
         if( (output == input_video) || (output == input_audio) )
         {
-            QMessageBox::critical(this, tr("Are you BAKA?"), tr("Output file can't be the same as input file!"), QMessageBox::Cancel);
+            QMessageBox::critical(this, MESSAGE_ARE_YOU_BAKA, tr("Output file can't be the same as input file!"), QMessageBox::Cancel);
             return;
         }
 
-        int reply = QMessageBox::question(this, tr("Question"), tr("Output file already exists! Overwrite?"), QMessageBox::Yes | QMessageBox::Cancel);
+        int reply = QMessageBox::question(this, MESSAGE_QUESTION, tr("Output file already exists! Overwrite?"), QMessageBox::Yes | QMessageBox::Cancel);
 
         if(reply == QMessageBox::Cancel)
         {

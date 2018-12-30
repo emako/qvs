@@ -197,7 +197,7 @@ void ScriptPlayer::on_buttonMount_clicked(bool a_checked)
         {
             g_pStdWatch[m_uid_std]->abortJob();
             StdManager::releaseStdWatch(m_uid_std);
-            ui->editMountMessage->setText(tr("Message: Avfs was be closed."));
+            ui->editMountMessage->setText(tr("Message: Avfs had been closed."));
         }
     }
 }
@@ -314,7 +314,7 @@ void ScriptPlayer::on_buttonPlay_clicked()
 {
     if(!ui->buttonMount->isChecked())
     {
-        QMessageBox::information(this, tr("Message"), tr("No script mounted."), QMessageBox::Ok);
+        QMessageBox::information(this, MESSAGE_INFORMATION, tr("No script mounted."), QMessageBox::Ok);
         return;
     }
 
@@ -322,7 +322,7 @@ void ScriptPlayer::on_buttonPlay_clicked()
 
     if(filename.isEmpty())
     {
-        QMessageBox::warning(this, tr("Failed"), tr("Source file is empty!"), QMessageBox::Ok);
+        QMessageBox::warning(this, MESSAGE_FAILED, tr("Source file is empty!"), QMessageBox::Ok);
         return;
     }
 
@@ -394,7 +394,7 @@ void ScriptPlayer::showStdwatcher(bool a_isShow)
     else
     {
         m_pContextMenu->actions().at(eCONTEXT_MENU_SHOW_STD_WATCHER)->setChecked(false);
-        QMessageBox::information(this, tr("Message"), tr("No Standard Watcher opened!"), QMessageBox::Ok);
+        QMessageBox::information(this, MESSAGE_INFORMATION, tr("No Standard Watcher opened!"), QMessageBox::Ok);
     }
 }
 

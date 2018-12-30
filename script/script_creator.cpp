@@ -138,7 +138,7 @@ void ScriptCreator::on_buttonPreview_clicked()
 {
     if(m_sourceFilename.isEmpty() || ui->editSource->text().isEmpty())
     {
-        QMessageBox::warning(this, tr("Warning"), tr("Source file is empty!"), QMessageBox::Ok);
+        QMessageBox::warning(this, MESSAGE_WARNING, tr("Source file is empty!"), QMessageBox::Ok);
         return;
     }
 
@@ -163,12 +163,12 @@ void ScriptCreator::on_buttonSave_clicked()
 {
     if(m_sourceFilename.isEmpty() || ui->editSource->text().isEmpty())
     {
-        QMessageBox::warning(this, tr("Warning"), tr("Source file is empty!"), QMessageBox::Ok);
+        QMessageBox::warning(this, MESSAGE_WARNING, tr("Source file is empty!"), QMessageBox::Ok);
         return;
     }
     if(m_outputFilename.isEmpty() || ui->editOutput->text().isEmpty())
     {
-        QMessageBox::warning(this, tr("Warning"), tr("Output file is empty!"), QMessageBox::Ok);
+        QMessageBox::warning(this, MESSAGE_WARNING, tr("Output file is empty!"), QMessageBox::Ok);
         return;
     }
     if(qvs::isFileExist(m_outputFilename))
@@ -176,11 +176,11 @@ void ScriptCreator::on_buttonSave_clicked()
         if( (ui->editOutput->text() == ui->editSource->text())
          || (m_sourceFilename == m_outputFilename) )
         {
-            QMessageBox::critical(this, tr("Are you BAKA?"), tr("Output file can't be the same as source file!"), QMessageBox::Cancel);
+            QMessageBox::critical(this, MESSAGE_ARE_YOU_BAKA, tr("Output file can't be the same as source file!"), QMessageBox::Cancel);
             return;
         }
 
-        int reply = QMessageBox::question(this, tr("Question"), tr("Output file already exists! Overwrite?"), QMessageBox::Yes | QMessageBox::Cancel);
+        int reply = QMessageBox::question(this, MESSAGE_QUESTION, tr("Output file already exists! Overwrite?"), QMessageBox::Yes | QMessageBox::Cancel);
 
         if(reply == QMessageBox::Cancel)
         {

@@ -176,7 +176,7 @@ private slots:
 
 private:
     Ui::MainWindow *ui;
-    bool m_is_aborted;
+    bool m_isAborted;
     QActionGroup *m_pActionGruopOnCompletion;
     QActionGroup *m_pActionGruopLanguage;
 

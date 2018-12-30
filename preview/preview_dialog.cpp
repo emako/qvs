@@ -566,7 +566,7 @@ void PreviewDialog::slotSaveSnapshot(void)
         }
         else
         {
-            QMessageBox::critical(this, tr("Image save error"), tr("Error while saving image ") + snapshotFilePath);
+            QMessageBox::critical(this, MESSAGE_ERROR, tr("Error on saving image ") + snapshotFilePath);
         }
     }
 }

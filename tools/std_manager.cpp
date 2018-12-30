@@ -32,7 +32,7 @@ void StdManager::releaseStdWatchAll(void)
     {
         if(g_pStdWatch[i.key()]->isRunning())
         {
-            if(QMessageBox::question(nullptr, QObject::tr("Question"), QObject::tr("StdWatcher is running!\nDo you really want to abort the job now?"), QMessageBox::Yes | QMessageBox::Cancel) == QMessageBox::Yes)
+            if(QMessageBox::question(nullptr, MESSAGE_QUESTION, QObject::tr("StdWatcher is running!\nDo you really want to abort the job now?"), QMessageBox::Yes | QMessageBox::Cancel) == QMessageBox::Yes)
             {
                 /* Abort on y. */
                 g_pStdWatch[i.key()]->abortJob();

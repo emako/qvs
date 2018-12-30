@@ -684,11 +684,11 @@ void Demuxer::on_buttonDemuxerStart_clicked()
         {
             if(output == ui->editDemuxerVideoInput->text())
             {
-                QMessageBox::critical(this, tr("Are you BAKA?"), tr("Output file can't be the same as input file!"), QMessageBox::Cancel);
+                QMessageBox::critical(this, MESSAGE_ARE_YOU_BAKA, tr("Output file can't be the same as input file!"), QMessageBox::Cancel);
                 return;
             }
 
-            int reply = QMessageBox::question(this, tr("Question"), tr("Output file already exists! Overwrite?"), QMessageBox::Yes | QMessageBox::Cancel);
+            int reply = QMessageBox::question(this, MESSAGE_QUESTION, tr("Output file already exists! Overwrite?"), QMessageBox::Yes | QMessageBox::Cancel);
 
             if(reply == QMessageBox::Cancel)
             {
@@ -704,7 +704,7 @@ void Demuxer::on_buttonDemuxerStart_clicked()
 
     if(item.type == DemuxerItem::eMEDIA_TYPE_DISABLE)
     {
-        QMessageBox::information(this, tr("Information"), tr("The selected track is disable!"), QMessageBox::Ok);
+        QMessageBox::information(this, MESSAGE_INFORMATION, tr("The selected track is disable!"), QMessageBox::Ok);
         return;
     }
     if(input.isEmpty() || output.isEmpty())
@@ -731,7 +731,7 @@ void Demuxer::on_buttonDemuxerStart_clicked()
             }
             else
             {
-                QMessageBox::information(this, tr("Information"), tr("Output file can't be the same as input file!"), QMessageBox::Ok);
+                QMessageBox::information(this, MESSAGE_INFORMATION, tr("Output file can't be the same as input file!"), QMessageBox::Ok);
                 return;
             }
             cmd = QString("%1 -i \"%2\" %3 copy -y %4 \"%5\"").arg(qvs::findFirstFilePath(DEMUXER_EXEC_FFMPEG)).arg(input).arg(filter).arg(track).arg(output);
@@ -741,7 +741,7 @@ void Demuxer::on_buttonDemuxerStart_clicked()
         if(index == eINDEX_0)
         {
             /* Not using the value of item track menber. */
-            QMessageBox::information(this, tr("Information"), tr("The selected track is disable!"), QMessageBox::Ok);
+            QMessageBox::information(this, MESSAGE_INFORMATION, tr("The selected track is disable!"), QMessageBox::Ok);
             return;
         }
         cmd = QString("%1 \"%2\" %3: \"%4\"").arg(qvs::findFirstFilePath(DEMUXER_EXEC_EAC3TO)).arg(input).arg(index).arg(output);
@@ -765,7 +765,7 @@ void Demuxer::on_buttonDemuxerStart_clicked()
             {
                 if(param_index != eINDEX_0)
                 {
-                    QMessageBox::information(this, tr("Information"), tr("Can't be extracked from attachments!"), QMessageBox::Ok);
+                    QMessageBox::information(this, MESSAGE_INFORMATION, tr("Can't be extracked from attachments!"), QMessageBox::Ok);
                     return;
                 }
                 cmd = QString("%1 --gui-mode --ui-language en attachments \"%2\" %3:\"%4\"").arg(qvs::findFirstFilePath(DEMUXER_EXEC_MKVEXTRACT)).arg(input).arg(item.track_num).arg(output);
@@ -774,7 +774,7 @@ void Demuxer::on_buttonDemuxerStart_clicked()
             {
                 if(param_index != eINDEX_0)
                 {
-                    QMessageBox::information(this, tr("Information"), tr("Can't be extracked from chapters!"), QMessageBox::Ok);
+                    QMessageBox::information(this, MESSAGE_INFORMATION, tr("Can't be extracked from chapters!"), QMessageBox::Ok);
                     return;
                 }
                 cmd = QString("%1 --gui-mode --ui-language en chapters \"%2\"").arg(qvs::findFirstFilePath(DEMUXER_EXEC_MKVEXTRACT)).arg(input);
@@ -783,7 +783,7 @@ void Demuxer::on_buttonDemuxerStart_clicked()
             {
                 if(param_index != eINDEX_0)
                 {
-                    QMessageBox::information(this, tr("Information"), tr("Can't be extracked from tags!"), QMessageBox::Ok);
+                    QMessageBox::information(this, MESSAGE_INFORMATION, tr("Can't be extracked from tags!"), QMessageBox::Ok);
                     return;
                 }
                 cmd = QString("%1 --gui-mode --ui-language en tags \"%2\"").arg(qvs::findFirstFilePath(DEMUXER_EXEC_MKVEXTRACT)).arg(input);

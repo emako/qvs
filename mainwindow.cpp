@@ -82,7 +82,7 @@ void MainWindow::setupUi(void)
     ui->widgetDemuxer->mainUi = this;
     ui->widgetMediaInfo->mainUi = this;
     m_timer->start(Timer::ETIMER_TYPE_MAIL_BOX, Timer::ETIMER_SLOT_CHECK_UP_MAIL, TIMER_INTERVAL_MAIL);
-    m_is_aborted = false;
+    m_isAborted = false;
     m_jobs_index = eINDEX_0;
     m_job_status_prev = JobChef::eJOB_STATUS_INITIAL;
     m_isStartJobImmediately = false;
@@ -150,7 +150,7 @@ void MainWindow::closeEvent(QCloseEvent *e)
 {
     if(isStarted())
     {
-        int reply = QMessageBox::question(this, tr("Question"), tr("Do you really want to abort the job now?"), QMessageBox::Yes | QMessageBox::No);
+        int reply = QMessageBox::question(this, MESSAGE_QUESTION, tr("Do you really want to abort the job now?"), QMessageBox::Yes | QMessageBox::No);
 
         if (reply == QMessageBox::No)
         {
@@ -486,18 +486,32 @@ void MainWindow::resetJob(void)
 
 void MainWindow::moveUpJob(void)
 {
-    int row = ui->jobsView->currentRow();
+    if(!isPaused())
+    {
+        int row = ui->jobsView->currentRow();
 
-    m_com->moveRow(ui->jobsView, row, row - eINDEX_1);
-    m_com->moveRow(&m_jobs, row, row - eINDEX_1);
+        m_com->moveRow(ui->jobsView, row, row - eINDEX_1);
+        m_com->moveRow(&m_jobs, row, row - eINDEX_1);
+    }
+    else
+    {
+        QMessageBox::warning(this, MESSAGE_WARNING, tr("Can't move the job on pausing mode."));
+    }
 }
 
 void MainWindow::moveDownJob(void)
 {
-    int row = ui->jobsView->currentRow();
+    if(!isPaused())
+    {
+        int row = ui->jobsView->currentRow();
 
-    m_com->moveRow(ui->jobsView, row, row + eINDEX_2);
-    m_com->moveRow(&m_jobs, row, row + eINDEX_1);
+        m_com->moveRow(ui->jobsView, row, row + eINDEX_2);
+        m_com->moveRow(&m_jobs, row, row + eINDEX_1);
+    }
+    else
+    {
+        QMessageBox::warning(this, MESSAGE_WARNING, tr("Can't move the job on pausing mode."));
+    }
 }
 
 void MainWindow::delJob(void)
@@ -554,7 +568,7 @@ bool MainWindow::isPaused(void)
 
 bool MainWindow::isAborted(void)
 {
-    return m_is_aborted;
+    return m_isAborted;
 }
 
 void MainWindow::viewLog(JobChef::EJOB_LOG_TYPE a_log_type, const QString &a_log)
@@ -673,7 +687,7 @@ void MainWindow::initJob(void)
     viewLog(JobChef::eJOB_LOG_TYPE_DEBUG, tr("o=o=o=o=o=o=o=o=o=o=o=o=o=o=o=o=o=o=o=o=o=o=o=o=o=o"));
     setDetailLog(tr("Job Initialising ..."));
     m_jobs_index = eINDEX_0;
-    m_is_aborted = false;
+    m_isAborted = false;
     ui->progressBar->setMaximum(eINDEX_0);
     ui->progressBar->setMinimum(eINDEX_0);
     m_job_chef->loadCommonConfig();
@@ -1040,11 +1054,11 @@ void MainWindow::statusChanged(JobChef::EJOB_STATUS a_job_status)
         ui->editDetails->setText(tr("Paused by user!"));
         break;
     case JobChef::eJOB_STATUS_ABORTING:
-        m_is_aborted = true;
+        m_isAborted = true;
         break;
     case JobChef::eJOB_STATUS_ABORTED:
         ui->editDetails->setText(tr("Aborted by user!"));
-        m_is_aborted = true;
+        m_isAborted = true;
         break;
     case JobChef::eJOB_STATUS_FAILED:
         ui->progressBar->setMaximum(eINDEX_100); /* Fixed progress bar filed on not processing encoder. */
@@ -1219,11 +1233,11 @@ void MainWindow::on_buttonAbortJob_clicked(void)
         return;
     }
 
-    int reply = QMessageBox::question(this, tr("Question"), tr("Do you really want to abort the job now?"), QMessageBox::Yes | QMessageBox::Cancel);
+    int reply = QMessageBox::question(this, MESSAGE_QUESTION, tr("Do you really want to abort the job now?"), QMessageBox::Yes | QMessageBox::Cancel);
 
     if(reply == QMessageBox::Yes)
     {
-        m_is_aborted = true;
+        m_isAborted = true;
         abortJob();
     }
 }
@@ -1691,7 +1705,7 @@ void MainWindow::slotViewJobsLog(void)
 
     if(QFile(m_logging->loggingPath()).size() > 10 * MB)
     {
-        if(QMessageBox::question(this, tr("Question"), tr("Log file size larger than 10MB.\nReading will take some time.\nContinue?"), QMessageBox::Ok|QMessageBox::No) == QMessageBox::No)
+        if(QMessageBox::question(this, MESSAGE_QUESTION, tr("Log file size larger than 10MB.\nReading will take some time.\nContinue?"), QMessageBox::Ok|QMessageBox::No) == QMessageBox::No)
         {
             return;
         }

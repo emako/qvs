@@ -80,6 +80,16 @@
 #define COLOR_LOGGING_STD_ERROR QColor(135, 45, 90)
 #define COLOR_LOGGING_STD_OUTPUT QColor(128, 0, 128)
 
+#define MESSAGE_ERROR QObject::tr("Error")
+#define MESSAGE_FATAL QObject::tr("Fatal")
+#define MESSAGE_FAILED QObject::tr("Failed")
+#define MESSAGE_REJECTION QObject::tr("Rejection")
+#define MESSAGE_QUESTION QObject::tr("Question")
+#define MESSAGE_WARNING QObject::tr("Warning")
+#define MESSAGE_INFORMATION QObject::tr("Information")
+#define MESSAGE_ARE_YOU_BAKA QObject::tr("Are you BAKA?")
+#define MESSAGE_DONE QObject::tr("Done")
+
 static const char QT_EMPTY[]            = "";
 static const char QT_BLANK[]            = " ";
 static const char QT_EXT_SPLITE[]       = ".";

@@ -180,11 +180,11 @@ void MediaInfoDialog::on_buttonMediaInfoSave_clicked()
     if(qvs::setFileText(filename, text))
     {
         qDebug() << QMessageBox::warning(this,tr("test"), tr("msg"), tr("Yesd"), tr("No"), tr("Cancel"));
-        QMessageBox::information(this, tr("Information"), tr("Saved successfully.\nLocation is \"%1\".").arg(filename), QMessageBox::NoButton);
+        QMessageBox::information(this, MESSAGE_INFORMATION, tr("Saved successfully.\nLocation is \"%1\".").arg(filename), QMessageBox::NoButton);
     }
     else
     {
-        QMessageBox::critical(this, tr("Failed"), tr("Save is failed."), QMessageBox::Discard);
+        QMessageBox::critical(this, MESSAGE_FAILED, tr("Save is failed."), QMessageBox::Discard);
     }
 }
 
