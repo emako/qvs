@@ -1,6 +1,8 @@
-QT -= gui
+QT += core gui
+#QT -= gui
 
-CONFIG += console
+greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
+#CONFIG += console
 CONFIG -= app_bundle
 
 TARGET = qvs-installer
