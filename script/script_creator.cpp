@@ -370,12 +370,18 @@ void ScriptCreator::release(const QUuid &a_uid)
 {
     if(mainUi->m_pPreviewDialogs.contains(a_uid))
     {
-        mainUi->m_pPreviewDialogs[a_uid]->close();
+        if(mainUi->m_pPreviewDialogs[a_uid] != nullptr)
+        {
+            mainUi->m_pPreviewDialogs[a_uid]->close();
+        }
         mainUi->m_pPreviewDialogs.remove(a_uid);
     }
     else if(mainUi->m_pScriptPlayers.contains(a_uid))
     {
-        mainUi->m_pScriptPlayers[a_uid]->close();
+        if(mainUi->m_pScriptPlayers[a_uid] != nullptr)
+        {
+            mainUi->m_pScriptPlayers[a_uid]->close();
+        }
         mainUi->m_pScriptPlayers.remove(a_uid);
     }
     QFile(previewScriptFilename(a_uid)).remove();

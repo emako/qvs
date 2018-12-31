@@ -1319,25 +1319,37 @@ void MainWindow::releaseChildWindowsAll(void)
 {
     for(QMap<QUuid, ScriptPlayer *>::iterator i = m_pScriptPlayers.begin(); i != m_pScriptPlayers.end(); ++i)
     {
-        m_pScriptPlayers[i.key()]->close();
+        if(m_pScriptPlayers[i.key()] != nullptr)
+        {
+            m_pScriptPlayers[i.key()]->close();
+        }
     }
     m_pScriptPlayers.clear();
 
     for(QMap<QUuid, MediaInfoDialog *>::iterator i = m_pMediaInfoDialogs.begin(); i != m_pMediaInfoDialogs.end(); ++i)
     {
-        m_pMediaInfoDialogs[i.key()]->close();
+        if(m_pMediaInfoDialogs[i.key()] != nullptr)
+        {
+            m_pMediaInfoDialogs[i.key()]->close();
+        }
     }
     m_pMediaInfoDialogs.clear();
 
     for(QMap<QUuid, PreviewDialog *>::iterator i = m_pPreviewDialogs.begin(); i != m_pPreviewDialogs.end(); ++i)
     {
-        m_pPreviewDialogs[i.key()]->close();
+        if(m_pPreviewDialogs[i.key()] != nullptr)
+        {
+            m_pPreviewDialogs[i.key()]->close();
+        }
     }
     m_pPreviewDialogs.clear();
 
     for(QMap<QUuid, ScriptCreator *>::iterator i = m_pScriptCreators.begin(); i != m_pScriptCreators.end(); ++i)
     {
-        m_pScriptCreators[i.key()]->close();
+        if(m_pScriptCreators[i.key()] != nullptr)
+        {
+            m_pScriptCreators[i.key()]->close();
+        }
     }
     m_pScriptCreators.clear();
 }

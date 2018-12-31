@@ -20,7 +20,10 @@ void StdManager::releaseStdWatch(QUuid a_uid)
 
     if(g_pStdWatch.contains(a_uid))
     {
-        g_pStdWatch[a_uid]->close();
+        if(g_pStdWatch[a_uid] != nullptr)
+        {
+            g_pStdWatch[a_uid]->close();
+        }
         g_pStdWatch[a_uid] = nullptr;
         g_pStdWatch.remove(a_uid);
     }
@@ -43,6 +46,9 @@ void StdManager::releaseStdWatchAll(void)
                 continue;
             }
         }
-        g_pStdWatch[i.key()]->close();
+        if(g_pStdWatch[i.key()] != nullptr)
+        {
+            g_pStdWatch[i.key()]->close();
+        }
     }
 }

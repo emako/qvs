@@ -39,7 +39,10 @@ void ScriptPlayer::releasePreviewDialog(const QUuid &a_uid)
 {
     if(mainUi->m_pPreviewDialogs.contains(a_uid))
     {
-        mainUi->m_pPreviewDialogs[a_uid]->close();
+        if(mainUi->m_pPreviewDialogs[a_uid] != nullptr)
+        {
+            mainUi->m_pPreviewDialogs[a_uid]->close();
+        }
     }
 }
 
