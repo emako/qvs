@@ -130,6 +130,7 @@ enum EINDEX : int {
     eINDEX_8 = 8,
     eINDEX_9 = 9,
     eINDEX_10 = 10,
+    eINDEX_12 = 12,
     eINDEX_16 = 16,
     eINDEX_24 = 24,
     eINDEX_30 = 30,

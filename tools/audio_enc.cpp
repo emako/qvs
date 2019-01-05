@@ -28,6 +28,7 @@ AudioEnc::~AudioEnc()
 
 void AudioEnc::setup(void)
 {
+    this->setAcceptDrops(false);
     this->setAttribute(Qt::WA_DeleteOnClose, true);
     setDefaultConfig();
     setMode(m_pAdvancedConfig->isEnable());

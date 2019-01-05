@@ -23,6 +23,7 @@ Merge::~Merge()
 
 void Merge::setup(void)
 {
+    this->setAcceptDrops(false);
     this->setAttribute(Qt::WA_DeleteOnClose, true);
     ui->stackedWidgetMode->setCurrentIndex(eMERGE_STACKED_WIDGET_MODE_CONTAINER);
     ui->labelCustomParam->setVisible(false);

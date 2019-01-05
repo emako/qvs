@@ -21,6 +21,7 @@ Muxer::~Muxer()
 
 void Muxer::setup(void)
 {
+    this->setAcceptDrops(false);
     this->setAttribute(Qt::WA_DeleteOnClose, true);
     ui->editMuxerVideoInput->setStyleSheet(c_qss_line_edit_read_only);
     ui->editMuxerAudioInput->setStyleSheet(c_qss_line_edit_read_only);

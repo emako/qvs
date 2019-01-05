@@ -23,6 +23,7 @@ Demuxer::~Demuxer()
 
 void Demuxer::setupUi(void)
 {
+    this->setAcceptDrops(false);
     this->setAttribute(Qt::WA_DeleteOnClose, true);
     reloadParamUi(eRELOAD_TYPE_FFMPEG);
     ui->editDemuxerVideoInput->setStyleSheet(c_qss_line_edit_read_only);

@@ -45,6 +45,9 @@
             <height>25</height>
            </size>
           </property>
+          <property name="acceptDrops">
+           <bool>false</bool>
+          </property>
           <property name="toolTip">
            <string/>
           </property>
@@ -84,8 +87,14 @@
             <height>25</height>
            </size>
           </property>
+          <property name="acceptDrops">
+           <bool>false</bool>
+          </property>
           <property name="toolTip">
            <string/>
+          </property>
+          <property name="autoFillBackground">
+           <bool>false</bool>
           </property>
           <property name="readOnly">
            <bool>false</bool>

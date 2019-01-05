@@ -25,7 +25,7 @@ MediaInfoDialog::~MediaInfoDialog()
 
 void MediaInfoDialog::setupUi(void)
 {
-    this->setAcceptDrops(true);
+    this->setAcceptDrops(false); // dropped from main ui.
     this->setAttribute(Qt::WA_DeleteOnClose, true);
     ui->editMediaInfo->setAcceptDrops(false);
     ui->editMediaInfo->setContextMenuPolicy(Qt::CustomContextMenu);
