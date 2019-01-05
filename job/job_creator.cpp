@@ -1292,6 +1292,9 @@ QStringList JobCreator::configToCommandHEVC(QMap<EJOB_CONFIG, QVariant> a_job_co
     case eINDEX_1:
         cmds << QString::number(eINDEX_10);
         break;
+    case eINDEX_2:
+        cmds << QString::number(eINDEX_12);
+        break;
     default:
         QMessageBox::information(this, MESSAGE_FATAL, tr("Unknown encoder variant!"));
         isFatalError = true;
