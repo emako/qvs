@@ -160,6 +160,7 @@ private slots:
     int getFirstJobStatusIndex(JobChef::EJOB_STATUS a_status);
     void cleanUpStatusAll(JobChef::EJOB_STATUS a_status);
     void slotAbout(void);
+    void slotAboutQt(void);
 
     void on_buttonAddJob_clicked(void);
     void on_buttonStartJob_clicked(void);

@@ -733,6 +733,7 @@ QProgressBar::chunk {
     <addaction name="actionWebAvsWiki"/>
     <addaction name="actionWebVapourSynthDocs"/>
     <addaction name="separator"/>
+    <addaction name="actionAboutQt"/>
     <addaction name="actionAbout"/>
    </widget>
    <widget class="QMenu" name="menuJob">
@@ -792,7 +793,7 @@ QProgressBar::chunk {
      <normaloff>:/buttons/information.png</normaloff>:/buttons/information.png</iconset>
    </property>
    <property name="text">
-    <string>About...</string>
+    <string>About Qvs</string>
    </property>
   </action>
   <action name="actionWebMulder">
@@ -1350,6 +1351,15 @@ QProgressBar::chunk {
    </property>
    <property name="text">
     <string>D2V Witch</string>
+   </property>
+  </action>
+  <action name="actionAboutQt">
+   <property name="icon">
+    <iconset resource="res/resources.qrc">
+     <normaloff>:/buttons/qt.png</normaloff>:/buttons/qt.png</iconset>
+   </property>
+   <property name="text">
+    <string>About Qt</string>
    </property>
   </action>
  </widget>

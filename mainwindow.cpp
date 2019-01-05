@@ -278,6 +278,7 @@ void MainWindow::setAcctions(void)
     connect(ui->actionWebAvsWiki, SIGNAL(triggered()), m_com, SLOT(openUrlWebAvsWiki()));
     connect(ui->actionWebVapourSynthDocs, SIGNAL(triggered()), m_com, SLOT(openUrlWebVapourSynthDocs()));
     connect(ui->actionAbout, SIGNAL(triggered()), this, SLOT(slotAbout()));
+    connect(ui->actionAboutQt, SIGNAL(triggered()), this, SLOT(slotAboutQt()));
 }
 
 void MainWindow::cleanUpAll(void)
@@ -800,6 +801,7 @@ void MainWindow::dropEvent(QDropEvent* e)
 {
     const QMimeData* mime = e->mimeData();
 
+    qDebug() << "Dropped Position:" << e->pos();
     if(mime->hasUrls())
     {
         foreach(QUrl url, e->mimeData()->urls())
@@ -818,7 +820,7 @@ void MainWindow::dropEvent(QDropEvent* e)
             case eTAB_MAIN:/*Main*/
                 execJobCreator(JobCreator::eJOB_RELOAD_DROP, filename);
                 break;
-            case eTAB_AUDIO:/*Audio*/
+            case eTAB_AUDIO: /*Audio*/
                 /* Audio Input */
                 pos = QPoint(ui->widgetAudioEnc->ui->editAudioInput->pos()
                            + ui->widgetAudioEnc->ui->groupBoxAudio->pos()
@@ -827,6 +829,7 @@ void MainWindow::dropEvent(QDropEvent* e)
                            + ui->widgetAudioEnc->pos()
                            + QPoint(ui->menubar->pos().x(), ui->menubar->height()));
                 ret = QRect(pos, ui->widgetAudioEnc->ui->editAudioInput->size());
+                qDebug() << "Audio Input:" << ret;
                 if(ret.contains(e->pos()))
                 {
                     ui->widgetAudioEnc->reload(filename);
@@ -839,6 +842,7 @@ void MainWindow::dropEvent(QDropEvent* e)
                            + ui->listViewAudioBatch->pos()
                            + QPoint(ui->menubar->pos().x(), ui->menubar->height()));
                 ret = QRect(pos, ui->listViewAudioBatch->size());
+                qDebug() << "Audio Batch Input:" << ret;
                 if(ret.contains(e->pos()))
                 {
                     QListWidgetItem *item = new QListWidgetItem(filename);
@@ -846,7 +850,7 @@ void MainWindow::dropEvent(QDropEvent* e)
                     break;
                 }
                 break;
-            case eTAB_MUXER:/*Muxer*/
+            case eTAB_MUXER: /*Muxer*/
                 /* Muxer */
                 /* Video Input */
                 pos = QPoint(ui->widgetMuxer->ui->editMuxerVideoInput->pos()
@@ -856,6 +860,7 @@ void MainWindow::dropEvent(QDropEvent* e)
                            + ui->widgetMuxer->pos()
                            + QPoint(ui->menubar->pos().x(), ui->menubar->height()));
                 ret = QRect(pos, ui->widgetMuxer->ui->editMuxerVideoInput->size());
+                qDebug() << "Video Input:" << ret;
                 if(ret.contains(e->pos()))
                 {
                     ui->widgetMuxer->reload(Muxer::eRELOAD_TYPE_VIDEO, filename);
@@ -870,6 +875,7 @@ void MainWindow::dropEvent(QDropEvent* e)
                            + ui->widgetMuxer->pos()
                            + QPoint(ui->menubar->pos().x(), ui->menubar->height()));
                 ret = QRect(pos, ui->widgetMuxer->ui->editMuxerAudioInput->size());
+                qDebug() << "Audio Input:" << ret;
                 if(ret.contains(e->pos()))
                 {
                     ui->widgetMuxer->reload(Muxer::eRELOAD_TYPE_AUDIO, filename);
@@ -883,17 +889,18 @@ void MainWindow::dropEvent(QDropEvent* e)
                            + ui->widgetDemuxer->pos()
                            + QPoint(ui->menubar->pos().x(), ui->menubar->height()));
                 ret = QRect(pos, ui->widgetDemuxer->ui->editDemuxerVideoInput->size());
+                qDebug() << "Demuxer:" << ret;
                 if(ret.contains(e->pos()))
                 {
                     ui->widgetDemuxer->reload(static_cast<Demuxer::ERELOAD_TYPE>(ui->widgetDemuxer->ui->comboBoxDemuxerFormat->currentIndex()), filename);
                     break;
                 }
                 break;
-            case eTAB_MEDIAINFO:/*MediaInfo*/
+            case eTAB_MEDIAINFO: /*MediaInfo*/
                 ui->widgetMediaInfo->m_mediainfo_path = filename;
                 ui->widgetMediaInfo->showMediaInfo(filename);
                 break;
-            case eTAB_EXTRA:/*Extra*/
+            case eTAB_EXTRA: /*Extra*/
                 ui->widgetMerge->reload(filename);
                 break;
             default:
@@ -1493,6 +1500,11 @@ void MainWindow::setShutCountMessage(void)
 void MainWindow::slotAbout(void)
 {
     QMessageBox::about(this, tr("About"), qvs::fromResource(":/strings/about").arg(QVS_VERSION));
+}
+
+void MainWindow::slotAboutQt(void)
+{
+    QMessageBox::aboutQt(this);
 }
 
 void MainWindow::showPreferences(void)
