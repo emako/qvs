@@ -305,6 +305,9 @@ Please be aware that this option does NOT have any effect on 32-Bit systems.</st
             </item>
             <item>
              <widget class="QLineEdit" name="editDG">
+              <property name="acceptDrops">
+               <bool>false</bool>
+              </property>
               <property name="placeholderText">
                <string>DGIndex Folder Setting ...</string>
               </property>
@@ -363,6 +366,9 @@ Please be aware that this option does NOT have any effect on 32-Bit systems.</st
             </item>
             <item>
              <widget class="QLineEdit" name="editDGNV">
+              <property name="acceptDrops">
+               <bool>false</bool>
+              </property>
               <property name="placeholderText">
                <string>DGIndexNV Folder Setting ...</string>
               </property>

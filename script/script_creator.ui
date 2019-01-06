@@ -139,6 +139,9 @@
                  <height>25</height>
                 </size>
                </property>
+               <property name="acceptDrops">
+                <bool>false</bool>
+               </property>
                <property name="toolTip">
                 <string/>
                </property>
@@ -216,6 +219,9 @@
                     <width>0</width>
                     <height>25</height>
                    </size>
+                  </property>
+                  <property name="acceptDrops">
+                   <bool>false</bool>
                   </property>
                   <property name="toolTip">
                    <string/>
@@ -1890,6 +1896,9 @@
                  <height>25</height>
                 </size>
                </property>
+               <property name="acceptDrops">
+                <bool>false</bool>
+               </property>
                <property name="toolTip">
                 <string/>
                </property>
@@ -2405,6 +2414,9 @@
                     <height>25</height>
                    </size>
                   </property>
+                  <property name="acceptDrops">
+                   <bool>false</bool>
+                  </property>
                   <property name="toolTip">
                    <string/>
                   </property>
@@ -2548,6 +2560,9 @@
                     <width>0</width>
                     <height>25</height>
                    </size>
+                  </property>
+                  <property name="acceptDrops">
+                   <bool>false</bool>
                   </property>
                   <property name="toolTip">
                    <string/>
@@ -2808,6 +2823,9 @@
                  <width>0</width>
                  <height>25</height>
                 </size>
+               </property>
+               <property name="acceptDrops">
+                <bool>false</bool>
                </property>
                <property name="toolTip">
                 <string/>

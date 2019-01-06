@@ -46,7 +46,7 @@
         </size>
        </property>
        <property name="acceptDrops">
-        <bool>true</bool>
+        <bool>false</bool>
        </property>
        <property name="placeholderText">
         <string>Enable VapourSynth/Avisynth Script</string>
