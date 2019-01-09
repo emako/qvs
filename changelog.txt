@@ -86,3 +86,9 @@ version r10
 
 version r11
  - fixed crach bug after script player dialog closed.
+
+version r12
+ - fixed x265 config failure of 12bit.
+ - fixed the problem of allowing drops.
+ - added Wobbly v4 mod.
+ - added about qt dialog for checking the libs version.
