@@ -8,7 +8,7 @@ QT += core gui
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
-#include(./log4qt/log4qt.pri)
+include(./log4qt/log4qt.pri)
 
 CONFIG += no_batch
 
@@ -37,21 +37,18 @@ OPENCV_LIB = $${PROJECT_DIRECTORY}/opencv/lib
 OPENCV_HEADER = $${PROJECT_DIRECTORY}/opencv/include
 FFMPEG_LIB = $${PROJECT_DIRECTORY}/ffmpeg/lib
 FFMPEG_HEADER = $${PROJECT_DIRECTORY}/ffmpeg/include
-LOG4QT_LIB = $${PROJECT_DIRECTORY}/log4qt/lib
-LOG4QT_HEADER = $${PROJECT_DIRECTORY}/log4qt/include
 
 INCLUDEPATH += $${OPENCV_HEADER}
 INCLUDEPATH += $${OPENCV_HEADER}/opencv
 INCLUDEPATH += $${OPENCV_HEADER}/opencv2
 INCLUDEPATH += $${FFMPEG_HEADER}
-INCLUDEPATH += $${LOG4QT_HEADER}
 
 VERSION_MESSAGE = "QT version is too low"
 greaterThan(QT_MAJOR_VERSION, 5)|equals(QT_MAJOR_VERSION, 5){
     !greaterThan(QT_MINOR_VERSION, 10){
         message($${VERSION_MESSAGE})
     }
-}else{
+} else {
         error($${VERSION_MESSAGE})
 }
 
@@ -85,7 +82,6 @@ CONFIG(debug, debug|release) {
         }
     }
     LIBS += -L$${OPENCV_LIB} -lopencv_world343d
-    LIBS += -L$${LOG4QT_LIB} -llog4qtd
 
 } else {
 
@@ -117,7 +113,6 @@ CONFIG(debug, debug|release) {
         }
     }
     LIBS += -L$${OPENCV_LIB} -lopencv_world343
-    LIBS += -L$${LOG4QT_LIB} -llog4qt
 
     DEFINES += NDEBUG
 }
