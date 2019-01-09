@@ -628,10 +628,12 @@ QProgressBar::chunk {
      </property>
      <property name="icon">
       <iconset resource="res/resources.qrc">
-       <normaloff>:/buttons/clean.png</normaloff>:/buttons/clean.png</iconset>
+       <normaloff>:/buttons/broom.png</normaloff>:/buttons/broom.png</iconset>
      </property>
      <addaction name="actionCleanupFinished"/>
      <addaction name="actionCleanupAll"/>
+     <addaction name="separator"/>
+     <addaction name="actionCleanLoggingFile"/>
     </widget>
     <widget class="QMenu" name="menuRemove_PostOperation">
      <property name="title">
@@ -718,6 +720,19 @@ QProgressBar::chunk {
      <addaction name="separator"/>
      <addaction name="actionWebX265FreeCodecs"/>
     </widget>
+    <widget class="QMenu" name="menuWebOther">
+     <property name="title">
+      <string>Download Other</string>
+     </property>
+     <property name="icon">
+      <iconset resource="res/resources.qrc">
+       <normaloff>:/buttons/drive_web.png</normaloff>:/buttons/drive_web.png</iconset>
+     </property>
+     <addaction name="actionWebLAVFilter"/>
+     <addaction name="actionWebNVEncC"/>
+     <addaction name="actionWebQSVEncC"/>
+     <addaction name="actionWebVCEEncC"/>
+    </widget>
     <addaction name="actionCheckForUpdates"/>
     <addaction name="separator"/>
     <addaction name="actionWebX264"/>
@@ -727,6 +742,7 @@ QProgressBar::chunk {
     <addaction name="menuDownloadX265"/>
     <addaction name="menuDownloadAvisynth"/>
     <addaction name="actionWebVapourSynth"/>
+    <addaction name="menuWebOther"/>
     <addaction name="separator"/>
     <addaction name="actionOnlineDocX264"/>
     <addaction name="actionOnlineDocX265"/>
@@ -763,6 +779,9 @@ QProgressBar::chunk {
     <addaction name="separator"/>
     <addaction name="actionVSedit"/>
     <addaction name="actionD2VWitch"/>
+    <addaction name="separator"/>
+    <addaction name="actionWibbly"/>
+    <addaction name="actionWobbly"/>
    </widget>
    <widget class="QMenu" name="menuView">
     <property name="title">
@@ -1227,7 +1246,7 @@ QProgressBar::chunk {
   <action name="actionCommand_Line">
    <property name="icon">
     <iconset resource="res/resources.qrc">
-     <normaloff>:/buttons/terminal_code.png</normaloff>:/buttons/terminal_code.png</iconset>
+     <normaloff>:/buttons/application_osx_command.png</normaloff>:/buttons/application_osx_command.png</iconset>
    </property>
    <property name="text">
     <string>Terminal CLI</string>
@@ -1360,6 +1379,74 @@ QProgressBar::chunk {
    </property>
    <property name="text">
     <string>About Qt</string>
+   </property>
+  </action>
+  <action name="actionWebLAVFilter">
+   <property name="icon">
+    <iconset resource="res/resources.qrc">
+     <normaloff>:/buttons/world_link.png</normaloff>:/buttons/world_link.png</iconset>
+   </property>
+   <property name="text">
+    <string>Download LAVFilter</string>
+   </property>
+  </action>
+  <action name="actiond">
+   <property name="text">
+    <string>d</string>
+   </property>
+  </action>
+  <action name="actionWebNVEncC">
+   <property name="icon">
+    <iconset resource="res/resources.qrc">
+     <normaloff>:/buttons/world_link.png</normaloff>:/buttons/world_link.png</iconset>
+   </property>
+   <property name="text">
+    <string>Download NVEncC</string>
+   </property>
+  </action>
+  <action name="actionWebQSVEncC">
+   <property name="icon">
+    <iconset resource="res/resources.qrc">
+     <normaloff>:/buttons/world_link.png</normaloff>:/buttons/world_link.png</iconset>
+   </property>
+   <property name="text">
+    <string>Download QSVEncC</string>
+   </property>
+  </action>
+  <action name="actionWebVCEEncC">
+   <property name="icon">
+    <iconset resource="res/resources.qrc">
+     <normaloff>:/buttons/world_link.png</normaloff>:/buttons/world_link.png</iconset>
+   </property>
+   <property name="text">
+    <string>Download VCEEncC</string>
+   </property>
+  </action>
+  <action name="actionCleanLoggingFile">
+   <property name="icon">
+    <iconset resource="res/resources.qrc">
+     <normaloff>:/buttons/textfield_clear.png</normaloff>:/buttons/textfield_clear.png</iconset>
+   </property>
+   <property name="text">
+    <string>Clean Logging File</string>
+   </property>
+  </action>
+  <action name="actionWobbly">
+   <property name="icon">
+    <iconset resource="res/resources.qrc">
+     <normaloff>:/buttons/script_go.png</normaloff>:/buttons/script_go.png</iconset>
+   </property>
+   <property name="text">
+    <string>Wobbly (IVTC Assistant)</string>
+   </property>
+  </action>
+  <action name="actionWibbly">
+   <property name="icon">
+    <iconset resource="res/resources.qrc">
+     <normaloff>:/buttons/script_code.png</normaloff>:/buttons/script_code.png</iconset>
+   </property>
+   <property name="text">
+    <string>Wibbly (IVTC Assistant)</string>
    </property>
   </action>
  </widget>

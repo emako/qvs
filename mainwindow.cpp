@@ -231,6 +231,7 @@ void MainWindow::setAcctions(void)
     /* CleanUpMenu */
     connect(ui->actionCleanupFinished, SIGNAL(triggered()), this, SLOT(cleanUpFinished()));
     connect(ui->actionCleanupAll, SIGNAL(triggered()), this, SLOT(cleanUpAll()));
+    connect(ui->actionCleanLoggingFile, SIGNAL(triggered()), this, SLOT(cleanLoggingFile()));
 
     /* OnCompletionMenu */
     m_pActionGruopOnCompletion->addAction(ui->actionPostOp_PowerDown);
@@ -252,33 +253,74 @@ void MainWindow::setAcctions(void)
     connect(ui->actionJobsLog, SIGNAL(triggered()), this, SLOT(slotViewJobsLog()));
 
     /* Tools */
+    connect(ui->actionPreviewDialog, SIGNAL(triggered()), this, SLOT(openPreviewDialog()));
     connect(ui->actionScriptCreator, SIGNAL(triggered()), this, SLOT(openScriptCreator()));
     connect(ui->actionScriptPlayer, SIGNAL(triggered()), this, SLOT(openScriptPlayer()));
     connect(ui->actionVSedit, SIGNAL(triggered()), this, SLOT(openTools()));
     connect(ui->actionD2VWitch, SIGNAL(triggered()), this, SLOT(openTools()));
-    connect(ui->actionPreviewDialog, SIGNAL(triggered()), this, SLOT(openPreviewDialog()));
+    connect(ui->actionWobbly, SIGNAL(triggered()), this, SLOT(openTools()));
+    connect(ui->actionWibbly, SIGNAL(triggered()), this, SLOT(openTools()));
 
     /* Help */
-    connect(ui->actionCheckForUpdates, SIGNAL(triggered()), m_com, SLOT(openUrlCheckForUpdates()));
-    connect(ui->actionWebX264, SIGNAL(triggered()), m_com, SLOT(openUrlWebX264()));
-    connect(ui->actionWebX265, SIGNAL(triggered()), m_com, SLOT(openUrlWebX265()));
-    connect(ui->actionWebX264VideoLAN, SIGNAL(triggered()), m_com, SLOT(openUrlWebX264VideoLAN()));
-    connect(ui->actionWebX264Komisar, SIGNAL(triggered()), m_com, SLOT(openUrlWebX264Komisar()));
-    connect(ui->actionWebX264FreeCodecs, SIGNAL(triggered()), m_com, SLOT(openUrlWebX264FreeCodecs()));
-    connect(ui->actionWebX265Fllear, SIGNAL(triggered()), m_com, SLOT(openUrlWebX265Fllear()));
-    connect(ui->actionWebX265LigH, SIGNAL(triggered()), m_com, SLOT(openUrlWebX265LigH()));
-    connect(ui->actionWebX265Snowfag, SIGNAL(triggered()), m_com, SLOT(openUrlWebX265Snowfag()));
-    connect(ui->actionWebX265FreeCodecs, SIGNAL(triggered()), m_com, SLOT(openUrlWebX265FreeCodecs()));
-    connect(ui->actionWebAvisynth32, SIGNAL(triggered()), m_com, SLOT(openUrlWebAvisynth32()));
-    connect(ui->actionWebAvisynth64, SIGNAL(triggered()), m_com, SLOT(openUrlWebAvisynth64()));
-    connect(ui->actionWebAvisynthPlus, SIGNAL(triggered()), m_com, SLOT(openUrlWebAvisynthPlus()));
-    connect(ui->actionWebVapourSynth, SIGNAL(triggered()), m_com, SLOT(openUrlWebVapourSynth()));
-    connect(ui->actionOnlineDocX264, SIGNAL(triggered()), m_com, SLOT(openUrlOnlineDocX264()));
-    connect(ui->actionOnlineDocX265, SIGNAL(triggered()), m_com, SLOT(openUrlOnlineDocX265()));
-    connect(ui->actionWebAvsWiki, SIGNAL(triggered()), m_com, SLOT(openUrlWebAvsWiki()));
-    connect(ui->actionWebVapourSynthDocs, SIGNAL(triggered()), m_com, SLOT(openUrlWebVapourSynthDocs()));
+    connect(ui->actionCheckForUpdates, SIGNAL(triggered()), this, SLOT(slotOpenUrl()));
+    connect(ui->actionWebX264, SIGNAL(triggered()), this, SLOT(slotOpenUrl()));
+    connect(ui->actionWebX265, SIGNAL(triggered()), this, SLOT(slotOpenUrl()));
+    connect(ui->actionWebX264VideoLAN, SIGNAL(triggered()), this, SLOT(slotOpenUrl()));
+    connect(ui->actionWebX264Komisar, SIGNAL(triggered()), this, SLOT(slotOpenUrl()));
+    connect(ui->actionWebX264FreeCodecs, SIGNAL(triggered()), this, SLOT(slotOpenUrl()));
+    connect(ui->actionWebX265Fllear, SIGNAL(triggered()), this, SLOT(slotOpenUrl()));
+    connect(ui->actionWebX265LigH, SIGNAL(triggered()), this, SLOT(slotOpenUrl()));
+    connect(ui->actionWebX265Snowfag, SIGNAL(triggered()), this, SLOT(slotOpenUrl()));
+    connect(ui->actionWebX265FreeCodecs, SIGNAL(triggered()), this, SLOT(slotOpenUrl()));
+    connect(ui->actionWebAvisynth32, SIGNAL(triggered()), this, SLOT(slotOpenUrl()));
+    connect(ui->actionWebAvisynth64, SIGNAL(triggered()), this, SLOT(slotOpenUrl()));
+    connect(ui->actionWebAvisynthPlus, SIGNAL(triggered()), this, SLOT(slotOpenUrl()));
+    connect(ui->actionWebVapourSynth, SIGNAL(triggered()), this, SLOT(slotOpenUrl()));
+    connect(ui->actionWebLAVFilter, SIGNAL(triggered()), this, SLOT(slotOpenUrl()));
+    connect(ui->actionWebNVEncC, SIGNAL(triggered()), this, SLOT(slotOpenUrl()));
+    connect(ui->actionWebQSVEncC, SIGNAL(triggered()), this, SLOT(slotOpenUrl()));
+    connect(ui->actionWebVCEEncC, SIGNAL(triggered()), this, SLOT(slotOpenUrl()));
+    connect(ui->actionOnlineDocX264, SIGNAL(triggered()), this, SLOT(slotOpenUrl()));
+    connect(ui->actionOnlineDocX265, SIGNAL(triggered()), this, SLOT(slotOpenUrl()));
+    connect(ui->actionWebAvsWiki, SIGNAL(triggered()), this, SLOT(slotOpenUrl()));
+    connect(ui->actionWebVapourSynthDocs, SIGNAL(triggered()), this, SLOT(slotOpenUrl()));
     connect(ui->actionAbout, SIGNAL(triggered()), this, SLOT(slotAbout()));
     connect(ui->actionAboutQt, SIGNAL(triggered()), this, SLOT(slotAboutQt()));
+}
+
+void MainWindow::slotOpenUrl(void)
+{
+    const QMap<QObject *, QString> c_url_map =
+    {
+        { nullptr,                      "https://github.com/emako/qvs" },
+        { ui->actionCheckForUpdates,    "https://github.com/emako/qvs/releases" },
+        { ui->actionWebX264,            "http://www.videolan.org/developers/x264.html" },
+        { ui->actionWebX265,            "http://www.videolan.org/developers/x265.html" },
+        { ui->actionWebX264VideoLAN,    "http://download.videolan.org/pub/x264/binaries" },
+        { ui->actionWebX264Komisar,     "http://komisar.gin.by" },
+        { ui->actionWebX264FreeCodecs,  "http://www.free-codecs.com/x264_video_codec_download.htm" },
+        { ui->actionWebX265Fllear,      "http://x265.ru/en/builds" },
+        { ui->actionWebX265LigH,        "https://www.mediafire.com/?6lfp2jlygogwa" },
+        { ui->actionWebX265Snowfag,     "http://builds.x265.eu" },
+        { ui->actionWebX265FreeCodecs,  "http://www.free-codecs.com/x265_hevc_encoder_download.htm" },
+        { ui->actionWebAvisynth32,      "https://sourceforge.net/projects/avisynth2/files/AviSynth%202.6" },
+        { ui->actionWebAvisynth64,      "http://forum.doom9.org/showthread.php?t=152800" },
+        { ui->actionWebAvisynthPlus,    "http://www.avs-plus.net" },
+        { ui->actionWebVapourSynth,     "http://www.vapoursynth.com" },
+        { ui->actionWebLAVFilter,       "https://github.com/Nevcairiel/LAVFilters/releases" },
+        { ui->actionWebNVEncC,          "https://github.com/rigaya/NVEnc/releases" },
+        { ui->actionWebQSVEncC,         "https://github.com/rigaya/QSVEnc/releases" },
+        { ui->actionWebVCEEncC,         "https://github.com/rigaya/VCEEnc/releases" },
+        { ui->actionOnlineDocX264,      "http://en.wikibooks.org/wiki/MeGUI/x264_Settings" },
+        { ui->actionOnlineDocX265,      "http://x265.readthedocs.org/en/default" },
+        { ui->actionWebAvsWiki,         "http://avisynth.nl/index.php/Main_Page#Usage" },
+        { ui->actionWebVapourSynthDocs, "http://www.vapoursynth.com/doc" },
+    };
+
+    if(c_url_map.contains(sender()))
+    {
+        m_com->openUrl(c_url_map[sender()]);
+    }
 }
 
 void MainWindow::cleanUpAll(void)
@@ -289,6 +331,18 @@ void MainWindow::cleanUpAll(void)
     {
         ui->jobsView->removeRow(eINDEX_0);
         m_jobs.removeAt(eINDEX_0);
+    }
+}
+
+void MainWindow::cleanLoggingFile(void)
+{
+    if(m_job_chef->isStarted())
+    {
+        QMessageBox::warning(this, MESSAGE_WARNING, tr("Can't clean while the job running."));
+    }
+    else
+    {
+        m_logging->restart();
     }
 }
 
@@ -1312,13 +1366,17 @@ void MainWindow::openScriptPlayer(void)
 
 void MainWindow::openTools(void)
 {
-    if(sender() == ui->actionVSedit)
+    const QMap<QObject *, QString> c_toolsCmdMap =
     {
-        QProcess::startDetached("vsedit");
-    }
-    else if(sender() == ui->actionD2VWitch)
+        { ui->actionVSedit,   "vsedit" },
+        { ui->actionD2VWitch, "d2vwitch" },
+        { ui->actionWobbly,   "wobbly" },
+        { ui->actionWibbly,   "wibbly" },
+    };
+
+    if(c_toolsCmdMap.contains(sender()))
     {
-        QProcess::startDetached("d2vwitch");
+        QProcess::startDetached(c_toolsCmdMap[sender()]);
     }
 }
 

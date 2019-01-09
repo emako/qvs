@@ -7,7 +7,6 @@ const char *c_content_to_arg[InstallerDialog::eINSTALLER_CONTENTS_MAX] = {
     "pfm",                /* eINSTALLER_CONTENTS_PFM */
     "vs64",               /* eINSTALLER_CONTENTS_VS64 */
     "avs32",              /* eINSTALLER_CONTENTS_AVS32 */
-    "lav",                /* eINSTALLER_CONTENTS_LAV */
     "media",              /* eINSTALLER_CONTENTS_MEDIA */
     "vsedit-recovery",    /* eINSTALLER_CONTENTS_VSEDIT_RECOVERY */
     "vsedit-template",    /* eINSTALLER_CONTENTS_VSEDIT_TEMPLATE */

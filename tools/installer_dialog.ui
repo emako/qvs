@@ -84,18 +84,6 @@
      </item>
      <item>
       <property name="text">
-       <string>LAV Filters 64-bit and 32-bit</string>
-      </property>
-      <property name="checkState">
-       <enum>Unchecked</enum>
-      </property>
-      <property name="icon">
-       <iconset resource="../res/resources.qrc">
-        <normaloff>:/buttons/ffmpeg.png</normaloff>:/buttons/ffmpeg.png</iconset>
-      </property>
-     </item>
-     <item>
-      <property name="text">
        <string>Mediainfo/CopyPath menu</string>
       </property>
       <property name="checkState">

@@ -157,8 +157,10 @@ private slots:
 
     void cleanUpAll(void);
     void cleanUpFinished(void);
+    void cleanLoggingFile(void);
     int getFirstJobStatusIndex(JobChef::EJOB_STATUS a_status);
     void cleanUpStatusAll(JobChef::EJOB_STATUS a_status);
+    void slotOpenUrl(void);
     void slotAbout(void);
     void slotAboutQt(void);
 

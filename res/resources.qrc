@@ -89,7 +89,6 @@
         <file>fonts/consola.ttf</file>
         <file>buttons/python.png</file>
         <file>buttons/pismo.png</file>
-        <file>buttons/system_run.png</file>
         <file>buttons/ffmpeg.png</file>
         <file>buttons/play_white.png</file>
         <file>icons/qvs.ico</file>
@@ -103,7 +102,6 @@
         <file>buttons/timeline_frames.png</file>
         <file>buttons/opencv.png</file>
         <file>buttons/application_double.png</file>
-        <file>buttons/clear.png</file>
         <file>buttons/clip_splitter.png</file>
         <file>buttons/film_add.png</file>
         <file>buttons/film_blue.png</file>
@@ -159,5 +157,14 @@
         <file>buttons/language_focus.png</file>
         <file>buttons/languages_menu.png</file>
         <file>strings/log4j/log4j.properties</file>
+        <file>buttons/application_osx_command.png</file>
+        <file>buttons/clear_co.png</file>
+        <file>buttons/tricks.png</file>
+        <file>strings/log4j/log4j-off.properties</file>
+        <file>buttons/script_code.png</file>
+        <file>buttons/script_go.png</file>
+        <file>buttons/broom.png</file>
+        <file>buttons/textfield_clear.png</file>
+        <file>buttons/meson.png</file>
     </qresource>
 </RCC>

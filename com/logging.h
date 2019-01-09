@@ -9,9 +9,12 @@
 #include <QDebug>
 #include <QDir>
 
-#define DEFAULT_LOG_PROP_FILENAME "/log4j.properties"
-#define DEFAULT_LOG_PROP_PATH_RESOURCE QString(":/strings/log4j") + QString(DEFAULT_LOG_PROP_FILENAME)
-#define DEFAULT_LOG_PROP_PATH_CURRENT QDir::currentPath() + QString(DEFAULT_LOG_PROP_FILENAME)
+#define DEFAULT_LOG_PROP_FILENAME            "/log4j.properties"
+#define DEFAULT_LOG_PROP_FILENAME_OFF        "/log4j-off.properties"
+#define DEFAULT_LOG_PROP_PATH_RESOURCE_ENTER QString(":/strings/log4j")
+#define DEFAULT_LOG_PROP_PATH_RESOURCE       DEFAULT_LOG_PROP_PATH_RESOURCE_ENTER + QString(DEFAULT_LOG_PROP_FILENAME)
+#define DEFAULT_LOG_PROP_PATH_RESOURCE_OFF   DEFAULT_LOG_PROP_PATH_RESOURCE_ENTER + QString(DEFAULT_LOG_PROP_FILENAME_OFF)
+#define DEFAULT_LOG_PROP_PATH_CURRENT        QDir::currentPath() + QString(DEFAULT_LOG_PROP_FILENAME)
 #define DEFAULT_LOG_FILENAME "logging.html" /* Must synchronize with define=DEFAULT_LOG_PROP_PATH_RESOURCE */
 
 using namespace Log4Qt;
@@ -33,6 +36,8 @@ public:
     QString loggingPath(void);
 
     bool remove(void);
+
+    void restart(void);
 
     static void test(void);
 };

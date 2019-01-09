@@ -29,7 +29,6 @@ public:
         eINSTALLER_CONTENTS_PFM,                /* Cmd */
         eINSTALLER_CONTENTS_VS64,               /* Reg */
         eINSTALLER_CONTENTS_AVS32,              /* Reg */
-        eINSTALLER_CONTENTS_LAV,                /* Cmd */
         eINSTALLER_CONTENTS_MEDIA,              /* Reg */
         eINSTALLER_CONTENTS_VSEDIT_RECOVERY,    /* Cmd */
         eINSTALLER_CONTENTS_VSEDIT_TEMPLATE,    /* Cmd */

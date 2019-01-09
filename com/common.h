@@ -90,6 +90,9 @@
 #define MESSAGE_ARE_YOU_BAKA QObject::tr("Are you BAKA?")
 #define MESSAGE_DONE QObject::tr("Done")
 
+#define FONT_DEFAULT QFont("Consolas")
+#define FONT_DEFAULT2 QFont("Yu Gothic UI")
+
 static const char QT_EMPTY[]            = "";
 static const char QT_BLANK[]            = " ";
 static const char QT_EXT_SPLITE[]       = ".";
@@ -217,51 +220,7 @@ public:
         eSHUTDOWN_MAX,
     };
 
-    enum EURL {
-        eURL_HOME_PAGE,
-        eURL_GITHUB,
-        eURL_OFFICIAL_X264,
-        eURL_OFFICIAL_X265,
-        eURL_DL_X264_1,
-        eURL_DL_X264_2,
-        eURL_DL_X264_3,
-        eURL_DL_X265_1,
-        eURL_DL_X265_2,
-        eURL_DL_X265_3,
-        eURL_DL_X265_4,
-        eURL_DL_AVS_32,
-        eURL_DL_AVS_64,
-        eURL_DL_AVS_PLUS,
-        eURL_DL_VS,
-        eURL_DOC_X264,
-        eURL_DOC_X265,
-        eURL_DOC_AVS,
-        eURL_DOC_VS,
-        eURL_MAX,
-    };
-
     const char *c_shotdown2arg[eSHUTDOWN_MAX] = {QT_EMPTY, "-l", "-s", "-r", "-h", "-a", "-f"};
-    const char *c_urls[Common::eURL_MAX] = {
-        "https://github.com/emako/qvs/releases",                            /* eURL_HOME_PAGE */
-        "https://github.com/emako/qvs/releases",                            /* eURL_GITHUB */
-        "http://www.videolan.org/developers/x264.html",                     /* eURL_OFFICIAL_X264 */
-        "http://www.videolan.org/developers/x265.html",                     /* eURL_OFFICIAL_X265 */
-        "http://download.videolan.org/pub/x264/binaries",                   /* eURL_DL_X264_1 */
-        "http://komisar.gin.by/",                                           /* eURL_DL_X264_2 */
-        "http://www.free-codecs.com/x264_video_codec_download.htm",         /* eURL_DL_X264_3 */
-        "http://x265.ru/en/builds/",                                        /* eURL_DL_X265_1 */
-        "https://www.mediafire.com/?6lfp2jlygogwa",                         /* eURL_DL_X265_2 */
-        "http://builds.x265.eu",                                            /* eURL_DL_X265_3 */
-        "http://www.free-codecs.com/x265_hevc_encoder_download.htm",        /* eURL_DL_X265_4 */
-        "https://sourceforge.net/projects/avisynth2/files/AviSynth%202.6",  /* eURL_DL_AVS_32 */
-        "http://forum.doom9.org/showthread.php?t=152800",                   /* eURL_DL_AVS_64 */
-        "http://www.avs-plus.net",                                          /* eURL_DL_AVS_PLUS */
-        "http://www.vapoursynth.com",                                       /* eURL_DL_VS */
-        "http://en.wikibooks.org/wiki/MeGUI/x264_Settings",                 /* eURL_DOC_X264 */
-        "http://x265.readthedocs.org/en/default",                           /* eURL_DOC_X265 */
-        "http://avisynth.nl/index.php/Main_Page#Usage",                     /* eURL_DOC_AVS */
-        "http://www.vapoursynth.com/doc",                                   /* eURL_DOC_VS */
-    };
 
     QList<DWORD> getProcessID(QString a_filename);
     QList<DWORD> getProcessID(QStringList a_filename_list);
@@ -291,25 +250,6 @@ public:
 
 public slots:
     virtual void openUrl(QString a_url);
-    virtual void openUrl(EURL a_url);
-    virtual void openUrlCheckForUpdates(void);
-    virtual void openUrlWebX264(void);
-    virtual void openUrlWebX265(void);
-    virtual void openUrlWebX264VideoLAN(void);
-    virtual void openUrlWebX264Komisar(void);
-    virtual void openUrlWebX264FreeCodecs(void);
-    virtual void openUrlWebX265Fllear(void);
-    virtual void openUrlWebX265LigH(void);
-    virtual void openUrlWebX265Snowfag(void);
-    virtual void openUrlWebX265FreeCodecs(void);
-    virtual void openUrlWebAvisynth32(void);
-    virtual void openUrlWebAvisynth64(void);
-    virtual void openUrlWebAvisynthPlus(void);
-    virtual void openUrlWebVapourSynth(void);
-    virtual void openUrlOnlineDocX264(void);
-    virtual void openUrlOnlineDocX265(void);
-    virtual void openUrlWebAvsWiki(void);
-    virtual void openUrlWebVapourSynthDocs(void);
 
 protected slots:
     virtual void slotProcessReadyReadStandardError();

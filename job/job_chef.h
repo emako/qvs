@@ -77,7 +77,6 @@ public:
     void startJob(void);
     void abortJobs(void);
     bool isStarted(void);
-    bool isRunning(void);
 
     bool updateProgress(QString a_text);
     QList<qint64> getAllProcessID(void);

@@ -48,6 +48,13 @@ bool Logging::remove(void)
     return QFile(DEFAULT_LOG_FILENAME).remove();
 }
 
+void Logging::restart(void)
+{
+    configure(DEFAULT_LOG_PROP_PATH_RESOURCE_OFF);
+    log().removeAllAppenders();
+    init();
+}
+
 void Logging::test(void)
 {
     log().debug("o*****");
