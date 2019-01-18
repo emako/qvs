@@ -166,5 +166,10 @@
         <file>buttons/broom.png</file>
         <file>buttons/textfield_clear.png</file>
         <file>buttons/meson.png</file>
+        <file>buttons/film_key.png</file>
+        <file>buttons/export_wiz.png</file>
+        <file>buttons/import_wiz.png</file>
+        <file>buttons/importdir_wiz.png</file>
+        <file>buttons/arrow_join.png</file>
     </qresource>
 </RCC>

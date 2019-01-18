@@ -92,7 +92,7 @@ QString qvs::fromResource(const QString &a_filename)
     return QString::fromUtf8(getResource(a_filename));
 }
 
-QString qvs::timeToString(double a_seconds, bool a_fullFormat)
+QString qvs::fromSecondTime(double a_seconds, bool a_fullFormat)
 {
     if(a_seconds <= 0.0)
         return QString("0");
@@ -127,6 +127,70 @@ QString qvs::timeToString(double a_seconds, bool a_fullFormat)
         timeString += QString::number(fraction, 'f', 3).mid(1);
 
     return timeString;
+}
+
+QString qvs::fromDouble(double a_number, int a_prec)
+{
+    return QString::number(a_number, 'f', a_prec);
+}
+
+QString qvs::fromTime(double a_seconds)
+{
+    if(static_cast<int>(a_seconds) < eINDEX_0)
+    {
+        a_seconds = eINDEX_0;
+    }
+
+    int secInt = static_cast<int>(a_seconds);
+    int hour = static_cast<int>(secInt / HOUR);
+    int min = static_cast<int>((secInt % HOUR) / MINUTE);
+    int sec = static_cast<int>(secInt % HOUR % MINUTE);
+    int msec = static_cast<int>((a_seconds - secInt) * SECOND_TO_MILLISECOND_UNIT);
+    QString timeString;
+
+    if(hour >= eINDEX_100)
+    {
+        hour = 99;
+        min = MINUTE - eINDEX_1;
+        sec = MINUTE - eINDEX_1;
+        msec = SECOND_TO_MILLISECOND_UNIT - eINDEX_1;
+    }
+
+    timeString = QString("%1:%2:%3.%4")
+            .arg(hour, eINDEX_2, eINDEX_10, QChar('0'))
+            .arg(min, eINDEX_2, eINDEX_10, QChar('0'))
+            .arg(sec, eINDEX_2, eINDEX_10, QChar('0'))
+            .arg(msec, eINDEX_3, eINDEX_10, QChar('0'));
+
+    return timeString;
+}
+
+double qvs::toTime(QString a_secondsStr)
+{
+    const enum ETIMECODE_FORMAT : int
+    {
+        eTIMECODE_FORMAT_H,
+        eTIMECODE_FORMAT_M,
+        eTIMECODE_FORMAT_S,
+        eTIMECODE_FORMAT_MAX,
+    };
+
+    double seconds = eINDEX_0;
+    int hour = eINDEX_0;
+    int min = eINDEX_0;
+    double sec = eINDEX_0;
+
+    QStringList timecodeList = a_secondsStr.split(QT_COLON);
+
+    if(timecodeList.length() >= eTIMECODE_FORMAT_MAX)
+    {
+        hour = QString(timecodeList[eTIMECODE_FORMAT_H]).toInt();
+        min = QString(timecodeList[eTIMECODE_FORMAT_M]).toInt();
+        sec = QString(timecodeList[eTIMECODE_FORMAT_S]).toDouble();
+    }
+
+    seconds = (hour * HOUR) + (min * MINUTE) + sec;
+    return seconds;
 }
 
 QString qvs::currentTime(void)
@@ -225,6 +289,33 @@ QString qvs::toNormalEol(const QString &a_str)
     return str;
 }
 
+QString qvs::toFilename(const QString &a_str)
+{
+	QString filename = a_str;
+	QRegularExpression rex("[\\*\\?\\\"<>\\|]"); /* / \ " : | * ? < > */
+
+	return filename.replace(rex, QT_EMPTY);
+}
+
+QString qvs::toFilename2(const QString &a_filename)
+{
+	QString filename = a_filename;
+	
+	/* DOS System */
+	filename.remove(QT_DOS_PATH_SPR);	// '\\'
+	filename.remove(QT_NOR_PATH_SPR);	// '/'
+	filename.remove(QT_COLON);			// ':'
+	filename.remove(QT_ASTERISK);		// '*'
+	filename.remove(QT_QUE_MARK);		// '?'
+	filename.remove(QT_LESS_THAN);		// '<'
+	filename.remove(QT_GREATER_THAN);	// '>'
+	filename.remove(QT_PIPE);			// '|'
+	filename.remove(QT_MAC_EOL);		// '\r'
+	filename.remove(QT_NOR_EOL);		// '\n'
+	filename.remove(QT_TAB);			// '\t'
+	return filename;
+}
+
 QString qvs::convertFramesToTimecode(double a_frames, double a_fps)
 {
     return convertSecondToTimecode(convertFramesToTime(a_frames, a_fps));
@@ -311,6 +402,98 @@ QString qvs::findFirstFilePath(QString a_filename, QString a_path)
         path = a_filename;
     }
     return path;
+}
+
+template <class T>
+void qvs::moveRow(QList<T> *a_list, int a_from, int a_to)
+{
+    int length = a_list->length();
+
+    if( (a_list->isEmpty()) || (a_from == a_to) || (a_from < 0) || (a_to < 0) || (a_from >= length) || (a_to > length) )
+    {
+        return;
+    }
+
+    T t = a_list->at(a_from);
+
+    a_list->removeAt(a_from);
+    a_list->insert(a_to, t);
+}
+
+void qvs::moveRow(QList<JobItem> *a_list, int a_from, int a_to)
+{
+    moveRow<JobItem>(a_list, a_from, a_to);
+}
+
+void qvs::moveRow(QList<QPair<QString, QString>> *a_list, int a_from, int a_to)
+{
+    moveRow<QPair<QString, QString>>(a_list, a_from, a_to);
+}
+
+void qvs::moveRowUi(QTableWidget *a_pTable, int a_from, int a_to)
+{
+    if(a_pTable == nullptr)
+    {
+        return;
+    }
+
+    int rowCount = a_pTable->rowCount();
+    int colCount = a_pTable->columnCount();
+
+    if( (a_from == a_to) || (a_from < 0) || (a_to < 0) || (a_from >= rowCount) || (a_to > rowCount) )
+    {
+        return;
+    }
+
+    if(a_to < a_from)
+    {
+        a_from++;
+    }
+
+    a_pTable->insertRow(a_to);
+
+    for(int i=0; i < colCount; i++)
+    {
+        a_pTable->setItem( a_to, i, a_pTable->takeItem( a_from , i ) );
+    }
+
+    if(a_from < a_to)
+    {
+        a_to--;
+    }
+
+    a_pTable->removeRow(a_from);
+    a_pTable->selectRow(a_to);
+}
+
+void qvs::moveRowUi(QListWidget *a_pList, int a_from, int a_to)
+{
+    if(a_pList == nullptr)
+    {
+        return;
+    }
+
+    int rowCount = a_pList->count();
+
+    if( (a_from == a_to) || (a_from < 0) || (a_to < 0) || (a_from >= rowCount) || (a_to > rowCount) )
+    {
+        return;
+    }
+
+    a_pList->insertItem(a_to, a_pList->item(a_from)->text());
+
+    if(a_to < a_from)
+    {
+        a_from++;
+    }
+
+    if(a_from < a_to)
+    {
+        a_to--;
+    }
+
+    a_pList->takeItem(a_from);
+    a_pList->setCurrentRow(a_to);
 }
 
 Common::Common(QObject *parent) : QObject(parent)
@@ -401,57 +584,6 @@ void Common::slotProcessReadyReadStandardOutput()
     }
 }
 
-void Common::moveRow(QList<JobItem> *a_list, int a_from, int a_to)
-{
-    int length = a_list->length();
-
-    if( (a_list->isEmpty()) || (a_from == a_to) || (a_from < 0) || (a_to < 0) || (a_from >= length) || (a_to > length) )
-    {
-        return;
-    }
-
-    JobItem job_item = a_list->at(a_from);
-
-    a_list->removeAt(a_from);
-    a_list->insert(a_to, job_item);
-}
-
-void Common::moveRow(QTableWidget *a_pTable, int a_from, int a_to)
-{
-    if(a_pTable == nullptr)
-    {
-        return;
-    }
-
-    int rowCount = a_pTable->rowCount();
-    int colCount = a_pTable->columnCount();
-
-    if( (a_from == a_to) || (a_from < 0) || (a_to < 0) || (a_from >= rowCount) || (a_to > rowCount) )
-    {
-        return;
-    }
-
-    if( a_to < a_from )
-    {
-        a_from++;
-    }
-
-    a_pTable->insertRow(a_to);
-
-    for(int i=0; i < colCount; i++)
-    {
-        a_pTable->setItem( a_to, i, a_pTable->takeItem( a_from , i ) );
-    }
-
-    if(a_from < a_to)
-    {
-        a_to--;
-    }
-
-    a_pTable->removeRow(a_from);
-    a_pTable->selectRow(a_to);
-}
-
 QString Common::beautifyText(QString a_text, QString a_color)
 {
     return QString("<p style=\"color:%1\">%2</p>").arg(a_color).arg(a_text);
@@ -525,14 +657,6 @@ QStringList qvs::getUrlFromText(const QString &a_text)
         }
     }
     return texts;
-}
-
-QString qvs::toFilename(const QString &a_str)
-{
-    QString filename = a_str;
-    QRegularExpression rex("[\\*\\?\\\"<>\\|]"); /* / \ " : | * ? < > */
-
-    return filename.replace(rex, QT_EMPTY);
 }
 
 QString Common::getHashMd5(QString a_filename)

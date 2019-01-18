@@ -244,6 +244,23 @@ StdWatcherCmd AudioEnc::getEncodeCmd(QString a_input, QString a_output, QString 
     return job_cmd;
 }
 
+StdWatcher::EDATA_TYPE AudioEnc::getDataType(void)
+{
+    StdWatcher::EDATA_TYPE dataType = StdWatcher::eDATA_TYPE_UTF8;
+    EENCODE_TYPE encode_type = static_cast<EENCODE_TYPE>(ui->comboBoxAudioEncoder->currentIndex());
+
+    switch(encode_type)
+    {
+    case eENCODE_TYPE_MP3:
+        dataType = StdWatcher::eDATA_TYPE_LOCAL;
+        break;
+    default:
+        break;
+    }
+
+    return dataType;
+}
+
 void AudioEnc::on_buttonAudioStart_clicked()
 {
     QString input = ui->editAudioInput->text();
@@ -281,6 +298,7 @@ void AudioEnc::on_buttonAudioStart_clicked()
     QUuid uid = StdManager::createStdWatch();
     g_pStdWatch[uid]->show();
     g_pStdWatch[uid]->initJob(uid);
+    g_pStdWatch[uid]->setDataType(getDataType());
 
     if(job_cmd.pipe.isEmpty())
     {

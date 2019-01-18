@@ -17,6 +17,7 @@
 #include <QObject>
 #include <QUuid>
 #include <QTableWidget>
+#include <QListWidget>
 #include <QClipboard>
 #include <QTextCursor>
 #include <QPlainTextEdit>
@@ -43,6 +44,9 @@
 #define HOUR (MINUTE * MINUTE)
 
 #define SECOND_TO_MILLISECOND_UNIT (1000)
+#define SECOND_TO_MILLISECOND_UNIT_F static_cast<double>(SECOND_TO_MILLISECOND_UNIT)
+
+#define TIME_FORMAT "HH:mm:ss.zzz"
 
 #define NUL 0
 #define ARI 1
@@ -90,8 +94,12 @@
 #define MESSAGE_ARE_YOU_BAKA QObject::tr("Are you BAKA?")
 #define MESSAGE_DONE QObject::tr("Done")
 
-#define FONT_DEFAULT QFont("Consolas")
-#define FONT_DEFAULT2 QFont("Yu Gothic UI")
+#define FONT_DEFAULT QFont(QObject::tr("Consolas"))
+#define FONT_DEFAULT2 QFont(QObject::tr("Yu Gothic UI"))
+
+#define CR QT_MAC_EOL
+#define LF QT_NOR_EOL
+#define EOL QT_OTR_EOL
 
 static const char QT_EMPTY[]            = "";
 static const char QT_BLANK[]            = " ";
@@ -109,6 +117,11 @@ static const char QT_BRACKET_R[]        = "}";
 static const char QT_BIKKURI_MARK[]     = "!";
 static const char QT_NOR_PATH_SPR[]     = "/";
 static const char QT_EQUAL[]            = "=";
+static const char QT_ASTERISK[]			= "*";
+static const char QT_QUE_MARK[]			= "?";
+static const char QT_LESS_THAN[]		= "<";
+static const char QT_GREATER_THAN[]		= ">";
+static const char QT_TAB[]				= "\t";
 static const char QT_DOS_PATH_SPR[]     = "\\";
 static const char QT_DOUBLE_QUOT_MARK[] = "\"";
 static const char QT_META[]             = "\b";
@@ -170,7 +183,11 @@ namespace qvs
     QByteArray getResource(const QString &a_filename);
     QString fromResource(const QString &a_filename);
 
-    QString timeToString(double a_seconds, bool a_fullFormat = false);      /* For Time Line Slider */
+    QString fromDouble(double a_number, int a_prec = eINDEX_3);
+
+    QString fromSecondTime(double a_seconds, bool a_fullFormat = false);
+    QString fromTime(double a_seconds);
+    double toTime(QString a_secondsStr);
 
     QString currentTime(void);
     QString currentDateTime(void);
@@ -186,6 +203,8 @@ namespace qvs
     QString toHtmlText(const QString &a_str);
 
     QString toNormalEol(const QString &a_str);
+	QString toFilename(const QString &a_str);
+	QString toFilename2(const QString &a_filename);
 
     QString convertFramesToTimecode(double a_frames, double a_fps);
     double convertFramesToTime(double a_frames, double a_fps);
@@ -197,7 +216,13 @@ namespace qvs
     QString toStringFirstUpper(QString a_str);
 
     QStringList getUrlFromText(const QString &a_text);
-    QString toFilename(const QString &a_str);
+
+    template <class T>
+    void moveRow(QList<T> *a_list, int a_from, int a_to);
+    void moveRow(QList<JobItem> *a_list, int a_from, int a_to);
+    void moveRow(QList<QPair<QString, QString>> *a_list, int a_from, int a_to);
+    void moveRowUi(QTableWidget *a_pTable, int a_from, int a_to);
+    void moveRowUi(QListWidget *a_pList, int a_from, int a_to);
 }
 
 class Common : public QObject
@@ -225,9 +250,6 @@ public:
     QList<DWORD> getProcessID(QString a_filename);
     QList<DWORD> getProcessID(QStringList a_filename_list);
     BOOL setPriortyClass(DWORD a_pid, DWORD a_priorityClass);
-
-    void moveRow(QList<class JobItem> *a_list, int a_from, int a_to);
-    void moveRow(QTableWidget *a_pTable, int a_from, int a_to);
 
     QString beautifyText(QString a_text, QString a_color = "red");
     int hadNumber(QString a_text);

@@ -155,6 +155,7 @@ void JobCreator::setupUi(void)
     m_job_output_suffix = getOutputFileSuffixList().at(eINDEX_0);
 
     /*Property*/
+    this->setWindowFlags(Qt::Dialog | Qt::WindowCloseButtonHint);
     this->setMaximumHeight(eINDEX_10);
     this->setAcceptDrops(true);
     this->loadCommonConfig();

@@ -474,7 +474,7 @@ void TimeLineSlider::mouseMoveEvent(QMouseEvent * a_pEvent)
 		if(m_fps != 0.0)
 		{
 			tipString += " - ";
-            tipString += qvs::timeToString((static_cast<double>(l_frame)) / m_fps);
+            tipString += qvs::fromSecondTime((static_cast<double>(l_frame)) / m_fps);
 		}
 		QToolTip::showText(a_pEvent->globalPos(), tipString);
 	}
@@ -608,7 +608,7 @@ void TimeLineSlider::paintEvent(QPaintEvent * a_pEvent)
 				if(l_displayMode == Frames)
 					labelString = QString::number(n);
 				else
-                    labelString = qvs::timeToString((static_cast<double>(n)) / m_fps);
+                    labelString = qvs::fromSecondTime((static_cast<double>(n)) / m_fps);
                 labelPos.setX(static_cast<int>(tickPos - labelsFontMetrics.width(labelString) / 2 + 1));
 				painter.drawText(labelPos, labelString);
 			}
@@ -679,7 +679,7 @@ void TimeLineSlider::paintEvent(QPaintEvent * a_pEvent)
 				if(l_displayMode == Frames)
 					labelString = QString::number(units);
 				else
-                    labelString = qvs::timeToString(units);
+                    labelString = qvs::fromSecondTime(units);
                 labelPos.setX(static_cast<int>(tickPos - labelsFontMetrics.width(labelString) / 2 + 1));
 				painter.drawText(labelPos, labelString);
 			}

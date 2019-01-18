@@ -18,6 +18,7 @@ JobCreatorHelp::~JobCreatorHelp()
 
 void JobCreatorHelp::setupUi(void)
 {
+    this->setWindowFlags(Qt::Dialog | Qt::WindowCloseButtonHint);
     ui->plainTextEdit->setLineWrapMode(QPlainTextEdit::NoWrap);
     connect(&m_process, SIGNAL(started()),this, SLOT(slotProcessStarted()));
     connect(&m_process, SIGNAL(finished(int, QProcess::ExitStatus)),this, SLOT(slotProcessFinished(int, QProcess::ExitStatus)));

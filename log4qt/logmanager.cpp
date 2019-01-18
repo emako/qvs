@@ -424,6 +424,9 @@ namespace Log4Qt
     void LogManager::qtMessageHandler(QtMsgType type, const QMessageLogContext &context, const QString &message)
     {
         Level level;
+
+        Q_UNUSED(context);
+
         switch (type)
         {
             case QtDebugMsg:

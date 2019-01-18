@@ -5,6 +5,8 @@
 #include <QValidator>
 #include <QRegExpValidator>
 
+#include "std_watcher.h"
+
 #define AUDIO_CONFIG_EXEC_PIPER "ffmpeg"
 #define AUDIO_CONFIG_EXEC_PIPER_32 "ffmpeg32"
 #define AUDIO_CONFIG_EXEC_AAC_APPLE "qaac"
@@ -24,6 +26,7 @@ class MainWindow;
 class AudioConfig;
 class AudioAdvancedConfig;
 class StdWatcherCmd;
+class StdWatcher;
 
 namespace Ui {
 class AudioEnc;
@@ -60,6 +63,7 @@ public:
     QString getAudioOutputPath(EENCODE_TYPE a_type, QString a_filename);
     QString getAudioOutputExt(EENCODE_TYPE a_type);
     StdWatcherCmd getEncodeCmd(QString a_input, QString a_output, QString a_bitrate);
+    StdWatcher::EDATA_TYPE getDataType(void);
     QString getPiperFilename(void);
 
 public slots:

@@ -4,9 +4,12 @@
 #include "tools/muxer.h"
 #include "tools/demuxer.h"
 #include "tools/audio_enc.h"
-#include "script/script_player.h"
 #include "tools/installer_dialog.h"
+#include "tools/splitter.h"
+#include "tools/merge.h"
+#include "script/script_player.h"
 #include "preview/preview_dialog.h"
+//#include "preview/ffpreview_dialog.h"
 #include "script/script_creator.h"
 #include "com/version.h"
 #include "com/style_sheet.h"
@@ -18,7 +21,10 @@
 #include "ui_script_player.h"
 #include "ui_installer_dialog.h"
 #include "ui_preview_dialog.h"
+#include "ui_ffpreview_dialog.h"
 #include "ui_script_creator.h"
+#include "ui_splitter.h"
+#include "ui_merge.h"
 
 extern QMap<QUuid, StdWatcher*> g_pStdWatch;
 
@@ -546,8 +552,8 @@ void MainWindow::moveUpJob(void)
     {
         int row = ui->jobsView->currentRow();
 
-        m_com->moveRow(ui->jobsView, row, row - eINDEX_1);
-        m_com->moveRow(&m_jobs, row, row - eINDEX_1);
+        qvs::moveRowUi(ui->jobsView, row, row - eINDEX_1);
+        qvs::moveRow(&m_jobs, row, row - eINDEX_1);
     }
     else
     {
@@ -561,8 +567,8 @@ void MainWindow::moveDownJob(void)
     {
         int row = ui->jobsView->currentRow();
 
-        m_com->moveRow(ui->jobsView, row, row + eINDEX_2);
-        m_com->moveRow(&m_jobs, row, row + eINDEX_1);
+        qvs::moveRowUi(ui->jobsView, row, row + eINDEX_2);
+        qvs::moveRow(&m_jobs, row, row + eINDEX_1);
     }
     else
     {
@@ -955,7 +961,35 @@ void MainWindow::dropEvent(QDropEvent* e)
                 ui->widgetMediaInfo->showMediaInfo(filename);
                 break;
             case eTAB_EXTRA: /*Extra*/
-                ui->widgetMerge->reload(filename);
+                /*Extra*/
+                /*Splitter*/
+                pos = QPoint(ui->widgetSplitter->ui->editSplitMediaInput->pos()
+                           + ui->widgetSplitter->ui->groupBoxSplitter->pos()
+                           + ui->tabWidget->pos()
+                           + ui->centralWidget->pos()
+                           + ui->widgetSplitter->pos()
+                           + QPoint(ui->menubar->pos().x(), ui->menubar->height()));
+                ret = QRect(pos, ui->widgetSplitter->ui->editSplitMediaInput->size());
+                qDebug() << "Splitter:" << ret;
+                if(ret.contains(e->pos()))
+                {
+                    ui->widgetSplitter->reload(filename);
+                    break;
+                }
+                /*Merge*/
+                pos = QPoint(ui->widgetMerge->ui->listWidget->pos()
+                           + ui->widgetMerge->ui->groupBoxMerge->pos()
+                           + ui->tabWidget->pos()
+                           + ui->centralWidget->pos()
+                           + ui->widgetMerge->pos()
+                           + QPoint(ui->menubar->pos().x(), ui->menubar->height()));
+                ret = QRect(pos, ui->widgetMerge->ui->listWidget->size());
+                qDebug() << "Merge:" << ret;
+                if(ret.contains(e->pos()))
+                {
+                    ui->widgetMerge->reload(filename);
+                    break;
+                }
                 break;
             default:
                 break;
@@ -1005,9 +1039,10 @@ void MainWindow::on_jobsView_itemDoubleClicked(QTableWidgetItem *)
     execJobCreator(JobCreator::eJOB_RELOAD_EDIT);
 }
 
-void MainWindow::execJobCreator(JobCreator::EJOB_RELOAD a_job_reload, QString filename)
+void MainWindow::execJobCreator(JobCreator::EJOB_RELOAD a_job_reload, QString a_filename)
 {
     JobCreator job_creator;
+
     job_creator.mainUi = this;
     job_creator.reload(a_job_reload);
 
@@ -1021,7 +1056,7 @@ void MainWindow::execJobCreator(JobCreator::EJOB_RELOAD a_job_reload, QString fi
     case JobCreator::eJOB_RELOAD_DROP:
         /*Dropped and Add Job Item*/
         job_creator.reloadConfig(QMap<JobCreator::EJOB_CONFIG, QVariant>());
-        job_creator.reloadSource(filename);
+        job_creator.reloadSource(a_filename);
         break;
     case JobCreator::eJOB_RELOAD_EDIT:
         /*Edit Job Item*/
@@ -1337,11 +1372,19 @@ void MainWindow::openPython(void)
 
 void MainWindow::openPreviewDialog(void)
 {
+#if true
     PreviewDialog *at_pPreviewDialog = new PreviewDialog();
     at_pPreviewDialog->mainUi = this;
     at_pPreviewDialog->m_uid = QUuid::createUuid();
     at_pPreviewDialog->show();
     m_pPreviewDialogs.insert(at_pPreviewDialog->m_uid, at_pPreviewDialog);
+#else
+    FFPreviewDialog *at_pPreviewDialog = new FFPreviewDialog();
+    at_pPreviewDialog->mainUi = this;
+    at_pPreviewDialog->m_uid = QUuid::createUuid();
+    at_pPreviewDialog->show();
+    //m_pPreviewDialogs.insert(at_pPreviewDialog->m_uid, at_pPreviewDialog);
+#endif
 }
 
 void MainWindow::openScriptCreator(void)

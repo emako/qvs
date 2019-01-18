@@ -45,6 +45,7 @@ public:
     QString getOutputFileExt(EOUTPUT_TYPE a_output_type);
 
 private slots:
+    bool eventFilter(QObject *o, QEvent *e);
     void on_buttonMuxerStart_clicked();
     void on_comboBoxMuxerFormat_activated(int a_index);
     void on_comboBoxMuxerFormat_currentIndexChanged(int a_index);

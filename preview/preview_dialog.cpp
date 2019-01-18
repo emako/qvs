@@ -33,8 +33,6 @@ void PreviewDialog::setup(void)
     ui->previewArea->installEventFilter(this);
 
     this->setAttribute(Qt::WA_DeleteOnClose, true);
-    this->setWindowIcon(QIcon(":/buttons/film.png"));
-    this->setWindowTitle(tr("Preview"));
 
     ui->statusBar->addPermanentWidget(m_statusBarLabel, eINDEX_1);
     ui->previewArea->setAlignment(Qt::AlignTop | Qt::AlignLeft);
@@ -530,11 +528,11 @@ void PreviewDialog::slotSaveSnapshot(void)
     if(snapshotFilePath.isEmpty())
     {
         snapshotFilePath = QStandardPaths::writableLocation(QStandardPaths::PicturesLocation);
-        snapshotFilePath += QString("/%1.").arg(m_frameShown);
+        snapshotFilePath += QString("/%1").arg(m_frameShown);
     }
     else
     {
-        snapshotFilePath += QString(" - %1.").arg(m_frameShown);
+        snapshotFilePath += QString(" - %1").arg(m_frameShown);
     }
     snapshotFilePath += fileExtension;
 
@@ -596,7 +594,7 @@ void PreviewDialog::slotSetPlayFPSLimit(void)
     }
     else
     {
-        assert(false);
+        Q_ASSERT(false);
     }
 }
 

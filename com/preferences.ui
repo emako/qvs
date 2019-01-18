@@ -21,7 +21,7 @@
   </property>
   <layout class="QVBoxLayout" name="verticalLayout_2">
    <item>
-    <widget class="QGroupBox" name="groupBox_2">
+    <widget class="QGroupBox" name="groupBoxPreferences">
      <property name="title">
       <string> Preferences </string>
      </property>
@@ -39,10 +39,10 @@
        <number>2</number>
       </property>
       <item>
-       <widget class="QWidget" name="widget" native="true">
+       <widget class="QWidget" name="widgetPreferences" native="true">
         <layout class="QVBoxLayout" name="verticalLayout_3">
          <item>
-          <widget class="QWidget" name="widget" native="true">
+          <widget class="QWidget" name="widgetNotRunNextJob" native="true">
            <layout class="QHBoxLayout" name="horizontalLayout_2">
             <property name="leftMargin">
              <number>0</number>
@@ -87,7 +87,7 @@
           </widget>
          </item>
          <item>
-          <widget class="QWidget" name="widget" native="true">
+          <widget class="QWidget" name="widgetNotShowSplashScreen" native="true">
            <layout class="QHBoxLayout" name="horizontalLayout_5">
             <property name="leftMargin">
              <number>0</number>
@@ -135,7 +135,7 @@
           </widget>
          </item>
          <item>
-          <widget class="QWidget" name="widget" native="true">
+          <widget class="QWidget" name="widgetJobCount" native="true">
            <layout class="QHBoxLayout" name="horizontalLayout_3">
             <property name="leftMargin">
              <number>0</number>
@@ -211,7 +211,7 @@
           </widget>
          </item>
          <item>
-          <widget class="QWidget" name="widget" native="true">
+          <widget class="QWidget" name="widgetUse64BitAVS" native="true">
            <layout class="QHBoxLayout" name="horizontalLayout_7">
             <property name="leftMargin">
              <number>0</number>
@@ -263,7 +263,7 @@ Please be aware that this option does NOT have any effect on 32-Bit systems.</st
           </widget>
          </item>
          <item>
-          <widget class="QWidget" name="widget" native="true">
+          <widget class="QWidget" name="widgetDG" native="true">
            <layout class="QHBoxLayout" name="horizontalLayout_14">
             <property name="spacing">
              <number>3</number>
@@ -324,7 +324,7 @@ Please be aware that this option does NOT have any effect on 32-Bit systems.</st
           </widget>
          </item>
          <item>
-          <widget class="QWidget" name="widget" native="true">
+          <widget class="QWidget" name="widgetDGNV" native="true">
            <layout class="QHBoxLayout" name="horizontalLayout_12">
             <property name="spacing">
              <number>3</number>
@@ -385,7 +385,7 @@ Please be aware that this option does NOT have any effect on 32-Bit systems.</st
           </widget>
          </item>
          <item>
-          <widget class="QWidget" name="widget" native="true">
+          <widget class="QWidget" name="widgetStyleFactory" native="true">
            <layout class="QHBoxLayout" name="horizontalLayout_4">
             <property name="leftMargin">
              <number>0</number>
@@ -443,7 +443,7 @@ Please be aware that this option does NOT have any effect on 32-Bit systems.</st
           </widget>
          </item>
          <item>
-          <widget class="QWidget" name="widget" native="true">
+          <widget class="QWidget" name="widgetPriority" native="true">
            <layout class="QHBoxLayout" name="horizontalLayout_11">
             <property name="leftMargin">
              <number>0</number>
@@ -540,7 +540,7 @@ Please be aware that this option does NOT have any effect on 32-Bit systems.</st
     </widget>
    </item>
    <item>
-    <widget class="QWidget" name="widget" native="true">
+    <widget class="QWidget" name="widgetButtonPanel" native="true">
      <layout class="QHBoxLayout" name="horizontalLayout">
       <property name="leftMargin">
        <number>0</number>

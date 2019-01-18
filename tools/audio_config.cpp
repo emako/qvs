@@ -60,6 +60,7 @@ void AudioConfig::setup(void)
     this->setValueHidden();
     this->installEventFilter(this);
     this->setStyleSheet(c_qss_slider_white_circle);
+    this->setWindowFlags(Qt::Dialog | Qt::WindowCloseButtonHint);
     this->loadConfig();
 
     m_pTimerValueHidden->connect(m_pTimerValueHidden, SIGNAL(timeout()), this, SLOT(setValueHidden()));

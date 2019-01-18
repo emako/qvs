@@ -30,6 +30,7 @@ void InstallerDialog::setup(void)
 {
     g_pConfig->initInstallerConfig();
     this->loadInstallerConfig();
+    this->setWindowFlags(Qt::Dialog | Qt::WindowCloseButtonHint);
     ui->treeWidgetModule->setHeaderHidden(false);
 
 #ifndef QVS_PORTABLE

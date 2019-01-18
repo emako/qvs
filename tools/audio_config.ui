@@ -21,7 +21,7 @@
      </property>
      <layout class="QVBoxLayout" name="verticalLayout">
       <item>
-       <widget class="QWidget" name="widget" native="true">
+       <widget class="QWidget" name="widgetTemplate" native="true">
         <layout class="QHBoxLayout" name="horizontalLayoutTemplate">
          <property name="spacing">
           <number>8</number>
@@ -145,7 +145,7 @@
        </widget>
       </item>
       <item>
-       <widget class="QWidget" name="widget" native="true">
+       <widget class="QWidget" name="widgetAudioEncoder" native="true">
         <layout class="QHBoxLayout" name="horizontalLayout_2">
          <property name="spacing">
           <number>8</number>
@@ -284,7 +284,7 @@
    <item>
     <widget class="QStackedWidget" name="stackedWidgetMode">
      <property name="currentIndex">
-      <number>0</number>
+      <number>8</number>
      </property>
      <widget class="QWidget" name="page_qaac">
       <layout class="QVBoxLayout" name="verticalLayout_3">
@@ -310,7 +310,7 @@
            <number>11</number>
           </property>
           <item>
-           <widget class="QWidget" name="widget" native="true">
+           <widget class="QWidget" name="widgetAacAppleMode" native="true">
             <layout class="QHBoxLayout" name="horizontalLayout_4">
              <property name="leftMargin">
               <number>0</number>
@@ -325,7 +325,7 @@
               <number>0</number>
              </property>
              <item>
-              <spacer name="horizontalSpacer_3">
+              <spacer name="horizontalSpacerAacAppleProfile1">
                <property name="orientation">
                 <enum>Qt::Horizontal</enum>
                </property>
@@ -388,7 +388,7 @@
               </widget>
              </item>
              <item>
-              <spacer name="horizontalSpacer_4">
+              <spacer name="horizontalSpacerAacAppleProfile2">
                <property name="orientation">
                 <enum>Qt::Horizontal</enum>
                </property>
@@ -432,7 +432,7 @@
            </widget>
           </item>
           <item>
-           <widget class="QWidget" name="widget" native="true">
+           <widget class="QWidget" name="widgetAacAppleProfile" native="true">
             <layout class="QHBoxLayout" name="horizontalLayout_3">
              <property name="leftMargin">
               <number>0</number>
@@ -574,7 +574,7 @@
            <number>11</number>
           </property>
           <item>
-           <widget class="QWidget" name="widget" native="true">
+           <widget class="QWidget" name="widgetAacFdkMode" native="true">
             <layout class="QHBoxLayout" name="horizontalLayout_6">
              <property name="leftMargin">
               <number>0</number>
@@ -700,7 +700,7 @@
            </widget>
           </item>
           <item>
-           <widget class="QWidget" name="widget" native="true">
+           <widget class="QWidget" name="widgetAacFdkProfile" native="true">
             <layout class="QHBoxLayout" name="horizontalLayout_13">
              <property name="leftMargin">
               <number>0</number>
@@ -865,7 +865,7 @@
            <number>11</number>
           </property>
           <item>
-           <widget class="QWidget" name="widget" native="true">
+           <widget class="QWidget" name="widgetAacNeroMode" native="true">
             <layout class="QHBoxLayout" name="horizontalLayout_14">
              <property name="leftMargin">
               <number>0</number>
@@ -1002,7 +1002,7 @@
            </widget>
           </item>
           <item>
-           <widget class="QWidget" name="widget" native="true">
+           <widget class="QWidget" name="widgetAacNeroProfile" native="true">
             <layout class="QHBoxLayout" name="horizontalLayout_7">
              <property name="leftMargin">
               <number>0</number>
@@ -1204,7 +1204,7 @@
            </widget>
           </item>
           <item>
-           <widget class="QWidget" name="widget" native="true">
+           <widget class="QWidget" name="widgetFlac" native="true">
             <property name="sizePolicy">
              <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
               <horstretch>0</horstretch>
@@ -1295,7 +1295,7 @@
            <number>11</number>
           </property>
           <item>
-           <widget class="QWidget" name="widget" native="true">
+           <widget class="QWidget" name="widgetOpusMode" native="true">
             <property name="sizePolicy">
              <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
               <horstretch>0</horstretch>
@@ -1475,7 +1475,7 @@
            <number>11</number>
           </property>
           <item>
-           <widget class="QWidget" name="widget" native="true">
+           <widget class="QWidget" name="widgetOggVorbis" native="true">
             <property name="sizePolicy">
              <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
               <horstretch>0</horstretch>
@@ -1587,7 +1587,7 @@
            <number>11</number>
           </property>
           <item>
-           <widget class="QWidget" name="widget" native="true">
+           <widget class="QWidget" name="widgetMp3" native="true">
             <property name="sizePolicy">
              <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
               <horstretch>0</horstretch>
@@ -1758,7 +1758,7 @@
            <number>11</number>
           </property>
           <item>
-           <widget class="QWidget" name="widget" native="true">
+           <widget class="QWidget" name="widgetAc3" native="true">
             <property name="sizePolicy">
              <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
               <horstretch>0</horstretch>
@@ -1885,7 +1885,7 @@
     </widget>
    </item>
    <item>
-    <widget class="QWidget" name="widget" native="true">
+    <widget class="QWidget" name="panelButton" native="true">
      <layout class="QHBoxLayout" name="horizontalLayout">
       <property name="leftMargin">
        <number>0</number>

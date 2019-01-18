@@ -25,6 +25,8 @@ void Muxer::setup(void)
     this->setAttribute(Qt::WA_DeleteOnClose, true);
     ui->editMuxerVideoInput->setStyleSheet(c_qss_line_edit_read_only);
     ui->editMuxerAudioInput->setStyleSheet(c_qss_line_edit_read_only);
+    ui->editMuxerVideoInput->installEventFilter(this);
+    ui->editMuxerAudioInput->installEventFilter(this);
 }
 
 void Muxer::reload(ERELOAD_TYPE a_reload_type, QString a_filename)
@@ -200,4 +202,25 @@ void Muxer::on_buttonMuxerOutput_clicked()
         filename = QDir::toNativeSeparators(filename);
         ui->editMuxerOutput->setText(filename);
     }
+}
+
+bool Muxer::eventFilter(QObject *o, QEvent *e)
+{
+    if(o == ui->editMuxerAudioInput && e->type() == QEvent::MouseButtonDblClick)
+    {
+        ui->editMuxerAudioInput->clear();
+        if(ui->editMuxerVideoInput->text().isEmpty())
+        {
+            ui->editMuxerOutput->clear();
+        }
+    }
+    else if(o == ui->editMuxerVideoInput && e->type() == QEvent::MouseButtonDblClick)
+    {
+        ui->editMuxerVideoInput->clear();
+        if(ui->editMuxerAudioInput->text().isEmpty())
+        {
+            ui->editMuxerOutput->clear();
+        }
+    }
+    return false;
 }

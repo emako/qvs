@@ -48,6 +48,8 @@ JobViewCmd::~JobViewCmd()
 
 void JobViewCmd::setup(void)
 {
+    this->setWindowFlags(Qt::Dialog | Qt::WindowCloseButtonHint);
+
     /* JobViewMenu */
     m_pViewMenu = new QMenu(ui->plainTextEdit);
     QAction *at_action_save = new QAction(QIcon(":/buttons/disk.png"), tr("Save Command"), ui->plainTextEdit);

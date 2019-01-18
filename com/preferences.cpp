@@ -13,6 +13,7 @@ Preferences::Preferences(QDialog *parent) :
 
 void Preferences::setupUi(void)
 {
+    this->setWindowFlags(Qt::Dialog | Qt::WindowCloseButtonHint);
     ui->comboBoxStyleFactory->addItems(QStyleFactory::keys());
     loadCommonConfig();
 }

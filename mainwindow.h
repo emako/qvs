@@ -1,5 +1,6 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
+
 #include <QMainWindow>
 #include <QApplication>
 #include <QStandardItemModel>
@@ -14,6 +15,7 @@
 #include "job/job_chef.h"
 #include "job/job_item.h"
 #include "job/job_view_cmd.h"
+//#include "preview/ffpreview_dialog.h"
 #include "com/common.h"
 #include "com/logging.h"
 #include "com/timer.h"
@@ -70,7 +72,7 @@ public:
     void loadFonts(void);
     void setLanguage(Config::ELANGUAGE a_language);
     Config::ELANGUAGE language(void);
-    void execJobCreator(JobCreator::EJOB_RELOAD a_job_reload, QString filename = QT_EMPTY);
+    void execJobCreator(JobCreator::EJOB_RELOAD a_job_reload, QString a_filename = QT_EMPTY);
     void acceptedJobCreator(JobCreator::EJOB_RELOAD a_job_reload);
     void saveJob(JobItem a_job_item, JobCreator::EJOB_RELOAD a_job_reload);
     void viewLog(JobChef::EJOB_LOG_TYPE a_log_type, const QString &a_log);

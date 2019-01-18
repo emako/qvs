@@ -36,7 +36,11 @@ void ScriptCreator::setup(void)
     ui->comboBoxDenoise->addItems(QStringList() << "DGDenoise");
     ui->comboBoxSubtitle->addItems(QStringList() << "VSFilter" << "VSFilterMod" << "TcasFilter" << "Subtext");
     ui->labelSourcePreview->setStyleSheet(c_qss_label_under_line);
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 12, 0))
     ui->scriptEditor->setTabStopDistance(QFontMetrics(ui->scriptEditor->font()).width(QT_BLANK) * eINDEX_4);
+#else
+    ui->scriptEditor->setTabStopWidth(QFontMetrics(ui->scriptEditor->font()).width(QT_BLANK) * eINDEX_4);
+#endif
 }
 
 void ScriptCreator::loadCommonConfig(void)

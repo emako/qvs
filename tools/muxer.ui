@@ -67,7 +67,7 @@
            <bool>true</bool>
           </property>
           <property name="placeholderText">
-           <string>Video File Input Path</string>
+           <string>Video File Input Path (Double Click to Clear.)</string>
           </property>
          </widget>
         </item>
@@ -109,7 +109,7 @@
            <bool>true</bool>
           </property>
           <property name="placeholderText">
-           <string>Audio File Input Path</string>
+           <string>Audio File Input Path (Double Click to Clear.)</string>
           </property>
          </widget>
         </item>

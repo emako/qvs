@@ -207,7 +207,7 @@ QProgressBar::chunk {
          </widget>
         </item>
         <item>
-         <widget class="QWidget" name="widget" native="true">
+         <widget class="QWidget" name="panelButton" native="true">
           <layout class="QHBoxLayout" name="horizontalLayout">
            <property name="leftMargin">
             <number>0</number>
@@ -368,7 +368,7 @@ QProgressBar::chunk {
             <number>5</number>
            </property>
            <item>
-            <widget class="QWidget" name="widget" native="true">
+            <widget class="QWidget" name="widgetAudioBatch" native="true">
              <layout class="QHBoxLayout" name="horizontalLayout_2">
               <property name="spacing">
                <number>11</number>
@@ -553,8 +553,14 @@ QProgressBar::chunk {
          <number>2</number>
         </property>
         <item>
-         <widget class="Merge" name="widgetMerge" native="true">
+         <widget class="Splitter" name="widgetSplitter" native="true">
           <property name="minimumSize">
+           <size>
+            <width>0</width>
+            <height>0</height>
+           </size>
+          </property>
+          <property name="baseSize">
            <size>
             <width>0</width>
             <height>50</height>
@@ -563,20 +569,14 @@ QProgressBar::chunk {
          </widget>
         </item>
         <item>
-         <spacer name="verticalSpacer_2">
-          <property name="orientation">
-           <enum>Qt::Vertical</enum>
-          </property>
-          <property name="sizeType">
-           <enum>QSizePolicy::Expanding</enum>
-          </property>
-          <property name="sizeHint" stdset="0">
+         <widget class="Merge" name="widgetMerge" native="true">
+          <property name="minimumSize">
            <size>
-            <width>20</width>
-            <height>40</height>
+            <width>0</width>
+            <height>0</height>
            </size>
           </property>
-         </spacer>
+         </widget>
         </item>
        </layout>
       </widget>
@@ -1479,6 +1479,12 @@ QProgressBar::chunk {
    <class>MediaInfoDialog</class>
    <extends>QWidget</extends>
    <header location="global">./mediainfo/mediainfo_dialog.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>Splitter</class>
+   <extends>QWidget</extends>
+   <header location="global">./tools/splitter.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>
