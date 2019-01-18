@@ -137,7 +137,8 @@ void MediaInfoDialog::showMediaInfo(const QString &a_filename, bool a_is_full_in
 
         if(m_isFFprobe)
         {
-            cmd = QString("%1 -show_streams -show_chapters -of json %3 \"%2\"").arg(qvs::findFirstFilePath(MEDIAINFO_DIALOG_EXEC_FFPROBE)).arg(a_filename).arg(QString("-show_format ") + QString((a_is_full_info) ? "-show_data" : QT_EMPTY));
+            /* Unused: -count_frames */
+            cmd = QString("%1 -loglevel error -show_streams -show_chapters -of json %3 \"%2\"").arg(qvs::findFirstFilePath(MEDIAINFO_DIALOG_EXEC_FFPROBE)).arg(a_filename).arg(QString("-show_format ") + QString((a_is_full_info) ? "-show_data" : QT_EMPTY));
         }
         else
         {
