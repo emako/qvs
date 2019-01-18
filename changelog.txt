@@ -43,15 +43,15 @@ version r4
  - fixed bugs.
 
 version r5
- - fixed bugs
+ - fixed bugs.
 
 version r6
- - fixed bugs
- - fixed warnings
- - fixed log html format
- - added view menu
- - updated qt to 5.11.2
- - updated mediainfo to v18.08.1
+ - fixed bugs.
+ - fixed warnings.
+ - fixed log html format.
+ - added view menu.
+ - updated qt to 5.11.2.
+ - updated mediainfo to v18.08.1.
 
 version r7
  - fixed ffmpeg endless waiting when muxing hevc.
