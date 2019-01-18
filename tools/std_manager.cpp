@@ -33,7 +33,7 @@ void StdManager::releaseStdWatchAll(void)
 {
     for(QMap<QUuid, StdWatcher*>::const_iterator i = g_pStdWatch.constBegin(); i != g_pStdWatch.constEnd(); ++i)
     {
-        if(g_pStdWatch[i.key()]->isRunning())
+        if( (g_pStdWatch[i.key()] != nullptr) && (g_pStdWatch[i.key()]->isRunning()) )
         {
             if(QMessageBox::question(nullptr, MESSAGE_QUESTION, QObject::tr("StdWatcher is running!\nDo you really want to abort the job now?"), QMessageBox::Yes | QMessageBox::Cancel) == QMessageBox::Yes)
             {

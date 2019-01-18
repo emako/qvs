@@ -10,6 +10,8 @@ StdWatcher::StdWatcher(QWidget *parent) :
     ui(new Ui::StdWatcher),
     m_isBatch(false),
     m_dataType(eDATA_TYPE_UTF8),
+	m_isSamplingStdOut(false),
+	m_isSamplingStdErr(false),
     m_pContextMenu(nullptr)
 {
     ui->setupUi(this);
@@ -355,6 +357,7 @@ void StdWatcher::slotEncoderProcessReadyReadStandardError()
     if(!standardErrorText.isEmpty())
     {
         viewLog(JobChef::eJOB_LOG_TYPE_JOB_STD_ERROR, standardErrorText);
+		samplingLog(eSTD_TYPE_ERROR, standardErrorText);
     }
 }
 
@@ -366,6 +369,7 @@ void StdWatcher::slotEncoderProcessReadyReadStandardOutput()
     if(!standardOutputText.isEmpty())
     {
         viewLog(JobChef::eJOB_LOG_TYPE_JOB_STD_OUTPUT, standardOutputText);
+		samplingLog(eSTD_TYPE_OUT, standardOutputText);
     }
 }
 
@@ -577,4 +581,56 @@ inline QString StdWatcher::fromStandard(const QByteArray &a_data) const
 void StdWatcher::setDataType(EDATA_TYPE a_dataType)
 {
     m_dataType = a_dataType;
+}
+
+void StdWatcher::setStdSampling(bool a_stdOut, bool a_stdErr)
+{
+	m_isSamplingStdOut = a_stdOut;
+	m_isSamplingStdErr = a_stdErr;
+}
+
+bool StdWatcher::isStdOutSampling(void)
+{
+	return m_isSamplingStdOut;
+}
+
+bool StdWatcher::isStdErrSampling(void)
+{
+	return m_isSamplingStdErr;
+}
+
+void StdWatcher::samplingLog(ESTD_TYPE a_stdType, QString a_log)
+{
+	switch (a_stdType)
+	{
+	case eSTD_TYPE_OUT:
+		if (m_isSamplingStdOut)
+		{
+			m_stdOutBuffer += a_log;
+		}
+		emit stdOutRecived(a_log);
+		break;
+	case eSTD_TYPE_ERROR:
+		if (m_isSamplingStdErr)
+		{
+			m_stdErrBuffer += a_log;
+        }
+		emit stdErrRecived(a_log);
+		break;
+	default:
+		break;
+	}
+}
+
+QString StdWatcher::getSamplingLog(ESTD_TYPE a_stdType)
+{
+	if (a_stdType == eSTD_TYPE_OUT)
+	{
+		return m_stdOutBuffer;
+	}
+	else if(a_stdType == eSTD_TYPE_ERROR)
+	{
+		return m_stdErrBuffer;
+	}
+	return NULLSTR;
 }

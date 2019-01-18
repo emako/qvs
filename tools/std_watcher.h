@@ -43,24 +43,43 @@ public:
         eDATA_TYPE_LATIN1,
     };
 
+    enum ESTD_TYPE {
+        eSTD_TYPE_OUT,
+        eSTD_TYPE_ERROR,
+    };
+
     void initJob(QUuid a_uid);
     void startJob(QString a_cmd);
     void startJob(StdWatcherCmd a_cmd);
     void startJob(QList<StdWatcherCmd> a_cmds);
     void abortJob();
-    QList<qint64> getAllProcessID(void);
     void releaseJob(void);
     void resumeJob(void);
     void pauseJob(void);
+
     bool isRunning(void);
     bool isStarted(void);
+
     void viewLog(JobChef::EJOB_LOG_TYPE a_log_type, const QString a_log);
+
+	QList<qint64> getAllProcessID(void);
     void setCloseTime(const long a_msec);
+
     void setDataType(EDATA_TYPE a_dataType);
+
+	void setStdSampling(bool a_stdOut, bool a_stdErr);
+	bool isStdOutSampling(void);
+	bool isStdErrSampling(void);
+	void samplingLog(ESTD_TYPE a_stdType, QString a_log);
+	QString getSamplingLog(ESTD_TYPE a_stdType);
 
     QProcess m_process_job_info;
     QProcess m_process_job_piper;
     QProcess m_process_job_encoder;
+
+signals:
+    void stdOutRecived(QString a_log);
+    void stdErrRecived(QString a_log);
 
 private:
     Ui::StdWatcher *ui;
@@ -77,6 +96,12 @@ private:
     long m_cmds_index;
     bool m_isBatch;
     EDATA_TYPE m_dataType;
+
+	bool m_isSamplingStdOut;
+	bool m_isSamplingStdErr;
+
+	QString m_stdOutBuffer;
+	QString m_stdErrBuffer;
 
     QTimer *m_pCloseTimer;
     QMenu *m_pContextMenu;
