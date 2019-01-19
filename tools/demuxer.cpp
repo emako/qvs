@@ -332,7 +332,7 @@ void Demuxer::reloadInfo(ERELOAD_TYPE a_reload_type)
                         {
                             QString track_num = track_nums.at(eINDEX_0);
 
-                            if(!mainUi->m_com->hadNumber(track_num))
+                            if(!Common::getInstance()->hadNumber(track_num))
                             {
                                 continue;
                             }

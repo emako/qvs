@@ -231,8 +231,14 @@ class Common : public QObject
 public:
     explicit Common(QObject *parent = nullptr);
     ~Common();
-    class MainWindow *mainUi;
-    void loadCommonConfig(void);
+
+	static Common* getInstance(void)
+	{
+		static Common s_instance;
+		return &s_instance;
+	}
+
+	void loadCommonConfig(void);
 
     enum ESHUTDOWN {
         eSHUTDOWN_NOTHING,
@@ -269,6 +275,9 @@ public:
 
     QProcess m_process;
     QString m_process_out;
+
+signals:
+	void systemShutdown(void);
 
 public slots:
     virtual void openUrl(QString a_url);

@@ -31,10 +31,7 @@ extern QMap<QUuid, StdWatcher*> g_pStdWatch;
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     m_job_chef(new JobChef),
-    m_com(new Common),
     m_logging(new Logging),
-    m_timer(new Timer),
-    m_pMailBox(new MailBox),
     m_pJobViewMenu(nullptr),
     m_pLogViewMenu(nullptr),
     m_pSystemTray(new QSystemTrayIcon(this)),
@@ -53,11 +50,8 @@ MainWindow::~MainWindow()
     delete m_pJobViewMenu;
     delete m_pLogViewMenu;
     delete m_job_chef;
-    delete m_timer;
-    delete m_pMailBox;
     delete m_pActionGruopOnCompletion;
     delete m_pActionGruopLanguage;
-    delete m_com;
     delete g_pConfig;
     delete ui;
     delete m_pSystemTray;
@@ -79,20 +73,17 @@ void MainWindow::setupUi(void)
 
     /*Init*/
     m_job_chef->mainUi = this;
-    m_com->mainUi = this;
-    m_timer->mainUi = this;
-    m_pMailBox->mainUi = this;
     ui->widgetMerge->mainUi = this;
     ui->widgetAudioEnc->mainUi = this;
     ui->widgetMuxer->mainUi = this;
     ui->widgetDemuxer->mainUi = this;
     ui->widgetMediaInfo->mainUi = this;
-    m_timer->start(Timer::ETIMER_TYPE_MAIL_BOX, Timer::ETIMER_SLOT_CHECK_UP_MAIL, TIMER_INTERVAL_MAIL);
     m_isAborted = false;
     m_jobs_index = eINDEX_0;
     m_job_status_prev = JobChef::eJOB_STATUS_INITIAL;
     m_isStartJobImmediately = false;
-    m_com->loadCommonConfig();
+	Common::getInstance()->loadCommonConfig();
+	Timer::getInstance()->start(Timer::eTIMER_TYPE_MAIL_BOX, Timer::eTIMER_SLOT_CHECK_UP_MAIL, TIMER_INTERVAL_MAIL);
     m_job_chef->updatePriortyStart();
     m_pSystemTray->setIcon(this->windowIcon());
     m_pSystemTray->setToolTip(this->windowTitle());
@@ -122,11 +113,13 @@ void MainWindow::setupUi(void)
 
     /*Signal*/
     setAcctions();
+	connect(Common::getInstance(), SIGNAL(systemShutdown()), this, SLOT(close()));
+	connect(Timer::getInstance(), SIGNAL(timeout(int, int)), this, SLOT(slotTimeout(int, int)));
+	connect(MailBox::getInstance(), SIGNAL(mailRecived(EMODULE, STMAILBOX*)), this, SLOT(slotMail(EMODULE, STMAILBOX*)));
     connect(m_pSystemTray, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), this, SLOT(slotTrayActivated(QSystemTrayIcon::ActivationReason)));
     connect(this, SIGNAL(ntfStartJob()), this, SLOT(startJob()));
     connect(this, SIGNAL(ntfFailJob()), this, SLOT(failJob()));
     connect(this, SIGNAL(ntfStatusChanged(JobChef::EJOB_STATUS)), this, SLOT(statusChanged(JobChef::EJOB_STATUS)));
-    connect(this, SIGNAL(ntfTimeout(Timer::ETIMER_SLOT)), this, SLOT(timeout(Timer::ETIMER_SLOT)));
 
     /*After Reload*/
     if(g_pConfig->getConfig(Config::eCONFIG_FIRST_FIRST_LAUNCH).toBool())
@@ -169,8 +162,8 @@ void MainWindow::closeEvent(QCloseEvent *e)
         }
     }
 
-    m_timer->stopAll();
-    m_pMailBox->releaseMailBox();
+	Timer::getInstance()->stopAll();
+	MailBox::getInstance()->releaseMailBox();
     this->releaseChildWindowsAll();
     StdManager::releaseStdWatchAll();
 
@@ -325,7 +318,7 @@ void MainWindow::slotOpenUrl(void)
 
     if(c_url_map.contains(sender()))
     {
-        m_com->openUrl(c_url_map[sender()]);
+		Common::getInstance()->openUrl(c_url_map[sender()]);
     }
 }
 
@@ -853,6 +846,13 @@ void MainWindow::dragEnterEvent(QDragEnterEvent* e)
 {
     if(e->mimeData()->hasText())
     {
+		switch (ui->tabWidget->currentIndex())
+		{
+		case eTAB_MAIN:/*Main*/
+			break;
+		default:
+			break;
+		}
         e->acceptProposedAction();
     }
 }
@@ -1349,17 +1349,6 @@ void MainWindow::on_logView_customContextMenuRequested(const QPoint &)
     m_pLogViewMenu->exec(QCursor::pos());
 }
 
-void MainWindow::timeout(Timer::ETIMER_SLOT a_timer)
-{
-    switch(a_timer)
-    {
-    case Timer::ETIMER_SLOT_CALC_MD5:
-    default:
-        QT_PASS;
-        break;
-    }
-}
-
 void MainWindow::openCommandLine(void)
 {
     WinExec("cmd", SW_SHOW);
@@ -1509,21 +1498,21 @@ void MainWindow::on_buttonAudioBatchStart_clicked()
 
 void MainWindow::allCompleted(void)
 {
-    m_com->m_shutdown = Common::eSHUTDOWN_NOTHING;
+	Common::getInstance()->m_shutdown = Common::eSHUTDOWN_NOTHING;
 
     if(ui->actionPostOp_PowerDown->isChecked())
     {
-        m_com->m_shutdown = Common::eSHUTDOWN_POWER_OFF;
+		Common::getInstance()->m_shutdown = Common::eSHUTDOWN_POWER_OFF;
     }
     else if(ui->actionPostOp_Hibernate->isChecked())
     {
-        m_com->m_shutdown = Common::eSHUTDOWN_SLEEP;
+		Common::getInstance()->m_shutdown = Common::eSHUTDOWN_SLEEP;
     }
     else if(ui->actionPostOp_DoNothing->isChecked())
     {
-        m_com->m_shutdown = Common::eSHUTDOWN_NOTHING;
+		Common::getInstance()->m_shutdown = Common::eSHUTDOWN_NOTHING;
     }
-    showShutdownMessage(m_com->m_shutdown);
+    showShutdownMessage(Common::getInstance()->m_shutdown);
 }
 
 QString MainWindow::getShutdownTitle(Common::ESHUTDOWN a_shutdown)
@@ -1566,11 +1555,11 @@ void MainWindow::showShutdownMessage(Common::ESHUTDOWN a_shutdown)
 
     m_count4shutdown = eINDEX_3 * eINDEX_10;
     m_pMsgBoxShutdown = new QMessageBox(QMessageBox::Information, msg, tr("%1 in %2s!").arg(msg).arg(m_count4shutdown), QMessageBox::Cancel);
-    m_timer->start(Timer::ETIMER_TYPE_CYCLIC, Timer::ETIMER_SLOT_SYSTEM_SHUTDOWN, static_cast<int>(eINDEX_10 * eINDEX_10 * eINDEX_10));
+	Timer::getInstance()->start(Timer::eTIMER_TYPE_CYCLIC, Timer::eTIMER_SLOT_SYSTEM_SHUTDOWN, static_cast<int>(eINDEX_10 * eINDEX_10 * eINDEX_10));
 
     if(m_pMsgBoxShutdown->exec() == QMessageBox::Cancel)
     {
-        m_timer->stop(Timer::ETIMER_TYPE_CYCLIC);
+		Timer::getInstance()->stop(Timer::eTIMER_TYPE_CYCLIC);
     }
     delete m_pMsgBoxShutdown;
     m_pMsgBoxShutdown = nullptr;
@@ -1578,7 +1567,7 @@ void MainWindow::showShutdownMessage(Common::ESHUTDOWN a_shutdown)
 
 void MainWindow::setShutCountMessage(void)
 {
-    QString msg = getShutdownTitle(m_com->m_shutdown);
+    QString msg = getShutdownTitle(Common::getInstance()->m_shutdown);
 
     m_count4shutdown--;
     m_pMsgBoxShutdown->setText(tr("%1 in %2s!").arg(msg).arg(m_count4shutdown));
@@ -1589,9 +1578,9 @@ void MainWindow::setShutCountMessage(void)
 
     if(m_count4shutdown <= eINDEX_0)
     {
-        m_timer->stop(Timer::ETIMER_TYPE_CYCLIC);
+		Timer::getInstance()->stop(Timer::eTIMER_TYPE_CYCLIC);
         m_pMsgBoxShutdown->close();
-        m_com->systemShutdown(m_com->m_shutdown);
+		Common::getInstance()->systemShutdown(Common::getInstance()->m_shutdown);
 
         delete m_pMsgBoxShutdown;
         m_pMsgBoxShutdown = nullptr;
@@ -1641,14 +1630,14 @@ void MainWindow::modeLaunch(void)
     case Config::eLAUNCH_MODE_COPY_PATH_DOS:
     case Config::eLAUNCH_MODE_COPY_PATH_UNIX:
     case Config::eLAUNCH_MODE_COPY_PATH_PYTHON:
-        m_com->copyPath();
+		Common::getInstance()->copyPath();
         break;
     case Config::eLAUNCH_MODE_SHOW_HELP:
         QMessageBox::about(this, tr("Qvs Help Dialog"), qvs::fromResource(":/strings/cli-usage"));
-        m_timer->start(Timer::ETIMER_TYPE_ONE_SHOT, Timer::ETIMER_SLOT_PROGURM_QUIT, eINDEX_10);
+		Timer::getInstance()->start(Timer::eTIMER_TYPE_ONE_SHOT, Timer::eTIMER_SLOT_PROGURM_QUIT, eINDEX_10);
         break;
     case Config::eLAUNCH_MODE_EXIT:
-        m_timer->start(Timer::ETIMER_TYPE_ONE_SHOT, Timer::ETIMER_SLOT_PROGURM_QUIT, eINDEX_10);
+		Timer::getInstance()->start(Timer::eTIMER_TYPE_ONE_SHOT, Timer::eTIMER_SLOT_PROGURM_QUIT, eINDEX_10);
         break;
     default:
         break;
@@ -1766,32 +1755,85 @@ void MainWindow::slotTrayActivated(QSystemTrayIcon::ActivationReason a_reason)
     QApplication::setQuitOnLastWindowClosed(true);
 }
 
-bool MainWindow::slotMail(STMAILBOX* a_mail_box)
+void MainWindow::slotTimeout(int a_timerType, int a_timerSlot)
 {
-    QVariant content = a_mail_box->content;
+	Timer::ETIMER_TYPE timerType = static_cast<Timer::ETIMER_TYPE>(a_timerType);
+	Timer::ETIMER_SLOT timerSlot = static_cast<Timer::ETIMER_SLOT>(a_timerSlot);
 
-    switch(a_mail_box->type)
-    {
-    case eINDEX_0: // Tpye 0: Called and to remove Widgets after closed.
-        return slotChildWindowClosedRemove(a_mail_box->uid);
-        //@break;
-    default:
-        break;
-    }
-    return false;
+	if (timerType == Timer::eTIMER_TYPE_ONE_SHOT)
+	{
+		switch (timerSlot)
+		{
+		case Timer::eTIMER_SLOT_CALC_MD5:
+			do {
+				QString md5 = Common::getInstance()->getHashMd5(ui->widgetMediaInfo->getPath());
+
+				ui->widgetMediaInfo->clear();
+				ui->widgetMediaInfo->append(tr("Filename: ") + QFileInfo(ui->widgetMediaInfo->getPath()).fileName());
+				ui->widgetMediaInfo->append(tr("MD5: ") + md5);
+			} while (false);
+			break;
+		case Timer::eTIMER_SLOT_PROGURM_QUIT:
+			this->close();
+			break;
+		default:
+			break;
+		}
+	}
+	else if (timerType == Timer::eTIMER_TYPE_CYCLIC)
+	{
+		switch (timerSlot)
+		{
+		case Timer::eTIMER_SLOT_SYSTEM_SHUTDOWN:
+			setShutCountMessage();
+			break;
+		default:
+			break;
+		}
+	}
 }
+
+bool MainWindow::slotMail(EMODULE a_module, STMAILBOX* a_mail_box)
+{
+	bool ret = false;
+
+	switch (a_module)
+	{
+	case MODULE_MAINWINDOW:
+		switch (a_mail_box->type)
+		{
+		case eINDEX_0: // Tpye 0: Called and to remove Widgets after closed.
+			ret = slotChildWindowClosedRemove(a_mail_box->uid);
+			break;
+		default:
+			break;
+		};
+		break;
+	case MODULE_SCRIPT_PLAYER:
+		ret = m_pScriptPlayers[a_mail_box->uid]->slotMail(a_mail_box);
+		break;
+	case MODULE_JOB_CHEF:
+		ret = m_job_chef->updatePriorty();
+		break;
+	default:
+		break;
+	}
+    return ret;
+}
+
 void MainWindow::slotChildWindowClosed(QUuid a_uid)
 {
     STMAILBOX *mail_box = new STMAILBOX();
 
     mail_box->type = eINDEX_0;
     mail_box->uid = a_uid;
-    g_pMailBox.insert(MailBox::eMODULE_MAINWINDOW, mail_box);
+    g_pMailBox.insert(MODULE_MAINWINDOW, mail_box);
 }
 
 bool MainWindow::slotChildWindowClosedRemove(QUuid a_uid)
 {
     bool ret = false;
+
     if(m_pMinimizeWidgets.contains(a_uid))
     {
         m_pMinimizeWidgets.remove(a_uid);

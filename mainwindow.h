@@ -15,7 +15,7 @@
 #include "job/job_chef.h"
 #include "job/job_item.h"
 #include "job/job_view_cmd.h"
-//#include "preview/ffpreview_dialog.h"
+#include "preview/ffpreview_dialog.h"
 #include "com/common.h"
 #include "com/logging.h"
 #include "com/timer.h"
@@ -87,10 +87,7 @@ public:
     QList<JobItem> m_jobs;
     int m_jobs_index;
     JobChef *m_job_chef;
-    Common *m_com;
     Logging *m_logging;
-    Timer *m_timer;
-    MailBox *m_pMailBox;
     QMap<QUuid, ScriptPlayer *> m_pScriptPlayers;
     QMap<QUuid, MediaInfoDialog *> m_pMediaInfoDialogs;
     QMap<QUuid, PreviewDialog *> m_pPreviewDialogs;
@@ -106,16 +103,15 @@ signals:
     void ntfStartJob(void);
     void ntfFailJob(void);
     void ntfStatusChanged(JobChef::EJOB_STATUS a_job_status);
-    void ntfTimeout(Timer::ETIMER_SLOT a_timer);
 
 public slots:
     void slotChildWindowClosed(QUuid a_uid);
-    bool slotMail(STMAILBOX* a_mail_box);
+	void slotTimeout(int a_timerType, int a_timerSlot);
+    bool slotMail(EMODULE a_module, STMAILBOX* a_mail_box);
 
 private slots:
     bool isEmptyJobs(void);
     bool isSkipJob(void);
-    void timeout(Timer::ETIMER_SLOT a_timer);
 
     void initJob(void);
     void startJob(void);

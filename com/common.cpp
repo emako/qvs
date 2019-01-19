@@ -707,7 +707,7 @@ void Common::systemShutdown(ESHUTDOWN a_shotdown)
 
     if( (a_shotdown == eSHUTDOWN_POWER_OFF) || (a_shotdown == eSHUTDOWN_REBOOT) )
     {
-        mainUi->close();
+		emit systemShutdown();
     }
 }
 
@@ -810,6 +810,6 @@ void Common::copyPath(void)
     default:
         break;
     }
-    connect(board, SIGNAL(dataChanged()), mainUi, SLOT(close()));
-    mainUi->m_timer->start(Timer::ETIMER_TYPE_ONE_SHOT, Timer::ETIMER_SLOT_PROGURM_QUIT, HOUR * SECOND_TO_MILLISECOND_UNIT);
+    connect(board, SIGNAL(dataChanged()), this, SIGNAL(systemShotdown()));
+    Timer::getInstance()->start(Timer::eTIMER_TYPE_ONE_SHOT, Timer::eTIMER_SLOT_PROGURM_QUIT, HOUR * SECOND_TO_MILLISECOND_UNIT);
 }

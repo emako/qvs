@@ -215,11 +215,11 @@ void MediaInfoDialog::calcMd5(void)
     {
         if(!isChild())
         {
-            mainUi->m_timer->start(Timer::ETIMER_TYPE_ONE_SHOT, Timer::ETIMER_SLOT_CALC_MD5);
+            Timer::getInstance()->start(Timer::eTIMER_TYPE_ONE_SHOT, Timer::eTIMER_SLOT_CALC_MD5);
         }
         else
         {
-            QString md5 = mainUi->m_com->getHashMd5(getPath());
+            QString md5 = Common::getInstance()->getHashMd5(getPath());
 
             clear();
             append(tr("Filename: ") + QFileInfo(getPath()).fileName());

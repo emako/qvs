@@ -658,7 +658,7 @@ void Config::reset(ECONFIG_TYPE a_config_type)
         {
             setConfig(static_cast<ECONFIG_COMMON>(i), m_config_common_default.at(i));
         }
-        mainUi->m_com->loadCommonConfig();
+        Common::getInstance()->loadCommonConfig();
         break;
     case eCONFIG_TYPE_ENCODE:
         do{

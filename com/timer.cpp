@@ -1,7 +1,5 @@
 #include "timer.h"
-#include "mainwindow.h"
-#include "../mediainfo/mediainfo_dialog.h"
-#include "ui_mainwindow.h"
+#include "mail_box.h"
 
 Timer::Timer(QObject *parent) : QObject(parent)
 {
@@ -27,17 +25,17 @@ Timer::~Timer()
 
 void Timer::start(ETIMER_TYPE a_timer_type, ETIMER_SLOT a_timer, int a_msec)
 {
-    if(a_timer_type == ETIMER_TYPE_ONE_SHOT)
+    if(a_timer_type == eTIMER_TYPE_ONE_SHOT)
     {
         m_pOneShotTimer->start(a_msec);
         m_pOneShotSlot = a_timer;
     }
-    else if(a_timer_type == ETIMER_TYPE_CYCLIC)
+    else if(a_timer_type == eTIMER_TYPE_CYCLIC)
     {
         m_pCyclicTimer->start(a_msec);
         m_pCyclicSlot = a_timer;
     }
-    else if(a_timer_type == ETIMER_TYPE_MAIL_BOX)
+    else if(a_timer_type == eTIMER_TYPE_MAIL_BOX)
     {
         m_pMailTimer->start(a_msec);
     }
@@ -45,23 +43,23 @@ void Timer::start(ETIMER_TYPE a_timer_type, ETIMER_SLOT a_timer, int a_msec)
 
 void Timer::stop(ETIMER_TYPE a_timer_type)
 {
-    if(a_timer_type == ETIMER_TYPE_ONE_SHOT)
+    if(a_timer_type == eTIMER_TYPE_ONE_SHOT)
     {
         if(m_pOneShotTimer->isActive())
         {
             m_pOneShotTimer->stop();
-            m_pOneShotSlot = ETIMER_SLOT_NONE;
+            m_pOneShotSlot = eTIMER_SLOT_NONE;
         }
     }
-    else if(a_timer_type == ETIMER_TYPE_CYCLIC)
+    else if(a_timer_type == eTIMER_TYPE_CYCLIC)
     {
         if(m_pCyclicTimer->isActive())
         {
             m_pCyclicTimer->stop();
-            m_pCyclicSlot = ETIMER_SLOT_NONE;
+            m_pCyclicSlot = eTIMER_SLOT_NONE;
         }
     }
-    else if(a_timer_type == ETIMER_TYPE_MAIL_BOX)
+    else if(a_timer_type == eTIMER_TYPE_MAIL_BOX)
     {
         if(m_pMailTimer->isActive())
         {
@@ -72,7 +70,7 @@ void Timer::stop(ETIMER_TYPE a_timer_type)
 
 void Timer::stopAll(void)
 {
-    for(int i = eINDEX_0; i < ETIMER_TYPE_MAX; i++)
+    for(int i = eINDEX_0; i < eTIMER_TYPE_MAX; i++)
     {
         stop(static_cast<ETIMER_TYPE>(i));
     }
@@ -80,42 +78,18 @@ void Timer::stopAll(void)
 
 void Timer::slotOneShotTimerOut(void)
 {
-    m_pOneShotTimer->stop();
+	stop(eTIMER_TYPE_ONE_SHOT);
 
-    switch(m_pOneShotSlot)
-    {
-    case ETIMER_SLOT_CALC_MD5:
-        do{
-            QString md5 = mainUi->m_com->getHashMd5(mainUi->ui->widgetMediaInfo->getPath());
-
-            mainUi->ui->widgetMediaInfo->clear();
-            mainUi->ui->widgetMediaInfo->append(tr("Filename: ") + QFileInfo(mainUi->ui->widgetMediaInfo->getPath()).fileName());
-            mainUi->ui->widgetMediaInfo->append(tr("MD5: ") + md5);
-        }while(false);
-        break;
-    case ETIMER_SLOT_PROGURM_QUIT:
-        mainUi->close();
-        break;
-    default:
-        break;
-    }
-    emit mainUi->ntfTimeout(m_pOneShotSlot);
+	emit timeout(eTIMER_TYPE_ONE_SHOT, m_pOneShotSlot);
 }
 
 void Timer::slotCyclicTimerOut(void)
 {
-    switch(m_pCyclicSlot)
-    {
-    case ETIMER_SLOT_SYSTEM_SHUTDOWN:
-        mainUi->setShutCountMessage();
-        break;
-    default:
-        break;
-    }
+	emit timeout(eTIMER_TYPE_CYCLIC, m_pCyclicSlot);
 }
 
 void Timer::slotMailBoxTimerOut(void)
 {
-    mainUi->m_pMailBox->slotCheckUpMailBox();
+    MailBox::getInstance()->slotCheckUpMailBox();
 }
 

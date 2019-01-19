@@ -564,7 +564,7 @@ bool JobChef::updatePriorty(void)
 
         for(QList<qint64>::iterator i = processIds.begin(); i != processIds.end(); ++i)
         {
-            if(mainUi->m_com->setPriortyClass(static_cast<DWORD>(*i), static_cast<DWORD>(m_priority)) == TRUE)
+            if(Common::getInstance()->setPriortyClass(static_cast<DWORD>(*i), static_cast<DWORD>(m_priority)) == TRUE)
             {
                 mainUi->viewLog(eJOB_LOG_TYPE_JOB_STATUS,  tr("Priority updated. PID %1.").arg(QString::number(static_cast<DWORD>(*i))));
             }
@@ -576,7 +576,7 @@ bool JobChef::updatePriorty(void)
 
 void JobChef::updatePriortyStart(void)
 {
-    STMAILBOX mail_box = mainUi->m_pMailBox->createMailBoxDefault();
+    STMAILBOX mail_box = MailBox::getInstance()->createMailBoxDefault();
     mail_box.is_cyclic = true;
-    mainUi->m_pMailBox->slotCreateMailBox(MailBox::eMODULE_JOB_CHEF, mail_box);
+	MailBox::getInstance()->slotCreateMailBox(MODULE_JOB_CHEF, mail_box);
 }

@@ -207,12 +207,12 @@ void ScriptPlayer::on_buttonMount_clicked(bool a_checked)
 
 void ScriptPlayer::setErrorLog(void)
 {
-    STMAILBOX mail_box = mainUi->m_pMailBox->createMailBoxDefault();
+    STMAILBOX mail_box = MailBox::getInstance()->createMailBoxDefault();
     mail_box.uid = m_uid_own;
     mail_box.type = eINDEX_0;
     mail_box.content = getErrorLogFilename();
     mail_box.is_cyclic = true; /* Run until detected errorlog file or stdwatcher was closed. */
-    mainUi->m_pMailBox->slotCreateMailBox(MailBox::eMODULE_SCRIPT_PLAYER, mail_box);
+	MailBox::getInstance()->slotCreateMailBox(MODULE_SCRIPT_PLAYER, mail_box);
 }
 
 bool ScriptPlayer::slotMail(STMAILBOX* a_mail_box)

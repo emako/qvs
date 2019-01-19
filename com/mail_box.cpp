@@ -1,10 +1,9 @@
 #include "mail_box.h"
-#include "../script/script_player.h"
-#include "../mainwindow.h"
 
-QMap<MailBox::EMODULE, STMAILBOX*> g_pMailBox;  /* QMap<Receiver, pMailBox> */
+QMap<EMODULE, STMAILBOX*> g_pMailBox;  /* Map<Receiver, MailBox*> */
 
-MailBox::MailBox() :
+MailBox::MailBox(QObject *parent) :
+	QObject(parent),
     is_interrupted(false)
 {
 }
@@ -46,26 +45,10 @@ void MailBox::slotCheckUpMailBox(void)
         return;
     }
 
-    QMap<EMODULE, STMAILBOX*>::iterator i;
-    for(i = g_pMailBox.begin(); i != g_pMailBox.end(); NULL)
+    for(QMap<EMODULE, STMAILBOX*>::iterator i = g_pMailBox.begin(); i != g_pMailBox.end(); NULL)
     {
         STMAILBOX *mail_box = g_pMailBox[i.key()];
-        bool is_erase = false;
-
-        switch(i.key())
-        {
-        case eMODULE_MAINWINDOW:
-            is_erase = mainUi->slotMail(mail_box);
-            break;
-        case eMODULE_SCRIPT_PLAYER:
-            is_erase = mainUi->m_pScriptPlayers[mail_box->uid]->slotMail(mail_box);
-            break;
-        case eMODULE_JOB_CHEF:
-            is_erase = mainUi->m_job_chef->updatePriorty();
-            break;
-        default:
-            break;
-        }
+        bool is_erase = emit mailRecived(i.key(), mail_box);
 
         if((!mail_box->is_cyclic) || is_erase)
         {

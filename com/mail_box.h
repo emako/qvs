@@ -7,26 +7,36 @@
 #include <QUuid>
 #include <QMap>
 
-class MainWindow;
+#define MODULE_MAINWINDOW    EMODULE::eMODULE_MAINWINDOW
+#define MODULE_STD_WATCHER   EMODULE::eMODULE_STD_WATCHER
+#define MODULE_SCRIPT_PLAYER EMODULE::eMODULE_SCRIPT_PLAYER
+#define MODULE_JOB_CHEF      EMODULE::eMODULE_JOB_CHEF
+
 class MailBox;
 struct STMAILBOX;
 
-class MailBox
+enum class EMODULE
 {
-public:
-    MailBox();
-    ~MailBox();
-    class MainWindow *mainUi;
+	eMODULE_MAINWINDOW,
+	eMODULE_STD_WATCHER,
+	eMODULE_SCRIPT_PLAYER,
+	eMODULE_JOB_CHEF,
+	eMODULE_MAX,
+};
 
-    enum EMODULE {
-        eMODULE_MAINWINDOW,
-        eMODULE_STD_WATCHER,
-        eMODULE_SCRIPT_PLAYER,
-        eMODULE_JOB_CHEF,
-        eMODULE_TIMER,
-        eMODULE_COMMON,
-        eMODULE_MAX,
-    };
+class MailBox : public QObject
+{
+	Q_OBJECT
+
+public:
+	explicit MailBox(QObject *parent = nullptr);
+    ~MailBox();
+
+	static class MailBox *getInstance(void)
+	{
+		static MailBox s_mailBox;
+		return &s_mailBox;
+	}
 
     enum EMAIL_TIMING {
         eMAIL_TIMING_DEFAULT,
@@ -37,6 +47,9 @@ public:
     };
 
     STMAILBOX createMailBoxDefault(void);
+
+signals:
+	bool mailRecived(EMODULE, STMAILBOX *);
 
 public slots:
     void slotCreateMailBox(EMODULE a_module, STMAILBOX a_mail_box);
@@ -59,6 +72,6 @@ struct STMAILBOX
     bool is_cyclic;
 };
 
-extern QMap<MailBox::EMODULE, STMAILBOX*> g_pMailBox;
+extern QMap<EMODULE, STMAILBOX*> g_pMailBox;
 
 #endif // MAIL_BOX_H

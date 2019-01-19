@@ -44,7 +44,7 @@ void Muxer::reload(ERELOAD_TYPE a_reload_type, QString a_filename)
             ui->editMuxerOutput->setText(getOutputFilename(a_filename));
         }
         ui->editMuxerAudioInput->setText(a_filename);
-        ui->spinBoxMuxerDelay->setValue(mainUi->m_com->getAudioFileDelayValue(a_filename));
+        ui->spinBoxMuxerDelay->setValue(Common::getInstance()->getAudioFileDelayValue(a_filename));
         break;
     }
 }
