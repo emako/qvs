@@ -839,7 +839,7 @@ def Overlaymod(clipa, clipb, x=0, y=0, alpha=None, opacity=1, aa=False):
 ###	-> libImath.dll
 ###	-> libimwri.dll
 ##################################################################################################
-def AddLogo(src, path, w=None, h=None, an=None, x=0, y=0, opacity=1, aa=False):
+def AddLogo(src, path, w=None, h=None, an=None, x=0, y=0, opacity=1, aa=False, fadein=0, fadeout=0):
 	core = vs.get_core()
 	funcName = 'AddLogo'
 	if path.split('.')[-1] == 'lgd':
@@ -862,7 +862,30 @@ def AddLogo(src, path, w=None, h=None, an=None, x=0, y=0, opacity=1, aa=False):
 			y = math.floor((src.height - img.height) / 2)
 		elif an == 1 | an == 2 | an == 3:
 			y = src.height - img.height
-	return Overlaymod(src, img, x=x, y=y, alpha=img_alpha, opacity=opacity, aa=aa)
+	
+	last = None
+	
+	if fadein != 0:
+		for count in range(0, fadein, 1):
+			last = Append(last, Overlaymod(core.std.Trim(src, count, count), img, x=x, y=y, alpha=img_alpha, opacity=(opacity * (count / fadein)), aa=aa))
+		
+	last = Append(last, Overlaymod(core.std.Trim(src, fadein, (src.num_frames - fadeout - 1)), img, x=x, y=y, alpha=img_alpha, opacity=opacity, aa=aa))
+	
+	if fadeout != 0:
+		for count in range(fadeout, 0, -1):
+			last = Append(last, Overlaymod(core.std.Trim(src, (src.num_frames - count - 1), (src.num_frames - count - 1)), img, x=x, y=y, alpha=img_alpha, opacity=(opacity * (count / fadeout)), aa=aa))
+	
+	if last == None:
+		raise ValueError('{funcName}: last clip is none.'.format(funcName=funcName))
+	
+	return last
+
+def Append(last, curt):
+	if (last == None) or (curt == None):
+		last = curt
+	else:
+		last += curt
+	return last
 
 
 ##################################################################################################
