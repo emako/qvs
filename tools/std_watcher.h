@@ -80,6 +80,8 @@ public:
 signals:
     void stdOutRecived(QString a_log);
     void stdErrRecived(QString a_log);
+    void encoderProcessFinished();
+    void encoderProcessAllFinished();
 
 private:
     Ui::StdWatcher *ui;

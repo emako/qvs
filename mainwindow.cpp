@@ -9,7 +9,6 @@
 #include "tools/merge.h"
 #include "script/script_player.h"
 #include "preview/preview_dialog.h"
-//#include "preview/ffpreview_dialog.h"
 #include "script/script_creator.h"
 #include "com/version.h"
 #include "com/style_sheet.h"
@@ -21,10 +20,11 @@
 #include "ui_script_player.h"
 #include "ui_installer_dialog.h"
 #include "ui_preview_dialog.h"
-#include "ui_ffpreview_dialog.h"
 #include "ui_script_creator.h"
 #include "ui_splitter.h"
 #include "ui_merge.h"
+
+#include "mediainfo/mediainfo_prober.h"
 
 extern QMap<QUuid, StdWatcher*> g_pStdWatch;
 
@@ -82,8 +82,8 @@ void MainWindow::setupUi(void)
     m_jobs_index = eINDEX_0;
     m_job_status_prev = JobChef::eJOB_STATUS_INITIAL;
     m_isStartJobImmediately = false;
-	Common::getInstance()->loadCommonConfig();
-	Timer::getInstance()->start(Timer::eTIMER_TYPE_MAIL_BOX, Timer::eTIMER_SLOT_CHECK_UP_MAIL, TIMER_INTERVAL_MAIL);
+    Common::getInstance()->loadCommonConfig();
+    Timer::getInstance()->start(Timer::eTIMER_TYPE_MAIL_BOX, Timer::eTIMER_SLOT_CHECK_UP_MAIL, TIMER_INTERVAL_MAIL);
     m_job_chef->updatePriortyStart();
     m_pSystemTray->setIcon(this->windowIcon());
     m_pSystemTray->setToolTip(this->windowTitle());

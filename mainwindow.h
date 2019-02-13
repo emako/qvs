@@ -15,7 +15,6 @@
 #include "job/job_chef.h"
 #include "job/job_item.h"
 #include "job/job_view_cmd.h"
-#include "preview/ffpreview_dialog.h"
 #include "com/common.h"
 #include "com/logging.h"
 #include "com/timer.h"

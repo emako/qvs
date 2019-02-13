@@ -35,8 +35,8 @@ void Merge::setup(void)
     QAction *at_action_load_from_files = new QAction(QIcon(":/buttons/folder_add.png"), tr("Load files"), ui->listWidget);
     QAction *at_action_load_from_text_file = new QAction(QIcon(":/buttons/folder_page_white.png"), tr("Load from text file"), ui->listWidget);
     QAction *at_action_load_from_clipboard = new QAction(QIcon(":/buttons/clipboard_sign_out.png"), tr("Load from clipboard"), ui->listWidget);
-    QAction *at_action_delete = new QAction(QIcon(":/buttons/delete.png"), tr("Delete"), ui->listWidget);
-    QAction *at_action_clear = new QAction(QIcon(":/buttons/cross.png"), tr("Clear"), ui->listWidget);
+    QAction *at_action_delete = new QAction(QIcon(":/buttons/cross.png"), tr("Delete"), ui->listWidget);
+    QAction *at_action_clear = new QAction(QIcon(":/buttons/erase.png"), tr("Clear"), ui->listWidget);
     QAction *at_action_move_up = new QAction(QIcon(":/buttons/arrow_up.png"), tr("Move Up"), ui->listWidget);
     QAction *at_action_move_down = new QAction(QIcon(":/buttons/arrow_down.png"), tr("Move Down"), ui->listWidget);
     m_pContextMenu->addActions(QList<QAction*>() << at_action_load_from_files << at_action_load_from_text_file << at_action_load_from_clipboard);

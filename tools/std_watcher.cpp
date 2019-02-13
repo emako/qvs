@@ -319,6 +319,7 @@ void StdWatcher::slotEncoderProcessFinished(int a_exitCode, QProcess::ExitStatus
 {
     QString message = tr("Encoder Process has completed.");
 
+    emit encoderProcessFinished();
     if(a_exitStatus == QProcess::CrashExit)
     {
         message = tr("Encoder Process has crashed.");
@@ -334,6 +335,14 @@ void StdWatcher::slotEncoderProcessFinished(int a_exitCode, QProcess::ExitStatus
             m_cmds_index++;
             return;
         }
+        else
+        {
+            emit encoderProcessAllFinished();
+        }
+    }
+    else
+    {
+        emit encoderProcessAllFinished();
     }
 
     if(ui->checkBoxExitCompleted->isChecked())
@@ -616,9 +625,7 @@ void StdWatcher::samplingLog(ESTD_TYPE a_stdType, QString a_log)
 			m_stdErrBuffer += a_log;
         }
 		emit stdErrRecived(a_log);
-		break;
-	default:
-		break;
+        break;
 	}
 }
 

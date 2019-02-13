@@ -578,5 +578,5 @@ void JobChef::updatePriortyStart(void)
 {
     STMAILBOX mail_box = MailBox::getInstance()->createMailBoxDefault();
     mail_box.is_cyclic = true;
-	MailBox::getInstance()->slotCreateMailBox(MODULE_JOB_CHEF, mail_box);
+    MailBox::getInstance()->slotCreateMailBox(MODULE_JOB_CHEF, mail_box);
 }
