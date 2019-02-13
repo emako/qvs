@@ -17,26 +17,25 @@ struct STMAILBOX;
 
 enum class EMODULE
 {
-	eMODULE_MAINWINDOW,
-	eMODULE_STD_WATCHER,
-	eMODULE_SCRIPT_PLAYER,
-	eMODULE_JOB_CHEF,
-	eMODULE_MAX,
+    eMODULE_MAINWINDOW,
+    eMODULE_STD_WATCHER,
+    eMODULE_SCRIPT_PLAYER,
+    eMODULE_JOB_CHEF,
+    eMODULE_MAX,
 };
 
 class MailBox : public QObject
 {
-	Q_OBJECT
-
+    Q_OBJECT
 public:
-	explicit MailBox(QObject *parent = nullptr);
+    explicit MailBox(QObject *parent = nullptr);
     ~MailBox();
 
-	static class MailBox *getInstance(void)
-	{
-		static MailBox s_mailBox;
-		return &s_mailBox;
-	}
+    static class MailBox *getInstance(void)
+    {
+        static MailBox s_mailBox;
+        return &s_mailBox;
+    }
 
     enum EMAIL_TIMING {
         eMAIL_TIMING_DEFAULT,

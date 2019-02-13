@@ -78,14 +78,14 @@ void Timer::stopAll(void)
 
 void Timer::slotOneShotTimerOut(void)
 {
-	stop(eTIMER_TYPE_ONE_SHOT);
+    stop(eTIMER_TYPE_ONE_SHOT);
 
-	emit timeout(eTIMER_TYPE_ONE_SHOT, m_pOneShotSlot);
+    emit timeout(eTIMER_TYPE_ONE_SHOT, m_pOneShotSlot);
 }
 
 void Timer::slotCyclicTimerOut(void)
 {
-	emit timeout(eTIMER_TYPE_CYCLIC, m_pCyclicSlot);
+    emit timeout(eTIMER_TYPE_CYCLIC, m_pCyclicSlot);
 }
 
 void Timer::slotMailBoxTimerOut(void)

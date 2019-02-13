@@ -2,9 +2,9 @@
 
 QMap<EMODULE, STMAILBOX*> g_pMailBox;  /* Map<Receiver, MailBox*> */
 
-MailBox::MailBox(QObject *parent) :
-	QObject(parent),
-    is_interrupted(false)
+MailBox::MailBox(QObject *parent)
+    : QObject(parent)
+    , is_interrupted(false)
 {
 }
 

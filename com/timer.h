@@ -16,7 +16,7 @@ public:
     ~Timer();
 
     enum ETIMER_TYPE : int
-	{
+    {
         eTIMER_TYPE_ONE_SHOT,
         eTIMER_TYPE_CYCLIC,
         eTIMER_TYPE_MAIL_BOX,

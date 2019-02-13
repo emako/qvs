@@ -291,10 +291,10 @@ QString qvs::toNormalEol(const QString &a_str)
 
 QString qvs::toFilename(const QString &a_str)
 {
-	QString filename = a_str;
-	QRegularExpression rex("[\\*\\?\\\"<>\\|]"); /* / \ " : | * ? < > */
+    QString filename = a_str;
+    QRegularExpression rex("[\\*\\?\\\"<>\\|]"); /* / \ " : | * ? < > */
 
-	return filename.replace(rex, QT_EMPTY);
+    return filename.replace(rex, QT_EMPTY);
 }
 
 QString qvs::toFilename2(const QString &a_filename)
@@ -703,6 +703,8 @@ void Common::systemShutdown(ESHUTDOWN a_shotdown)
     }
 
     QProcess process;
+    const char *c_shotdown2arg[eSHUTDOWN_MAX] = { QT_EMPTY, "-l", "-s", "-r", "-h", "-a", "-f" };
+
     process.startDetached("shutdown", QStringList() << c_shotdown2arg[a_shotdown]);
 
     if( (a_shotdown == eSHUTDOWN_POWER_OFF) || (a_shotdown == eSHUTDOWN_REBOOT) )

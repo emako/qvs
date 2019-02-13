@@ -33,6 +33,11 @@
 #include <QDebug>
 #include <QTextCodec>
 
+#ifdef max
+# undef max /* Undefind max from windows header,
+             * because it will raise the compiling failed. */
+#endif
+
 #define NULLSTR QString()
 #define NULLSTRS QStringList()
 
@@ -61,7 +66,7 @@
 #endif
 
 #define COLOR_WHITE_HEX     #FFFFFF //RGB(255, 255, 255)
-#define COLOR_SILVER_HEX	#C0C0C0	//RGB(192, 192, 192)
+#define COLOR_SILVER_HEX    #C0C0C0	//RGB(192, 192, 192)
 #define COLOR_GRAY_HEX      #808080	//RGB(128, 128, 128)
 #define COLOR_BLACK_HEX     #000000	//RGB(0, 0, 0)
 #define COLOR_RED_HEX       #FF0000	//RGB(255, 0, 0)
@@ -232,11 +237,11 @@ public:
     explicit Common(QObject *parent = nullptr);
     ~Common();
 
-	static Common* getInstance(void)
-	{
-		static Common s_instance;
-		return &s_instance;
-	}
+    static Common* getInstance(void)
+    {
+        static Common s_instance;
+        return &s_instance;
+    }
 
 	void loadCommonConfig(void);
 
@@ -250,8 +255,6 @@ public:
         eSHUTDOWN_FORCE_POWER_OFF,
         eSHUTDOWN_MAX,
     };
-
-    const char *c_shotdown2arg[eSHUTDOWN_MAX] = {QT_EMPTY, "-l", "-s", "-r", "-h", "-a", "-f"};
 
     QList<DWORD> getProcessID(QString a_filename);
     QList<DWORD> getProcessID(QStringList a_filename_list);
