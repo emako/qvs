@@ -4,7 +4,8 @@
 
 ScriptEditor::ScriptEditor(QWidget *parent)
     : QPlainTextEdit(parent),
-      m_pLineNumberArea(new LineNumberArea(this))
+      m_pLineNumberArea(new LineNumberArea(this)),
+      m_isKeyCtrlPressed(false)
 {
     connect(this, SIGNAL(blockCountChanged(int)), this, SLOT(updateLineNumberAreaWidth(int)));
     connect(this, SIGNAL(updateRequest(QRect, int)), this, SLOT(updateLineNumberArea(QRect, int)));
@@ -53,6 +54,60 @@ void ScriptEditor::resizeEvent(QResizeEvent *e)
 
     QRect cr = contentsRect();
     m_pLineNumberArea->setGeometry(QRect(cr.left(), cr.top(), lineNumberAreaWidth(), cr.height()));
+}
+
+void ScriptEditor::keyPressEvent(QKeyEvent *e)
+{
+    if(e->key() == Qt::Key_Control)
+    {
+        m_isKeyCtrlPressed = true;
+    }
+    QPlainTextEdit::keyPressEvent(e);
+    e->accept();
+}
+
+void ScriptEditor::keyReleaseEvent(QKeyEvent *e)
+{
+    if(e->key() == Qt::Key_Control)
+    {
+        m_isKeyCtrlPressed = false;
+    }
+    QPlainTextEdit::keyReleaseEvent(e);
+    e->accept();
+}
+
+void ScriptEditor::wheelEvent(QWheelEvent* e)
+{
+    if(m_isKeyCtrlPressed)
+    {
+        auto resizeFont = [](QWidget *a_pWidget, int a_size) -> void
+        {
+            QFont font(a_pWidget->font());
+
+            font.setPointSize(a_pWidget->font().pointSize() + a_size);
+            a_pWidget->setFont(font);
+        };
+
+        if(e->delta() > 0)
+        {
+            resizeFont(this, 1);
+        }
+        else
+        {
+            resizeFont(this, -1);
+        }
+        emit fontPointSizeUpdated(this->font().pointSize());
+    }
+    QPlainTextEdit::wheelEvent(e);
+    e->accept();
+}
+
+void ScriptEditor::resizeFont(int a_pointSize)
+{
+    QFont font(this->font());
+
+    font.setPointSize(a_pointSize);
+    this->setFont(font);
 }
 
 void ScriptEditor::highlightCurrentLine()

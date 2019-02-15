@@ -6,6 +6,8 @@
 #include <QSize>
 #include <QPaintEvent>
 #include <QResizeEvent>
+#include <QWheelEvent>
+#include <QKeyEvent>
 
 namespace EditorColor
 {
@@ -49,9 +51,16 @@ public:
     void lineNumberAreaPaintEvent(QPaintEvent *event);
     int lineNumberAreaWidth();
     QString getCurrentCursorText(void);
+    void resizeFont(int a_pointSize);
+
+signals:
+    void fontPointSizeUpdated(int);
 
 protected:
     void resizeEvent(QResizeEvent *event) override;
+    void keyPressEvent(QKeyEvent *event) override;
+    void keyReleaseEvent(QKeyEvent *event) override;
+    void wheelEvent(QWheelEvent* event) override;
 
 private slots:
     void updateLineNumberAreaWidth(int newBlockCount);
@@ -60,6 +69,7 @@ private slots:
 
 private:
     QWidget *m_pLineNumberArea;
+    bool m_isKeyCtrlPressed;
 };
 
 
