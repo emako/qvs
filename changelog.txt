@@ -92,3 +92,11 @@ version r12
  - fixed the problem of allowing drops.
  - added Wobbly v4 mod.
  - added about qt dialog for checking the libs version.
+
+version r13
+ - added editor font size can be changed by ctrl+wheel.
+ - added tools splitter.
+ - added python func 'AddLogo' fadeio API.
+ - fixed some ui performance.
+ - fixed script creator AddLogo's empty filename.
+ - updated preview dialog to QtAV1.2.0.
