@@ -478,7 +478,7 @@ inline QString ScriptCreator::createScript(const ScriptCreateFilter &a_filter)
             {
                 an = QString::number(ui->spinBoxAddLogoAlignment->value());
             }
-            script = QString("src = qvs.AddLogo(src, path=u'%1', w=%2, h=%3, an=%4, x=0, y=0, opacity=1, aa=False, fadein=0, fadeout=0)").arg(m_deleteLogoFilename).arg(w).arg(h).arg(an);
+            script = QString("src = qvs.AddLogo(src, path=u'%1', w=%2, h=%3, an=%4, x=0, y=0, opacity=1, aa=False, fadein=0, fadeout=0)").arg(m_addLogoFilename).arg(w).arg(h).arg(an);
         }
         break;
     case ScriptCreateDenoise:
