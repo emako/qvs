@@ -171,5 +171,11 @@
         <file>buttons/import_wiz.png</file>
         <file>buttons/importdir_wiz.png</file>
         <file>buttons/arrow_join.png</file>
+        <file>buttons/sound.png</file>
+        <file>buttons/sound_low.png</file>
+        <file>buttons/sound_mute.png</file>
+        <file>buttons/sound_none.png</file>
+        <file>buttons/music.png</file>
+        <file>buttons/inbox_document_music.png</file>
     </qresource>
 </RCC>

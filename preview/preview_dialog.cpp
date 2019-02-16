@@ -5,12 +5,15 @@
 
 PreviewDialog::PreviewDialog(QWidget *parent) :
     QMainWindow(parent),
-    m_pPlayTimer(new QTimer(this)),
+    m_mediainfoProber(new MediaInfoProber),
+	m_pStatisticsView(nullptr),
+    m_isLocked(false),
     m_frameShown(eINDEX_0),
     m_playing(false),
     m_bigFrameStep(eINDEX_24),
     m_reloadTitleShown(true),
     ui(new Ui::PreviewDialog),
+    m_pContextMenu(nullptr),
     m_statusBarLabel(new QLabel)
 {
     ui->setupUi(this);
@@ -19,35 +22,87 @@ PreviewDialog::PreviewDialog(QWidget *parent) :
 
 PreviewDialog::~PreviewDialog()
 {
+	if (m_pStatisticsView)
+	{
+		m_pStatisticsView->close();
+		delete m_pStatisticsView;
+	}
+
+#if !USING_OPENCV
+	delete m_pPlayer;
+	delete m_pVideoOutput;
+#endif
+
     delete m_statusBarLabel;
     delete m_pPlayTimer;
+    delete m_pContextMenu;
     delete ui;
 }
 
 void PreviewDialog::setup(void)
 {
+    m_pPlayTimer = new QTimer(this);
+
+	//--
+	m_pPlayer = new AVPlayer(this);
+    m_pVideoOutput = new PreviewRenderer(this);
+
+#if USING_PAINTER
+    m_pPreviewPainter = new QPainter(ui->previewArea->previewArea());
+    m_pPreviewPainter->setRenderHint(QPainter::HighQualityAntialiasing);
+#endif
+
+    m_pVideoOutput->setQuality(VideoRenderer::QualityFastest);
+	m_pPlayer->setRenderer(m_pVideoOutput);
+    m_pPlayer->setMediaEndAction(MediaEndAction_Default);
+    qRegisterMetaType<AVPlayer::State>("AVPlayer::State");
+
+    connect(m_pPlayer, SIGNAL(positionChanged(qint64)), this, SLOT(slotPositionChanged(qint64)));
+    connect(m_pPlayer, SIGNAL(stateChanged(AVPlayer::State)), this, SLOT(stateChanged(AVPlayer::State)));
+
+    isInitialing = false;
+
     setUpZoomPanel();
     setUpTimeLinePanel();
 
     this->installEventFilter(this);
-    ui->previewArea->installEventFilter(this);
-
     this->setAttribute(Qt::WA_DeleteOnClose, true);
 
     ui->statusBar->addPermanentWidget(m_statusBarLabel, eINDEX_1);
     ui->previewArea->setAlignment(Qt::AlignTop | Qt::AlignLeft);
+    ui->previewArea->installEventFilter(this);
+    ui->previewArea->previewArea()->installEventFilter(this);
 
     ui->frameNumberSlider->setBigStep(m_bigFrameStep);
-    ui->frameNumberSlider->setDisplayMode(TimeLineSlider::Frames);
+    ui->frameNumberSlider->setDisplayMode(TimeLineSlider::Time);
 
     m_pPlayTimer->setSingleShot(true);
     m_pPlayTimer->setTimerType(Qt::PreciseTimer);
+	connect(ui->previewArea, SIGNAL(customContextMenuRequested(const QPoint &)), this, SLOT(previewContextMenuRequested(const QPoint &)));
     connect(m_pPlayTimer, SIGNAL(timeout()), this, SLOT(slotPlayNext()));
     connect(ui->frameNumberSlider, SIGNAL(signalFrameChanged(int)), this, SLOT(slotShowFrame(int)));
     connect(ui->frameNumberSpinBox, SIGNAL(valueChanged(int)), this, SLOT(slotShowFrame(int)));
     connect(ui->playButton, SIGNAL(clicked(bool)), this, SLOT(slotPlay(bool)));
     connect(ui->frameToClipboardButton, SIGNAL(clicked()), this, SLOT(slotFrameToClipboard()));
     connect(ui->saveSnapshotButton, SIGNAL(clicked()), this, SLOT(slotSaveSnapshot()));
+    connect(ui->soundButton, SIGNAL(clicked(bool)), this, SLOT(slotSoundMuted(bool)));
+
+    /* ContextMenu */
+    m_pContextMenu = new QMenu(ui->previewArea);
+    QAction *at_action_load = new QAction(QIcon(":/buttons/folder_add.png"), tr("Open media..."), ui->previewArea);
+    QAction *at_action_external_audio_track = new QAction(QIcon(":/buttons/inbox_document_music.png"), tr("External audio..."), ui->previewArea);
+    QAction *at_action_media_info = new QAction(QIcon(":/buttons/error_log.png"), tr("MediaInfo"), ui->previewArea);
+    m_pContextMenu->addActions(QList<QAction*>() << at_action_load << at_action_external_audio_track);
+    m_pContextMenu->addSeparator();
+    m_pContextMenu->addActions(QList<QAction*>() << at_action_media_info);
+    connect(at_action_load, SIGNAL(triggered()), this, SLOT(slotOpenMediaFile()));
+    connect(at_action_external_audio_track, SIGNAL(triggered()), this, SLOT(slotSetExternalAudio()));
+    connect(at_action_media_info, SIGNAL(triggered()), this, SLOT(slotShowVideoInfo()));
+
+    ui->sliderSound->setValue(g_pConfig->getConfig(Config::eCONFIG_COMMON_PREVIEW_SOUND_VALUME).toInt());
+    emit ui->sliderSound->valueChanged(ui->sliderSound->value());
+    ui->soundButton->setChecked(g_pConfig->getConfig(Config::eCONFIG_COMMON_PREVIEW_SOUND_IS_MUTE).toBool());
+    emit ui->soundButton->clicked(ui->soundButton->isChecked());
 }
 
 void PreviewDialog::setUpZoomPanel(void)
@@ -88,12 +143,13 @@ void PreviewDialog::setUpZoomPanel(void)
     connect(ui->scaleModeComboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(slotScaleModeChanged(int)));
 }
 
-
 void PreviewDialog::setUpTimeLinePanel(void)
 {
     ui->playFpsLimitModeComboBox->addItem(tr("From video"), static_cast<int>(FromVideo));
+#if false
     ui->playFpsLimitModeComboBox->addItem(tr("No limit"), static_cast<int>(NoLimit));
     ui->playFpsLimitModeComboBox->addItem(tr("Custom"), static_cast<int>(Custom));
+#endif
 
     ui->playFpsLimitSpinBox->setLocale(QLocale("C"));
     double customFPS = g_pConfig->getConfig(Config::eCONFIG_COMMON_PREVIEW_FPS_LIMIT_CUSTOM).toDouble();
@@ -123,15 +179,36 @@ bool PreviewDialog::reload(const std::string &a_filename)
         return false;
     }
 
+#if USING_OPENCV
     if(!m_videoCapture.open(a_filename))
     {
         return false;
     }
+#endif
 
     if(m_mediainfoLoader.open(QString::fromStdString(a_filename)) <= eINDEX_0)
     {
         return false;
     }
+    if(!m_mediainfoProber->open(QString::fromStdString(a_filename)))
+    {
+        return false;
+    }
+
+    m_pPlayer->audio()->setVolume(qreal(eINDEX_0));
+    disconnect(m_pVideoOutput, SIGNAL(updatePreview(const QImage &)), this, SLOT(updatePreview(const QImage &)));
+
+    m_pPlayer->setFile(QString::fromStdString(a_filename));
+
+    if(!m_pPlayer->load())
+    {
+        QMessageBox::critical(this, MESSAGE_ERROR, tr("Load the media file failed!"));
+        return false;
+    }
+    isInitialing = true;
+    m_pPlayer->play(); // cause only played state is seekable.
+    m_pPlayer->audio()->setVolume(qreal(ui->sliderSound->value()) / eINDEX_100);
+    m_pPlayer->setPosition(m_pPlayer->startPosition()); // seek to start frame.
 
     getVideoInfo();
     slotSetPlayFPSLimit();
@@ -141,12 +218,13 @@ bool PreviewDialog::reload(const std::string &a_filename)
     ui->frameNumberSlider->setFramesNumber(m_videoInfo.frameCount);
     ui->frameNumberSlider->setFPS(m_videoInfo.fps);
 
-
+#if USING_OPENCV
     m_videoCapture >> m_mat;
     if(!setMat(m_mat))
     {
         return false;
     }
+#endif
 
     if(m_reloadTitleShown)
     {
@@ -157,6 +235,23 @@ bool PreviewDialog::reload(const std::string &a_filename)
     return true;
 }
 
+void PreviewDialog::slotSeek(double a_secs)
+{
+	if (!m_pPlayer->isPlaying())
+	{
+		return;
+	}
+	m_pPlayer->seek(a_secs * 1000LL); // to msecs
+}
+
+void PreviewDialog::slotPositionChanged(qint64 a_pos)
+{
+    int frameNumber = static_cast<int>(a_pos / m_videoInfo.fps);
+
+    ui->frameNumberSpinBox->setValue(frameNumber);
+    ui->frameNumberSlider->setFrame(frameNumber);
+}
+
 void PreviewDialog::slotShowFrame(int a_frameNumber)
 {
     if((m_frameShown == a_frameNumber) && (!m_framePixmap.isNull()))
@@ -164,6 +259,10 @@ void PreviewDialog::slotShowFrame(int a_frameNumber)
         return;
     }
     if(m_playing)
+    {
+        return;
+    }
+    if(!m_pPlayer->isPaused() && m_pPlayer->isPlaying())
     {
         return;
     }
@@ -181,29 +280,90 @@ void PreviewDialog::slotShowFrame(int a_frameNumber)
 
 void PreviewDialog::getVideoInfo(void)
 {
+#if USING_OPENCV
     m_videoInfo.frameCount  = static_cast<int>(m_videoCapture.get(CV_CAP_PROP_FRAME_COUNT));
     m_videoInfo.frameWidth  = static_cast<int>(m_videoCapture.get(CV_CAP_PROP_FRAME_WIDTH));
     m_videoInfo.frameHeight = static_cast<int>(m_videoCapture.get(CV_CAP_PROP_FRAME_HEIGHT));
     m_videoInfo.fpsCV       = m_videoCapture.get(CV_CAP_PROP_FPS);
-    m_videoInfo.fps         = m_mediainfoLoader.get(MediaInfoLoader::eMEDIA_PROP_FRAME_RATE).toDouble();
-    m_videoInfo.AviRatio    = m_videoCapture.get(CV_CAP_PROP_POS_AVI_RATIO);
-    m_videoInfo.time        = qvs::convertFramesToTimecode(m_videoInfo.frameCount, m_videoInfo.fps);
-    m_videoInfo.format      = m_mediainfoLoader.get(MediaInfoLoader::eMEDIA_PROP_FORMAT);
-    m_videoInfo.fpsNum      = m_mediainfoLoader.get(MediaInfoLoader::eMEDIA_PROP_FRAME_RATE_NUM).toInt();
-    m_videoInfo.fpsDen      = m_mediainfoLoader.get(MediaInfoLoader::eMEDIA_PROP_FRAME_RATE_DEN).toInt();
+	m_videoInfo.AviRatio = m_videoCapture.get(CV_CAP_PROP_POS_AVI_RATIO);
+	m_videoInfo.fps = m_mediainfoLoader.get(MediaInfoLoader::eMEDIA_PROP_FRAME_RATE).toDouble();
+	m_videoInfo.time = qvs::convertFramesToTimecode(m_videoInfo.frameCount, m_videoInfo.fps);
+	m_videoInfo.format = m_mediainfoLoader.get(MediaInfoLoader::eMEDIA_PROP_FORMAT);
+	m_videoInfo.fpsNum = m_mediainfoLoader.get(MediaInfoLoader::eMEDIA_PROP_FRAME_RATE_NUM).toInt();
+	m_videoInfo.fpsDen = m_mediainfoLoader.get(MediaInfoLoader::eMEDIA_PROP_FRAME_RATE_DEN).toInt();
+#else
+#if true
+    const AVFormatContext *pFormatCtx = m_mediainfoProber->get();
+
+    if (pFormatCtx && (pFormatCtx->nb_streams > eINDEX_0))
+    {
+        const AVStream *pStreamFirst = pFormatCtx->streams[eINDEX_0];
+        const AVCodecParameters *pAVCodecParameters = nullptr;
+
+        if (pStreamFirst)
+        {
+            pAVCodecParameters = pStreamFirst->codecpar;
+
+            m_videoInfo.frameCount = static_cast<int>(pStreamFirst->nb_frames);
+            if(m_videoInfo.frameCount == eINDEX_0)
+            {
+                /* Retry get frame count. */
+                m_videoInfo.frameCount = m_mediainfoLoader.get(MediaInfoLoader::eMEDIA_PROP_FRAME_COUNT).toInt();
+            }
+            m_videoInfo.frameWidth = pAVCodecParameters->width;
+            m_videoInfo.frameHeight = pAVCodecParameters->height;
+            m_videoInfo.fpsNum = m_mediainfoLoader.get(MediaInfoLoader::eMEDIA_PROP_FRAME_RATE_NUM).toInt();
+            m_videoInfo.fpsDen = m_mediainfoLoader.get(MediaInfoLoader::eMEDIA_PROP_FRAME_RATE_DEN).toInt();
+            m_videoInfo.fps = m_mediainfoLoader.get(MediaInfoLoader::eMEDIA_PROP_FRAME_RATE).toDouble();
+            m_videoInfo.fpsFF = av_q2d(pStreamFirst->avg_frame_rate);
+            m_videoInfo.format = m_mediainfoProber->getPixfmt(static_cast<AVPixelFormat>(pAVCodecParameters->format));
+            m_videoInfo.time = qvs::convertFramesToTimecode(m_videoInfo.frameCount, m_videoInfo.fps);
+            m_statusBarLabel->setText(m_videoInfo.getStatus());
+        }
+    }
+#else
+    const Statistics statistics = m_pPlayer->statistics();
+    m_videoInfo.frameCount = static_cast<int>(statistics.video.frames);
+    m_videoInfo.frameWidth = statistics.video_only.width;
+    m_videoInfo.frameHeight = statistics.video_only.height;
+    m_videoInfo.fpsFF = statistics.video.frame_rate;
+    m_videoInfo.fps = m_mediainfoLoader.get(MediaInfoLoader::eMEDIA_PROP_FRAME_RATE).toDouble();
+    m_videoInfo.time = qvs::convertFramesToTimecode(m_videoInfo.frameCount, m_videoInfo.fps);
+    m_videoInfo.format = statistics.video_only.pix_fmt.toUpper();
+    m_videoInfo.fpsNum = m_mediainfoLoader.get(MediaInfoLoader::eMEDIA_PROP_FRAME_RATE_NUM).toInt();
+    m_videoInfo.fpsDen = m_mediainfoLoader.get(MediaInfoLoader::eMEDIA_PROP_FRAME_RATE_DEN).toInt();
+#endif
+#endif
     m_statusBarLabel->setText(m_videoInfo.getStatus());
 }
 
 inline void PreviewDialog::printVideoInfo(void)
 {
+#if USING_OPENCV
     m_videoInfo.posMsec     =  m_videoCapture.get(CV_CAP_PROP_POS_MSEC);
     m_videoInfo.posFrames   =  static_cast<int>(m_videoCapture.get(CV_CAP_PROP_POS_FRAMES));
     m_videoInfo.AviRatio    =  m_videoCapture.get(CV_CAP_PROP_POS_AVI_RATIO);
+#else
+#endif
     m_videoInfo.printStatus();
+}
+
+void PreviewDialog::slotShowVideoInfo(void)
+{
+	if (!m_pStatisticsView)
+	{
+		m_pStatisticsView = new StatisticsView();
+	}
+	if (m_pPlayer)
+	{
+		m_pStatisticsView->setStatistics(m_pPlayer->statistics());
+	}
+	m_pStatisticsView->show();
 }
 
 void PreviewDialog::slotPlayNext(void)
 {
+#if USING_OPENCV
     m_videoCapture >> m_mat;
     if(!setMat(m_mat))
     {
@@ -214,8 +374,11 @@ void PreviewDialog::slotPlayNext(void)
     ui->frameNumberSpinBox->setValue(m_videoInfo.posFrames);
     ui->frameNumberSlider->setFrame(m_videoInfo.posFrames);
     m_pPlayTimer->start(static_cast<int>(std::ceil(m_secondsBetweenFrames * SECOND_TO_MILLISECOND_UNIT)));
+#else
+#endif
 }
 
+#if USING_OPENCV
 inline QImage PreviewDialog::convertMatToImage(const Mat& a_mat)
 {
     if(a_mat.type() == CV_8UC1)
@@ -255,12 +418,16 @@ inline QImage PreviewDialog::convertMatToImage(const Mat& a_mat)
         return QImage();
     }
 }
+#endif
 
+#if USING_OPENCV
 inline QPixmap PreviewDialog::convertMatToPixmap(const Mat& a_mat)
 {
     return QPixmap::fromImage(convertMatToImage(a_mat), Qt::NoAlpha);
 }
+#endif
 
+#if USING_OPENCV
 inline bool PreviewDialog::setMat(const Mat& a_mat)
 {
     QPixmap pixmap = convertMatToPixmap(a_mat);
@@ -273,16 +440,27 @@ inline bool PreviewDialog::setMat(const Mat& a_mat)
     setPreviewPixmap();
     return true;
 }
+#endif
+
+void PreviewDialog::updatePreview(const QImage &a_image)
+{
+#if USING_PAINTER
+    drawPreviewImage(a_image);
+#else
+    setPreviewPixmap(a_image);
+#endif
+}
 
 void PreviewDialog::slotPlay(bool a_checked)
 {
+#if USING_OPENCV
     if(a_checked)
     {
         if(!m_videoCapture.isOpened())
         {
             return;
         }
-        m_pPlayTimer->start();
+		m_pPlayTimer->start();
         m_playing = true;
     }
     else
@@ -290,6 +468,25 @@ void PreviewDialog::slotPlay(bool a_checked)
         m_pPlayTimer->stop();
         m_playing = false;
     }
+#else
+
+    if(a_checked)
+    {
+        m_pPlayer->setState(AVPlayer::PlayingState);
+        m_playing = true;
+    }
+    else
+    {
+        m_pPlayer->setState(AVPlayer::PausedState);
+        m_playing = false;
+    }
+#endif
+
+	if (m_pStatisticsView && m_pStatisticsView->isVisible())
+	{
+		m_pStatisticsView->setStatistics(m_pPlayer->statistics());
+	}
+
     ui->playButton->setChecked(a_checked);
 }
 
@@ -319,7 +516,11 @@ void PreviewDialog::slotZoomModeChanged(int a_index)
     }
     if(!m_framePixmap.isNull())
     {
+    #if USING_OPENCV || !USING_PAINTER
         setPreviewPixmap();
+    #else
+        drawPreviewImage();
+    #endif
     }
     g_pConfig->setConfig(Config::eCONFIG_COMMON_PREVIEW_ZOOM_MODE, a_index);
 }
@@ -328,17 +529,74 @@ void PreviewDialog::slotScaleModeChanged(int)
 {
     if(!m_framePixmap.isNull())
     {
+#if USING_OPENCV || !USING_PAINTER
         setPreviewPixmap();
+#else
+        drawPreviewImage();
+#endif
     }
+
+    if(static_cast<Qt::TransformationMode>(ui->scaleModeComboBox->currentIndex()) == Qt::FastTransformation)
+    {
+        m_pVideoOutput->setQuality(VideoRenderer::QualityFastest);
+    }
+    else
+    {
+        m_pVideoOutput->setQuality(VideoRenderer::QualityDefault);
+    }
+
     g_pConfig->setConfig(Config::eCONFIG_COMMON_PREVIEW_SCALE_MODE, ui->scaleModeComboBox->currentIndex());
 }
 
-inline void PreviewDialog::setPreviewPixmap(void)
+void PreviewDialog::drawPreviewImage()
 {
+    if(m_frameImage.isNull())
+    {
+        qDebug() << "drawPreviewImage: image is null.";
+        return;
+    }
+    ui->previewArea->previewArea()->update();
+}
+
+void PreviewDialog::drawPreviewImage(const QImage &a_image)
+{
+    if(a_image.isNull())
+    {
+        qDebug() << "drawPreviewImage: image is null.";
+        return;
+    }
+    m_frameImage = a_image;
+    ui->previewArea->previewArea()->update();
+}
+
+void PreviewDialog::setPreviewPixmap(const QImage &a_image)
+{
+#if USING_OPENCV
+    m_framePixmap = QPixmap::fromImage(a_image, Qt::NoAlpha);
+#else
+    m_framePixmap = QPixmap::fromImage(a_image);
+#endif
+    setPreviewPixmap();
+}
+
+void PreviewDialog::setPreviewPixmap(void)
+{
+    if(m_framePixmap.isNull())
+    {
+        return;
+    }
+
+    if(m_isLocked == true)
+    {
+        return;
+    }
+    m_isLocked = true;
+
     ZoomMode zoomMode = static_cast<ZoomMode>(ui->zoomModeComboBox->currentData().toInt());
     if(zoomMode == ZoomMode::NoZoom)
     {
         ui->previewArea->setPixmap(m_framePixmap);
+        m_isLocked = false;
         return;
     }
 
@@ -356,28 +614,85 @@ inline void PreviewDialog::setPreviewPixmap(void)
     }
     else
     {
-        QRect previewRect = ui->scrollArea->geometry();
-        int cropSize = ui->previewArea->lineWidth() * 2;
+        QRect previewRect = ui->previewArea->geometry();
+        int cropSize = ui->previewArea->frameWidth() * 2;
 
         frameWidth = previewRect.width() - cropSize;
         frameHeight = previewRect.height() - cropSize;
     }
+
     previewPixmap = m_framePixmap.scaled(frameWidth, frameHeight, Qt::KeepAspectRatio, scaleMode);
+
     ui->previewArea->setPixmap(previewPixmap);
+
+    m_isLocked = false;
 }
 
 void PreviewDialog::slotZoomRatioChanged(double)
 {
+#if USING_OPENCV || !USING_PAINTER
     setPreviewPixmap();
+#else
+    drawPreviewImage();
+#endif
+}
+
+QRect PreviewDialog::getVideoOutputRect(void)
+{
+    /* Called by preview painter's paint event. */
+    int frameWidth = 0;
+    int frameHeight = 0;
+    ZoomMode zoomMode = static_cast<ZoomMode>(ui->zoomModeComboBox->currentData().toInt());
+
+    if(zoomMode == FixedRatio)
+    {
+        double ratio = ui->zoomRatioSpinBox->value();
+
+        frameWidth = static_cast<int>(m_framePixmap.width() * ratio);
+        frameHeight = static_cast<int>(m_framePixmap.height() * ratio);
+    }
+    else if(zoomMode == FitToFrame)
+    {
+        QRect previewRect = ui->previewArea->geometry();
+        int cropSize = ui->previewArea->lineWidth() * 2;
+        int maxWidth = previewRect.width() - cropSize;
+        int maxHeight = previewRect.height() - cropSize;
+
+        if(maxWidth < maxHeight)
+        {
+            /* Resing base on preview-ui-width. */
+            frameWidth = maxWidth;
+            frameHeight = static_cast<int>(frameWidth * m_framePixmap.height() / m_framePixmap.width());
+        }
+        else
+        {
+            /* Resing base on preview-ui-height. */
+            frameHeight = maxHeight;
+            frameWidth = static_cast<int>(frameHeight * (static_cast<double>(m_framePixmap.width()) / m_framePixmap.height()));
+        }
+    }
+    else
+    {
+        frameWidth = m_framePixmap.width();
+        frameHeight = m_framePixmap.height();
+    }
+    return QRect(0, 0, frameWidth, frameHeight);
 }
 
 void PreviewDialog::resizeEvent(QResizeEvent *a_pEvent)
 {
     a_pEvent->accept();
+#if USING_OPENCV
     if(m_videoCapture.isOpened())
     {
         setPreviewPixmap();
     }
+#else
+    if(!m_pPlayer->isPlaying())
+    {
+        setPreviewPixmap();
+    }
+#endif
 }
 
 bool PreviewDialog::eventFilter(QObject *o, QEvent *e)
@@ -389,12 +704,24 @@ bool PreviewDialog::eventFilter(QObject *o, QEvent *e)
             QT_PASS;
         }
     }
-    else if(o == ui->previewArea)
+    else if(o == ui->previewArea->previewArea())
     {
         if(e->type() == QEvent::KeyPress)
         {
             QT_PASS;
         }
+#if USING_PAINTER
+        else if(e->type() == QEvent::Paint)
+        {
+            if(!m_frameImage.isNull())
+            {
+                m_pPreviewPainter->begin(ui->previewArea->previewArea());
+                m_pPreviewPainter->drawImage(getVideoOutputRect(), m_frameImage, m_frameImage.rect(), Qt::NoAlpha);
+                m_pPreviewPainter->end();
+                //qDebug() << getVideoOutputRect() << m_frameImage.rect();
+            }
+        }
+#endif
     }
     return false;
 }
@@ -537,7 +864,7 @@ void PreviewDialog::slotSaveSnapshot(void)
     snapshotFilePath += fileExtension;
 
     QStringList saveFormatsList;
-    for(const std::pair<QString, QString> & pair : extensionToFilterMap)
+    for(const std::pair<QString, QString> pair : extensionToFilterMap)
     {
         saveFormatsList << pair.second;
     }
@@ -569,7 +896,6 @@ void PreviewDialog::slotSaveSnapshot(void)
     }
 }
 
-
 void PreviewDialog::slotSetPlayFPSLimit(void)
 {
     double limit = ui->playFpsLimitSpinBox->value();
@@ -600,6 +926,7 @@ void PreviewDialog::slotSetPlayFPSLimit(void)
 
 bool PreviewDialog::requestShowFrame(int a_frameNumber)
 {
+#if USING_OPENCV
     if(!m_videoCapture.isOpened())
     {
         return false;
@@ -612,14 +939,23 @@ bool PreviewDialog::requestShowFrame(int a_frameNumber)
     {
         return false;
     }
+#else
+    m_pPlayer->setSeekType(AccurateSeek);
+    m_pPlayer->seek(qint64(a_frameNumber * m_videoInfo.fps));
+    m_pPlayer->setState(AVPlayer::PausedState);
+
+#endif
     return true;
 }
 
 void PreviewDialog::closeEvent(QCloseEvent *e)
 {
     m_mediainfoLoader.close();
+#if USING_OPENCV
     m_videoCapture.release();
     m_mat.release();
+#else
+#endif
     if(m_pPlayTimer->isActive())
     {
         m_pPlayTimer->stop();
@@ -631,4 +967,102 @@ void PreviewDialog::closeEvent(QCloseEvent *e)
 void PreviewDialog::wheelEvent(QWheelEvent *e)
 {
     e->accept();
+}
+
+void PreviewDialog::previewContextMenuRequested(const QPoint &)
+{
+    m_pContextMenu->exec(QCursor::pos());
+}
+
+void PreviewDialog::stateChanged(AVPlayer::State a_state)
+{
+    switch(a_state)
+    {
+    case AVPlayer::StoppedState:
+        ui->playButton->setChecked(false);
+        break;
+    case AVPlayer::PlayingState:
+        ui->playButton->setChecked(true);
+        if(isInitialing)
+        {
+            m_pPlayer->setState(AVPlayer::PausedState);
+            m_pPlayer->setPosition(m_pPlayer->startPosition());
+            isInitialing = false;
+        }
+        connect(m_pVideoOutput, SIGNAL(updatePreview(const QImage &)), this, SLOT(updatePreview(const QImage &)));
+        break;
+    case AVPlayer::PausedState:
+        ui->playButton->setChecked(false);
+        break;
+    }
+}
+
+void PreviewDialog::slotSoundMuted(bool a_checked)
+{
+    if(a_checked)
+    {
+        /* To be muxted */
+        ui->sliderSound->hide();
+        m_pPlayer->audio()->setMute(true);
+    }
+    else
+    {
+        ui->soundButton->setIcon(QIcon(":/buttons/sound.png"));
+        ui->sliderSound->show();
+        m_pPlayer->audio()->setMute(false);
+    }
+
+    g_pConfig->setConfig(Config::eCONFIG_COMMON_PREVIEW_SOUND_IS_MUTE, a_checked);
+    updateSoundButtonIcon();
+}
+
+void PreviewDialog::updateSoundButtonIcon(void)
+{
+    if(ui->soundButton->isChecked())
+    {
+        ui->soundButton->setIcon(QIcon(":/buttons/sound_mute.png"));
+    }
+    else
+    {
+        if( ( ui->sliderSound->value() >    ui->sliderSound->minimum() )
+         && ( ui->sliderSound->value() <= ( ui->sliderSound->maximum() / 3 ) ) )
+        {
+            ui->soundButton->setIcon(QIcon(":/buttons/sound_low.png"));
+        }
+        else if(ui->sliderSound->value() == ui->sliderSound->minimum())
+        {
+            ui->soundButton->setIcon(QIcon(":/buttons/sound_none.png"));
+        }
+        else
+        {
+            ui->soundButton->setIcon(QIcon(":/buttons/sound.png"));
+        }
+    }
+}
+
+void PreviewDialog::slotOpenMediaFile(void)
+{
+    QString filename = QFileDialog::getOpenFileName(this, tr("Open Media file"), QString(), tr("Media (*.*)"));
+
+    if(!filename.isEmpty())
+    {
+        reload(filename.toStdString());
+    }
+}
+
+void PreviewDialog::slotSetExternalAudio(void)
+{
+    QString filename = QFileDialog::getOpenFileName(this, tr("Open External Audio file"), QString(), tr("External Audio (*.*)"));
+
+     if(!filename.isEmpty())
+     {
+         m_pPlayer->setExternalAudio(filename);
+     }
+}
+
+void PreviewDialog::on_sliderSound_valueChanged(int a_value)
+{
+    m_pPlayer->audio()->setVolume(qreal(a_value) / eINDEX_100);
+    g_pConfig->setConfig(Config::eCONFIG_COMMON_PREVIEW_SOUND_VALUME, a_value);
+    updateSoundButtonIcon();
 }

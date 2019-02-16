@@ -38,59 +38,19 @@
      <number>0</number>
     </property>
     <item>
-     <widget class="QScrollArea" name="scrollArea">
+     <widget class="PreviewArea" name="previewArea">
       <property name="focusPolicy">
        <enum>Qt::NoFocus</enum>
+      </property>
+      <property name="contextMenuPolicy">
+       <enum>Qt::CustomContextMenu</enum>
+      </property>
+      <property name="sizeAdjustPolicy">
+       <enum>QAbstractScrollArea::AdjustToContents</enum>
       </property>
       <property name="widgetResizable">
        <bool>true</bool>
       </property>
-      <widget class="QWidget" name="scrollAreaWidgetContents">
-       <property name="geometry">
-        <rect>
-         <x>0</x>
-         <y>0</y>
-         <width>1005</width>
-         <height>573</height>
-        </rect>
-       </property>
-       <property name="focusPolicy">
-        <enum>Qt::NoFocus</enum>
-       </property>
-       <layout class="QVBoxLayout" name="verticalLayout">
-        <property name="spacing">
-         <number>0</number>
-        </property>
-        <property name="leftMargin">
-         <number>0</number>
-        </property>
-        <property name="topMargin">
-         <number>0</number>
-        </property>
-        <property name="rightMargin">
-         <number>0</number>
-        </property>
-        <property name="bottomMargin">
-         <number>0</number>
-        </property>
-        <item>
-         <widget class="QLabel" name="previewArea">
-          <property name="focusPolicy">
-           <enum>Qt::NoFocus</enum>
-          </property>
-          <property name="lineWidth">
-           <number>1</number>
-          </property>
-          <property name="text">
-           <string/>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
-          </property>
-         </widget>
-        </item>
-       </layout>
-      </widget>
      </widget>
     </item>
     <item>
@@ -372,6 +332,42 @@
          </property>
         </widget>
        </item>
+       <item>
+        <widget class="QToolButton" name="soundButton">
+         <property name="focusPolicy">
+          <enum>Qt::ClickFocus</enum>
+         </property>
+         <property name="toolTip">
+          <string>Sound</string>
+         </property>
+         <property name="icon">
+          <iconset resource="../res/resources.qrc">
+           <normaloff>:/buttons/sound.png</normaloff>:/buttons/sound.png</iconset>
+         </property>
+         <property name="checkable">
+          <bool>true</bool>
+         </property>
+         <property name="checked">
+          <bool>false</bool>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QSlider" name="sliderSound">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="maximum">
+          <number>100</number>
+         </property>
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+        </widget>
+       </item>
       </layout>
      </widget>
     </item>
@@ -395,6 +391,12 @@
    <class>TimeLineSlider</class>
    <extends>QWidget</extends>
    <header>./preview/preview_timeline_slider.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>PreviewArea</class>
+   <extends>QScrollArea</extends>
+   <header>./preview/preview_area.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

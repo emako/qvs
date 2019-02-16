@@ -26,6 +26,8 @@ const char *c_config_common_key[Config::eCONFIG_COMMON_MAX] = {
     "preview_scale_mode",               /*eCONFIG_COMMON_PREVIEW_SCALE_MODE*/
     "preview_timeline_display_mode",    /*eCONFIG_COMMON_PREVIEW_TIMELINE_DISPLAY_MODE*/
     "preview_last_snapshot_ext",        /*eCONFIG_COMMON_PREVIEW_LAST_SNAPSHOT_EXT*/
+    "preview_sound_valume",             /*eCONFIG_COMMON_PREVIEW_SOUND_VALUME*/
+    "preview_sound_is_mute",            /*eCONFIG_COMMON_PREVIEW_SOUND_IS_MUTE*/
     "encoding_audio_current_presets",   /*eCONFIG_COMMON_ENCODING_AUDIO_CURRENT_PRESETS*/
 };
 
@@ -110,6 +112,8 @@ void Config::initCommonConfigDefault(void)
     m_config_common_default << QVariant(eINDEX_1); /*eCONFIG_COMMON_PREVIEW_SCALE_MODE*/
     m_config_common_default << QVariant(eINDEX_1); /*eCONFIG_COMMON_PREVIEW_TIMELINE_DISPLAY_MODE*/
     m_config_common_default << QVariant(NULLSTR); /*eCONFIG_COMMON_PREVIEW_LAST_SNAPSHOT_EXT*/
+    m_config_common_default << QVariant(eINDEX_30); /*eCONFIG_COMMON_PREVIEW_SOUND_VALUME*/
+    m_config_common_default << QVariant(false); /*eCONFIG_COMMON_PREVIEW_SOUND_IS_MUTE*/
     m_config_common_default << QVariant(NULLSTR); /*eCONFIG_COMMON_ENCODING_AUDIO_CURRENT_PRESETS*/
 }
 
