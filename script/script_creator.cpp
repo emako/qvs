@@ -685,7 +685,7 @@ inline QString ScriptCreator::createScriptResize(const ResizeFilter &a_filterRes
         }while(false);
         break;
     case Nnedi3Resize:
-        script = QString("src = qvs.Nnedi3Resize(src, w=%1, h=%2, cl=True, device=2, list_device=False").arg(ui->spinBoxResizeW->value()).arg(ui->spinBoxResizeH->value());
+        script = QString("src = qvs.Nnedi3Resize(src, w=%1, h=%2, cl=True, device=2, list_device=False)").arg(ui->spinBoxResizeW->value()).arg(ui->spinBoxResizeH->value());
         break;
     }
     return script;
