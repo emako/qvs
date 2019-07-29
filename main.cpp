@@ -7,6 +7,8 @@ int main(int argc, char *argv[])
 {
     /* Application Setup */
     QApplication a(argc, argv);
+    qvs::loadFonts(); // Load fonts from resource.
+    a.setFont(FONT_DEFAULT);
 
     /* Application Current Path */
     QDir::setCurrent(QCoreApplication::applicationDirPath());
@@ -39,7 +41,7 @@ int main(int argc, char *argv[])
     /* MainWindow Setup */
     MainWindow w;
     g_pConfig->setMainWindow(&w);
-    g_pConfig->initEncodeConfig();  //Init encode config after create classes.
+    g_pConfig->initEncodeConfig();  // Init encode config after create classes.
     g_pConfig->initEncodeAudioConfig();
 
     /* Splash Screen Finish */

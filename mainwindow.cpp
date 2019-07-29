@@ -4,6 +4,7 @@
 #include "tools/muxer.h"
 #include "tools/demuxer.h"
 #include "tools/audio_enc.h"
+#include "tools/audio_batch_enc.h"
 #include "tools/installer_dialog.h"
 #include "tools/splitter.h"
 #include "tools/merge.h"
@@ -16,6 +17,7 @@
 #include "ui_demuxer.h"
 #include "ui_mainwindow.h"
 #include "ui_audio_enc.h"
+#include "ui_audio_batch_enc.h"
 #include "ui_mediainfo_dialog.h"
 #include "ui_script_player.h"
 #include "ui_installer_dialog.h"
@@ -40,7 +42,6 @@ MainWindow::MainWindow(QWidget *parent) :
     m_pActionGruopLanguage(nullptr),
     m_pMsgBoxShutdown(nullptr)
 {
-    this->loadFonts();
     ui->setupUi(this);
     this->setupUi();
 }
@@ -94,6 +95,9 @@ void MainWindow::setupUi(void)
     m_pSystemTray->show();
     m_pSystemTray->hide();
     ui->widgetAudioEnc->init();
+    m_pTaskbarButton->progress()->setMinimum(eINDEX_0);
+    m_pTaskbarButton->progress()->setMaximum(eINDEX_100);
+    m_pTaskbarButton->progress()->show();
 
     /*Ui*/
     ui->progressBar->setStyleSheet(c_qss_process_bar_pink_lady);
@@ -124,6 +128,7 @@ void MainWindow::setupUi(void)
     connect(this, SIGNAL(ntfStartJob()), this, SLOT(startJob()));
     connect(this, SIGNAL(ntfFailJob()), this, SLOT(failJob()));
     connect(this, SIGNAL(ntfStatusChanged(JobChef::EJOB_STATUS)), this, SLOT(statusChanged(JobChef::EJOB_STATUS)));
+    connect(ui->widgetAudioBatchEnc, SIGNAL(ntfStarted()), this, SLOT(slotAudioBatchEncStarted()));
 
     /*After Reload*/
     if(g_pConfig->getConfig(Config::eCONFIG_FIRST_FIRST_LAUNCH).toBool())
@@ -153,7 +158,9 @@ void MainWindow::showEvent(QShowEvent *e)
 {
 #ifdef Q_OS_WIN32
     m_pTaskbarButton->setWindow(this->windowHandle());
+# if false
     m_pThumbnailToolBar->setWindow(this->windowHandle());
+# endif
 #endif
 
     e->accept();
@@ -225,14 +232,16 @@ void MainWindow::setAcctions(void)
 
     /* AppMenu */
     connect(ui->actionOpen, SIGNAL(triggered()), this, SLOT(selectOpenfile()));
-    connect(ui->actionCreateJob, SIGNAL(triggered()), this, SLOT(on_buttonAddJob_clicked()));
+    connect(ui->actionAddJob, SIGNAL(triggered()), this, SLOT(on_buttonAddJob_clicked()));
     connect(ui->actionCommand_Line, SIGNAL(triggered()), this, SLOT(openCommandLine()));
     connect(ui->actionPython, SIGNAL(triggered()), this, SLOT(openPython()));
     connect(ui->actionPreferences, SIGNAL(triggered()), this, SLOT(showPreferences()));
     connect(ui->actionInstaller, SIGNAL(triggered()), this, SLOT(showInstaller()));
 
     /* JobMenu */
+    connect(ui->actionJob_Start, SIGNAL(triggered()), this, SLOT(on_buttonStartJob_clicked()));
     connect(ui->actionJob_Pause, SIGNAL(triggered(bool)), this, SLOT(on_buttonPauseJob_clicked(bool)));
+    connect(ui->actionJob_Abort, SIGNAL(triggered()), this, SLOT(on_buttonAbortJob_clicked()));
     connect(ui->actionJob_Explore, SIGNAL(triggered()), this, SLOT(exploreJob()));
     connect(ui->actionJob_Delete, SIGNAL(triggered()), this, SLOT(delJob()));
     connect(ui->actionJob_Edit, SIGNAL(triggered()), this, SLOT(editJob()));
@@ -307,10 +316,8 @@ void MainWindow::setAcctions(void)
     thumbnailToolStartJob->setIcon(QIcon(":/buttons/start_green.png"));
     thumbnailToolAbortJob->setToolTip(tr("Abort Job"));
     thumbnailToolAbortJob->setIcon(QIcon(":/buttons/stop_red.png"));
-#if 0 /* TODO: added thumbnail tool button to control jobs. */
     m_pThumbnailToolBar->addButton(thumbnailToolStartJob);
     m_pThumbnailToolBar->addButton(thumbnailToolAbortJob);
-#endif
     connect(thumbnailToolStartJob, SIGNAL(clicked()), this, SLOT(on_buttonStartJob_clicked()));
     connect(thumbnailToolAbortJob, SIGNAL(clicked()), this, SLOT(on_buttonAbortJob_clicked()));
 }
@@ -672,6 +679,8 @@ void MainWindow::viewLog(JobChef::EJOB_LOG_TYPE a_log_type, const QString &a_log
     case JobChef::eJOB_LOG_TYPE_FATAL:
         html = qvs::toHtml(a_log, COLOR_LOGGING_WARN, true);
         ui->logView->appendHtml(html);
+        m_pTaskbarButton->progress()->stop();
+        m_pTaskbarButton->progress()->setValue(eINDEX_0);
         break;
     case JobChef::eJOB_LOG_TYPE_JOB_STATUS:
         html = qvs::toHtml(a_log, COLOR_LOGGING_STATUS, true);
@@ -694,6 +703,15 @@ void MainWindow::viewLog(JobChef::EJOB_LOG_TYPE a_log_type, const QString &a_log
             ui->jobsView->setItem(m_jobs_index - eINDEX_1, eINDEX_2, new QTableWidgetItem(QString("%1%").arg(a_log)));
         }
         ui->progressBar->setValue(static_cast<int>(a_log.toDouble()));
+        m_pTaskbarButton->progress()->resume();
+        if(static_cast<int>(a_log.toDouble()) == eINDEX_100)
+        {
+            m_pTaskbarButton->progress()->setValue(static_cast<int>(eINDEX_0));
+        }
+        else
+        {
+            m_pTaskbarButton->progress()->setValue(static_cast<int>(a_log.toDouble()));
+        }
         break;
     case JobChef::eJOB_LOG_TYPE_JOB_STD_DETAILS:
         setDetailLog(a_log);
@@ -773,6 +791,8 @@ void MainWindow::initJob(void)
     m_isAborted = false;
     ui->progressBar->setMaximum(eINDEX_0);
     ui->progressBar->setMinimum(eINDEX_0);
+    m_pTaskbarButton->progress()->resume();
+    m_pTaskbarButton->progress()->setValue(eINDEX_0);
     m_job_chef->loadCommonConfig();
     emit ntfStatusChanged(JobChef::eJOB_STATUS_STARTING);
 }
@@ -925,16 +945,16 @@ void MainWindow::dropEvent(QDropEvent* e)
                 }
                 /* Audio Batch Input */
                 pos = QPoint(ui->tabWidget->pos()
-                           + ui->groupBoxAudioBatch->pos()
+                           + ui->widgetAudioBatchEnc->ui->groupBoxAudioBatch->pos()
                            + ui->centralWidget->pos()
-                           + ui->listViewAudioBatch->pos()
+                           + ui->widgetAudioBatchEnc->ui->listViewAudioBatch->pos()
                            + QPoint(ui->menubar->pos().x(), ui->menubar->height()));
-                ret = QRect(pos, ui->listViewAudioBatch->size());
+                ret = QRect(pos, ui->widgetAudioBatchEnc->ui->listViewAudioBatch->size());
                 qDebug() << "Audio Batch Input:" << ret;
                 if(ret.contains(e->pos()))
                 {
                     QListWidgetItem *item = new QListWidgetItem(filename);
-                    ui->listViewAudioBatch->addItem(item);
+                    ui->widgetAudioBatchEnc->ui->listViewAudioBatch->addItem(item);
                     break;
                 }
                 break;
@@ -1166,32 +1186,44 @@ void MainWindow::statusChanged(JobChef::EJOB_STATUS a_job_status)
     default:
         break;
     case JobChef::eJOB_STATUS_READY:
+        m_pTaskbarButton->progress()->resume();
         break;
     case JobChef::eJOB_STATUS_WAITING:
+        m_pTaskbarButton->progress()->resume();
         break;
     case JobChef::eJOB_STATUS_STARTING:
+        m_pTaskbarButton->progress()->resume();
         break;
     case JobChef::eJOB_STATUS_RUNNING:
+        m_pTaskbarButton->progress()->resume();
         break;
     case JobChef::eJOB_STATUS_PAUSING:
+        m_pTaskbarButton->progress()->pause();
         break;
     case JobChef::eJOB_STATUS_PAUSED:
         ui->editDetails->setText(tr("Paused by user!"));
+        m_pTaskbarButton->progress()->pause();
         break;
     case JobChef::eJOB_STATUS_ABORTING:
+        m_pTaskbarButton->progress()->resume();
         m_isAborted = true;
         break;
     case JobChef::eJOB_STATUS_ABORTED:
         ui->editDetails->setText(tr("Aborted by user!"));
+        m_pTaskbarButton->progress()->resume();
         m_isAborted = true;
         break;
     case JobChef::eJOB_STATUS_FAILED:
         ui->progressBar->setMaximum(eINDEX_100); /* Fixed progress bar failed on not processing encoder. */
+        m_pTaskbarButton->progress()->stop();
+        m_pTaskbarButton->progress()->setValue(static_cast<int>(eINDEX_0));
         viewLog(JobChef::eJOB_LOG_TYPE_DEBUG, tr("Process Failed!"));
         break;
     case JobChef::eJOB_STATUS_COMPLETED:
         viewLog(JobChef::eJOB_LOG_TYPE_JOB_STD_PROGRESS, QString::number(eINDEX_10 * eINDEX_10));
         ui->editDetails->setText(tr("Job Completed!"));
+        m_pTaskbarButton->progress()->resume();
+        m_pTaskbarButton->progress()->setValue(static_cast<int>(eINDEX_0));
         break;
     }
     m_job_status_prev = a_job_status;
@@ -1199,7 +1231,8 @@ void MainWindow::statusChanged(JobChef::EJOB_STATUS a_job_status)
 
 QString MainWindow::getJobStatusText(JobChef::EJOB_STATUS a_job_status)
 {
-    static const QStringList s_job_status = {
+    static const QStringList s_job_status =
+    {
         QObject::tr("Initial"),     /* eJOB_STATUS_INITIAL */
         QObject::tr("Ready"),       /* eJOB_STATUS_READY */
         QObject::tr("Starting"),    /* eJOB_STATUS_STARTING */
@@ -1479,41 +1512,14 @@ void MainWindow::releaseChildWindowsAll(void)
     m_pScriptCreators.clear();
 }
 
-void MainWindow::on_buttonAudioBatchAdd_clicked()
+void MainWindow::slotAudioBatchEncStarted(void)
 {
-    QString filename = QFileDialog::getOpenFileName(this, tr("Open Audio file"), NULLSTR, tr("Audio (*.*)"));
-
-    if(!filename.isEmpty())
-    {
-        QListWidgetItem *item = new QListWidgetItem(QDir::toNativeSeparators(filename));
-
-        ui->listViewAudioBatch->addItem(item);
-    }
-}
-
-void MainWindow::on_buttonAudioBatchDelete_clicked()
-{
-    ui->listViewAudioBatch->takeItem(ui->listViewAudioBatch->currentRow());
-}
-
-void MainWindow::on_buttonAudioBatchClear_clicked()
-{
-    ui->listViewAudioBatch->clear();
-}
-
-void MainWindow::on_buttonAudioBatchStart_clicked()
-{
-    if(ui->listViewAudioBatch->count() <= eINDEX_0)
-    {
-        return;
-    }
-
     QList<StdWatcherCmd> cmds;
     QUuid uid = StdManager::createStdWatch();
 
-    for(int i = eINDEX_0; i < ui->listViewAudioBatch->count(); i++)
+    for(int i = eINDEX_0; i < ui->widgetAudioBatchEnc->ui->listViewAudioBatch->count(); i++)
     {
-        QString input = ui->listViewAudioBatch->item(i)->text();
+        QString input = ui->widgetAudioBatchEnc->ui->listViewAudioBatch->item(i)->text();
         QString output = ui->widgetAudioEnc->getAudioOutputPath(static_cast<AudioEnc::EENCODE_TYPE>(ui->widgetAudioEnc->ui->comboBoxAudioEncoder->currentIndex()), input);
         QString bitrate = ui->widgetAudioEnc->ui->comboBoxAudioBitrate->currentText();
         StdWatcherCmd cmd = ui->widgetAudioEnc->getEncodeCmd(input, output, bitrate);
@@ -1670,12 +1676,6 @@ void MainWindow::modeLaunch(void)
     default:
         break;
     }
-}
-
-void MainWindow::loadFonts(void)
-{
-    QFontDatabase::addApplicationFontFromData(qvs::getResource(":/fonts/consola.ttf"));
-    QFontDatabase::addApplicationFontFromData(qvs::getResource(":/fonts/DigitalMini.ttf"));
 }
 
 void MainWindow::setLanguage(Config::ELANGUAGE a_language)

@@ -38,10 +38,12 @@ class Config : public QObject
     Q_OBJECT
 public:
     explicit Config(QObject *parent = nullptr);
+    ~Config();
     class MainWindow *mainUi;
     void setMainWindow(MainWindow *a_pMainUi);
 
-    enum ECONFIG_TYPE {
+    enum ECONFIG_TYPE
+    {
         eCONFIG_TYPE_FIRST,
         eCONFIG_TYPE_COMMON,
         eCONFIG_TYPE_ENCODE,
@@ -49,7 +51,8 @@ public:
         eCONFIG_TYPE_MAX,
     };
 
-    enum ECONFIG_COMMON {
+    enum ECONFIG_COMMON
+    {
         eCONFIG_COMMON_NOT_AUTO_NEXT_JOB,
         eCONFIG_COMMON_PREFER_AVS_32BIT,
         eCONFIG_COMMON_STYLE_FACTORY,
@@ -68,7 +71,8 @@ public:
         eCONFIG_COMMON_MAX,
     };
 
-    enum ECONFIG_FIRST {
+    enum ECONFIG_FIRST
+    {
         eCONFIG_FIRST_GUARD_LOCKER,
         eCONFIG_FIRST_SPLASH_SCREEN,
         eCONFIG_FIRST_CLI_FILENAME,
@@ -77,7 +81,8 @@ public:
         eCONFIG_FIRST_MAX,
     };
 
-    enum ECONFIG_INSTALLER {
+    enum ECONFIG_INSTALLER
+    {
         eCONFIG_INSTALLER_PFM,
         eCONFIG_INSTALLER_VS64,
         eCONFIG_INSTALLER_AVS32,
@@ -86,7 +91,8 @@ public:
         eCONFIG_INSTALLER_MAX,
     };
 
-    enum ELAUNCH_MODE {
+    enum ELAUNCH_MODE
+    {
         eLAUNCH_MODE_NORMAL,
         eLAUNCH_MODE_NORMAL_ADD_JOB,
         eLAUNCH_MODE_MEDIAINFO,
@@ -98,7 +104,8 @@ public:
         eLAUNCH_MODE_MAX,
     };
 
-    enum ECONFIG_PYTHON {
+    enum ECONFIG_PYTHON
+    {
         eCONFIG_PYTHON_D2V,
         eCONFIG_PYTHON_DG,
         eCONFIG_PYTHON_DGNV,
@@ -106,7 +113,8 @@ public:
         eCONFIG_PYTHON_MAX,
     };
 
-    enum ELANGUAGE {
+    enum ELANGUAGE
+    {
         eLANGUAGE_EN,
         eLANGUAGE_ZH,
         eLANGUAGE_JA,
@@ -178,6 +186,7 @@ public:
 
 private:
     QString m_settingsFilePath;
+    QSettings *m_pSettings;
     ELAUNCH_MODE m_launchMode;
     QStringList m_args;
     QList<QVariant> m_config_first_default;

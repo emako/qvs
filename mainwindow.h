@@ -63,7 +63,8 @@ public:
     friend class ScriptCreator;
     friend class StdWatcher;
 
-    enum ETAB {
+    enum ETAB
+    {
         eTAB_MAIN,
         eTAB_AUDIO,
         eTAB_MUXER,
@@ -73,7 +74,6 @@ public:
     };
 
     void modeLaunch(void);
-    void loadFonts(void);
     void setLanguage(Config::ELANGUAGE a_language);
     Config::ELANGUAGE language(void);
     void execJobCreator(JobCreator::EJOB_RELOAD a_job_reload, QString a_filename = QT_EMPTY);
@@ -84,7 +84,6 @@ public:
     bool isStarted(void);
     bool isPaused(void);
     bool isAborted(void);
-    void reqJobStart(void);
     void setStartJobImmediately(bool a_set);
     void logging(const QString &a_log);
 
@@ -119,6 +118,7 @@ private slots:
     bool isEmptyJobs(void);
     bool isSkipJob(void);
 
+    void reqJobStart(void);
     void initJob(void);
     void startJob(void);
     void failJob(void);
@@ -158,6 +158,7 @@ private slots:
     void slotMinimize(void);
     void slotTrayActivated(QSystemTrayIcon::ActivationReason a_reason);
     void slotViewJobsLog(void);
+    void slotAudioBatchEncStarted(void);
 
     void cleanUpAll(void);
     void cleanUpFinished(void);
@@ -175,11 +176,6 @@ private slots:
     void on_buttonAbortJob_clicked(void);
     void on_jobsView_customContextMenuRequested(const QPoint &a_pos);
     void on_logView_customContextMenuRequested(const QPoint &a_pos);
-
-    void on_buttonAudioBatchAdd_clicked();
-    void on_buttonAudioBatchDelete_clicked();
-    void on_buttonAudioBatchClear_clicked();
-    void on_buttonAudioBatchStart_clicked();
 
 private:
     Ui::MainWindow *ui;

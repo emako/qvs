@@ -78,7 +78,7 @@ p, li { white-space: pre-wrap; }
       <item>
        <widget class="QCheckBox" name="checkBoxMediaInfoFull">
         <property name="text">
-         <string>Full Info</string>
+         <string>Full information</string>
         </property>
        </widget>
       </item>

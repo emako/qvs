@@ -3,7 +3,8 @@
 
 static const int PROCESS_EXIT_CODE_AUTO_SKIP = 'A'+'u'+'t'+'o'+'S'+'k'+'i'+'p';
 static const int PROCESS_EXIT_CODE_SUCCESS = eINDEX_0;
-static const DWORD c_priortyIndexToPriorty[JobChef::ePROCESS_PRIORITY_INDEX_MAX] = {
+static const DWORD c_priortyIndexToPriorty[JobChef::ePROCESS_PRIORITY_INDEX_MAX] =
+{
     JobChef::ePROCESS_PRIORITY_IIDLE,
     JobChef::ePROCESS_PRIORITY_BELOW_NORMAL,
     JobChef::ePROCESS_PRIORITY_NORMAL,

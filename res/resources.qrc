@@ -177,5 +177,8 @@
         <file>buttons/sound_none.png</file>
         <file>buttons/music.png</file>
         <file>buttons/inbox_document_music.png</file>
+        <file>buttons/pause_blue.png</file>
+        <file>buttons/start_green.png</file>
+        <file>buttons/stop_red.png</file>
     </qresource>
 </RCC>

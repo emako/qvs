@@ -13,7 +13,8 @@ const char ENCODING_AUDIO_PRESETS_GROUP[] = "encoding_audio_presets";
 const char INSTALLER_GROUP[]              = "installer";
 const char PYTHON_GROUP[]                 = "python";
 
-const char *c_config_common_key[Config::eCONFIG_COMMON_MAX] = {
+const char *c_config_common_key[Config::eCONFIG_COMMON_MAX] =
+{
     "not_auto_next_job",                /*eCONFIG_COMMON_NOT_AUTO_NEXT_JOB*/
     "prefer_avs_32bit",                 /*eCONFIG_COMMON_PREFER_AVS_32BIT*/
     "style_factory",                    /*eCONFIG_COMMON_STYLE_FACTORY*/
@@ -31,7 +32,8 @@ const char *c_config_common_key[Config::eCONFIG_COMMON_MAX] = {
     "encoding_audio_current_presets",   /*eCONFIG_COMMON_ENCODING_AUDIO_CURRENT_PRESETS*/
 };
 
-const char *c_config_first_key[Config::eCONFIG_FIRST_MAX] = {
+const char *c_config_first_key[Config::eCONFIG_FIRST_MAX] =
+{
     QT_EMPTY,                           /*eCONFIG_FIRST_GUARD_LOCKER*/
     "splash_screen",                    /*eCONFIG_FIRST_SPLASH_SCREEN*/
     QT_EMPTY,                           /*eCONFIG_FIRST_CLI_FILENAME*/
@@ -39,7 +41,8 @@ const char *c_config_first_key[Config::eCONFIG_FIRST_MAX] = {
     "language",                         /*eCONFIG_FIRST_LANGUAGE*/
 };
 
-const char *c_config_installer_key[Config::eCONFIG_INSTALLER_MAX] = {
+const char *c_config_installer_key[Config::eCONFIG_INSTALLER_MAX] =
+{
     "pfm_installed",                    /*eCONFIG_INSTALLER_PFM*/
     "vs64_installed",                   /*eCONFIG_INSTALLER_VS64*/
     "avs32_installed",                  /*eCONFIG_INSTALLER_AVS32*/
@@ -47,7 +50,8 @@ const char *c_config_installer_key[Config::eCONFIG_INSTALLER_MAX] = {
     "media_installed",                  /*eCONFIG_INSTALLER_MEDIA*/
 };
 
-const char *c_config_python_key[Config::eCONFIG_PYTHON_MAX] = {
+const char *c_config_python_key[Config::eCONFIG_PYTHON_MAX] =
+{
     "d2v",                              /*eCONFIG_PYTHON_D2V*/
     "dg",                               /*eCONFIG_PYTHON_DG*/
     "dgnv",                             /*eCONFIG_PYTHON_DGNV*/
@@ -60,6 +64,11 @@ Config::Config(QObject *parent) :
     m_isInitConfigInstaller(false)
 {
     this->getConfigFile();
+}
+
+Config::~Config()
+{
+    delete m_pSettings;
 }
 
 void Config::init(QStringList a_args)
@@ -466,6 +475,7 @@ void Config::getConfigFile(void)
         m_settingsFilePath = QStandardPaths::writableLocation(QStandardPaths::GenericConfigLocation) + SETTINGS_FILE_NAME;
     }
     m_settingsFilePath = QDir::toNativeSeparators(m_settingsFilePath);
+    m_pSettings = new QSettings(m_settingsFilePath, QSettings::IniFormat);
 
     qDebug() << "Config file:" << m_settingsFilePath;
 }
@@ -481,28 +491,30 @@ bool Config::getPortableMode(void)
 
 QVariant Config::valueInGroup(const QString & a_group, const QString & a_key, const QVariant & a_defaultValue) const
 {
-    QSettings settings(m_settingsFilePath, QSettings::IniFormat);
-    settings.beginGroup(a_group);
-    return settings.value(a_key, a_defaultValue);
+    QVariant value;
+    m_pSettings->beginGroup(a_group);
+    value =  m_pSettings->value(a_key, a_defaultValue);
+    m_pSettings->endGroup();
+    return value;
 }
 
 bool Config::setValueInGroup(const QString & a_group, const QString & a_key, const QVariant & a_value)
 {
-    QSettings settings(m_settingsFilePath, QSettings::IniFormat);
-    settings.beginGroup(a_group);
-    settings.setValue(a_key, a_value);
-    settings.sync();
-    bool success = (QSettings::NoError == settings.status());
+    m_pSettings->beginGroup(a_group);
+    m_pSettings->setValue(a_key, a_value);
+    m_pSettings->sync();
+    m_pSettings->endGroup();
+    bool success = (QSettings::NoError == m_pSettings->status());
     return success;
 }
 
 bool Config::deleteValueInGroup(const QString & a_group, const QString & a_key)
 {
-    QSettings settings(m_settingsFilePath, QSettings::IniFormat);
-    settings.beginGroup(a_group);
-    settings.remove(a_key);
-    settings.sync();
-    bool success = (QSettings::NoError == settings.status());
+    m_pSettings->beginGroup(a_group);
+    m_pSettings->remove(a_key);
+    m_pSettings->sync();
+    bool success = (QSettings::NoError == m_pSettings->status());
+    m_pSettings->endGroup();
     return success;
 }
 
@@ -637,9 +649,11 @@ void Config::setConfig(ECONFIG_INSTALLER a_key, QVariant a_value)
 
 QStringList Config::groupKeys(const QString & a_group)
 {
-    QSettings settings(m_settingsFilePath, QSettings::IniFormat);
-    settings.beginGroup(a_group);
-    return settings.childKeys();
+    QStringList list;
+    m_pSettings->beginGroup(a_group);
+    list << m_pSettings->childKeys();
+    m_pSettings->endGroup();
+    return list;
 }
 
 void Config::reset(ECONFIG_TYPE a_config_type)

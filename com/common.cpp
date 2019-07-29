@@ -6,6 +6,12 @@
 Config *g_pConfig = nullptr;
 const QString c_default_style = "Fusion";
 
+void qvs::loadFonts(void)
+{
+    QFontDatabase::addApplicationFontFromData(qvs::getResource(":/fonts/consola.ttf"));
+    QFontDatabase::addApplicationFontFromData(qvs::getResource(":/fonts/DigitalMini.ttf"));
+}
+
 bool qvs::isFileExist(const QString &a_filename)
 {
     QFileInfo info(a_filename);

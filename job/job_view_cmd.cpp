@@ -3,7 +3,8 @@
 #include "ui_job_view_cmd.h"
 #include "mainwindow.h"
 
-const char *c_config_key[JobCreator::eJOB_CONFIG_MAX] = {
+const char *c_config_key[JobCreator::eJOB_CONFIG_MAX] =
+{
     "Source",       /*eJOB_CONFIG_INPUT*/
     "Output",       /*eJOB_CONFIG_OUTPUT*/
     "Encoder",      /*eJOB_CONFIG_ENCODER*/
@@ -20,7 +21,8 @@ const char *c_config_key[JobCreator::eJOB_CONFIG_MAX] = {
     "Pass",         /*eJOB_CONFIG_PASS_NUM*/
 };
 
-const char *c_config_type[JobCmdList::eJOB_CMD_TYPE_MAX] = {
+const char *c_config_type[JobCmdList::eJOB_CMD_TYPE_MAX] =
+{
     "Info",         /*eJOB_CMD_TYPE_INFO*/
     "Piper",        /*eJOB_CMD_TYPE_PIPER*/
     "Encoder",      /*eJOB_CMD_TYPE_ENCODER*/

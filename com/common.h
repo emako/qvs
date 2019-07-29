@@ -100,8 +100,9 @@
 #define MESSAGE_ARE_YOU_BAKA QObject::tr("Are you BAKA?")
 #define MESSAGE_DONE QObject::tr("Done")
 
-#define FONT_DEFAULT QFont(QObject::tr("Consolas"))
-#define FONT_DEFAULT2 QFont(QObject::tr("Yu Gothic UI"))
+#define FONT_SIZE_DEFAULT 9
+#define FONT_DEFAULT QFont(QObject::tr("Consolas"), FONT_SIZE_DEFAULT)
+#define FONT_DEFAULT_BAK QFont(QObject::tr("Yu Gothic UI"), FONT_SIZE_DEFAULT)
 
 #define CR QT_MAC_EOL
 #define LF QT_NOR_EOL
@@ -139,7 +140,8 @@ class MainWindow;
 class JobItem;
 class Config;
 
-enum EINDEX : int {
+enum EINDEX : int
+{
     eINDEX_NONE = -1,
     eINDEX_0 = 0,
     eINDEX_1 = 1,
@@ -162,7 +164,8 @@ enum EINDEX : int {
     eINDEX_MAX,
 };
 
-enum EBOOL {
+enum EBOOL
+{
     eFALSE   = false,
     eTRUE    = true,
     eDISABLE = false,
@@ -173,6 +176,8 @@ enum EBOOL {
 
 namespace qvs
 {
+    void loadFonts(void);
+
     bool isFileExist(const QString &a_filename);
     bool isFile(const QString &a_filename);
 
