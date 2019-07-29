@@ -140,7 +140,8 @@ win32 {
     }
 }
 
-SOURCES += main.cpp
+SOURCES += main.cpp \
+    tools/audio_batch_enc.cpp
 SOURCES += mainwindow.cpp
 SOURCES += com/common.cpp
 SOURCES += com/preferences.cpp
@@ -203,6 +204,7 @@ HEADERS += tools/std_watcher.h
 HEADERS += tools/std_manager.h
 HEADERS += tools/demuxer.h
 HEADERS += tools/audio_enc.h
+HEADERS += tools/audio_batch_enc.h
 HEADERS += tools/installer_dialog.h
 HEADERS += tools/audio_config.h
 HEADERS += tools/merge.h
@@ -241,6 +243,7 @@ FORMS += tools/muxer.ui
 FORMS += tools/std_watcher.ui
 FORMS += tools/demuxer.ui
 FORMS += tools/audio_enc.ui
+FORMS += tools/audio_batch_enc.ui
 FORMS += tools/audio_config.ui
 FORMS += tools/merge.ui
 FORMS += tools/splitter.ui
