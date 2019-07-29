@@ -100,3 +100,8 @@ version r13
  - fixed some ui performance.
  - fixed script creator AddLogo's empty filename.
  - updated preview dialog to QtAV1.2.0.
+
+version r14
+ - added win taskbar button.
+ - fixed script creator func 'Nnedi3Resize'.
+ - fixed crash error on closing stdwatch.
