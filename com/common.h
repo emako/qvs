@@ -32,6 +32,7 @@
 #include <QApplication>
 #include <QDebug>
 #include <QTextCodec>
+#include <QtMath>
 
 #ifdef max
 # undef max /* Undefind max from windows header,

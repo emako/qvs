@@ -98,7 +98,7 @@ QString qvs::fromSecondTime(double a_seconds, bool a_fullFormat)
         return QString("0");
 
     // Milliseconds cut-off
-    a_seconds = std::round(a_seconds * 1000.0) / 1000.0;
+    a_seconds = qRound(a_seconds * 1000.0) / 1000.0;
 
     // Seconds
     uint64_t integer = static_cast<uint64_t>(a_seconds);
@@ -122,7 +122,7 @@ QString qvs::fromSecondTime(double a_seconds, bool a_fullFormat)
     }
 
     // Fraction
-    double fraction = a_seconds - std::floor(a_seconds);
+    double fraction = a_seconds - qFloor(a_seconds);
     if((fraction > 0.0) || a_fullFormat)
         timeString += QString::number(fraction, 'f', 3).mid(1);
 
@@ -167,7 +167,7 @@ QString qvs::fromTime(double a_seconds)
 
 double qvs::toTime(QString a_secondsStr)
 {
-    const enum ETIMECODE_FORMAT : int
+    enum ETIMECODE_FORMAT : int
     {
         eTIMECODE_FORMAT_H,
         eTIMECODE_FORMAT_M,

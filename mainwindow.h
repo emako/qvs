@@ -9,6 +9,11 @@
 #include <QDesktopServices>
 #include <QJsonDocument>
 #include <QSystemTrayIcon>
+#include <QWinTaskbarButton>
+#include <QWinTaskbarProgress>
+#include <QWinThumbnailToolBar>
+#include <QWinThumbnailToolButton>
+#include <QMetaMethod>
 
 #include "job/job_creator.h"
 #include "job/job_cmdlist.h"
@@ -94,6 +99,8 @@ public:
     QMenu *m_pJobViewMenu;
     QMenu *m_pLogViewMenu;
     QSystemTrayIcon *m_pSystemTray;
+    QWinTaskbarButton *m_pTaskbarButton;
+    QWinThumbnailToolBar *m_pThumbnailToolBar;
     QMap<QUuid, QWidget *> m_pMinimizeWidgets;
 
     JobChef::EJOB_STATUS m_job_status_prev;
@@ -205,6 +212,7 @@ protected:
     virtual void dropEvent(QDropEvent *e);
     virtual void dragMoveEvent(QDragMoveEvent *e);
     virtual void resizeEvent(QResizeEvent* e);
+    virtual void showEvent(QShowEvent *e);
     virtual void closeEvent(QCloseEvent *e);
 };
 

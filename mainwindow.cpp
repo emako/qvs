@@ -54,6 +54,8 @@ MainWindow::~MainWindow()
     delete m_pActionGruopLanguage;
     delete g_pConfig;
     delete ui;
+    delete m_pTaskbarButton;
+    delete m_pThumbnailToolBar;
     delete m_pSystemTray;
 }
 
@@ -65,6 +67,8 @@ void MainWindow::setupUi(void)
     m_pActionGruopLanguage = new QActionGroup(this);
     m_pJobViewMenu = new QMenu(ui->jobsView);
     m_pLogViewMenu = new QMenu(ui->logView);
+    m_pTaskbarButton = new QWinTaskbarButton(this);
+    m_pThumbnailToolBar = new QWinThumbnailToolBar(this);
 
     /*Property*/
     this->setWindowTitle(tr("Qvs"));
@@ -143,6 +147,16 @@ void MainWindow::setupUi(void)
             g_pConfig->setConfig(Config::eCONFIG_FIRST_FIRST_LAUNCH, false);
         }
     }
+}
+
+void MainWindow::showEvent(QShowEvent *e)
+{
+#ifdef Q_OS_WIN32
+    m_pTaskbarButton->setWindow(this->windowHandle());
+    m_pThumbnailToolBar->setWindow(this->windowHandle());
+#endif
+
+    e->accept();
 }
 
 void MainWindow::closeEvent(QCloseEvent *e)
@@ -285,6 +299,20 @@ void MainWindow::setAcctions(void)
     connect(ui->actionWebVapourSynthDocs, SIGNAL(triggered()), this, SLOT(slotOpenUrl()));
     connect(ui->actionAbout, SIGNAL(triggered()), this, SLOT(slotAbout()));
     connect(ui->actionAboutQt, SIGNAL(triggered()), this, SLOT(slotAboutQt()));
+
+    /* ThumbnailTool */
+    QWinThumbnailToolButton *thumbnailToolStartJob = new QWinThumbnailToolButton(m_pThumbnailToolBar);
+    QWinThumbnailToolButton *thumbnailToolAbortJob = new QWinThumbnailToolButton(m_pThumbnailToolBar);
+    thumbnailToolStartJob->setToolTip(tr("Start Job"));
+    thumbnailToolStartJob->setIcon(QIcon(":/buttons/start_green.png"));
+    thumbnailToolAbortJob->setToolTip(tr("Abort Job"));
+    thumbnailToolAbortJob->setIcon(QIcon(":/buttons/stop_red.png"));
+#if 0 /* TODO: added thumbnail tool button to control jobs. */
+    m_pThumbnailToolBar->addButton(thumbnailToolStartJob);
+    m_pThumbnailToolBar->addButton(thumbnailToolAbortJob);
+#endif
+    connect(thumbnailToolStartJob, SIGNAL(clicked()), this, SLOT(on_buttonStartJob_clicked()));
+    connect(thumbnailToolAbortJob, SIGNAL(clicked()), this, SLOT(on_buttonAbortJob_clicked()));
 }
 
 void MainWindow::slotOpenUrl(void)
@@ -347,7 +375,7 @@ void MainWindow::cleanLoggingFile(void)
 
 int MainWindow::getFirstJobStatusIndex(JobChef::EJOB_STATUS a_status)
 {
-    int i;
+    int i = eINDEX_NONE;
     bool has = false;
 
     for(i = eINDEX_0; i < ui->jobsView->rowCount(); i++)
@@ -1158,7 +1186,7 @@ void MainWindow::statusChanged(JobChef::EJOB_STATUS a_job_status)
         m_isAborted = true;
         break;
     case JobChef::eJOB_STATUS_FAILED:
-        ui->progressBar->setMaximum(eINDEX_100); /* Fixed progress bar filed on not processing encoder. */
+        ui->progressBar->setMaximum(eINDEX_100); /* Fixed progress bar failed on not processing encoder. */
         viewLog(JobChef::eJOB_LOG_TYPE_DEBUG, tr("Process Failed!"));
         break;
     case JobChef::eJOB_STATUS_COMPLETED:
@@ -1689,7 +1717,7 @@ void MainWindow::slotMinimize(void)
 
     for(QMap<QUuid, ScriptPlayer *>::iterator i = m_pScriptPlayers.begin(); i != m_pScriptPlayers.end(); ++i)
     {
-        if(m_pScriptPlayers[i.key()]->isVisible())
+        if(m_pScriptPlayers[i.key()] != nullptr && m_pScriptPlayers[i.key()]->isVisible())
         {
             m_pMinimizeWidgets.insert(i.key(), m_pScriptPlayers[i.key()]);
         }
@@ -1697,7 +1725,7 @@ void MainWindow::slotMinimize(void)
 
     for(QMap<QUuid, MediaInfoDialog *>::iterator i = m_pMediaInfoDialogs.begin(); i != m_pMediaInfoDialogs.end(); ++i)
     {
-        if(m_pMediaInfoDialogs[i.key()]->isVisible())
+        if(m_pMediaInfoDialogs[i.key()] != nullptr && m_pMediaInfoDialogs[i.key()]->isVisible())
         {
             m_pMinimizeWidgets.insert(i.key(), m_pMediaInfoDialogs[i.key()]);
         }
@@ -1705,7 +1733,7 @@ void MainWindow::slotMinimize(void)
 
     for(QMap<QUuid, PreviewDialog *>::iterator i = m_pPreviewDialogs.begin(); i != m_pPreviewDialogs.end(); ++i)
     {
-        if(m_pPreviewDialogs[i.key()]->isVisible())
+        if(m_pPreviewDialogs[i.key()] != nullptr && m_pPreviewDialogs[i.key()]->isVisible())
         {
             m_pMinimizeWidgets.insert(i.key(), m_pPreviewDialogs[i.key()]);
         }
@@ -1713,7 +1741,7 @@ void MainWindow::slotMinimize(void)
 
     for(QMap<QUuid, ScriptCreator *>::iterator i = m_pScriptCreators.begin(); i != m_pScriptCreators.end(); ++i)
     {
-        if(m_pScriptCreators[i.key()]->isVisible())
+        if(m_pScriptCreators[i.key()] != nullptr && m_pScriptCreators[i.key()]->isVisible())
         {
             m_pMinimizeWidgets.insert(i.key(), m_pScriptCreators[i.key()]);
         }
@@ -1721,7 +1749,7 @@ void MainWindow::slotMinimize(void)
 
     for(QMap<QUuid, StdWatcher*>::iterator i = g_pStdWatch.begin(); i != g_pStdWatch.end(); i++)
     {
-        if(g_pStdWatch[i.key()]->isVisible())
+        if(g_pStdWatch[i.key()] != nullptr && g_pStdWatch[i.key()]->isVisible())
         {
             m_pMinimizeWidgets.insert(i.key(), g_pStdWatch[i.key()]);
         }
@@ -1752,6 +1780,7 @@ void MainWindow::slotTrayActivated(QSystemTrayIcon::ActivationReason a_reason)
         }
     }
     m_pSystemTray->hide();
+    m_pMinimizeWidgets.clear();
     QApplication::setQuitOnLastWindowClosed(true);
 }
 
@@ -1764,14 +1793,10 @@ void MainWindow::slotTimeout(int a_timerType, int a_timerSlot)
 	{
 		switch (timerSlot)
 		{
-		case Timer::eTIMER_SLOT_CALC_MD5:
-			do {
-				QString md5 = Common::getInstance()->getHashMd5(ui->widgetMediaInfo->getPath());
-
-				ui->widgetMediaInfo->clear();
-				ui->widgetMediaInfo->append(tr("Filename: ") + QFileInfo(ui->widgetMediaInfo->getPath()).fileName());
-				ui->widgetMediaInfo->append(tr("MD5: ") + md5);
-			} while (false);
+        case Timer::eTIMER_SLOT_CALC_MD5:
+            ui->widgetMediaInfo->clear();
+            ui->widgetMediaInfo->append(tr("Filename: ") + QFileInfo(ui->widgetMediaInfo->getPath()).fileName());
+            ui->widgetMediaInfo->append(tr("MD5: ") + Common::getInstance()->getHashMd5(ui->widgetMediaInfo->getPath()));
 			break;
 		case Timer::eTIMER_SLOT_PROGURM_QUIT:
 			this->close();
