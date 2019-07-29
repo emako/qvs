@@ -3,7 +3,8 @@
 
 const char BAT_INSTALLER_FILENAME[] = "qvs-installer-auto.bat";
 
-const char *c_content_to_arg[InstallerDialog::eINSTALLER_CONTENTS_MAX] = {
+const char *c_content_to_arg[InstallerDialog::eINSTALLER_CONTENTS_MAX] =
+{
     "pfm",                /* eINSTALLER_CONTENTS_PFM */
     "vs64",               /* eINSTALLER_CONTENTS_VS64 */
     "avs32",              /* eINSTALLER_CONTENTS_AVS32 */

@@ -12,7 +12,8 @@
 ///@brief Kinds of Stream: general
 ///extern QList<QPair<MediaInfoDLL::String, QPair<QString, bool>>> g_mediainfo_list_general;
 ///
-QList<QPair<MediaInfoDLL::String, QPair<QString, bool>>> g_mediainfo_list_general = {
+QList<QPair<MediaInfoDLL::String, QPair<QString, bool>>> g_mediainfo_list_general =
+{
 	{ MI_GENERAL_COUNT, { MI_QT_GENERAL_COUNT, false } },
 	{ MI_GENERAL_STATUS, { MI_QT_GENERAL_STATUS, false } },
 	{ MI_GENERAL_STREAMCOUNT, { MI_QT_GENERAL_STREAMCOUNT, false } },
@@ -349,7 +350,8 @@ QList<QPair<MediaInfoDLL::String, QPair<QString, bool>>> g_mediainfo_list_genera
 ///@brief Kinds of Stream: video
 ///extern QList<QPair<MediaInfoDLL::String, QPair<QString, bool>>> g_mediainfo_list_video;
 ///
-QList<QPair<MediaInfoDLL::String, QPair<QString, bool>>> g_mediainfo_list_video = {
+QList<QPair<MediaInfoDLL::String, QPair<QString, bool>>> g_mediainfo_list_video =
+{
 	{ MI_VIDEO_COUNT, { MI_QT_VIDEO_COUNT, false } },
 	{ MI_VIDEO_STATUS, { MI_QT_VIDEO_STATUS, false } },
 	{ MI_VIDEO_STREAMCOUNT, { MI_QT_VIDEO_STREAMCOUNT, false } },
@@ -729,7 +731,8 @@ QList<QPair<MediaInfoDLL::String, QPair<QString, bool>>> g_mediainfo_list_video 
 ///@brief Kinds of Stream: audio
 ///extern QList<QPair<MediaInfoDLL::String, QPair<QString, bool>>> g_mediainfo_list_audio;
 ///
-QList<QPair<MediaInfoDLL::String, QPair<QString, bool>>> g_mediainfo_list_audio = {
+QList<QPair<MediaInfoDLL::String, QPair<QString, bool>>> g_mediainfo_list_audio =
+{
 	{ MI_AUDIO_COUNT, { MI_QT_AUDIO_COUNT, false } },
 	{ MI_AUDIO_STATUS, { MI_QT_AUDIO_STATUS, false } },
 	{ MI_AUDIO_STREAMCOUNT, { MI_QT_AUDIO_STREAMCOUNT, false } },
@@ -1012,7 +1015,8 @@ QList<QPair<MediaInfoDLL::String, QPair<QString, bool>>> g_mediainfo_list_audio 
 ///@brief Kinds of Stream: text
 ///extern QList<QPair<MediaInfoDLL::String, QPair<QString, bool>>> g_mediainfo_list_text;
 ///
-QList<QPair<MediaInfoDLL::String, QPair<QString, bool>>> g_mediainfo_list_text = {
+QList<QPair<MediaInfoDLL::String, QPair<QString, bool>>> g_mediainfo_list_text =
+{
 	{ MI_TEXT_COUNT, { MI_QT_TEXT_COUNT, false } },
 	{ MI_TEXT_STATUS, { MI_QT_TEXT_STATUS, false } },
 	{ MI_TEXT_STREAMCOUNT, { MI_QT_TEXT_STREAMCOUNT, false } },
@@ -1256,7 +1260,8 @@ QList<QPair<MediaInfoDLL::String, QPair<QString, bool>>> g_mediainfo_list_text =
 ///@brief Kinds of Stream: other
 ///extern QList<QPair<MediaInfoDLL::String, QPair<QString, bool>>> g_mediainfo_list_other;
 ///
-QList<QPair<MediaInfoDLL::String, QPair<QString, bool>>> g_mediainfo_list_other = {
+QList<QPair<MediaInfoDLL::String, QPair<QString, bool>>> g_mediainfo_list_other =
+{
 	{ MI_OTHER_COUNT, { MI_QT_OTHER_COUNT, false } },
 	{ MI_OTHER_STATUS, { MI_QT_OTHER_STATUS, false } },
 	{ MI_OTHER_STREAMCOUNT, { MI_QT_OTHER_STREAMCOUNT, false } },
@@ -1377,7 +1382,8 @@ QList<QPair<MediaInfoDLL::String, QPair<QString, bool>>> g_mediainfo_list_other 
 ///@brief Kinds of Stream: image
 ///extern QList<QPair<MediaInfoDLL::String, QPair<QString, bool>>> g_mediainfo_list_image;
 ///
-QList<QPair<MediaInfoDLL::String, QPair<QString, bool>>> g_mediainfo_list_image = {
+QList<QPair<MediaInfoDLL::String, QPair<QString, bool>>> g_mediainfo_list_image =
+{
 	{ MI_IMAGE_COUNT, { MI_QT_IMAGE_COUNT, false } },
 	{ MI_IMAGE_STATUS, { MI_QT_IMAGE_STATUS, false } },
 	{ MI_IMAGE_STREAMCOUNT, { MI_QT_IMAGE_STREAMCOUNT, false } },
@@ -1507,7 +1513,8 @@ QList<QPair<MediaInfoDLL::String, QPair<QString, bool>>> g_mediainfo_list_image 
 ///@brief Kinds of Stream: menu
 ///extern QList<QPair<MediaInfoDLL::String, QPair<QString, bool>>> g_mediainfo_list_menu;
 ///
-QList<QPair<MediaInfoDLL::String, QPair<QString, bool>>> g_mediainfo_list_menu = {
+QList<QPair<MediaInfoDLL::String, QPair<QString, bool>>> g_mediainfo_list_menu =
+{
 	{ MI_MENU_COUNT, { MI_QT_MENU_COUNT, false } },
 	{ MI_MENU_STATUS, { MI_QT_MENU_STATUS, false } },
 	{ MI_MENU_STREAMCOUNT, { MI_QT_MENU_STREAMCOUNT, false } },
@@ -1604,7 +1611,8 @@ QList<QPair<MediaInfoDLL::String, QPair<QString, bool>>> g_mediainfo_list_menu =
 	{ MI_MENU_CHAPTERS_POS_END, { MI_QT_MENU_CHAPTERS_POS_END, false } },
 };
 
-QList<QPair<QString, QList<QPair<MediaInfoDLL::String, QPair<QString, bool>>>>> g_mediainfo_lists = {
+QList<QPair<QString, QList<QPair<MediaInfoDLL::String, QPair<QString, bool>>>>> g_mediainfo_lists =
+{
 	{ "General", g_mediainfo_list_general },  // Stream_General
 	{ "Video",   g_mediainfo_list_video   },  // Stream_Video
 	{ "Audio",   g_mediainfo_list_audio   },  // Stream_Audio

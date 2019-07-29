@@ -30,20 +30,23 @@ public:
     ~StdWatcher();
     class MainWindow *mainUi;
 
-    enum EHANDLER_TYPE {
+    enum EHANDLER_TYPE
+    {
         eHANDLER_TYPE_STARTED,
         eHANDLER_TYPE_ERROR,
         eHANDLER_TYPE_FINISHED,
         eHANDLER_TYPE_MAX,
     };
 
-    enum EDATA_TYPE {
+    enum EDATA_TYPE
+    {
         eDATA_TYPE_UTF8,
         eDATA_TYPE_LOCAL,
         eDATA_TYPE_LATIN1,
     };
 
-    enum ESTD_TYPE {
+    enum ESTD_TYPE
+    {
         eSTD_TYPE_OUT,
         eSTD_TYPE_ERROR,
     };
@@ -111,7 +114,7 @@ private:
     long m_close_time_min;
     long m_close_time_max;
     long m_close_time_set = eINDEX_NONE;
-    const long c_close_time = eINDEX_10 + eINDEX_1;
+    const long c_close_time = eINDEX_10 + eINDEX_1; // 10s
 
 private slots:
     /*Piper Process*/

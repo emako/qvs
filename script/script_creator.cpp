@@ -1385,7 +1385,8 @@ void ScriptCreator::on_checkBoxSourceFilterLSMASH_stateChanged(int)
 
 void ScriptCreator::selectSubFilter(void)
 {
-    static const QMap<QString, SubtitleFilter> s_subtitleExtRecommendFilter = {
+    static const QMap<QString, SubtitleFilter> s_subtitleExtRecommendFilter =
+    {
         { EXT_ASS,  VSFilter   },
         { EXT_SSA,  VSFilter   },
         { EXT_SUP,  Subtext    },
@@ -1394,7 +1395,8 @@ void ScriptCreator::selectSubFilter(void)
         { EXT_TCAS, TcasFilter },
     };
 
-    static const QMap<SubtitleFilter, QList<QString>> s_subtitleFilterSupportExt = {
+    static const QMap<SubtitleFilter, QList<QString>> s_subtitleFilterSupportExt =
+    {
         { VSFilter,    { EXT_ASS, EXT_SSA, EXT_SRT          } },
         { VSFilterMod, { EXT_ASS, EXT_SSA, EXT_SRT          } },
         { TcasFilter,  { EXT_TCAS                           } },

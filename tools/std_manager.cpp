@@ -31,14 +31,21 @@ void StdManager::releaseStdWatch(QUuid a_uid)
 
 void StdManager::releaseStdWatchAll(void)
 {
-    for(QMap<QUuid, StdWatcher*>::const_iterator i = g_pStdWatch.constBegin(); i != g_pStdWatch.constEnd(); ++i)
+    QMap<QUuid, StdWatcher*> at_pStdWatchClone = g_pStdWatch;
+
+    for(QMap<QUuid, StdWatcher*>::iterator i = at_pStdWatchClone.begin(); i != at_pStdWatchClone.end(); i++)
     {
-        if( (g_pStdWatch[i.key()] != nullptr) && (g_pStdWatch[i.key()]->isRunning()) )
+        if (at_pStdWatchClone[i.key()] == nullptr)
         {
-            if(QMessageBox::question(nullptr, MESSAGE_QUESTION, QObject::tr("StdWatcher is running!\nDo you really want to abort the job now?"), QMessageBox::Yes | QMessageBox::Cancel) == QMessageBox::Yes)
+            continue;
+        }
+
+        if(at_pStdWatchClone[i.key()]->isRunning())
+        {
+            if(QMessageBox::question(at_pStdWatchClone[i.key()], MESSAGE_QUESTION, QObject::tr("StdWatcher is running!\nDo you really want to abort the job now?"), QMessageBox::Yes | QMessageBox::Cancel) == QMessageBox::Yes)
             {
                 /* Abort on y. */
-                g_pStdWatch[i.key()]->abortJob();
+                at_pStdWatchClone[i.key()]->abortJob();
             }
             else
             {
@@ -46,9 +53,7 @@ void StdManager::releaseStdWatchAll(void)
                 continue;
             }
         }
-        if(g_pStdWatch[i.key()] != nullptr)
-        {
-            g_pStdWatch[i.key()]->close();
-        }
+
+        at_pStdWatchClone[i.key()]->close();
     }
 }

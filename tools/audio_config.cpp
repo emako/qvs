@@ -27,7 +27,8 @@ static const QString c_audio_config_bitrate = QObject::tr("Bitrate");
 static const QString c_audio_config_quality = QObject::tr("Quality");
 static const QString c_template_key_default = QObject::tr("<Default>");
 
-const QList<QPair<AudioAdvancedConfig::ECONFIG, QString>> c_list_config_encode_audio = {
+const QList<QPair<AudioAdvancedConfig::ECONFIG, QString>> c_list_config_encode_audio =
+{
     { AudioAdvancedConfig::eCONFIG_ADVANCED, "Advanced" },
     { AudioAdvancedConfig::eCONFIG_TYPE, "Type" },
     { AudioAdvancedConfig::eCONFIG_MODE, "Mode" },
@@ -112,7 +113,8 @@ void AudioConfig::setupUi(void)
     /* Group: WAV */
     PASS;
 
-    static const QList<QPair<AudioEnc::EENCODE_TYPE, QVariant>> s_config_default_value = {
+    static const QList<QPair<AudioEnc::EENCODE_TYPE, QVariant>> s_config_default_value =
+    {
         { AudioEnc::eENCODE_TYPE_AAC_APPLE,  DEFAULT_BITRATE },
         { AudioEnc::eENCODE_TYPE_AAC_FDK,    DEFAULT_BITRATE },
         { AudioEnc::eENCODE_TYPE_AAC_NERO,   DEFAULT_BITRATE },
@@ -129,7 +131,8 @@ void AudioConfig::setupUi(void)
         setDefaultConfig(getDefaultConfig(i, s_config_default_value.at(static_cast<int>(i)).second));
     }
 
-    s_value_sliders = {
+    s_value_sliders =
+    {
         ui->horizontalSliderAacApple,    /* eENCODE_TYPE_AAC_APPLE */
         ui->horizontalSliderAacFdk,      /* eENCODE_TYPE_AAC_FDK */
         ui->horizontalSliderAacNero,     /* eENCODE_TYPE_AAC_NERO */
