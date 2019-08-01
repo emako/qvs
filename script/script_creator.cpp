@@ -198,8 +198,6 @@ void ScriptCreator::on_buttonSave_clicked()
     {
         this->hide();
         mainUi->execJobCreator(JobCreator::eJOB_RELOAD_DROP, QDir::toNativeSeparators(m_outputFilename));
-        this->close();
-        return;
     }
     g_pConfig->setConfig(Config::eCONFIG_COMMON_ADD_JOB_IMMEDIATELY, !ui->checkBoxNotAddJobOnSaved->isChecked());
     this->close();
