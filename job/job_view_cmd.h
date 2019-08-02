@@ -18,10 +18,9 @@ class JobViewCmd : public QDialog
 public:
     explicit JobViewCmd(QDialog *parent = nullptr);
     ~JobViewCmd();
-    friend class MainWindow;
-    class MainWindow *mainUi;
 
-    enum ERELOAD_MODE {
+    enum ERELOAD_MODE
+    {
         eRELOAD_MODE_NONE,
         eRELOAD_MODE_JOB_ITEM,
         eRELOAD_MODE_STD_WATCHER_CMD_LIST,

@@ -32,7 +32,8 @@ public:
         this->clear();
     }
 
-    enum EMEDIA_TYPE {
+    enum EMEDIA_TYPE
+    {
         eMEDIA_TYPE_UNSPECIFIED,
         eMEDIA_TYPE_VIDEO,
         eMEDIA_TYPE_AUDIO,
@@ -77,7 +78,8 @@ public:
     friend class MainWindow;
     class MainWindow *mainUi;
 
-    enum ERELOAD_TYPE {
+    enum ERELOAD_TYPE
+    {
         eRELOAD_TYPE_FFMPEG,
         eRELOAD_TYPE_EAC3TO,
         eRELOAD_TYPE_MKVEXTRACT,

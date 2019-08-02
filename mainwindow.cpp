@@ -78,7 +78,6 @@ void MainWindow::setupUi(void)
 
     /*Init*/
     m_job_chef->mainUi = this;
-    ui->widgetMerge->mainUi = this;
     ui->widgetAudioEnc->mainUi = this;
     ui->widgetMuxer->mainUi = this;
     ui->widgetDemuxer->mainUi = this;
@@ -121,6 +120,7 @@ void MainWindow::setupUi(void)
 
     /*Signal*/
     setAcctions();
+    setJumpListItems();
 	connect(Common::getInstance(), SIGNAL(systemShutdown()), this, SLOT(close()));
 	connect(Timer::getInstance(), SIGNAL(timeout(int, int)), this, SLOT(slotTimeout(int, int)));
 	connect(MailBox::getInstance(), SIGNAL(mailRecived(EMODULE, STMAILBOX*)), this, SLOT(slotMail(EMODULE, STMAILBOX*)));
@@ -182,6 +182,8 @@ void MainWindow::closeEvent(QCloseEvent *e)
             e->accept();
         }
     }
+
+    m_jumpList.tasks()->clear();
 
 	Timer::getInstance()->stopAll();
 	MailBox::getInstance()->releaseMailBox();
@@ -320,6 +322,18 @@ void MainWindow::setAcctions(void)
     m_pThumbnailToolBar->addButton(thumbnailToolAbortJob);
     connect(thumbnailToolStartJob, SIGNAL(clicked()), this, SLOT(on_buttonStartJob_clicked()));
     connect(thumbnailToolAbortJob, SIGNAL(clicked()), this, SLOT(on_buttonAbortJob_clicked()));
+}
+
+void MainWindow::setJumpListItems(void)
+{
+    /* JumpList */
+    QWinJumpListItem *at_jumpListItem = new QWinJumpListItem(QWinJumpListItem::Link); // deleted on process exited.
+    at_jumpListItem->setTitle(tr("VapourSynth Editor"));
+    at_jumpListItem->setIcon(QIcon(":/buttons/vsedit.png"));
+    at_jumpListItem->setFilePath(QDir::currentPath() + QDir::separator() + "vsedit");
+    at_jumpListItem->setWorkingDirectory(QDir::currentPath());
+    m_jumpList.tasks()->addItem(at_jumpListItem);
+    m_jumpList.tasks()->setVisible(true);
 }
 
 void MainWindow::slotOpenUrl(void)
@@ -485,7 +499,6 @@ void MainWindow::viewJobCmd(void)
         JobItem job_item = m_jobs.at(row);
 
         JobViewCmd job_view_cmd;
-        job_view_cmd.mainUi = this;
         job_view_cmd.reload(job_item);
         job_view_cmd.exec();
     }
@@ -526,7 +539,7 @@ void MainWindow::slotPreview(void)
         at_pScriptPlayer->setPlayAvisynthWith32Bit(false);
         at_pScriptPlayer->ui->comboBoxArch->setCurrentIndex(job_item.job_config[JobCreator::eJOB_CONFIG_ARCH].toInt());
         at_pScriptPlayer->reload(source_path);
-        m_pScriptPlayers.insert(at_pScriptPlayer->m_uid_own, at_pScriptPlayer);
+        g_pScriptPlayers.insert(at_pScriptPlayer->m_uid_own, at_pScriptPlayer);
     }
 }
 
@@ -1427,13 +1440,13 @@ void MainWindow::openPreviewDialog(void)
     at_pPreviewDialog->mainUi = this;
     at_pPreviewDialog->m_uid = QUuid::createUuid();
     at_pPreviewDialog->show();
-    m_pPreviewDialogs.insert(at_pPreviewDialog->m_uid, at_pPreviewDialog);
+    g_pPreviewDialogs.insert(at_pPreviewDialog->m_uid, at_pPreviewDialog);
 #else
     FFPreviewDialog *at_pPreviewDialog = new FFPreviewDialog();
     at_pPreviewDialog->mainUi = this;
     at_pPreviewDialog->m_uid = QUuid::createUuid();
     at_pPreviewDialog->show();
-    //m_pPreviewDialogs.insert(at_pPreviewDialog->m_uid, at_pPreviewDialog);
+    //g_pPreviewDialogs.insert(at_pPreviewDialog->m_uid, at_pPreviewDialog);
 #endif
 }
 
@@ -1444,7 +1457,7 @@ void MainWindow::openScriptCreator(void)
     at_pScriptCreator->mainUi = this;
     at_pScriptCreator->m_uid_own = QUuid::createUuid();
     at_pScriptCreator->show();
-    m_pScriptCreators.insert(at_pScriptCreator->m_uid_own, at_pScriptCreator);
+    g_pScriptCreators.insert(at_pScriptCreator->m_uid_own, at_pScriptCreator);
 }
 
 void MainWindow::openScriptPlayer(void)
@@ -1454,7 +1467,7 @@ void MainWindow::openScriptPlayer(void)
     at_pScriptPlayer->mainUi = this;
     at_pScriptPlayer->m_uid_own = QUuid::createUuid();
     at_pScriptPlayer->show();
-    m_pScriptPlayers.insert(at_pScriptPlayer->m_uid_own, at_pScriptPlayer);
+    g_pScriptPlayers.insert(at_pScriptPlayer->m_uid_own, at_pScriptPlayer);
 }
 
 void MainWindow::openTools(void)
@@ -1475,41 +1488,41 @@ void MainWindow::openTools(void)
 
 void MainWindow::releaseChildWindowsAll(void)
 {
-    for(QMap<QUuid, ScriptPlayer *>::iterator i = m_pScriptPlayers.begin(); i != m_pScriptPlayers.end(); ++i)
+    for(QMap<QUuid, ScriptPlayer *>::iterator i = g_pScriptPlayers.begin(); i != g_pScriptPlayers.end(); ++i)
     {
-        if(m_pScriptPlayers[i.key()] != nullptr)
+        if(g_pScriptPlayers[i.key()] != nullptr)
         {
-            m_pScriptPlayers[i.key()]->close();
+            g_pScriptPlayers[i.key()]->close();
         }
     }
-    m_pScriptPlayers.clear();
+    g_pScriptPlayers.clear();
 
-    for(QMap<QUuid, MediaInfoDialog *>::iterator i = m_pMediaInfoDialogs.begin(); i != m_pMediaInfoDialogs.end(); ++i)
+    for(QMap<QUuid, MediaInfoDialog *>::iterator i = g_pMediaInfoDialogs.begin(); i != g_pMediaInfoDialogs.end(); ++i)
     {
-        if(m_pMediaInfoDialogs[i.key()] != nullptr)
+        if(g_pMediaInfoDialogs[i.key()] != nullptr)
         {
-            m_pMediaInfoDialogs[i.key()]->close();
+            g_pMediaInfoDialogs[i.key()]->close();
         }
     }
-    m_pMediaInfoDialogs.clear();
+    g_pMediaInfoDialogs.clear();
 
-    for(QMap<QUuid, PreviewDialog *>::iterator i = m_pPreviewDialogs.begin(); i != m_pPreviewDialogs.end(); ++i)
+    for(QMap<QUuid, PreviewDialog *>::iterator i = g_pPreviewDialogs.begin(); i != g_pPreviewDialogs.end(); ++i)
     {
-        if(m_pPreviewDialogs[i.key()] != nullptr)
+        if(g_pPreviewDialogs[i.key()] != nullptr)
         {
-            m_pPreviewDialogs[i.key()]->close();
+            g_pPreviewDialogs[i.key()]->close();
         }
     }
-    m_pPreviewDialogs.clear();
+    g_pPreviewDialogs.clear();
 
-    for(QMap<QUuid, ScriptCreator *>::iterator i = m_pScriptCreators.begin(); i != m_pScriptCreators.end(); ++i)
+    for(QMap<QUuid, ScriptCreator *>::iterator i = g_pScriptCreators.begin(); i != g_pScriptCreators.end(); ++i)
     {
-        if(m_pScriptCreators[i.key()] != nullptr)
+        if(g_pScriptCreators[i.key()] != nullptr)
         {
-            m_pScriptCreators[i.key()]->close();
+            g_pScriptCreators[i.key()]->close();
         }
     }
-    m_pScriptCreators.clear();
+    g_pScriptCreators.clear();
 }
 
 void MainWindow::slotAudioBatchEncStarted(void)
@@ -1713,37 +1726,37 @@ void MainWindow::languageChanged(void)
 
 void MainWindow::slotMinimize(void)
 {
-    m_pMinimizeWidgets.clear();
+    g_pMinimizeWidgets.clear();
 
-    for(QMap<QUuid, ScriptPlayer *>::iterator i = m_pScriptPlayers.begin(); i != m_pScriptPlayers.end(); ++i)
+    for(QMap<QUuid, ScriptPlayer *>::iterator i = g_pScriptPlayers.begin(); i != g_pScriptPlayers.end(); ++i)
     {
-        if(m_pScriptPlayers[i.key()] != nullptr && m_pScriptPlayers[i.key()]->isVisible())
+        if(g_pScriptPlayers[i.key()] != nullptr && g_pScriptPlayers[i.key()]->isVisible())
         {
-            m_pMinimizeWidgets.insert(i.key(), m_pScriptPlayers[i.key()]);
+            g_pMinimizeWidgets.insert(i.key(), g_pScriptPlayers[i.key()]);
         }
     }
 
-    for(QMap<QUuid, MediaInfoDialog *>::iterator i = m_pMediaInfoDialogs.begin(); i != m_pMediaInfoDialogs.end(); ++i)
+    for(QMap<QUuid, MediaInfoDialog *>::iterator i = g_pMediaInfoDialogs.begin(); i != g_pMediaInfoDialogs.end(); ++i)
     {
-        if(m_pMediaInfoDialogs[i.key()] != nullptr && m_pMediaInfoDialogs[i.key()]->isVisible())
+        if(g_pMediaInfoDialogs[i.key()] != nullptr && g_pMediaInfoDialogs[i.key()]->isVisible())
         {
-            m_pMinimizeWidgets.insert(i.key(), m_pMediaInfoDialogs[i.key()]);
+            g_pMinimizeWidgets.insert(i.key(), g_pMediaInfoDialogs[i.key()]);
         }
     }
 
-    for(QMap<QUuid, PreviewDialog *>::iterator i = m_pPreviewDialogs.begin(); i != m_pPreviewDialogs.end(); ++i)
+    for(QMap<QUuid, PreviewDialog *>::iterator i = g_pPreviewDialogs.begin(); i != g_pPreviewDialogs.end(); ++i)
     {
-        if(m_pPreviewDialogs[i.key()] != nullptr && m_pPreviewDialogs[i.key()]->isVisible())
+        if(g_pPreviewDialogs[i.key()] != nullptr && g_pPreviewDialogs[i.key()]->isVisible())
         {
-            m_pMinimizeWidgets.insert(i.key(), m_pPreviewDialogs[i.key()]);
+            g_pMinimizeWidgets.insert(i.key(), g_pPreviewDialogs[i.key()]);
         }
     }
 
-    for(QMap<QUuid, ScriptCreator *>::iterator i = m_pScriptCreators.begin(); i != m_pScriptCreators.end(); ++i)
+    for(QMap<QUuid, ScriptCreator *>::iterator i = g_pScriptCreators.begin(); i != g_pScriptCreators.end(); ++i)
     {
-        if(m_pScriptCreators[i.key()] != nullptr && m_pScriptCreators[i.key()]->isVisible())
+        if(g_pScriptCreators[i.key()] != nullptr && g_pScriptCreators[i.key()]->isVisible())
         {
-            m_pMinimizeWidgets.insert(i.key(), m_pScriptCreators[i.key()]);
+            g_pMinimizeWidgets.insert(i.key(), g_pScriptCreators[i.key()]);
         }
     }
 
@@ -1751,18 +1764,18 @@ void MainWindow::slotMinimize(void)
     {
         if(g_pStdWatch[i.key()] != nullptr && g_pStdWatch[i.key()]->isVisible())
         {
-            m_pMinimizeWidgets.insert(i.key(), g_pStdWatch[i.key()]);
+            g_pMinimizeWidgets.insert(i.key(), g_pStdWatch[i.key()]);
         }
     }
 
     if(this->isVisible())
     {
-        m_pMinimizeWidgets.insert(QUuid::createUuid(), this);
+        g_pMinimizeWidgets.insert(QUuid::createUuid(), this);
     }
 
-    for(QMap<QUuid, QWidget *>::iterator i = m_pMinimizeWidgets.begin(); i != m_pMinimizeWidgets.end(); i++)
+    for(QMap<QUuid, QWidget *>::iterator i = g_pMinimizeWidgets.begin(); i != g_pMinimizeWidgets.end(); i++)
     {
-        m_pMinimizeWidgets[i.key()]->hide();
+        g_pMinimizeWidgets[i.key()]->hide();
     }
     m_pSystemTray->show();
     QApplication::setQuitOnLastWindowClosed(false);
@@ -1774,13 +1787,16 @@ void MainWindow::slotTrayActivated(QSystemTrayIcon::ActivationReason a_reason)
 
     if(m_pSystemTray->isVisible())
     {
-        for(QMap<QUuid, QWidget *>::iterator i = m_pMinimizeWidgets.begin(); i != m_pMinimizeWidgets.end(); i++)
+        for(QMap<QUuid, QWidget *>::iterator i = g_pMinimizeWidgets.begin(); i != g_pMinimizeWidgets.end(); i++)
         {
-            m_pMinimizeWidgets[i.key()]->show();
+            if(g_pMinimizeWidgets[i.key()] != nullptr)
+            {
+                g_pMinimizeWidgets[i.key()]->show();
+            }
         }
     }
     m_pSystemTray->hide();
-    m_pMinimizeWidgets.clear();
+    g_pMinimizeWidgets.clear();
     QApplication::setQuitOnLastWindowClosed(true);
 }
 
@@ -1823,19 +1839,9 @@ bool MainWindow::slotMail(EMODULE a_module, STMAILBOX* a_mail_box)
 	bool ret = false;
 
 	switch (a_module)
-	{
-	case MODULE_MAINWINDOW:
-		switch (a_mail_box->type)
-		{
-		case eINDEX_0: // Tpye 0: Called and to remove Widgets after closed.
-			ret = slotChildWindowClosedRemove(a_mail_box->uid);
-			break;
-		default:
-			break;
-		};
-		break;
+    {
 	case MODULE_SCRIPT_PLAYER:
-		ret = m_pScriptPlayers[a_mail_box->uid]->slotMail(a_mail_box);
+        ret = g_pScriptPlayers[a_mail_box->uid]->slotMail(a_mail_box);
 		break;
 	case MODULE_JOB_CHEF:
 		ret = m_job_chef->updatePriorty();
@@ -1848,20 +1854,19 @@ bool MainWindow::slotMail(EMODULE a_module, STMAILBOX* a_mail_box)
 
 void MainWindow::slotChildWindowClosed(QUuid a_uid)
 {
-    STMAILBOX *mail_box = new STMAILBOX();
-
-    mail_box->type = eINDEX_0;
-    mail_box->uid = a_uid;
-    g_pMailBox.insert(MODULE_MAINWINDOW, mail_box);
+    if(!slotChildWindowClosedRemove(a_uid))
+    {
+        qWarning() << tr("Not child window contains, UID:%1.").arg(a_uid.toString());
+    }
 }
 
 bool MainWindow::slotChildWindowClosedRemove(QUuid a_uid)
 {
     bool ret = false;
 
-    if(m_pMinimizeWidgets.contains(a_uid))
+    if(g_pMinimizeWidgets.contains(a_uid))
     {
-        m_pMinimizeWidgets.remove(a_uid);
+        g_pMinimizeWidgets.remove(a_uid);
         ret = true;
     }
     if(g_pStdWatch.contains(a_uid))
@@ -1869,24 +1874,24 @@ bool MainWindow::slotChildWindowClosedRemove(QUuid a_uid)
         g_pStdWatch.remove(a_uid);
         ret = true;
     }
-    if(m_pScriptPlayers.contains(a_uid))
+    if(g_pScriptPlayers.contains(a_uid))
     {
-        m_pScriptPlayers.remove(a_uid);
+        g_pScriptPlayers.remove(a_uid);
         ret = true;
     }
-    if(m_pMediaInfoDialogs.contains(a_uid))
+    if(g_pMediaInfoDialogs.contains(a_uid))
     {
-        m_pMediaInfoDialogs.remove(a_uid);
+        g_pMediaInfoDialogs.remove(a_uid);
         ret = true;
     }
-    if(m_pPreviewDialogs.contains(a_uid))
+    if(g_pPreviewDialogs.contains(a_uid))
     {
-        m_pPreviewDialogs.remove(a_uid);
+        g_pPreviewDialogs.remove(a_uid);
         ret = true;
     }
-    if(m_pScriptCreators.contains(a_uid))
+    if(g_pScriptCreators.contains(a_uid))
     {
-        m_pScriptCreators.remove(a_uid);
+        g_pScriptCreators.remove(a_uid);
         ret = true;
     }
     return ret;
@@ -1900,8 +1905,6 @@ void MainWindow::logging(const QString &a_log)
 void MainWindow::slotViewJobsLog(void)
 {
     JobViewCmd job_view_cmd;
-
-    job_view_cmd.mainUi = this;
 
     if(QFile(m_logging->loggingPath()).size() > 10 * MB)
     {

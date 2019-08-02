@@ -160,7 +160,7 @@ void ScriptCreator::on_buttonPreview_clicked()
     at_pScriptPlayer->setReloadTitleShown(false);
     at_pScriptPlayer->slotPlayOnMounted(true);
     at_pScriptPlayer->reload(script_filename);
-    mainUi->m_pScriptPlayers.insert(at_pScriptPlayer->m_uid_own, at_pScriptPlayer);
+    g_pScriptPlayers.insert(at_pScriptPlayer->m_uid_own, at_pScriptPlayer);
 }
 
 void ScriptCreator::on_buttonSave_clicked()
@@ -362,7 +362,7 @@ bool ScriptCreator::eventFilter(QObject *o, QEvent *e)
             at_pPreviewDialog->m_uid = m_uid_preview_source;
             at_pPreviewDialog->show();
             at_pPreviewDialog->reload(ui->editSource->text().toStdString());
-            mainUi->m_pPreviewDialogs.insert(at_pPreviewDialog->m_uid, at_pPreviewDialog);
+            g_pPreviewDialogs.insert(at_pPreviewDialog->m_uid, at_pPreviewDialog);
         }
     }
     return false;
@@ -370,21 +370,21 @@ bool ScriptCreator::eventFilter(QObject *o, QEvent *e)
 
 void ScriptCreator::release(const QUuid &a_uid)
 {
-    if(mainUi->m_pPreviewDialogs.contains(a_uid))
+    if(g_pPreviewDialogs.contains(a_uid))
     {
-        if(mainUi->m_pPreviewDialogs[a_uid] != nullptr)
+        if(g_pPreviewDialogs[a_uid] != nullptr)
         {
-            mainUi->m_pPreviewDialogs[a_uid]->close();
+            g_pPreviewDialogs[a_uid]->close();
         }
-        mainUi->m_pPreviewDialogs.remove(a_uid);
+        g_pPreviewDialogs.remove(a_uid);
     }
-    else if(mainUi->m_pScriptPlayers.contains(a_uid))
+    else if(g_pScriptPlayers.contains(a_uid))
     {
-        if(mainUi->m_pScriptPlayers[a_uid] != nullptr)
+        if(g_pScriptPlayers[a_uid] != nullptr)
         {
-            mainUi->m_pScriptPlayers[a_uid]->close();
+            g_pScriptPlayers[a_uid]->close();
         }
-        mainUi->m_pScriptPlayers.remove(a_uid);
+        g_pScriptPlayers.remove(a_uid);
     }
     QFile(previewScriptFilename(a_uid)).remove();
 }

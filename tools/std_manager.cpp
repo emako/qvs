@@ -1,6 +1,11 @@
 #include "std_manager.h"
 
 QMap<QUuid, StdWatcher*> g_pStdWatch;
+QMap<QUuid, ScriptPlayer *> g_pScriptPlayers;
+QMap<QUuid, MediaInfoDialog *> g_pMediaInfoDialogs;
+QMap<QUuid, PreviewDialog *> g_pPreviewDialogs;
+QMap<QUuid, ScriptCreator *> g_pScriptCreators;
+QMap<QUuid, QWidget *> g_pMinimizeWidgets;
 
 QUuid StdManager::createStdWatch(void)
 {

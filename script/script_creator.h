@@ -41,7 +41,8 @@ public:
     QUuid m_uid_preview_source;
     QUuid m_uid_preview_script;
 
-    enum ScriptCreateFilter {
+    enum ScriptCreateFilter
+    {
         ScriptCreateInit,               /*Import module and get core.*/
         ScriptCreateSource,
         ScriptCreateCrop,
@@ -57,14 +58,16 @@ public:
         ScriptCreateMax,
     };
 
-    enum ScriptCreatorTab {
+    enum ScriptCreatorTab
+    {
         ScriptCreatorTabSource,
         ScriptCreatorTabFilters,
         ScriptCreatorTabScript,
         ScriptCreatorTabMax,
     };
 
-    enum ReloadFileType {
+    enum ReloadFileType
+    {
         ReloadFileSource,
         ReloadFileOutput,
         ReloadFileTimecode,
@@ -73,7 +76,8 @@ public:
         ReloadFileSubtitle,
     };
 
-    enum SourceFilter {
+    enum SourceFilter
+    {
         LWLibavSource,
         FFmpegSource,
         DGSourceNV,
@@ -81,7 +85,8 @@ public:
         DirectShowSource,
     };
 
-    enum ResizeFilter {
+    enum ResizeFilter
+    {
         BilinearResize,
         BicubicResize,
         PointResize,
@@ -91,30 +96,35 @@ public:
         Nnedi3Resize,
     };
 
-    enum FramesPerSecondFilter {
+    enum FramesPerSecondFilter
+    {
         ChangeFPS,
         AssumeFPS,
         VFRtoCFR,
     };
 
-    enum SourceType {
+    enum SourceType
+    {
         Progressive,
         Interlaced,
         Telecine,
     };
 
-    enum InterlacedFilter {
+    enum InterlacedFilter
+    {
         Yadifmod,
         QTGMC,
         DGBob,
     };
 
-    enum TelecineFilter {
+    enum TelecineFilter
+    {
         VIVTC,
         DGIVTC,
     };
 
-    enum class FieldOrder {
+    enum class FieldOrder
+    {
         T,
         B,
         P,
@@ -122,17 +132,20 @@ public:
         BFF = B,
     };
 
-    enum FrameRate {
+    enum FrameRate
+    {
         SingleRate,
         DoubleRate,
         DoubleRateOriginal, /*double-rate but retain the original frame rate (for slow motion).*/
     };
 
-    enum DenoiseFilter {
+    enum DenoiseFilter
+    {
         DGDenoise,
     };
 
-    enum SubtitleFilter {
+    enum SubtitleFilter
+    {
         VSFilter,
         VSFilterMod,
         TcasFilter,

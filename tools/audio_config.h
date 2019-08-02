@@ -25,7 +25,8 @@ public:
     {
     }
 
-    enum ECONFIG {
+    enum ECONFIG
+    {
         eCONFIG_ADVANCED,
         eCONFIG_TYPE,
         eCONFIG_MODE,
@@ -85,7 +86,8 @@ public:
     friend class AudioEnc;
     class MainWindow *mainUi;
 
-    enum EAUDIO_CONFIG_MODE {
+    enum EAUDIO_CONFIG_MODE
+    {
         eDEFAULT_MODE = eINDEX_0,
 
         eQAAC_MODE_LC_AAC_TRUE_VBR = eINDEX_0,
@@ -113,7 +115,8 @@ public:
         eMP3_MODE_VBR = eINDEX_2,
     };
 
-    enum EAUDIO_CONFIG_PROFILE {
+    enum EAUDIO_CONFIG_PROFILE
+    {
         eDEFAULT_PROFILE = eINDEX_0,
 
         eQAAC_PROFILE_LC_AAC = eINDEX_0,

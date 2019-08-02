@@ -8,12 +8,15 @@
 #include <QScrollBar>
 #include <QDesktopServices>
 #include <QJsonDocument>
+#include <QMetaMethod>
 #include <QSystemTrayIcon>
 #include <QWinTaskbarButton>
 #include <QWinTaskbarProgress>
 #include <QWinThumbnailToolBar>
 #include <QWinThumbnailToolButton>
-#include <QMetaMethod>
+#include <QWinJumpList>
+#include <QWinJumpListItem>
+#include <QWinJumpListCategory>
 
 #include "job/job_creator.h"
 #include "job/job_cmdlist.h"
@@ -91,16 +94,12 @@ public:
     int m_jobs_index;
     JobChef *m_job_chef;
     Logging *m_logging;
-    QMap<QUuid, ScriptPlayer *> m_pScriptPlayers;
-    QMap<QUuid, MediaInfoDialog *> m_pMediaInfoDialogs;
-    QMap<QUuid, PreviewDialog *> m_pPreviewDialogs;
-    QMap<QUuid, ScriptCreator *> m_pScriptCreators;
     QMenu *m_pJobViewMenu;
     QMenu *m_pLogViewMenu;
     QSystemTrayIcon *m_pSystemTray;
     QWinTaskbarButton *m_pTaskbarButton;
     QWinThumbnailToolBar *m_pThumbnailToolBar;
-    QMap<QUuid, QWidget *> m_pMinimizeWidgets;
+    QWinJumpList m_jumpList;
 
     JobChef::EJOB_STATUS m_job_status_prev;
 
@@ -193,6 +192,7 @@ private:
 
     void setupUi(void);
     void setAcctions(void);
+    void setJumpListItems(void);
 
     QString getJobStatusText(JobChef::EJOB_STATUS a_job_status);
     QIcon getJobStatusIcon(JobChef::EJOB_STATUS a_job_status);

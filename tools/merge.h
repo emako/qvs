@@ -35,9 +35,9 @@ public:
     explicit Merge(QWidget *parent = nullptr);
     ~Merge();
     friend class MainWindow;
-    class MainWindow *mainUi;
 
-    enum EMERGE_MODE {
+    enum EMERGE_MODE
+    {
         eMERGE_MODE_CONTAINER,
         eMERGE_MODE_COMBINE,
         eMERGE_MODE_COPY,
@@ -46,25 +46,29 @@ public:
         eMERGE_MODE_MAX,
     };
 
-    enum EMERGE_TYPE {
+    enum EMERGE_TYPE
+    {
         eMERGE_TYPE_MULTIPLE_LINES,
         eMERGE_TYPE_SINGLE_LINE,
         eMERGE_TYPE_MAX,
     };
 
-    enum EMERGE_STACKED_WIDGET_MODE {
+    enum EMERGE_STACKED_WIDGET_MODE
+    {
         eMERGE_STACKED_WIDGET_MODE_CONTAINER,
         eMERGE_STACKED_WIDGET_MODE_CUSTOM,
         eMERGE_STACKED_WIDGET_MODE_MAX,
     };
 
-    enum EMERGE_CONTAINER_AUDIO_CODEC {
+    enum EMERGE_CONTAINER_AUDIO_CODEC
+    {
         eMERGE_CONTAINER_AUDIO_CODEC_COPY,
         eMERGE_CONTAINER_AUDIO_CODEC_AAC,
         eMERGE_CONTAINER_AUDIO_CODEC_MAX,
     };
 
-    enum ECONTEXT_MENU {
+    enum ECONTEXT_MENU
+    {
         eCONTEXT_MENU_LOAD_FROM_FILES,
         eCONTEXT_MENU_LOAD_FROM_FILE_TEXT,
         eCONTEXT_MENU_LOAD_FROM_CLIPBOARD,

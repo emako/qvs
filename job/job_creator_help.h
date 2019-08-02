@@ -21,7 +21,8 @@ public:
     ~JobCreatorHelp();
     class JobCreator *mainUi;
 
-    enum EJOB_ENCODER {
+    enum EJOB_ENCODER
+    {
         eJOB_ENCODER_AVC,
         eJOB_ENCODER_HEVC,
         eJOB_ENCODER_NVENCC,
@@ -30,7 +31,8 @@ public:
         eJOB_ENCODER_MAX,
     };
 
-    enum EJOB_PIPER {
+    enum EJOB_PIPER
+    {
         eJOB_PIPER_VSPIPE,
         eJOB_PIPER_AVS4X26X,
         eJOB_PIPER_DIRECT,

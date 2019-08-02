@@ -30,13 +30,15 @@ public:
     QUuid m_uid_preview; /* For Preview (call).    */
     QUuid m_uid_std;     /* For StdWatcher (call). */
 
-    enum ESCRIPT_TYPE {
+    enum ESCRIPT_TYPE
+    {
         eSCRIPT_TYPE_VS,
         eSCRIPT_TYPE_AVS,
         eSCRIPT_TYPE_NOT_SCRIPT,
     };
 
-    enum ECONTEXT_MENU {
+    enum ECONTEXT_MENU
+    {
         eCONTEXT_MENU_EXPLORE,
         eCONTEXT_MENU_COPY_CLIP_PATH,
         eCONTEXT_MENU_SEPARATOR_0,
@@ -45,7 +47,8 @@ public:
         eCONTEXT_MENU_MAX,
     };
 
-    enum ESCRIPT_PLAYER_PLAYER {
+    enum ESCRIPT_PLAYER_PLAYER
+    {
         eSCRIPT_PLAYER_PLAYER_SYSTEM,
         eSCRIPT_PLAYER_PLAYER_PREVIEW,
         eSCRIPT_PLAYER_PLAYER_VIRTUAL_DUB64,

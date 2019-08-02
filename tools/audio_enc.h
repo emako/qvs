@@ -43,7 +43,8 @@ public:
     friend class AudioConfig;
     class MainWindow *mainUi;
 
-    enum EENCODE_TYPE {
+    enum EENCODE_TYPE
+    {
         eENCODE_TYPE_AAC_APPLE,
         eENCODE_TYPE_AAC_FDK,
         eENCODE_TYPE_AAC_NERO,

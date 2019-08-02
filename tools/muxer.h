@@ -26,12 +26,15 @@ public:
     friend class MainWindow;
     class MainWindow *mainUi;
 
-    enum ERELOAD_TYPE {
+    enum ERELOAD_TYPE
+    {
         eRELOAD_TYPE_VIDEO,
         eRELOAD_TYPE_AUDIO,
         eRELOAD_TYPE_MAX,
     };
-    enum EOUTPUT_TYPE {
+
+    enum EOUTPUT_TYPE
+    {
         eOUTPUT_TYPE_MP4BOX,
         eOUTPUT_TYPE_LSMASH,
         eOUTPUT_TYPE_MKVMERGE,

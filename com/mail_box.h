@@ -37,7 +37,8 @@ public:
         return &s_mailBox;
     }
 
-    enum EMAIL_TIMING {
+    enum EMAIL_TIMING
+    {
         eMAIL_TIMING_DEFAULT,
         eMAIL_TIMING_PROCESS_STARTED,
         eMAIL_TIMING_PROCESS_ERROR,

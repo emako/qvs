@@ -25,7 +25,8 @@ public:
     class MainWindow *mainUi;
     friend class MainWindow;
 
-    enum EINSTALLER_CONTENTS {
+    enum EINSTALLER_CONTENTS
+    {
         eINSTALLER_CONTENTS_PFM,                /* Cmd */
         eINSTALLER_CONTENTS_VS64,               /* Reg */
         eINSTALLER_CONTENTS_AVS32,              /* Reg */

@@ -37,11 +37,11 @@ void ScriptPlayer::closeEvent(QCloseEvent *e)
 
 void ScriptPlayer::releasePreviewDialog(const QUuid &a_uid)
 {
-    if(mainUi->m_pPreviewDialogs.contains(a_uid))
+    if(g_pPreviewDialogs.contains(a_uid))
     {
-        if(mainUi->m_pPreviewDialogs[a_uid] != nullptr)
+        if(g_pPreviewDialogs[a_uid] != nullptr)
         {
-            mainUi->m_pPreviewDialogs[a_uid]->close();
+            g_pPreviewDialogs[a_uid]->close();
         }
     }
 }
@@ -347,7 +347,7 @@ void ScriptPlayer::on_buttonPlay_clicked()
             at_pPreviewDialog->show();
             at_pPreviewDialog->m_reloadTitleShown = m_reloadTitleShown;
             at_pPreviewDialog->reload(filename.toStdString());
-            mainUi->m_pPreviewDialogs.insert(at_pPreviewDialog->m_uid, at_pPreviewDialog);
+            g_pPreviewDialogs.insert(at_pPreviewDialog->m_uid, at_pPreviewDialog);
         }while(false);
         break;
     case eSCRIPT_PLAYER_PLAYER_VIRTUAL_DUB64:

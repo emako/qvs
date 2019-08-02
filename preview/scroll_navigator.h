@@ -9,9 +9,9 @@ class ScrollNavigator : public QWidget
 {
 public:
 
-	ScrollNavigator(QWidget * a_pParent = 0);
+    ScrollNavigator(QWidget * a_pParent = nullptr);
 
-	virtual ~ScrollNavigator();
+    virtual ~ScrollNavigator() override;
 
 	void draw(int a_contentsWidth, int a_contentsHeight, int a_viewportX,
 		int a_viewportY, int a_viewportWidth, int a_viewportHeight);

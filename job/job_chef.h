@@ -15,7 +15,8 @@ public:
     friend class MainWindow;
     class MainWindow *mainUi;
 
-    enum EJOB_STATUS {
+    enum EJOB_STATUS
+    {
         eJOB_STATUS_INITIAL,
         eJOB_STATUS_READY,
         eJOB_STATUS_STARTING,
@@ -30,7 +31,8 @@ public:
         eJOB_STATUS_COMPLETED,
     };
 
-    enum EPROCESS_PRIORITY {
+    enum EPROCESS_PRIORITY
+    {
         ePROCESS_PRIORITY_IIDLE          =   IDLE_PRIORITY_CLASS,
         ePROCESS_PRIORITY_BELOW_NORMAL   =   BELOW_NORMAL_PRIORITY_CLASS,
         ePROCESS_PRIORITY_NORMAL         =   NORMAL_PRIORITY_CLASS,
@@ -39,7 +41,8 @@ public:
         ePROCESS_PRIORITY_REALTIME       =   REALTIME_PRIORITY_CLASS,
     };
 
-    enum EPROCESS_PRIORITY_INDEX {
+    enum EPROCESS_PRIORITY_INDEX
+    {
         ePROCESS_PRIORITY_IIDLE_INDEX,
         ePROCESS_PRIORITY_BELOW_NORMAL_INDEX,
         ePROCESS_PRIORITY_NORMAL_INDEX,
@@ -49,7 +52,8 @@ public:
         ePROCESS_PRIORITY_INDEX_MAX,
     };
 
-    enum EJOB_LOG_TYPE {
+    enum EJOB_LOG_TYPE
+    {
         eJOB_LOG_TYPE_DEBUG,
         eJOB_LOG_TYPE_INFO,
         eJOB_LOG_TYPE_WARN,

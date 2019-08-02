@@ -13,7 +13,8 @@ namespace EditorColor
 {
     namespace ColorLineNumArea
     {
-        enum Color{
+        enum Color
+        {
             r = 240,
             g = 240,
             b = 240,
@@ -22,7 +23,8 @@ namespace EditorColor
 
     namespace ColorLineNum
     {
-        enum Color{
+        enum Color
+        {
             r = 140,
             g = 140,
             b = 140,
@@ -31,7 +33,8 @@ namespace EditorColor
 
     namespace ColorHighlight
     {
-        enum Color{
+        enum Color
+        {
             r = 232,
             g = 232,
             b = 255,

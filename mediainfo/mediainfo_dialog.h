@@ -42,7 +42,8 @@ public:
     QUuid m_uid;     /* For StdWatcher (call). */
     bool m_fromCLI;
 
-    enum ECONTEXT_MENU {
+    enum ECONTEXT_MENU
+    {
         eCONTEXT_MENU_LOAD,
         eCONTEXT_MENU_ADD_A_FORM,
         eCONTEXT_MENU_SEPARATOR_0,
@@ -88,7 +89,6 @@ private:
     QString m_mediainfo_path;
     bool m_isFFprobe;
     bool m_child;
-
 
 protected slots:
     virtual void dragEnterEvent(QDragEnterEvent *e);

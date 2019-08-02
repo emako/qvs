@@ -287,7 +287,7 @@ void MediaInfoDialog::addMediainfoForm(void)
     new_form->m_uid_own = QUuid::createUuid();
     new_form->resize(this->width(), this->height());
     new_form->show();
-    mainUi->m_pMediaInfoDialogs.insert(new_form->m_uid_own, new_form);
+    g_pMediaInfoDialogs.insert(new_form->m_uid_own, new_form);
 }
 
 void MediaInfoDialog::slotPreview(void)
@@ -314,7 +314,7 @@ void MediaInfoDialog::slotPreview(void)
         at_pScriptPlayer->show();
         at_pScriptPlayer->slotPlayOnMounted(true);
         at_pScriptPlayer->reload(m_mediainfo_path);
-        mainUi->m_pScriptPlayers.insert(at_pScriptPlayer->m_uid_own, at_pScriptPlayer);
+        g_pScriptPlayers.insert(at_pScriptPlayer->m_uid_own, at_pScriptPlayer);
     }
 }
 

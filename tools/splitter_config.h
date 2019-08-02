@@ -125,7 +125,8 @@ public:
 		eSPLITTER_KEY_FRAMES_MENU_MAX,
 	};
 
-    enum EFFPROBE_FORMAT {
+    enum EFFPROBE_FORMAT
+    {
         eFFPROBE_FORMAT_SECTION,                        // eg. 'frame' in csv format / 'frames' in json format
         eFFPROBE_FORMAT_MEDIA_TYPE,                     // eg. 'video' or 'audio'
         eFFPROBE_FORMAT_STREAM_INDEX,
@@ -154,7 +155,8 @@ public:
         eFFPROBE_FORMAT_MAX,
     };
 
-	enum EFFPROBE_KEY_FRAME_FORMAT {
+    enum EFFPROBE_KEY_FRAME_FORMAT
+    {
 		eFFPROBE_KEY_FRAME_FORMAT_SECTION,              // eg. 'frame' in csv format / 'frames' in json format
 		eFFPROBE_KEY_FRAME_FORMAT_KEY_FRAME,            // eg. 1 or 0
 		eFFPROBE_KEY_FRAME_FORMAT_PICT_TYPE,            // eg. 'I' or 'P' or 'B'

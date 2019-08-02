@@ -323,7 +323,6 @@ void Merge::on_buttonDebug_clicked()
         return;
     }
 
-    job_view_cmd.mainUi = mainUi;
     job_view_cmd.reload(cmds);
     job_view_cmd.exec();
 }

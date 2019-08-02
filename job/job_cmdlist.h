@@ -24,7 +24,8 @@ public:
         uid = QUuid::createUuid();
     }
 
-    enum EJOB_CMD_TYPE {
+    enum EJOB_CMD_TYPE
+    {
         eJOB_CMD_TYPE_INFO,
         eJOB_CMD_TYPE_PIPER,
         eJOB_CMD_TYPE_ENCODER,
