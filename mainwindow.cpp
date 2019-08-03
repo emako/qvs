@@ -13,6 +13,7 @@
 #include "script/script_creator.h"
 #include "com/version.h"
 #include "com/style_sheet.h"
+#include "com/app_instance_local_connect.h"
 #include "ui_muxer.h"
 #include "ui_demuxer.h"
 #include "ui_mainwindow.h"
@@ -1915,4 +1916,18 @@ void MainWindow::slotViewJobsLog(void)
     }
     job_view_cmd.reload(m_logging->history());
     job_view_cmd.exec();
+}
+
+void MainWindow::commandRecived(const QString &a_cmd)
+{
+    qDebug() << "Command Recived:" << a_cmd;
+
+    if(CMD_COMPARE(a_cmd, CMD_SHOW))
+    {
+        qDebug() << "Only single instances are allowed to be created.";
+
+        slotTrayActivated(QSystemTrayIcon::Unknown);
+        setWindowState(Qt::WindowActive);
+        showNormal();
+    }
 }

@@ -39,6 +39,7 @@
              * because it will raise the compiling failed. */
 #endif
 
+#define APPINSTANCE "qvs_running"
 #define NULLSTR QString()
 #define NULLSTRS QStringList()
 

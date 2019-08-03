@@ -265,9 +265,15 @@
      </property>
      <item>
       <widget class="QRadioButton" name="radioButtonFrames">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
        <property name="minimumSize">
         <size>
-         <width>100</width>
+         <width>110</width>
          <height>0</height>
         </size>
        </property>
@@ -493,7 +499,7 @@
       <widget class="QRadioButton" name="radioButtonTimecodes">
        <property name="minimumSize">
         <size>
-         <width>100</width>
+         <width>110</width>
          <height>0</height>
         </size>
        </property>
@@ -594,7 +600,7 @@
        </property>
        <property name="minimumSize">
         <size>
-         <width>100</width>
+         <width>110</width>
          <height>0</height>
         </size>
        </property>

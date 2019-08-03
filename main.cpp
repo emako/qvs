@@ -1,6 +1,7 @@
 #include "mainwindow.h"
 #include "com/config.h"
 #include "com/app_instance_file_guard.h"
+#include "com/app_instance_local_connect.h"
 #include "com/common.h"
 
 int main(int argc, char *argv[])
@@ -27,7 +28,11 @@ int main(int argc, char *argv[])
 #endif
 
     /* Application Instance File Guard */
-    AppInstanceFileGuard guard("qvs_running");
+#if false
+    AppInstanceFileGuard guard(APPINSTANCE);
+#else
+    AppInstanceLocalConnect guard(APPINSTANCE);
+#endif
 
     if(g_pConfig->isCheckGuardLocker())
     {
@@ -40,6 +45,7 @@ int main(int argc, char *argv[])
 
     /* MainWindow Setup */
     MainWindow w;
+    w.connect(&guard, SIGNAL(commandRecived(const QString &)), &w, SLOT(commandRecived(const QString &)));
     g_pConfig->setMainWindow(&w);
     g_pConfig->initEncodeConfig();  // Init encode config after create classes.
     g_pConfig->initEncodeAudioConfig();

@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT += core gui winextras
+QT += core gui winextras network
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -140,14 +140,14 @@ win32 {
     }
 }
 
-SOURCES += main.cpp \
-    tools/audio_batch_enc.cpp
+SOURCES += main.cpp
 SOURCES += mainwindow.cpp
 SOURCES += com/common.cpp
 SOURCES += com/preferences.cpp
 SOURCES += com/timer.cpp
 SOURCES += com/mail_box.cpp
 SOURCES += com/config.cpp
+SOURCES += com/app_instance_local_connect.cpp
 SOURCES += com/app_instance_file_guard.cpp
 SOURCES += com/style_sheet.cpp
 SOURCES += com/logging.cpp
@@ -161,8 +161,9 @@ SOURCES += tools/std_watcher.cpp
 SOURCES += tools/std_manager.cpp
 SOURCES += tools/demuxer.cpp
 SOURCES += tools/audio_enc.cpp
-SOURCES += tools/installer_dialog.cpp
 SOURCES += tools/audio_config.cpp
+SOURCES += tools/audio_batch_enc.cpp
+SOURCES += tools/installer_dialog.cpp
 SOURCES += tools/merge.cpp
 SOURCES += tools/splitter.cpp
 SOURCES += tools/splitter_config.cpp
@@ -188,6 +189,7 @@ HEADERS += com/preferences.h
 HEADERS += com/mail_box.h
 HEADERS += com/timer.h
 HEADERS += com/config.h
+HEADERS += com/app_instance_local_connect.h
 HEADERS += com/app_instance_file_guard.h
 HEADERS += com/style_sheet.h
 HEADERS += com/version.h

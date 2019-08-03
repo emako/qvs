@@ -112,6 +112,7 @@ public slots:
     void slotChildWindowClosed(QUuid a_uid);
 	void slotTimeout(int a_timerType, int a_timerSlot);
     bool slotMail(EMODULE a_module, STMAILBOX* a_mail_box);
+    void commandRecived(const QString &a_cmd);
 
 private slots:
     bool isEmptyJobs(void);
