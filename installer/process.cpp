@@ -79,7 +79,6 @@ void Process::slotInstallerProcessError(QProcess::ProcessError a_error)
         qErrOut() << "Installer Process write error occured." << endl;
         break;
     case QProcess::UnknownError:
-    default:
         qErrOut() << "Installer Process unknown error occured." << endl;
         break;
     }

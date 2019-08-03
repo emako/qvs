@@ -17,8 +17,8 @@ static const char QT_NOR_PATH_SPR[]   = "/";
 static const char QT_DOS_PATH_SPR[]   = "\\";
 static const char QT_REG_PATH_SPR[]   = "\\\\";
 
-static const char *g_pfm_version = "191";
-static const char *g_vs_version  = "R44@QVS";
+static const char *g_pfm_version = "192";
+static const char *g_vs_version  = "R46@QVS";
 
 static QString g_settings_file_path;
 static QString g_pfm_filename;
