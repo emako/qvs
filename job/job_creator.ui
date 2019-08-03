@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>595</width>
-    <height>615</height>
+    <width>596</width>
+    <height>679</height>
    </rect>
   </property>
   <property name="maximumSize">
@@ -497,6 +497,12 @@
              </item>
              <item>
               <widget class="QDoubleSpinBox" name="spinQuantizer">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
                <property name="toolTip">
                 <string/>
                </property>
@@ -540,14 +546,23 @@
                 <string>Select the target average(!) bitrate, in kilobit/sec. Higher value means better quality, but bigger file. Lower value means smaller file, but lower quality.</string>
                </property>
                <property name="text">
-                <string>Target Bitrate (kbps):</string>
+                <string>Target Bitrate:</string>
                </property>
               </widget>
              </item>
              <item>
               <widget class="QSpinBox" name="spinBitrate">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
                <property name="toolTip">
                 <string/>
+               </property>
+               <property name="suffix">
+                <string> kbps</string>
                </property>
                <property name="minimum">
                 <number>10</number>
