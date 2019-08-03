@@ -102,6 +102,7 @@ version r13
  - updated preview dialog to QtAV1.2.0.
 
 version r14
- - added win taskbar button.
+ - added win taskbar button and jump list.
  - fixed script creator func 'Nnedi3Resize'.
- - fixed crash error on closing stdwatch.
+ - fixed crash error on closing child window.
+ - updated installer version.
