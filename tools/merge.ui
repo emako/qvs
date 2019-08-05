@@ -91,7 +91,7 @@
               <widget class="QLabel" name="labelFormat">
                <property name="minimumSize">
                 <size>
-                 <width>70</width>
+                 <width>90</width>
                  <height>0</height>
                 </size>
                </property>
@@ -175,7 +175,7 @@
                   <widget class="QLabel" name="labelContainer">
                    <property name="minimumSize">
                     <size>
-                     <width>70</width>
+                     <width>90</width>
                      <height>0</height>
                     </size>
                    </property>
@@ -260,7 +260,7 @@
                   <widget class="QLabel" name="labelAudio">
                    <property name="minimumSize">
                     <size>
-                     <width>70</width>
+                     <width>90</width>
                      <height>0</height>
                     </size>
                    </property>
@@ -341,7 +341,7 @@
                   <widget class="QLabel" name="labelCustomType">
                    <property name="minimumSize">
                     <size>
-                     <width>70</width>
+                     <width>90</width>
                      <height>0</height>
                     </size>
                    </property>
@@ -394,7 +394,7 @@
                   <widget class="QLabel" name="labelCustomCommand">
                    <property name="minimumSize">
                     <size>
-                     <width>70</width>
+                     <width>90</width>
                      <height>0</height>
                     </size>
                    </property>

@@ -109,6 +109,9 @@
 #define LF QT_NOR_EOL
 #define EOL QT_OTR_EOL
 
+#define SET_FONT_BOLD(WIDGET,BOLD) do { QFont _font = WIDGET->font(); _font.setBold(BOLD); WIDGET->setFont(_font); } while(0)
+#define SET_TEXT_COLOR(WIDGET,COLOR) do { QPalette _palette = WIDGET->palette(); _palette.setColor(QPalette::WindowText, (COLOR)); _palette.setColor(QPalette::Text, (COLOR)); WIDGET->setPalette(_palette); } while(0)
+
 static const char QT_EMPTY[]            = "";
 static const char QT_BLANK[]            = " ";
 static const char QT_EXT_SPLITE[]       = ".";

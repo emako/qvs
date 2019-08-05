@@ -71,6 +71,7 @@ void MainWindow::setupUi(void)
     m_pLogViewMenu = new QMenu(ui->logView);
     m_pTaskbarButton = new QWinTaskbarButton(this);
     m_pThumbnailToolBar = new QWinThumbnailToolBar(this);
+    m_label[0].reset(new QLabel(ui->jobsView->viewport()));
 
     /*Property*/
     this->setWindowTitle(tr("Qvs"));
@@ -118,6 +119,11 @@ void MainWindow::setupUi(void)
     ui->jobsView->setGeometry(eINDEX_0, eINDEX_0, eINDEX_100 * eINDEX_7, eINDEX_0);
     ui->jobsView->setColumnWidth(eINDEX_1, eINDEX_100);
     ui->jobsView->setColumnWidth(eINDEX_2, eINDEX_100);
+    ui->jobsView->installEventFilter(this);
+    m_label[eINDEX_0]->setText(tr("Please click the '%1' button to create jobs.").arg(ui->buttonAddJob->text()));
+    m_label[eINDEX_0]->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
+    SET_TEXT_COLOR(m_label[eINDEX_0], Qt::darkGray);
+    m_label[eINDEX_0]->setVisible(true);
 
     /*Signal*/
     setAcctions();
@@ -130,6 +136,7 @@ void MainWindow::setupUi(void)
     connect(this, SIGNAL(ntfFailJob()), this, SLOT(failJob()));
     connect(this, SIGNAL(ntfStatusChanged(JobChef::EJOB_STATUS)), this, SLOT(statusChanged(JobChef::EJOB_STATUS)));
     connect(ui->widgetAudioBatchEnc, SIGNAL(ntfStarted()), this, SLOT(slotAudioBatchEncStarted()));
+    connect(ui->splitter, SIGNAL(splitterMoved(int, int)), this, SLOT(updateLabelPos()));
 
     /*After Reload*/
     if(g_pConfig->getConfig(Config::eCONFIG_FIRST_FIRST_LAUNCH).toBool())
@@ -163,7 +170,8 @@ void MainWindow::showEvent(QShowEvent *e)
     m_pThumbnailToolBar->setWindow(this->windowHandle());
 # endif
 #endif
-
+    updateViewHeaderWidth();
+    updateLabelPos();
     e->accept();
 }
 
@@ -381,6 +389,8 @@ void MainWindow::cleanUpAll(void)
         ui->jobsView->removeRow(eINDEX_0);
         m_jobs.removeAt(eINDEX_0);
     }
+
+    m_label[0]->setVisible(ui->jobsView->rowCount() == eINDEX_0);
 }
 
 void MainWindow::cleanLoggingFile(void)
@@ -434,6 +444,8 @@ void MainWindow::cleanUpStatusAll(JobChef::EJOB_STATUS a_status)
 void MainWindow::cleanUpFinished(void)
 {
     cleanUpStatusAll(JobChef::eJOB_STATUS_COMPLETED);
+
+    m_label[0]->setVisible(ui->jobsView->rowCount() == eINDEX_0);
 }
 
 void MainWindow::selectOpenfile(void)
@@ -627,6 +639,8 @@ void MainWindow::delJob(void)
         ui->jobsView->removeRow(row);
         m_jobs.removeAt(row);
     }
+
+    m_label[0]->setVisible(ui->jobsView->rowCount() == eINDEX_0);
 }
 
 void MainWindow::saveJob(JobItem a_job_item, JobCreator::EJOB_RELOAD a_job_reload)
@@ -896,12 +910,15 @@ void MainWindow::addItem(int a_row, int a_col, QString a_content, QIcon a_icon)
     ui->jobsView->setItem(a_row, a_col, item);
 }
 
-void MainWindow::resizeEvent(QResizeEvent*)
+void MainWindow::resizeEvent(QResizeEvent* e)
 {
+    QMainWindow::resizeEvent(e);
+
     /*Resize JobsView Header Width*/
-    int at_header_def_width = eINDEX_10 * eINDEX_10;
-    int at_diff_width = eINDEX_2;
-    ui->jobsView->setColumnWidth(eINDEX_0, ui->jobsView->geometry().width() - eINDEX_2 * at_header_def_width - at_diff_width);
+    updateViewHeaderWidth();
+
+    /*Update JobsView Label Pos*/
+    updateLabelPos();
 }
 
 void MainWindow::dragEnterEvent(QDragEnterEvent* e)
@@ -1141,6 +1158,8 @@ void MainWindow::execJobCreator(JobCreator::EJOB_RELOAD a_job_reload, QString a_
         reqJobStart();
     }
     setStartJobImmediately(false);
+
+    m_label[0]->setVisible(ui->jobsView->rowCount() == eINDEX_0);
 }
 
 void MainWindow::acceptedJobCreator(JobCreator::EJOB_RELOAD a_job_reload)
@@ -1171,11 +1190,11 @@ bool MainWindow::eventFilter(QObject *o, QEvent *e)
     {
         if (e->type() == QEvent::FocusIn)
         {
-            ui->jobsView->setStyleSheet(c_qss_table_widget_selection_bk_focus_in);
+            //ui->jobsView->setStyleSheet(c_qss_table_widget_selection_bk_focus_in);
         }
         else if(e->type() == QEvent::FocusOut)
         {
-            ui->jobsView->setStyleSheet(c_qss_table_widget_selection_bk_focus_out);
+            //ui->jobsView->setStyleSheet(c_qss_table_widget_selection_bk_focus_out);
         }
     }
     return false;
@@ -1561,6 +1580,7 @@ void MainWindow::allCompleted(void)
 		Common::getInstance()->m_shutdown = Common::eSHUTDOWN_NOTHING;
     }
     showShutdownMessage(Common::getInstance()->m_shutdown);
+    setWindowState(Qt::WindowActive);
 }
 
 QString MainWindow::getShutdownTitle(Common::ESHUTDOWN a_shutdown)
@@ -1930,4 +1950,24 @@ void MainWindow::commandRecived(const QString &a_cmd)
         setWindowState(Qt::WindowActive);
         showNormal();
     }
+}
+
+void MainWindow::updateLabelPos(void)
+{
+    for(int i = eINDEX_0; i < eINDEX_1; i++)
+    {
+        const QWidget *const viewPort = dynamic_cast<QWidget*>(m_label[i]->parent());
+
+        if(viewPort != nullptr)
+        {
+            m_label[i]->setGeometry(0, 0, viewPort->width(), viewPort->height());
+        }
+    }
+}
+
+void MainWindow::updateViewHeaderWidth(void)
+{
+    int at_header_def_width = eINDEX_10 * eINDEX_10;
+    int at_diff_width = eINDEX_2;
+    ui->jobsView->setColumnWidth(eINDEX_0, ui->jobsView->geometry().width() - eINDEX_2 * at_header_def_width - at_diff_width);
 }

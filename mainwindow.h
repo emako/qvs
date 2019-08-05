@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include <QApplication>
+#include <QPainter>
 #include <QStandardItemModel>
 #include <QTableWidgetItem>
 #include <QScrollBar>
@@ -100,6 +101,7 @@ public:
     QWinTaskbarButton *m_pTaskbarButton;
     QWinThumbnailToolBar *m_pThumbnailToolBar;
     QWinJumpList m_jumpList;
+    QScopedPointer<QLabel> m_label[eINDEX_1];
 
     JobChef::EJOB_STATUS m_job_status_prev;
 
@@ -112,7 +114,6 @@ public slots:
     void slotChildWindowClosed(QUuid a_uid);
 	void slotTimeout(int a_timerType, int a_timerSlot);
     bool slotMail(EMODULE a_module, STMAILBOX* a_mail_box);
-    void commandRecived(const QString &a_cmd);
 
 private slots:
     bool isEmptyJobs(void);
@@ -134,6 +135,10 @@ private slots:
     void moveDownJob(void);
     void slotPreview(void);
     void allCompleted(void);
+
+    void commandRecived(const QString &a_cmd);
+    void updateLabelPos(void);
+    void updateViewHeaderWidth(void);
 
     void showPreferences(void);
     void showInstaller(void);
