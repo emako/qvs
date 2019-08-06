@@ -444,7 +444,6 @@ void MainWindow::cleanUpStatusAll(JobChef::EJOB_STATUS a_status)
 void MainWindow::cleanUpFinished(void)
 {
     cleanUpStatusAll(JobChef::eJOB_STATUS_COMPLETED);
-
     m_label[0]->setVisible(ui->jobsView->rowCount() == eINDEX_0);
 }
 
@@ -1580,7 +1579,7 @@ void MainWindow::allCompleted(void)
 		Common::getInstance()->m_shutdown = Common::eSHUTDOWN_NOTHING;
     }
     showShutdownMessage(Common::getInstance()->m_shutdown);
-    setWindowState(Qt::WindowActive);
+    activateWindow();
 }
 
 QString MainWindow::getShutdownTitle(Common::ESHUTDOWN a_shutdown)
@@ -1947,7 +1946,7 @@ void MainWindow::commandRecived(const QString &a_cmd)
         qDebug() << "Only single instances are allowed to be created.";
 
         slotTrayActivated(QSystemTrayIcon::Unknown);
-        setWindowState(Qt::WindowActive);
+        activateWindow();
         showNormal();
     }
 }
