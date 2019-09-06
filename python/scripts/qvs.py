@@ -3300,31 +3300,16 @@ def DGBob(src, dir=None, core=None, order=-1, mode=0, device=255, pv=False):
 ###    The dir of DGIndexNV.
 ###    Get from qvs.conf -> 'python' : 'dgnv'.
 ###
-### strength [float, Default: 0.15, Range: 0.1-1.0]
+### strength [float, Default: 1.0, Range: 0.1-1.0]
 ### ------------------
-###    Strength of the Non-Local Means (NLM) denoising.
+###    Strength of the sharpening.
 ###    Typical values for strength are in the range 0.1-1.0.
 ###    Note that if you have interlaced source you should deinterlace with deinterlace=1 or deinterlace=2.
 ###    If you have hard pulldown, or you have soft pulldown that is being honored,
-###    then invoke it through DGDenoise() after performing external IVTC.
-###    The essential point to remember is that denoising should be applied to progressive frames.
-###    If you must retain interlacing, then separate the fields, apply DGDenoise(),
-###    and then re-weave the fields.
-###
-### blend [float, Default: 0.1]
-### ------------------
-###    Blending coefficient for the NLM denoising with range 0.0 to 1.0.
-###    Use lower values to blend in less of the original pixel.
-###
-### chroma [bint, Default: False]
-### ------------------
-###    Blending coefficient for the NLM denoising with range 0.0 to 1.0.
-###    Use lower values to blend in less of the original pixel.
-###
-### searchw [int, Default: 5, Range: 5/7/9]
-### ------------------
-###    Width of the search window for the NLM denoising.
-###    Wider windows may improve quality at the expense of speed.
+###    then invoke it through DGSharpen() after performing external IVTC.
+###    The essential point to remember is that sharpening should be applied to progressive frames.
+###    If you must retain interlacing, then separate the fields,
+###    apply DGSharpen(), and then re-weave the fields.
 ###
 ### device [int, Default: 255]
 ### ------------------
@@ -3337,14 +3322,14 @@ def DGBob(src, dir=None, core=None, order=-1, mode=0, device=255, pv=False):
 ### -> DGDecodeNV.dll
 ###    -> license.txt
 ##################################################################################################
-def DGSharpen(src, dir=None, core=None, strength=0.15, blend=0.1, chroma=False, searchw=5, device=255, pv=False):
+def DGSharpen(src, dir=None, core=None, strength=1.0, device=255):
 	core = Default(core, vs.get_core())
 	bin_path = GetConfig(section='python', options='dgnv')
 	dir = Default(dir, bin_path)
 	if not core is None:
 		if not CheckRegFunc('DGSharpen'):
 			SetWorkingDir(core=core, path=dir, isAvs=True)
-	return core.avs.DGSharpen(src, strength=strength, blend=blend, chroma=chroma, searchw=searchw, device=device)
+	return core.avs.DGSharpen(src, strength=strength, device=device)
 
 
 ##################################################################################################
