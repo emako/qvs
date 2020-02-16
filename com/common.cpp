@@ -1,10 +1,42 @@
 #include "common.h"
+#include "version.h"
 #include "mainwindow.h"
 
 #include "../job/job_item.h"
 
 Config *g_pConfig = nullptr;
 const QString c_default_style = "Fusion";
+
+void qvs::printInfo(void)
+{
+    qInfo() << "Started Datetime:" << QDateTime::currentDateTime().toString("yyyy.MM.dd hh:mm:ss.zzz");
+    qInfo() << "Version:" << APP_NAME << QVS_VERSION;
+    qInfo() << "Build Datetime:" << qvs::getBuildDateTimeString();
+    qInfo() << "App Path:" << QCoreApplication::applicationDirPath();
+    qInfo() << "Running Path:" << QDir::currentPath();
+}
+
+QDate qvs::getBuildDate(void)
+{
+    static const QDate buildDate = QLocale( QLocale::English ).toDate( QString( __DATE__ ).replace( "  ", " 0" ), "MMM dd yyyy");
+
+    return buildDate;
+}
+
+QTime qvs::getBuildTime(void)
+{
+    static const QTime buildTime = QTime::fromString( __TIME__, "hh:mm:ss" );
+
+    return buildTime;
+}
+
+QString qvs::getBuildDateTimeString(void)
+{
+    QString buildDateString = getBuildDate().toString("yyyy.MM.dd");
+    QString buildTimeString = getBuildTime().toString();
+
+    return QString("%1 %2").arg(buildDateString).arg(buildTimeString);
+}
 
 void qvs::loadFonts(void)
 {

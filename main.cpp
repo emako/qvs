@@ -8,6 +8,7 @@ int main(int argc, char *argv[])
 {
     /* Application Setup */
     QApplication a(argc, argv);
+    qvs::printInfo();
     qvs::loadFonts(); // Load fonts from resource.
     a.setFont(FONT_DEFAULT);
 

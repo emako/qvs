@@ -180,6 +180,12 @@ enum EBOOL
 
 namespace qvs
 {
+    void printInfo(void);
+
+    QDate getBuildDate(void);
+    QTime getBuildTime(void);
+    QString getBuildDateTimeString(void);
+
     void loadFonts(void);
 
     bool isFileExist(const QString &a_filename);
