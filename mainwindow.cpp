@@ -8,12 +8,14 @@
 #include "tools/installer_dialog.h"
 #include "tools/splitter.h"
 #include "tools/merge.h"
+#include "tools/single_image_video.h"
 #include "script/script_player.h"
 #include "preview/preview_dialog.h"
 #include "script/script_creator.h"
 #include "com/version.h"
 #include "com/style_sheet.h"
 #include "com/app_instance_local_connect.h"
+#include "mediainfo/mediainfo_prober.h"
 #include "ui_muxer.h"
 #include "ui_demuxer.h"
 #include "ui_mainwindow.h"
@@ -26,8 +28,7 @@
 #include "ui_script_creator.h"
 #include "ui_splitter.h"
 #include "ui_merge.h"
-
-#include "mediainfo/mediainfo_prober.h"
+#include "ui_single_image_video.h"
 
 extern QMap<QUuid, StdWatcher*> g_pStdWatch;
 
@@ -1040,6 +1041,35 @@ void MainWindow::dropEvent(QDropEvent* e)
                 break;
             case eTAB_EXTRA: /*Extra*/
                 /*Extra*/
+                /*SingleImageVideo*/
+                /*Image Input*/
+                pos = QPoint(ui->widgetSingleImageVideo->ui->editImageInput->pos()
+                           + ui->widgetSingleImageVideo->ui->groupBoxSingleImageVideo->pos()
+                           + ui->tabWidget->pos()
+                           + ui->centralWidget->pos()
+                           + ui->widgetSingleImageVideo->pos()
+                           + QPoint(ui->menubar->pos().x(), ui->menubar->height()));
+                ret = QRect(pos, ui->widgetSingleImageVideo->ui->editImageInput->size());
+                qDebug() << "SingleImageVideo:" << ret;
+                if(ret.contains(e->pos()))
+                {
+                    ui->widgetSingleImageVideo->reload(filename, nullptr);
+                    break;
+                }
+                /*Audio Input*/
+                pos = QPoint(ui->widgetSingleImageVideo->ui->editAudioInput->pos()
+                           + ui->widgetSingleImageVideo->ui->groupBoxSingleImageVideo->pos()
+                           + ui->tabWidget->pos()
+                           + ui->centralWidget->pos()
+                           + ui->widgetSingleImageVideo->pos()
+                           + QPoint(ui->menubar->pos().x(), ui->menubar->height()));
+                ret = QRect(pos, ui->widgetSingleImageVideo->ui->editAudioInput->size());
+                qDebug() << "SingleImageVideo:" << ret;
+                if(ret.contains(e->pos()))
+                {
+                    ui->widgetSingleImageVideo->reload(nullptr, filename);
+                    break;
+                }
                 /*Splitter*/
                 pos = QPoint(ui->widgetSplitter->ui->editSplitMediaInput->pos()
                            + ui->widgetSplitter->ui->groupBoxSplitter->pos()

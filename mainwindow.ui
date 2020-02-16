@@ -404,6 +404,9 @@ QProgressBar::chunk {
          <number>2</number>
         </property>
         <item>
+         <widget class="SingleImageVideo" name="widgetSingleImageVideo" native="true"/>
+        </item>
+        <item>
          <widget class="Splitter" name="widgetSplitter" native="true">
           <property name="minimumSize">
            <size>
@@ -466,7 +469,7 @@ QProgressBar::chunk {
      <x>0</x>
      <y>0</y>
      <width>720</width>
-     <height>26</height>
+     <height>23</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -1305,43 +1308,49 @@ QProgressBar::chunk {
   <customwidget>
    <class>Merge</class>
    <extends>QWidget</extends>
-   <header location="global">./tools/merge.h</header>
+   <header>./tools/merge.h</header>
    <container>1</container>
   </customwidget>
   <customwidget>
    <class>Muxer</class>
    <extends>QWidget</extends>
-   <header location="global">./tools/muxer.h</header>
+   <header>./tools/muxer.h</header>
    <container>1</container>
   </customwidget>
   <customwidget>
    <class>Demuxer</class>
    <extends>QWidget</extends>
-   <header location="global">./tools/demuxer.h</header>
+   <header>./tools/demuxer.h</header>
    <container>1</container>
   </customwidget>
   <customwidget>
    <class>AudioEnc</class>
    <extends>QWidget</extends>
-   <header location="global">./tools/audio_enc.h</header>
+   <header>./tools/audio_enc.h</header>
    <container>1</container>
   </customwidget>
   <customwidget>
    <class>MediaInfoDialog</class>
    <extends>QWidget</extends>
-   <header location="global">./mediainfo/mediainfo_dialog.h</header>
+   <header>./mediainfo/mediainfo_dialog.h</header>
    <container>1</container>
   </customwidget>
   <customwidget>
    <class>Splitter</class>
    <extends>QWidget</extends>
-   <header location="global">./tools/splitter.h</header>
+   <header>./tools/splitter.h</header>
    <container>1</container>
   </customwidget>
   <customwidget>
    <class>AudioBatchEnc</class>
    <extends>QWidget</extends>
-   <header location="global">tools/audio_batch_enc.h</header>
+   <header>./tools/audio_batch_enc.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>SingleImageVideo</class>
+   <extends>QWidget</extends>
+   <header>./tools/single_image_video.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>
