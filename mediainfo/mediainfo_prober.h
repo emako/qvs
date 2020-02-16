@@ -40,6 +40,7 @@ public:
     QString version(void);
 
     QString getPixfmt(const AVPixelFormat &a_pixfmt);
+    int64_t getDuration();
 
 private:
     AVFormatContext *m_pFormatCtx;

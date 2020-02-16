@@ -4,6 +4,7 @@
 #define FF_COMPONENT(name, NAME) #name, LIB##NAME##_VERSION_INT, name##_version(), name##_configuration(), name##_license()
 
 MediaInfoProber::MediaInfoProber()
+    : m_pFormatCtx(nullptr)
 {
 }
 
@@ -16,11 +17,7 @@ MediaInfoProber::MediaInfoProber(const QString &a_filename)
 
 MediaInfoProber::~MediaInfoProber()
 {
-    if (m_pFormatCtx != nullptr)
-    {
-        avformat_free_context(m_pFormatCtx);
-        m_pFormatCtx = nullptr;
-    }
+    close();
 }
 
 bool MediaInfoProber::open(const QString &a_filename)
@@ -38,8 +35,7 @@ bool MediaInfoProber::open(const QString &a_filename)
     if (avformat_find_stream_info(m_pFormatCtx, nullptr) < eINDEX_0)
     {
         qWarning() << "Could't find stream infomation.";
-        avformat_free_context(m_pFormatCtx);
-        m_pFormatCtx = nullptr;
+        close();
         return false;
     }
     return true;
@@ -53,6 +49,7 @@ bool MediaInfoProber::open(void)
 
 QString MediaInfoProber::inform(void)
 {
+    // TODO
 	return "";
 }
 
@@ -63,6 +60,12 @@ AVFormatContext *MediaInfoProber::get(void)
 
 void MediaInfoProber::close(void)
 {
+    if (m_pFormatCtx != nullptr)
+    {
+        avformat_close_input(&m_pFormatCtx);
+        avformat_free_context(m_pFormatCtx);
+        m_pFormatCtx = nullptr;
+    }
 }
 
 QString MediaInfoProber::version(void)
@@ -99,4 +102,9 @@ QString MediaInfoProber::version(void)
 QString MediaInfoProber::getPixfmt(const AVPixelFormat &a_pixfmt)
 {
 	return MediaInfoPixfmt::getPixelFormat(a_pixfmt);
+}
+
+int64_t MediaInfoProber::getDuration()
+{
+    return m_pFormatCtx->duration / static_cast<int64_t>(AV_TIME_BASE);
 }
