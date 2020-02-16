@@ -94,6 +94,8 @@ private:
     void setInsertTextColor(QColor a_color, int a_length);
     inline QString fromStandard(const QByteArray &a_data) const;
 
+    bool m_isAborted = false;
+
     QUuid m_uid;
     QString m_cmd;
     QString m_pipe;

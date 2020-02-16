@@ -39,6 +39,11 @@ void StdWatcher::initJob(QUuid a_uid)
 
 void StdWatcher::startJob(QString a_cmd)
 {
+    if (m_isAborted)
+    {
+        return;
+    }
+
     m_cmd = a_cmd;
     viewLog(JobChef::eJOB_LOG_TYPE_INFO, m_cmd);
     m_process_job_encoder.start(m_cmd);
@@ -46,6 +51,11 @@ void StdWatcher::startJob(QString a_cmd)
 
 void StdWatcher::startJob(StdWatcherCmd a_cmd)
 {
+    if (m_isAborted)
+    {
+        return;
+    }
+
     m_pipe = a_cmd.pipe;
     m_cmd = a_cmd.cmd;
 
@@ -66,6 +76,11 @@ void StdWatcher::startJob(StdWatcherCmd a_cmd)
 
 void StdWatcher::startJob(QList<StdWatcherCmd> a_cmds)
 {
+    if (m_isAborted)
+    {
+        return;
+    }
+
     if(!a_cmds.isEmpty())
     {
         m_cmds = a_cmds;
@@ -82,6 +97,9 @@ void StdWatcher::abortJob()
         ui->btnPause->setChecked(false);
         resumeJob();
     }
+
+    m_isAborted = true;
+
     if(m_process_job_info.state() != QProcess::NotRunning)
     {
         m_process_job_info.kill();
@@ -275,6 +293,7 @@ void StdWatcher::viewLog(JobChef::EJOB_LOG_TYPE a_log_type, const QString a_log)
         break;
     case JobChef::eJOB_LOG_TYPE_JOB_STATUS:
         ui->logView->appendHtml(qvs::toHtml(a_log, COLOR_LOGGING_STATUS, false));
+        qDebug() << a_log;
         break;
     case JobChef::eJOB_LOG_TYPE_JOB_STD_ERROR:
         ui->logView->appendHtml(qvs::toHtml(a_log, COLOR_LOGGING_STD_ERROR, false));
