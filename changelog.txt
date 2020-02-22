@@ -106,3 +106,14 @@ version r14
  - fixed script creator func 'Nnedi3Resize'.
  - fixed crash error on closing child window.
  - updated installer version.
+
+version r15
+ - added single image video funciton.
+ - fixed crash error on closing child window.
+ - fixed sometimes config, 'NotAddJobOnSaved' is not saved.
+ - updated vapoursynth to r48.
+ - updated mediainfo to v19.09.
+ - updated x265 to 3.2+5.
+ - updated mkvtoolnix to 43.0.0.
+ - updated ffmpeg to 4.2.2.
+ - updated LAVFilters to 0.74.1

@@ -1686,7 +1686,7 @@ void MainWindow::setShutCountMessage(void)
 
 void MainWindow::slotAbout(void)
 {
-    QMessageBox::about(this, tr("About"), qvs::fromResource(":/strings/about").arg(QVS_VERSION));
+    QMessageBox::about(this, tr("About"), qvs::fromResource(":/strings/about").arg(QVS_VERSION).arg(qvs::getBuildDateTimeString().replace(" ", "-")));
 }
 
 void MainWindow::slotAboutQt(void)

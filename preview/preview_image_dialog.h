@@ -37,7 +37,7 @@ public:
     void setPreviewPixmap(const QImage &a_image);
     void setPreviewPixmap(void);
 
-    inline QImage getFrameImage();
+    QImage getFrameImage();
     QList<QImage> m_frameImages;
     int m_frameImageIndex;
     QPixmap m_framePixmap;

@@ -1,10 +1,7 @@
-Qvs %1
-
-By ema(egosub)
-https://github.com/emako
-http://weibo.com/egosub
-
-This software is free and distributed under MIT license.
-
-Software uses Qt 5 framework by The Qt Company, distributed under LGPL license.
-https://qt.io/
+Qvs %1 - [Build: %2]<br />
+<br />
+By ema (<a href='http://weibo.com/egosub'>egosub</a>)<br />
+<br />
+This software is free and distributed under MIT license.<br />
+Please visit <a href='https://github.com/emako/qvs/releases'>Github</a> for the latest version.<br />
+<br />
