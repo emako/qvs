@@ -87,6 +87,51 @@ void SingleImageVideo::previewImage()
     }
 }
 
+QImage SingleImageVideo::makeImageDivisibleBy2(const QImage &a_image, bool isShowQuestionBox)
+{
+    QImage image;
+
+    if (a_image.isNull())
+    {
+        return a_image;
+    }
+
+    if ((a_image.width() % 2 != 0) || (a_image.height() % 2 != 0))
+    {
+        QSize recommendSize(a_image.size());
+
+        if (a_image.width() % 2 != 0)
+        {
+            recommendSize.setWidth(recommendSize.width() + eINDEX_1);
+        }
+        if (a_image.height() % 2 != 0)
+        {
+            recommendSize.setHeight(recommendSize.height() + eINDEX_1);
+        }
+
+        int ret = QMessageBox::Ignore;
+
+        if (isShowQuestionBox)
+        {
+            QString message = tr("Image size(%1x%2) is not divisible by 2.\nWould you like scale to size(%3x%4)?")
+                                .arg(a_image.width()).arg(a_image.height())
+                                .arg(recommendSize.width()).arg(recommendSize.height());
+            ret = QMessageBox::question(this, MESSAGE_FAILED, message, QMessageBox::Yes | QMessageBox::Cancel);
+        }
+
+        if (ret == QMessageBox::Yes || !isShowQuestionBox)
+        {
+            image = a_image.scaled(recommendSize, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
+        }
+    }
+    else
+    {
+        return a_image;
+    }
+
+    return image;
+}
+
 void SingleImageVideo::previewImageFromAudioFile()
 {
     QString audioFilename = ui->editAudioInput->text();
@@ -112,29 +157,7 @@ void SingleImageVideo::previewImageFromAudioFile()
             return;
         }
 
-        if ((image.width() % 2 != 0) || (image.height() % 2 != 0))
-        {
-            QSize recommendSize(image.size());
-
-            if (image.width() % 2 != 0)
-            {
-                recommendSize.setWidth(recommendSize.width() + eINDEX_1);
-            }
-            if (image.height() % 2 != 0)
-            {
-                recommendSize.setHeight(recommendSize.height() + eINDEX_1);
-            }
-
-            QString message = tr("Image size(%1x%2) is not a mod2 size.\nWould you like scale to size(%3x%4)?")
-                                .arg(image.width()).arg(image.height())
-                                .arg(recommendSize.width()).arg(recommendSize.height());
-            int ret = QMessageBox::question(this, MESSAGE_FAILED, message, QMessageBox::Yes | QMessageBox::Cancel);
-
-            if (ret == QMessageBox::Yes)
-            {
-                image = image.scaled(recommendSize, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
-            }
-        }
+        image = makeImageDivisibleBy2(image, true);
 
         QString outputFilename = QString("%1_cover.%2").arg(audioFilename).arg(OUTPUT_EXT_JPG);
 
@@ -222,6 +245,26 @@ void SingleImageVideo::on_buttonImageVideoStart_clicked()
     QString audioFilename = ui->editAudioInput->text();
     QString videoFilename = ui->editVideoOutput->text();
 
+    if (imageFilename.isEmpty() && !audioFilename.isEmpty())
+    {
+        previewImage();
+
+        imageFilename = ui->editImageInput->text();
+        audioFilename = ui->editAudioInput->text();
+        videoFilename = ui->editVideoOutput->text();
+
+        if (imageFilename.isEmpty())
+        {
+            return;
+        }
+    }
+
+    if (imageFilename.isEmpty())
+    {
+        QMessageBox::critical(this, MESSAGE_FAILED, tr("Please input the image file."), QMessageBox::Ok);
+        return;
+    }
+
     if (videoFilename.isEmpty())
     {
         QMessageBox::critical(this, MESSAGE_FAILED, tr("Please edit the output video path."), QMessageBox::Ok);
@@ -237,23 +280,20 @@ void SingleImageVideo::on_buttonImageVideoStart_clicked()
         }
     }
 
-    if (imageFilename.isEmpty() && !audioFilename.isEmpty())
-    {
-        previewImage();
+    QImage image(imageFilename);
 
-        imageFilename = ui->editImageInput->text();
-        audioFilename = ui->editAudioInput->text();
-    }
-    else if (imageFilename.isEmpty())
+    if (image.isNull())
     {
-        QMessageBox::critical(this, MESSAGE_FAILED, tr("Please input the image file."), QMessageBox::Ok);
+        QMessageBox::critical(this, MESSAGE_FAILED, tr("Parse image file failed!"), QMessageBox::Ok);
         return;
     }
 
-    if (qvs::getFileExt(imageFilename) != OUTPUT_EXT_JPG)
-    {
-        QImage image(imageFilename);
+    QSize sizeBeforeDivisibleCheck = image.size();
 
+    image = makeImageDivisibleBy2(image, false);
+
+    if (image.size() != sizeBeforeDivisibleCheck || qvs::getFileExt(imageFilename) != OUTPUT_EXT_JPG)
+    {
         imageFilename = QString("%1_qvs.jpg").arg(imageFilename);
         image.save(imageFilename, OUTPUT_EXT_JPG, 100);
     }
@@ -266,7 +306,14 @@ void SingleImageVideo::on_buttonImageVideoStart_clicked()
     {
         output1 = output2;
 
-        time = QInputDialog::getInt(this, tr("Edit the length of video"), tr("Seconds:"), 1000, 0);
+        bool ok;
+
+        time = QInputDialog::getInt(this, tr("Enter"), tr("Audio file is empty.\nPlease enter the output length(sec.):"), 100, 0, 2147483647, 1, &ok);
+
+        if (!ok)
+        {
+            return;
+        }
     }
     else
     {
@@ -291,6 +338,7 @@ void SingleImageVideo::on_buttonImageVideoStart_clicked()
             .arg(ui->doubleSpinBoxCRF->value()) // 5
             .arg(output1); // 6
     QString cmdString2;
+    QString cmdString3;
 
     qDebug() << cmdString1;
     if (!audioFilename.isEmpty())
@@ -301,6 +349,9 @@ void SingleImageVideo::on_buttonImageVideoStart_clicked()
                 .arg(audioFilename) // 3
                 .arg(output2); // 4
         qDebug() << cmdString2;
+
+        cmdString3 = QString("cmd /c del \"%1\"").arg(output1);
+        qDebug() << cmdString3;
     }
 
 
@@ -319,6 +370,13 @@ void SingleImageVideo::on_buttonImageVideoStart_clicked()
 
         cmd2.cmd = cmdString2;
         cmds << cmd2;
+    }
+    if (!cmdString3.isEmpty())
+    {
+        StdWatcherCmd cmd3;
+
+        cmd3.cmd = cmdString3;
+        cmds << cmd3;
     }
 
     if(cmds.isEmpty())

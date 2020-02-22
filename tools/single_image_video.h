@@ -30,6 +30,7 @@ public:
 
     void reload(const QString &a_imageFilename, const QString &a_audioFilename);
     QString getOutputFilename(const QString &a_path);
+    QImage makeImageDivisibleBy2(const QImage &a_image, bool isShowQuestionBox = false);
 
 private slots:
     bool eventFilter(QObject *o, QEvent *e);
