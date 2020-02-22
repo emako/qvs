@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Installer>
+    <Name>Qvs</Name>
+    <Version>r15</Version>
+    <Title>Qvs</Title>
+    <Publisher>ema</Publisher>
+    <StartMenuDir>Qvs</StartMenuDir>
+    <AllowNonAsciiCharacters>true</AllowNonAsciiCharacters>
+    <TargetDir>@HomeDir@/qvs</TargetDir>
+	<AdminTargetDir>@RootDir@/qvs</AdminTargetDir>
+	<MaintenanceToolName>qvs-maintenance-tool</MaintenanceToolName>
+</Installer>
