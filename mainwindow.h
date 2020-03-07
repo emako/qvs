@@ -199,6 +199,7 @@ private:
     void setupUi(void);
     void setAcctions(void);
     void setJumpListItems(void);
+    void bindWinTaskbar();
 
     QString getJobStatusText(JobChef::EJOB_STATUS a_job_status);
     QIcon getJobStatusIcon(JobChef::EJOB_STATUS a_job_status);
@@ -216,6 +217,10 @@ protected:
     virtual void resizeEvent(QResizeEvent* e);
     virtual void showEvent(QShowEvent *e);
     virtual void closeEvent(QCloseEvent *e);
+    virtual void focusInEvent(QFocusEvent *e);
+    virtual void focusOutEvent(QFocusEvent *e);
+    virtual void enterEvent(QEvent *e);
+    virtual void leaveEvent(QEvent *e);
 };
 
 #endif // MAINWINDOW_H

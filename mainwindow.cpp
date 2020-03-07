@@ -78,6 +78,7 @@ void MainWindow::setupUi(void)
     this->setWindowTitle(tr("Qvs"));
     this->setWindowIcon(QIcon(":/icons/qvs.ico"));
     this->setAcceptDrops(true);
+    this->installEventFilter(this);
 
     /*Init*/
     m_job_chef->mainUi = this;
@@ -99,7 +100,14 @@ void MainWindow::setupUi(void)
     ui->widgetAudioEnc->init();
     m_pTaskbarButton->progress()->setMinimum(eINDEX_0);
     m_pTaskbarButton->progress()->setMaximum(eINDEX_100);
-    m_pTaskbarButton->progress()->show();
+    m_pTaskbarButton->connect(m_pTaskbarButton->progress(), &QWinTaskbarProgress::visibilityChanged, [=](bool visible)
+    {
+        if (visible)
+        {
+            bindWinTaskbar();
+        }
+    });
+    m_pTaskbarButton->progress()->hide();
 
     /*Ui*/
     ui->progressBar->setStyleSheet(c_qss_process_bar_pink_lady);
@@ -165,12 +173,7 @@ void MainWindow::setupUi(void)
 
 void MainWindow::showEvent(QShowEvent *e)
 {
-#ifdef Q_OS_WIN32
-    m_pTaskbarButton->setWindow(this->windowHandle());
-# if false
-    m_pThumbnailToolBar->setWindow(this->windowHandle());
-# endif
-#endif
+    bindWinTaskbar();
     updateViewHeaderWidth();
     updateLabelPos();
     e->accept();
@@ -201,6 +204,26 @@ void MainWindow::closeEvent(QCloseEvent *e)
     StdManager::releaseStdWatchAll();
 
     g_pConfig->saveConfigAll();
+}
+
+void MainWindow::focusInEvent(QFocusEvent *e)
+{
+    Q_UNUSED(e)
+}
+
+void MainWindow::focusOutEvent(QFocusEvent *e)
+{
+    Q_UNUSED(e)
+}
+
+void MainWindow::enterEvent(QEvent *e)
+{
+    Q_UNUSED(e)
+}
+
+void MainWindow::leaveEvent(QEvent *e)
+{
+    Q_UNUSED(e)
 }
 
 void MainWindow::setAcctions(void)
@@ -344,6 +367,16 @@ void MainWindow::setJumpListItems(void)
     at_jumpListItem->setWorkingDirectory(QDir::currentPath());
     m_jumpList.tasks()->addItem(at_jumpListItem);
     m_jumpList.tasks()->setVisible(true);
+}
+
+void MainWindow::bindWinTaskbar()
+{
+#ifdef Q_OS_WIN32
+    m_pTaskbarButton->setWindow(this->windowHandle());
+# if false
+    m_pThumbnailToolBar->setWindow(this->windowHandle());
+# endif
+#endif
 }
 
 void MainWindow::slotOpenUrl(void)
@@ -709,6 +742,7 @@ void MainWindow::viewLog(JobChef::EJOB_LOG_TYPE a_log_type, const QString &a_log
         ui->logView->appendHtml(html);
         m_pTaskbarButton->progress()->stop();
         m_pTaskbarButton->progress()->setValue(eINDEX_0);
+        m_pTaskbarButton->progress()->hide();
         break;
     case JobChef::eJOB_LOG_TYPE_JOB_STATUS:
         html = qvs::toHtml(a_log, COLOR_LOGGING_STATUS, true);
@@ -724,6 +758,8 @@ void MainWindow::viewLog(JobChef::EJOB_LOG_TYPE a_log_type, const QString &a_log
         break;
     case JobChef::eJOB_LOG_TYPE_JOB_STD_PROGRESS:
         ui->progressBar->setMaximum(eINDEX_100);
+        m_pTaskbarButton->progress()->setMaximum(eINDEX_100);
+        m_pTaskbarButton->progress()->setMinimum(eINDEX_0);
         if( (m_jobs_index <= ui->jobsView->rowCount())
          && (ui->jobsView->columnCount() >= eINDEX_3) )
         {
@@ -735,10 +771,12 @@ void MainWindow::viewLog(JobChef::EJOB_LOG_TYPE a_log_type, const QString &a_log
         if(static_cast<int>(a_log.toDouble()) == eINDEX_100)
         {
             m_pTaskbarButton->progress()->setValue(static_cast<int>(eINDEX_0));
+            m_pTaskbarButton->progress()->hide();
         }
         else
         {
             m_pTaskbarButton->progress()->setValue(static_cast<int>(a_log.toDouble()));
+            m_pTaskbarButton->progress()->show();
         }
         break;
     case JobChef::eJOB_LOG_TYPE_JOB_STD_DETAILS:
@@ -819,8 +857,11 @@ void MainWindow::initJob(void)
     m_isAborted = false;
     ui->progressBar->setMaximum(eINDEX_0);
     ui->progressBar->setMinimum(eINDEX_0);
+    m_pTaskbarButton->progress()->setMaximum(eINDEX_0);
+    m_pTaskbarButton->progress()->setMinimum(eINDEX_0);
     m_pTaskbarButton->progress()->resume();
     m_pTaskbarButton->progress()->setValue(eINDEX_0);
+    m_pTaskbarButton->progress()->show();
     m_job_chef->loadCommonConfig();
     emit ntfStatusChanged(JobChef::eJOB_STATUS_STARTING);
 }
@@ -1226,6 +1267,16 @@ bool MainWindow::eventFilter(QObject *o, QEvent *e)
             //ui->jobsView->setStyleSheet(c_qss_table_widget_selection_bk_focus_out);
         }
     }
+    else if (o == this)
+    {
+        if (QEvent::WindowActivate == e->type())
+        {
+            if (m_job_status_prev == JobChef::eJOB_STATUS_FAILED)
+            {
+                m_pTaskbarButton->progress()->hide();
+            }
+        }
+    }
     return false;
 }
 
@@ -1249,36 +1300,52 @@ void MainWindow::statusChanged(JobChef::EJOB_STATUS a_job_status)
         break;
     case JobChef::eJOB_STATUS_READY:
         m_pTaskbarButton->progress()->resume();
+        m_pTaskbarButton->progress()->show();
         break;
     case JobChef::eJOB_STATUS_WAITING:
         m_pTaskbarButton->progress()->resume();
+        m_pTaskbarButton->progress()->show();
         break;
     case JobChef::eJOB_STATUS_STARTING:
         m_pTaskbarButton->progress()->resume();
+        m_pTaskbarButton->progress()->show();
         break;
     case JobChef::eJOB_STATUS_RUNNING:
         m_pTaskbarButton->progress()->resume();
+        m_pTaskbarButton->progress()->show();
         break;
     case JobChef::eJOB_STATUS_PAUSING:
         m_pTaskbarButton->progress()->pause();
+        m_pTaskbarButton->progress()->show();
         break;
     case JobChef::eJOB_STATUS_PAUSED:
         ui->editDetails->setText(tr("Paused by user!"));
         m_pTaskbarButton->progress()->pause();
+        m_pTaskbarButton->progress()->show();
         break;
     case JobChef::eJOB_STATUS_ABORTING:
         m_pTaskbarButton->progress()->resume();
+        m_pTaskbarButton->progress()->show();
         m_isAborted = true;
         break;
     case JobChef::eJOB_STATUS_ABORTED:
         ui->editDetails->setText(tr("Aborted by user!"));
         m_pTaskbarButton->progress()->resume();
+        m_pTaskbarButton->progress()->hide();
         m_isAborted = true;
         break;
     case JobChef::eJOB_STATUS_FAILED:
         ui->progressBar->setMaximum(eINDEX_100); /* Fixed progress bar failed on not processing encoder. */
         m_pTaskbarButton->progress()->stop();
-        m_pTaskbarButton->progress()->setValue(static_cast<int>(eINDEX_0));
+        m_pTaskbarButton->progress()->setValue(static_cast<int>(eINDEX_100));
+        if (!this->isActiveWindow())
+        {
+            m_pTaskbarButton->progress()->show();
+        }
+        else
+        {
+            m_pTaskbarButton->progress()->hide();
+        }
         viewLog(JobChef::eJOB_LOG_TYPE_DEBUG, tr("Process Failed!"));
         break;
     case JobChef::eJOB_STATUS_COMPLETED:
@@ -1286,6 +1353,7 @@ void MainWindow::statusChanged(JobChef::EJOB_STATUS a_job_status)
         ui->editDetails->setText(tr("Job Completed!"));
         m_pTaskbarButton->progress()->resume();
         m_pTaskbarButton->progress()->setValue(static_cast<int>(eINDEX_0));
+        m_pTaskbarButton->progress()->hide();
         break;
     }
     m_job_status_prev = a_job_status;
