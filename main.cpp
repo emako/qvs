@@ -6,6 +6,8 @@
 
 int main(int argc, char *argv[])
 {
+    qputenv("QTWEBENGINE_CHROMIUM_FLAGS", "--single-process");
+    qputenv("QTWEBENGINE_REMOTE_DEBUGGING", "7777");
     /* Application Setup */
     QApplication a(argc, argv);
     qvs::printInfo();

@@ -182,5 +182,6 @@
         <file>buttons/stop_red.png</file>
         <file>buttons/page_next.png</file>
         <file>buttons/page_prev.png</file>
+        <file>buttons/google_blockly.png</file>
     </qresource>
 </RCC>

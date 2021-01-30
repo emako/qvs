@@ -1,0 +1,44 @@
+Source/Output
+	Media source filters.
+	Blank Clip filters.
+	Vapoursynth Script source filters.
+	Slicing filters.
+Fixing Defects
+	Deinterlacing
+		Deinterlacing filters.
+		Interlacing filters.
+	Inverse Telecine
+	Denoising
+	Sharpening
+	Others
+		Anti-aliasing filters.
+		Line Darkening filters.
+		Debanding filters.
+		Deblocking filters.
+		Dehaloing filters.
+		Deringing/Edge cleaning filters.
+		Derainbow filters.
+Resizing
+	Resizing filters.
+	Undoes Resizing filters.
+	Borders filters.
+	Cropping filters.
+Format
+	Format conversion filters.
+Frame Rate
+	Frame Rate conversion filters.
+	Variable Frame Rate conversion filters.
+Subtitles
+Utilses
+	Logos
+	Standards
+		Overlay filters.
+		Stack filters.
+		Transformation filters.
+		Blur filters.
+		Effects and Transitions filters.
+		Color/Levels filters.
+	Miscs
+		Masking and Edge Detecting filters.
+		Metrics/Analysis filters.
+		Collection filters.

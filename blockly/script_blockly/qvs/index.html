@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="google" value="notranslate">
+	<title>Script Blockly</title>
+	<link rel="stylesheet" href="style.css">
+	<link rel="shortcut icon" href="favion.ico" type="image/x-icon">
+	<script src="../blockly_compressed.js"></script>
+	<script src="../blocks_compressed.js"></script>
+	<script src="../python_compressed.js"></script>
+	<script src="../javascript_compressed.js"></script>
+	<script src="code.js"></script>
+	<script src="qvs.js"></script>
+	<script src="override.js"></script>
+</head>
+<body>
+	<table width="100%" height="100%">
+		<tr>
+		</tr>
+		<tr>
+			<td colspan=2>
+				<table width="100%">
+					<tr id="tabRow" height="1em">
+						<td id="tab_blocks" class="tabon">...</td>
+						<td class="tabmin">&nbsp;</td>
+						<td id="tab_python" class="taboff">Python</td>
+						<td class="tabmin">&nbsp;</td>
+						<td class="tabmax">
+							<!-- !!! -->
+							<button id="trashButton" class="notext" title="...">
+								<img src='../media/1x1.gif' class="trash icon21">
+							</button>
+							<button id="runButton" class="notext primary" title="...">
+								<img src='../media/1x1.gif' class="run icon21">
+							</button>
+							<!-- !!! -->
+						</td>
+					</tr>
+				</table>
+			</td>
+		</tr>
+		<tr>
+			<td height="99%" colspan=2 id="content_area">
+			</td>
+		</tr>
+	</table>
+	<div id="content_blocks" class="content"></div>
+	<pre id="content_python" class="content prettyprint lang-py"></pre>
+	<textarea id="content_xml" class="content" wrap="off"></textarea>
+
+	<xml xmlns="https://developers.google.com/blockly/xml" id="toolbox" style="display: none">
+
+		<!-- !!! -->
+		<!-- vapoursynth script blocks -->
+		<category name="%{BKY_VSCAT_SOURCE_OUTPUT}" colour="%{BKY_VSCAT_SOURCE_OUTPUT_HUE}">
+			<block type="clip_stat"></block>
+			<button text="Media source/output filters."></button>
+			<block type="libavsmashsource">
+				<value name="load">
+					<block type="open"></block>
+				</value>
+			</block>
+			<block type="lwlibavsource">
+				<value name="load">
+					<block type="open"></block>
+				</value>
+			</block>
+			<block type="ffmpegsource">
+				<value name="load">
+					<block type="open"></block>
+				</value>
+			</block>
+			<block type="dgsourcenv">
+				<value name="load">
+					<block type="open"></block>
+				</value>
+			</block>
+			<block type="dgsource">
+				<value name="load">
+					<block type="open"></block>
+				</value>
+			</block>
+			<block type="d2vsource">
+				<value name="load">
+					<block type="open"></block>
+				</value>
+			</block>
+			<block type="directshowsource">
+				<value name="load">
+					<block type="open"></block>
+				</value>
+			</block>
+			<block type="imagesource">
+			<value name="load">
+				<block type="open"></block>
+			</value>
+			</block>
+			<block type="imagewriter"></block>
+			<block type="qrcodesource"></block>
+			<button text="Blank Clip filters."></button>
+			<block type="blankclip"></block>
+			<block type="colorbars"></block>
+			<button text="Vapoursynth Script source filters."></button>
+			<block type="import">
+				<value name="load">
+					<block type="open"></block>
+				</value>
+			</block>
+			<button text="Slicing filters."></button>
+			<block type="trim"></block>
+			<block type="splice"></block>
+			<block type="loop"></block>
+			<block type="deleteframes"></block>
+		</category>
+		<category name="%{BKY_VSCAT_FIXING_DEFECTS}" colour="%{BKY_VSCAT_FIXING_DEFECTS_HUE}">
+			<category name="%{BKY_VSCAT_DEINTERLACING}" colour=240>
+				<button text="Deinterlacing filters."></button>
+				<block type="yadifmod"></block>
+				<block type="qtgmc"></block>
+				<block type="dgbob"></block>
+				<button text="Interlacing filters."></button>
+				<block type="interlacing"></block>
+			</category>
+			<category name="%{BKY_VSCAT_INVERSE_TELECINE}" colour=230>
+				<block type="vivtc"></block>
+				<block type="dgivtc"></block>
+				<block type="selecteven"></block>
+				<block type="selectodd"></block>
+			</category>
+			<category name="%{BKY_VSCAT_DENOISING}" colour=220>
+				<block type="knlmeanscl"></block>
+				<block type="dgdenoise"></block>
+				<block type="smdegrain"></block>
+				<block type="vaguedenoiser"></block>
+			</category>
+			<category name="%{BKY_VSCAT_SHARPENING}" colour=210>
+				<block type="dgsharpen"></block>
+			</category>
+			<category name="%{BKY_VSCAT_OTHERS}" colour=200>
+				<button text="This Page is to be continued ..."></button>
+				<button text="Anti-aliasing filters."></button>
+				<button text="Line Darkening filters."></button>
+				<button text="Debanding filters."></button>
+				<button text="Deblocking filters."></button>
+				<button text="Dehaloing filters."></button>
+				<button text="Deringing/Edge cleaning filters."></button>
+				<button text="Derainbow filters."></button>
+			</category>
+		</category>
+		<category name="%{BKY_VSCAT_RESIZING}" colour="%{BKY_VSCAT_RESIZING_HUE}">
+			<button text="Resizing filters."></button>
+			<block type="resize"></block>
+			<block type="nnedi3_resize"></block>
+			<block type="anime4k"></block>
+			<button text="Undoes Resizing filters."></button>
+			<block type="descale"></block>
+			<button text="Borders filters."></button>
+			<block type="fillmargins"></block>
+			<block type="addmargins"></block>
+			<block type="addborders"></block>
+			<button text="Cropping filters."></button>
+			<block type="crop"></block>
+		</category>
+		<category name="%{BKY_VSCAT_FORMAT}" colour="%{BKY_VSCAT_FORMAT_HUE}">
+			<button text="Format conversion filters."></button>
+			<block type="converttoyv24"></block>
+			<block type="converttoyv16"></block>
+			<block type="converttoyuy2"></block>
+			<block type="converttoyv12"></block>
+			<block type="converttoyv411"></block>
+			<block type="converttoy8"></block>
+			<block type="converttorgb24"></block>
+			<block type="converttorgb48"></block>
+			<block type="converttorgbs"></block>
+			<block type="converttogrey"></block>
+			<block type="toyuv"></block>
+			<block type="torgb"></block>
+			<block type="depth"></block>
+			<block type="getplane"></block>
+		</category>
+		<category name="%{BKY_VSCAT_FRAME_RATE}" colour="%{BKY_VSCAT_FRAME_RATE_HUE}">
+			<button text="Frame Rate conversion filters."></button>
+			<block type="changefps"></block>
+			<block type="assumefps"></block>
+			<button text="Variable Frame Rate conversion filters."></button>
+			<block type="vfrtocfr">
+				<value name="load">
+					<block type="open"></block>
+				</value>
+			</block>
+		</category>
+		<category name="%{BKY_VSCAT_SUBTITLES}" colour="%{BKY_VSCAT_SUBTITLES_HUE}">
+			<block type="subtitle_auto">
+				<value name="load">
+					<block type="open"></block>
+				</value>
+			</block>
+			<block type="textsub">
+				<value name="load">
+					<block type="open"></block>
+				</value>
+			</block>
+			<block type="textsubmod">
+				<value name="load">
+					<block type="open"></block>
+				</value>
+			</block>
+			<block type="subtext">
+				<value name="load">
+					<block type="open"></block>
+				</value>
+			</block>
+			<block type="tcassub">
+				<value name="load">
+					<block type="open"></block>
+				</value>
+			</block>
+			<block type="subtitle"></block>
+		</category>
+		<category name="%{BKY_VSCAT_UTILSES}" colour="%{BKY_VSCAT_UTILSES_HUE}">
+			<category name="%{BKY_VSCAT_LOGO}" colour=1>
+				<block type="eraseany">
+						<value name="load">
+							<block type="open"></block>
+						</value>
+					</block>
+					<block type="addlogo">
+						<value name="load">
+							<block type="open"></block>
+						</value>
+					</block>
+					<block type="morpho"></block>
+				</category>
+			<category name="%{BKY_VSCAT_STANDARD}" colour=1>
+				<button text="Overlay filters."></button>
+				<block type="overlay"></block>
+				<block type="overlaymod"></block>
+				<button text="Stack filters."></button>
+				<block type="stackvertical"></block>
+				<block type="stackhorizontal">
+					<value name="clips">
+						<shadow type="lists_create_with">
+							<field name="num">0</field>
+						</shadow>
+					</value>
+				</block>
+				<button text="Transformation filters."></button>
+				<block type="turnleft"></block>
+				<block type="turnright"></block>
+				<block type="turn180"></block>
+				<block type="flipvertical"></block>
+				<block type="fliphorizontal"></block>
+				<button text="Blur filters."></button>
+				<block type="boxblur"></block>
+				<button text="Effects and Transitions filters."></button>
+				<block type="dissolve"></block>
+				<block type="fadein"></block>
+				<block type="fadeout"></block>
+				<button text="Color/Levels filters."></button>
+				<block type="tweak"></block>
+				<block type="levels"></block>
+				<block type="invert"></block>
+				<block type="limiter"></block>
+				<block type="expr"></block>
+			</category>
+			<category name="%{BKY_VSCAT_MISC}" colour=1>
+				<button text="Masking and Edge Detecting filters."></button>
+				<block type="prewitt"></block>
+				<block type="sobel"></block>
+				<button text="Metrics/Analysis filters."></button>
+				<block type="viewdiff"></block>
+				<block type="viewframenum"></block>
+				<block type="viewframenumandtime"></block>
+				<block type="viewframetype"></block>
+				<block type="viewmediainfo">
+					<value name="load">
+						<block type="open"></block>
+					</value>
+				</block>
+				<block type="viewcoreinfo"></block>
+				<block type="viewnoise"></block>
+				<button text="Collection filters."></button>
+			</category>
+		</category>
+		<sep></sep>
+
+		<!-- blockly blocks -->
+		<category name="%{BKY_CATLOGIC}" colour="%{BKY_LOGIC_HUE}">
+			<block type="controls_if"></block>
+			<block type="logic_compare"></block>
+			<block type="logic_operation"></block>
+			<block type="logic_negate"></block>
+			<block type="logic_boolean"></block>
+			<block type="logic_null"></block>
+			<block type="logic_ternary"></block>
+		</category>
+		<category name="%{BKY_CATLOOPS}" colour="%{BKY_LOOPS_HUE}">
+			<block type="controls_repeat_ext">
+				<value name="TIMES">
+					<shadow type="math_number">
+						<field name="NUM">10</field>
+					</shadow>
+				</value>
+			</block>
+			<block type="controls_whileUntil"></block>
+			<block type="controls_for">
+				<value name="FROM">
+					<shadow type="math_number">
+						<field name="NUM">1</field>
+					</shadow>
+				</value>
+				<value name="TO">
+					<shadow type="math_number">
+						<field name="NUM">10</field>
+					</shadow>
+				</value>
+				<value name="BY">
+					<shadow type="math_number">
+						<field name="NUM">1</field>
+					</shadow>
+				</value>
+			</block>
+			<block type="controls_forEach"></block>
+			<block type="controls_flow_statements"></block>
+		</category>
+		<category name="%{BKY_CATMATH}" colour="%{BKY_MATH_HUE}">
+			<block type="math_number">
+				<field name="NUM">123</field>
+			</block>
+			<block type="math_arithmetic">
+				<value name="A">
+					<shadow type="math_number">
+						<field name="NUM">1</field>
+					</shadow>
+				</value>
+				<value name="B">
+					<shadow type="math_number">
+						<field name="NUM">1</field>
+					</shadow>
+				</value>
+			</block>
+			<block type="math_single">
+				<value name="NUM">
+					<shadow type="math_number">
+						<field name="NUM">9</field>
+					</shadow>
+				</value>
+			</block>
+			<block type="math_trig">
+				<value name="NUM">
+					<shadow type="math_number">
+						<field name="NUM">45</field>
+					</shadow>
+				</value>
+			</block>
+			<block type="math_constant"></block>
+			<block type="math_number_property">
+				<value name="NUMBER_TO_CHECK">
+					<shadow type="math_number">
+						<field name="NUM">0</field>
+					</shadow>
+				</value>
+			</block>
+			<block type="math_round">
+				<value name="NUM">
+					<shadow type="math_number">
+						<field name="NUM">3.1</field>
+					</shadow>
+				</value>
+			</block>
+			<block type="math_on_list"></block>
+			<block type="math_modulo">
+				<value name="DIVIDEND">
+					<shadow type="math_number">
+						<field name="NUM">64</field>
+					</shadow>
+				</value>
+				<value name="DIVISOR">
+					<shadow type="math_number">
+						<field name="NUM">10</field>
+					</shadow>
+				</value>
+			</block>
+			<block type="math_constrain">
+				<value name="VALUE">
+					<shadow type="math_number">
+						<field name="NUM">50</field>
+					</shadow>
+				</value>
+				<value name="LOW">
+					<shadow type="math_number">
+						<field name="NUM">1</field>
+					</shadow>
+				</value>
+				<value name="HIGH">
+					<shadow type="math_number">
+						<field name="NUM">100</field>
+					</shadow>
+				</value>
+			</block>
+			<block type="math_random_int">
+				<value name="FROM">
+					<shadow type="math_number">
+						<field name="NUM">1</field>
+					</shadow>
+				</value>
+				<value name="TO">
+					<shadow type="math_number">
+						<field name="NUM">100</field>
+					</shadow>
+				</value>
+			</block>
+			<block type="math_random_float"></block>
+			<block type="math_atan2">
+				<value name="X">
+					<shadow type="math_number">
+						<field name="NUM">1</field>
+					</shadow>
+				</value>
+				<value name="Y">
+					<shadow type="math_number">
+						<field name="NUM">1</field>
+					</shadow>
+				</value>
+			</block>
+		</category>
+		<category name="%{BKY_CATTEXT}" colour="%{BKY_TEXTS_HUE}">
+			<block type="text"></block>
+			<block type="text_join"></block>
+			<block type="text_append">
+				<value name="TEXT">
+					<shadow type="text"></shadow>
+				</value>
+			</block>
+			<block type="text_length">
+				<value name="VALUE">
+					<shadow type="text">
+						<field name="TEXT">abc</field>
+					</shadow>
+				</value>
+			</block>
+			<block type="text_isEmpty">
+				<value name="VALUE">
+					<shadow type="text">
+						<field name="TEXT"></field>
+					</shadow>
+				</value>
+			</block>
+			<block type="text_indexOf">
+				<value name="VALUE">
+					<block type="variables_get">
+						<field name="VAR">{textVariable}</field>
+					</block>
+				</value>
+				<value name="FIND">
+					<shadow type="text">
+						<field name="TEXT">abc</field>
+					</shadow>
+				</value>
+			</block>
+			<block type="text_charAt">
+				<value name="VALUE">
+					<block type="variables_get">
+						<field name="VAR">{textVariable}</field>
+					</block>
+				</value>
+			</block>
+			<block type="text_getSubstring">
+				<value name="STRING">
+					<block type="variables_get">
+						<field name="VAR">{textVariable}</field>
+					</block>
+				</value>
+			</block>
+			<block type="text_changeCase">
+				<value name="TEXT">
+					<shadow type="text">
+						<field name="TEXT">abc</field>
+					</shadow>
+				</value>
+			</block>
+			<block type="text_trim">
+				<value name="TEXT">
+					<shadow type="text">
+						<field name="TEXT">abc</field>
+					</shadow>
+				</value>
+			</block>
+			<block type="text_print">
+				<value name="TEXT">
+					<shadow type="text">
+						<field name="TEXT">abc</field>
+					</shadow>
+				</value>
+			</block>
+			<block type="text_prompt_ext">
+				<value name="TEXT">
+					<shadow type="text">
+						<field name="TEXT">abc</field>
+					</shadow>
+				</value>
+			</block>
+		</category>
+		<category name="%{BKY_CATLISTS}" colour="%{BKY_LISTS_HUE}">
+			<block type="lists_create_with">
+				<mutation items="0"></mutation>
+			</block>
+			<block type="lists_create_with"></block>
+			<block type="lists_repeat">
+				<value name="NUM">
+					<shadow type="math_number">
+						<field name="NUM">5</field>
+					</shadow>
+				</value>
+			</block>
+			<block type="lists_length"></block>
+			<block type="lists_isEmpty"></block>
+			<block type="lists_indexOf">
+				<value name="VALUE">
+					<block type="variables_get">
+						<field name="VAR">{listVariable}</field>
+					</block>
+				</value>
+			</block>
+			<block type="lists_getIndex">
+				<value name="VALUE">
+					<block type="variables_get">
+						<field name="VAR">{listVariable}</field>
+					</block>
+				</value>
+			</block>
+			<block type="lists_setIndex">
+				<value name="LIST">
+					<block type="variables_get">
+						<field name="VAR">{listVariable}</field>
+					</block>
+				</value>
+			</block>
+			<block type="lists_getSublist">
+				<value name="LIST">
+					<block type="variables_get">
+						<field name="VAR">{listVariable}</field>
+					</block>
+				</value>
+			</block>
+			<block type="lists_split">
+				<value name="DELIM">
+					<shadow type="text">
+						<field name="TEXT">,</field>
+					</shadow>
+				</value>
+			</block>
+			<block type="lists_sort"></block>
+		</category>
+		<!-- !!! -->
+		
+		<!-- !!! -->
+		<!-- Unused Category ...
+		<category name="%{BKY_CATCOLOUR}" colour="%{BKY_COLOUR_HUE}">
+			<block type="colour_picker"></block>
+			<block type="colour_random"></block>
+			<block type="colour_rgb">
+				<value name="RED">
+					<shadow type="math_number">
+						<field name="NUM">100</field>
+					</shadow>
+				</value>
+				<value name="GREEN">
+					<shadow type="math_number">
+						<field name="NUM">50</field>
+					</shadow>
+				</value>
+				<value name="BLUE">
+					<shadow type="math_number">
+						<field name="NUM">0</field>
+					</shadow>
+				</value>
+			</block>
+			<block type="colour_blend">
+				<value name="COLOUR1">
+					<shadow type="colour_picker">
+						<field name="COLOUR">#ff0000</field>
+					</shadow>
+				</value>
+				<value name="COLOUR2">
+					<shadow type="colour_picker">
+						<field name="COLOUR">#3333ff</field>
+					</shadow>
+				</value>
+				<value name="RATIO">
+					<shadow type="math_number">
+						<field name="NUM">0.5</field>
+					</shadow>
+				</value>
+			</block>
+		</category>
+		-->
+		<!-- !!! -->
+
+		<sep></sep>
+		<category name="%{BKY_CATVARIABLES}" colour="%{BKY_VARIABLES_HUE}" custom="VARIABLE"></category>
+		<category name="%{BKY_CATFUNCTIONS}" colour="%{BKY_PROCEDURES_HUE}" custom="PROCEDURE"></category>
+	</xml>
+
+</body>
+</html>

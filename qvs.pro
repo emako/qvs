@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT += core gui winextras network
+QT += core gui winextras network webenginewidgets webchannel gui-private
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -126,6 +126,7 @@ win32 {
 
     DEPLOY_COMMAND = windeployqt
     DEPLOY_TARGET = $$shell_quote($$shell_path($${D}/$${TARGET}.exe))
+#    DEPLOY_TARGET = $$shell_quote($$shell_path($${D}/$$QtWebEngineProcess.exe))
 #    QMAKE_POST_LINK += $${DEPLOY_COMMAND} --no-translations $${DEPLOY_TARGET} $${E}
 
     if($$ARCHITECTURE_64_BIT) {
@@ -186,6 +187,8 @@ SOURCES += script/script_editor.cpp
 SOURCES += script/syntax_highlighter.cpp
 SOURCES += script/script_creator.cpp
 SOURCES += script/number_matcher.cpp
+SOURCES += script/script_blockly.cpp
+SOURCES += script/blockly_scheme_handler.cpp
 
 HEADERS += mainwindow.h
 HEADERS += com/common.h
@@ -239,6 +242,9 @@ HEADERS += script/script_editor.h
 HEADERS += script/syntax_highlighter.h
 HEADERS += script/script_creator.h
 HEADERS += script/number_matcher.h
+HEADERS += script/script_blockly.h
+HEADERS += script/blockly_scheme_handler.h
+HEADERS += script/script_blockly_content.h
 
 FORMS += mainwindow.ui
 FORMS += com/preferences.ui
@@ -248,6 +254,7 @@ FORMS += job/job_view_cmd.ui
 FORMS += mediainfo/mediainfo_dialog.ui
 FORMS += script/script_player.ui
 FORMS += script/script_creator.ui
+FORMS += script/script_blockly.ui
 FORMS += tools/installer_dialog.ui
 FORMS += tools/muxer.ui
 FORMS += tools/std_watcher.ui

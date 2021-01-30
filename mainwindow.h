@@ -156,6 +156,7 @@ private slots:
     void openPython(void);
     void openPreviewDialog(void);
     void openScriptCreator(void);
+    void openScriptBlockly(void);
     void openScriptPlayer(void);
     void openTools(void);
     void selectOpenfile(void);
@@ -211,6 +212,7 @@ private:
 
 protected:
     virtual bool eventFilter(QObject *o, QEvent *e);
+    virtual void keyPressEvent(QKeyEvent * e);
     virtual void dragEnterEvent(QDragEnterEvent *e);
     virtual void dropEvent(QDropEvent *e);
     virtual void dragMoveEvent(QDragMoveEvent *e);

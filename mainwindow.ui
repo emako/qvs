@@ -628,6 +628,7 @@ QProgressBar::chunk {
      <string>Tools</string>
     </property>
     <addaction name="actionScriptCreator"/>
+    <addaction name="actionScriptBlockly"/>
     <addaction name="actionScriptPlayer"/>
     <addaction name="actionPreviewDialog"/>
     <addaction name="separator"/>
@@ -1301,6 +1302,15 @@ QProgressBar::chunk {
    </property>
    <property name="text">
     <string>Wibbly (IVTC Assistant)</string>
+   </property>
+  </action>
+  <action name="actionScriptBlockly">
+   <property name="icon">
+    <iconset resource="res/resources.qrc">
+     <normaloff>:/buttons/google_blockly.png</normaloff>:/buttons/google_blockly.png</iconset>
+   </property>
+   <property name="text">
+    <string>Script Blockly</string>
    </property>
   </action>
  </widget>

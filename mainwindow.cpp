@@ -10,8 +10,9 @@
 #include "tools/merge.h"
 #include "tools/single_image_video.h"
 #include "script/script_player.h"
-#include "preview/preview_dialog.h"
 #include "script/script_creator.h"
+#include "script/script_blockly.h"
+#include "preview/preview_dialog.h"
 #include "com/version.h"
 #include "com/style_sheet.h"
 #include "com/app_instance_local_connect.h"
@@ -312,6 +313,7 @@ void MainWindow::setAcctions(void)
     /* Tools */
     connect(ui->actionPreviewDialog, SIGNAL(triggered()), this, SLOT(openPreviewDialog()));
     connect(ui->actionScriptCreator, SIGNAL(triggered()), this, SLOT(openScriptCreator()));
+    connect(ui->actionScriptBlockly, SIGNAL(triggered()), this, SLOT(openScriptBlockly()));
     connect(ui->actionScriptPlayer, SIGNAL(triggered()), this, SLOT(openScriptPlayer()));
     connect(ui->actionVSedit, SIGNAL(triggered()), this, SLOT(openTools()));
     connect(ui->actionD2VWitch, SIGNAL(triggered()), this, SLOT(openTools()));
@@ -1280,6 +1282,14 @@ bool MainWindow::eventFilter(QObject *o, QEvent *e)
     return false;
 }
 
+void MainWindow::keyPressEvent(QKeyEvent * e)
+{
+    if(e->key() == Qt::Key_F12)
+    {
+        openScriptBlockly();
+    }
+}
+
 void MainWindow::statusChanged(JobChef::EJOB_STATUS a_job_status)
 {
     qDebug() << QString("JobStatus(%1/%2):").arg(m_jobs_index).arg(ui->jobsView->rowCount()) << getJobStatusText(m_job_status_prev) << "->" << getJobStatusText(a_job_status);
@@ -1577,6 +1587,16 @@ void MainWindow::openScriptCreator(void)
     g_pScriptCreators.insert(at_pScriptCreator->m_uid_own, at_pScriptCreator);
 }
 
+void MainWindow::openScriptBlockly(void)
+{
+    ScriptBlockly *at_pScriptBlockly = new ScriptBlockly();
+
+    at_pScriptBlockly->mainUi = this;
+    at_pScriptBlockly->m_uid_own = QUuid::createUuid();
+    at_pScriptBlockly->show();
+    g_pScriptBlocklys.insert(at_pScriptBlockly->m_uid_own, at_pScriptBlockly);
+}
+
 void MainWindow::openScriptPlayer(void)
 {
     ScriptPlayer *at_pScriptPlayer = new ScriptPlayer();
@@ -1640,6 +1660,15 @@ void MainWindow::releaseChildWindowsAll(void)
         }
     }
     g_pScriptCreators.clear();
+
+    for(QMap<QUuid, ScriptBlockly *>::iterator i = g_pScriptBlocklys.begin(); i != g_pScriptBlocklys.end(); ++i)
+    {
+        if(g_pScriptBlocklys[i.key()] != nullptr)
+        {
+            g_pScriptBlocklys[i.key()]->close();
+        }
+    }
+    g_pScriptBlocklys.clear();
 }
 
 void MainWindow::slotAudioBatchEncStarted(void)
@@ -1878,6 +1907,14 @@ void MainWindow::slotMinimize(void)
         }
     }
 
+    for(QMap<QUuid, ScriptBlockly *>::iterator i = g_pScriptBlocklys.begin(); i != g_pScriptBlocklys.end(); ++i)
+    {
+        if(g_pScriptBlocklys[i.key()] != nullptr && g_pScriptBlocklys[i.key()]->isVisible())
+        {
+            g_pMinimizeWidgets.insert(i.key(), g_pScriptBlocklys[i.key()]);
+        }
+    }
+
     for(QMap<QUuid, StdWatcher*>::iterator i = g_pStdWatch.begin(); i != g_pStdWatch.end(); i++)
     {
         if(g_pStdWatch[i.key()] != nullptr && g_pStdWatch[i.key()]->isVisible())
@@ -1995,6 +2032,11 @@ bool MainWindow::slotChildWindowClosedRemove(QUuid a_uid)
     if(g_pScriptPlayers.contains(a_uid))
     {
         g_pScriptPlayers.remove(a_uid);
+        ret = true;
+    }
+    if(g_pScriptBlocklys.contains(a_uid))
+    {
+        g_pScriptBlocklys.remove(a_uid);
         ret = true;
     }
     if(g_pMediaInfoDialogs.contains(a_uid))
