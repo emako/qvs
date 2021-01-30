@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Installer>
     <Name>Qvs</Name>
-    <Version>r15</Version>
+    <Version>r16</Version>
     <Title>Qvs</Title>
     <Publisher>ema</Publisher>
     <StartMenuDir>Qvs</StartMenuDir>
