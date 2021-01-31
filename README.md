@@ -14,7 +14,7 @@ Create Script from Add New Job
 ![avatar](https://i.imgur.com/xZ6Tn9g.jpg)  
 
 Create Script from blockly  
-![avatar](https://imgur.com/gallery/atgSQFl)  
+![avatar](https://i.imgur.com/2EDtZPK.png)  
 
 Script Mount  
 ![avatar](https://i.imgur.com/39DlTa1.jpg)  
