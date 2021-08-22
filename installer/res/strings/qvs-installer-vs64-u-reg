@@ -8,6 +8,9 @@ Windows Registry Editor Version 5.00
 "Plugins"="$(QVS_HOME)\\vapoursynth64\\plugins"
 "VapourSynthDLL"="$(QVS_HOME)\\VapourSynth.dll"
 "VSScriptDLL"="$(QVS_HOME)\\VSScript.dll"
+"VSPipeEXE"="$(QVS_HOME)\\VSPipe.exe"
+"VSPipeEXE"="$(QVS_HOME)\\VSPipe.exe"
+"VSRepoPY"="$(QVS_HOME)\\vsrepo.py"
 
 [-HKEY_CLASSES_ROOT\vpyfile]
 

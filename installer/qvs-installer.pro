@@ -20,7 +20,7 @@ QMAKE_LFLAGS += /MANIFESTUAC:\"level=\'requireAdministrator\' uiAccess=\'false\'
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 COMMON_DIRECTORY = ../installer
-#RC_ICONS = $${COMMON_DIRECTORY}/res/qvs-installer.ico
+RC_ICONS = $${COMMON_DIRECTORY}/res/qvs-installer.ico
 
 SOURCES += \
 	main.cpp \
