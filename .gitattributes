@@ -25,3 +25,12 @@ blockly/script_blockly/generators/python/* linguist-vendored
 blockly/script_blockly/msg/* linguist-vendored
 blockly/script_blockly/msg/js/* linguist-vendored
 blockly/script_blockly/msg/json/* linguist-vendored
+ffmpeg/include/libavcodec/* linguist-vendored
+ffmpeg/include/libavdevice/* linguist-vendored
+ffmpeg/include/libavfilter/* linguist-vendored
+ffmpeg/include/libavformat/* linguist-vendored
+ffmpeg/include/libavutil/* linguist-vendored
+ffmpeg/include/libpostproc/* linguist-vendored
+ffmpeg/include/libswresample/* linguist-vendored
+ffmpeg/include/libswscale/* linguist-vendored
+ffmpeg/include/xxxxx/* linguist-vendored
