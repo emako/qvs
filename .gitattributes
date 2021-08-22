@@ -1,0 +1,9 @@
+*.js linguist-detectable=true
+.html linguist-language=JavaScript
+.css linguist-language=JavaScript
+blockly/script_blockly/*.js linguist-vendored
+blockly/script_blockly/*.map linguist-vendored
+blockly/script_blockly/blocks/* linguist-vendored
+blockly/script_blockly/core/* linguist-vendored
+blockly/script_blockly/generators/* linguist-vendored
+blockly/script_blockly/msg/* linguist-vendored
