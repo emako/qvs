@@ -151,6 +151,7 @@ public slots:
     virtual void setMode(bool a_advancedMode);
     virtual void moveValue(void);
     virtual void setValueValue(void);
+    virtual bool canShowSpinBox(QObject *a_object);
     virtual bool containsValue(QObject *a_object);
     virtual void setValueVisible(const bool &a_visible);
     virtual void setValueHidden(void);
@@ -191,6 +192,7 @@ private slots:
     void on_horizontalSliderOggVorbis_valueChanged(int a_value);
     void on_comboBoxMp3Mode_currentIndexChanged(int a_index);
     void on_horizontalSliderMp3_valueChanged(int a_value);
+    void on_checkBoxMp3ModeIntelligent_stateChanged(int a_state);
     void on_horizontalSliderAc3_valueChanged(int a_value);
 
 private:

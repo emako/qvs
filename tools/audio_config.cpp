@@ -247,6 +247,7 @@ void AudioConfig::setDefaultConfig(const AudioAdvancedConfig &advanced_config)
     case AudioEnc::eENCODE_TYPE_MP3:
         ui->comboBoxMp3Mode->setCurrentIndex(mode);
         ui->horizontalSliderMp3->setValue(value);
+        ui->checkBoxMp3ModeIntelligent->setChecked(advanced_config.value2.toBool());
         break;
     case AudioEnc::eENCODE_TYPE_AC3:
         ui->horizontalSliderAc3->setValue(value);
@@ -336,7 +337,7 @@ bool AudioConfig::eventFilter(QObject *o, QEvent *e)
     case QEvent::Enter:
         if(containsValue(o))
         {
-            if(m_advancedMode)
+            if(canShowSpinBox(o))
             {
                 if(o != m_pSpinBox)
                 {
@@ -356,6 +357,18 @@ bool AudioConfig::eventFilter(QObject *o, QEvent *e)
         break;
     }
     return false;
+}
+
+bool AudioConfig::canShowSpinBox(QObject *a_object)
+{
+    if (static_cast<QSlider *>(a_object) != nullptr)
+    {
+        if (!static_cast<QSlider *>(a_object)->isEnabled())
+        {
+            return false;
+        }
+    }
+    return m_advancedMode;
 }
 
 bool AudioConfig::containsValue(QObject *a_object)
@@ -710,6 +723,22 @@ void AudioConfig::on_horizontalSliderMp3_valueChanged(int a_value)
     ui->groupBoxMp3->setTitle(QString("Lame MP3 (%1=%2)").arg(mode).arg(a_value));
 }
 
+void AudioConfig::on_checkBoxMp3ModeIntelligent_stateChanged(int)
+{
+    if (ui->checkBoxMp3ModeIntelligent->isChecked())
+    {
+        ui->comboBoxMp3Mode->setEnabled(false);
+        ui->horizontalSliderMp3->setEnabled(false);
+        ui->labelMp3Mode->setEnabled(false);
+    }
+    else
+    {
+        ui->comboBoxMp3Mode->setEnabled(true);
+        ui->horizontalSliderMp3->setEnabled(true);
+        ui->labelMp3Mode->setEnabled(true);
+    }
+}
+
 ///->MP3_END
 
 ///->AC3_START
@@ -796,6 +825,7 @@ AudioAdvancedConfig AudioConfig::getConfig(void)
         config.cmd = processMp3();
         config.mode = static_cast<uint>(ui->comboBoxMp3Mode->currentIndex());
         config.value = ui->horizontalSliderMp3->value();
+        config.value2 = ui->checkBoxMp3ModeIntelligent->isChecked();
         break;
     case AudioEnc::eENCODE_TYPE_AC3:
         config.name = ui->groupBoxAc3->title();
@@ -819,13 +849,13 @@ void AudioConfig::setConfig(AudioAdvancedConfig *a_pAdvancedConfig)
     ui->comboBoxAudioEncoder->setCurrentIndex(static_cast<int>(a_pAdvancedConfig->type));
     emit ui->comboBoxAudioEncoder->currentIndexChanged(static_cast<int>(a_pAdvancedConfig->type));
 
-    if(!m_advancedMode)
+    if (!m_advancedMode)
     {
         at_advancedConfig = getDefaultConfig(static_cast<uint>(a_pAdvancedConfig->type));
         a_pAdvancedConfig = &at_advancedConfig;
     }
 
-    switch(static_cast<AudioEnc::EENCODE_TYPE>(a_pAdvancedConfig->type))
+    switch (static_cast<AudioEnc::EENCODE_TYPE>(a_pAdvancedConfig->type))
     {
     case AudioEnc::eENCODE_TYPE_AAC_APPLE:
     default:
@@ -859,6 +889,7 @@ void AudioConfig::setConfig(AudioAdvancedConfig *a_pAdvancedConfig)
     case AudioEnc::eENCODE_TYPE_MP3:
         ui->comboBoxMp3Mode->setCurrentIndex(static_cast<int>(a_pAdvancedConfig->mode));
         ui->horizontalSliderMp3->setValue(a_pAdvancedConfig->value.toInt());
+        ui->checkBoxMp3ModeIntelligent->setChecked(a_pAdvancedConfig->value2.toBool());
         break;
     case AudioEnc::eENCODE_TYPE_AC3:
         ui->horizontalSliderAc3->setValue(a_pAdvancedConfig->value.toInt());
@@ -1125,6 +1156,17 @@ QString AudioConfig::processMp3(void)
     QByteArray exec = qvs::findFirstFilePath(AUDIO_CONFIG_EXEC_MP3).toUtf8();
     EAUDIO_CONFIG_MODE mode = static_cast<EAUDIO_CONFIG_MODE>(ui->comboBoxMp3Mode->currentIndex());
     int value = ui->horizontalSliderMp3->value();
+
+    if (ui->checkBoxMp3ModeIntelligent->isChecked())
+    {
+        QString cmdCBR;
+        QString cmdABR;
+        QString cmdVBR;
+        cmd = cmdCBR.sprintf("%s -b %%d --cbr -h - \"%1\"", exec.data()) // CBR
+                + "|" + cmdABR.sprintf("%s --abr %%d -h - \"%1\"", exec.data()) // ABR
+                + "|" + cmdVBR.sprintf("%s -V%%d - \"%1\"", exec.data()); // VBR
+        return cmd;
+    }
 
     switch(mode)
     {

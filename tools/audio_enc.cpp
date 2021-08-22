@@ -3,6 +3,7 @@
 #include "std_manager.h"
 #include "mainwindow.h"
 #include "../com/style_sheet.h"
+#include "../mediainfo/mediainfo_enum.h"
 #include "ui_audio_enc.h"
 #include "ui_audio_config.h"
 #include "ui_mainwindow.h"
@@ -228,6 +229,104 @@ StdWatcherCmd AudioEnc::getEncodeCmd(QString a_input, QString a_output, QString 
         if(encode_type == eENCODE_TYPE_AC3)
         {
             cmd = m_pAdvancedConfig->cmd.arg(qvs::findFirstFilePath(getPiperFilename())).arg(a_input).arg(a_output);
+        }
+        else if (encode_type == eENCODE_TYPE_MP3 && m_pAdvancedConfig->value2.toBool())
+        {
+            QStringList cmds = m_pAdvancedConfig->cmd.split('|');
+
+            MediaInfoLoader mi = MediaInfoLoader(a_input);
+            QString format = mi.get(MI_AUDIO_FORMAT, stream_t::Stream_Audio);
+
+            if (format == "MPEG Audio")
+            {
+                pipe = QString();
+                cmd = QString("cmd /c echo It's already in MP3 format, so only copy. & copy \"%1\" \"%2\" /y").arg(a_input).arg(a_output);
+            }
+            else
+            {
+                QString bitRateMode = mi.get(MI_AUDIO_BITRATE_MODE, stream_t::Stream_Audio);
+                int bitRateSrc = qRound(mi.get(MI_AUDIO_BITRATE, stream_t::Stream_Audio).toInt() / 1000.0);
+                int bitRateTar = 192;
+                AudioConfig::EAUDIO_CONFIG_MODE formatTar = AudioConfig::eMP3_MODE_ABR;
+
+                if (bitRateMode == "VBR" || bitRateMode == "Variable")
+                {
+                    int bitRateMaxSrc = qRound(mi.get(MI_AUDIO_BITRATE_MAXIMUM, stream_t::Stream_Audio).toInt() / 1000.0);
+
+                    bitRateTar = qMax(bitRateMaxSrc, bitRateSrc);
+                    formatTar = AudioConfig::eMP3_MODE_CBR;
+                }
+                else
+                {
+                    // -----------------------------------------------------------------------------------------------------------------------
+                    // 0   24       24    64     88        88     128    152       152    192    216       216    256    280       280    320
+                    //     64VBR    64CBR        128ABR    128CBR        192ABR    192CBR        256ABR    256CBR        320ABR    320CBR
+                    // -----------------------------------------------------------------------------------------------------------------------
+
+                    // 280~ -> 320C
+                    if (bitRateSrc >= 280)
+                    {
+                        bitRateTar = 320;
+                        formatTar = AudioConfig::eMP3_MODE_CBR;
+                    }
+                    // 256~280 -> 320V
+                    else if (bitRateSrc >= 256 && bitRateSrc < 280)
+                    {
+                        bitRateTar = 320;
+                        formatTar = AudioConfig::eMP3_MODE_ABR;
+                    }
+                    // 216~256 -> 256C
+                    else if (bitRateSrc >= 216 && bitRateSrc < 256)
+                    {
+                        bitRateTar = 256;
+                        formatTar = AudioConfig::eMP3_MODE_CBR;
+                    }
+                    // 192~216 -> 256V
+                    else if (bitRateSrc >= 192 && bitRateSrc < 216)
+                    {
+                        bitRateTar = 256;
+                        formatTar = AudioConfig::eMP3_MODE_ABR;
+                    }
+                    // 152~192 -> 192C
+                    else if (bitRateSrc >= 152 && bitRateSrc < 192)
+                    {
+                        bitRateTar = 192;
+                        formatTar = AudioConfig::eMP3_MODE_CBR;
+                    }
+                    // 128~152 -> 192V
+                    else if (bitRateSrc >= 128 && bitRateSrc < 152)
+                    {
+                        bitRateTar = 192;
+                        formatTar = AudioConfig::eMP3_MODE_ABR;
+                    }
+                    // 88~128 -> 128C
+                    else if (bitRateSrc >= 88 && bitRateSrc < 128)
+                    {
+                        bitRateTar = 128;
+                        formatTar = AudioConfig::eMP3_MODE_CBR;
+                    }
+                    // 64~88 -> 128V
+                    else if (bitRateSrc >= 64 && bitRateSrc < 88)
+                    {
+                        bitRateTar = 128;
+                        formatTar = AudioConfig::eMP3_MODE_ABR;
+                    }
+                    // 24~64 -> 64C
+                    else if (bitRateSrc >= 24 && bitRateSrc < 64)
+                    {
+                        bitRateTar = 64;
+                        formatTar = AudioConfig::eMP3_MODE_CBR;
+                    }
+                    // 0~24 -> 64V
+                    else if (bitRateSrc >= 0 && bitRateSrc < 24)
+                    {
+                        bitRateTar = 64;
+                        formatTar = AudioConfig::eMP3_MODE_ABR;
+                    }
+                }
+                cmd = QString().sprintf(cmds[static_cast<int>(formatTar)].toUtf8(), bitRateTar).arg(a_output);
+            }
+            mi.close();
         }
         else
         {
