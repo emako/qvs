@@ -903,9 +903,36 @@ QList<JobCmdList> JobCreator::configToCommandGPU(QMap<EJOB_CONFIG, QVariant> a_j
     QStringList cli;
     QString encoder;
     QString arch;
+    EJOB_PIPER job_piper = getEncoderPiper(a_job_config);
     bool isFatalError = false;
 
+    // video input:
     //QSVEncC  -c hevc --cqp 23  --profile main -i "input"  -o "output"
+
+    // script input:
+    //vspipe --y4m "example.vpy" - | NVEncC --y4m -i - --codec h264 -o "example_vpy.mp4"
+
+#ifndef _USE_GPU_ENCODE_INPUT_SCRIPT
+    /*Pipe*/
+    switch(job_piper)
+    {
+    case eJOB_PIPER_VSPIPE:
+        cli << qvs::findFirstFilePath(QString(JOB_CREATOR_EXEC_VSPIPE));
+        cli << "--y4m";
+        cli << QString("\"%1\"").arg(a_job_config[eJOB_CONFIG_INPUT].toString());
+        cli << "-";
+        cli << QT_PIPE;
+        break;
+    case eJOB_PIPER_AVS4X26X:
+        cli << qvs::findFirstFilePath(QString("%1_%2").arg(JOB_CREATOR_EXEC_AVS4X26X).arg(arch));
+        cli << "--x264-binary";
+        cli << a_job_config[eJOB_CONFIG_CUSTOM_PIPER_PARM].toString();
+        break;
+    case eJOB_PIPER_DIRECT:
+    default:
+        break;
+    }
+#endif
 
     /*Encoder*/
     switch(a_job_config[eJOB_CONFIG_ARCH].toInt())
@@ -1002,7 +1029,11 @@ QList<JobCmdList> JobCreator::configToCommandGPU(QMap<EJOB_CONFIG, QVariant> a_j
     }
 
     /*Input*/
+#ifndef _USE_GPU_ENCODE_INPUT_SCRIPT
+    cli << "--y4m -i -";
+#else
     cli << "-i" << QString("\"%1\"").arg(a_job_config[eJOB_CONFIG_INPUT].toString());
+#endif
 
     /*Output*/
     cli << "-o" << QString("\"%1\"").arg(a_job_config[eJOB_CONFIG_OUTPUT].toString());
@@ -1010,6 +1041,15 @@ QList<JobCmdList> JobCreator::configToCommandGPU(QMap<EJOB_CONFIG, QVariant> a_j
     cmd.cmd = cli.join(QT_BLANK);
     cmd.type = JobCmdList::eJOB_CMD_TYPE_ENCODER;
     cmds << cmd;
+
+#ifndef _USE_GPU_ENCODE_INPUT_SCRIPT
+    QList<JobCmdList> at_cmds = splitPipeCommand(cmd.cmd);
+    cmds.clear();
+    for(int i = 0; i < at_cmds.length(); i++)
+    {
+        cmds << at_cmds.at(i);
+    }
+#endif
 
     if(isFatalError)
     {
