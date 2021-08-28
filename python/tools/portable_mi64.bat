@@ -3,7 +3,7 @@
 rd /s /q .\List_Of_Parameters
 rd /s /q .\mi64
 
-rem extract vs64 7zip pkg
+rem extract mi64 7zip pkg
 mkdir mi64
 copy MediaInfo_DLL_*_Windows_x64_WithoutInstaller.7z mi64
 cd mi64
