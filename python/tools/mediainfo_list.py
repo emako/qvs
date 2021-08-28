@@ -116,6 +116,8 @@ def pair_list():
 	
 def main():
 	for filename in input:
+		if os.path.exists('List_Of_Parameters'):
+			filename = 'List_Of_Parameters/' + filename
 		todo(filename)
 	
 	with open(output_source, 'w') as f:

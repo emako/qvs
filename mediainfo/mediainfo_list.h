@@ -2,7 +2,7 @@
 #define MEDIAINFO_DEFINE_QT_H
 //--------------------------------------------------------------------
 //
-// Header File created by Python3.8.2 2021-01-30T18:54:46
+// Header File created by Python3.9.6 2021-08-28T05:47:20
 // For MediaInfo v18.08 or greater version.
 // The macro definition is derived from the CSV files in Developers/List_Of_Parameters.
 //
@@ -20,7 +20,7 @@ extern QList<QPair<MediaInfoDLL::String, QPair<QString, bool>>> g_mediainfo_list
 extern QList<QPair<MediaInfoDLL::String, QPair<QString, bool>>> g_mediainfo_list_menu;
 extern QList<QPair<QString, QList<QPair<MediaInfoDLL::String, QPair<QString, bool>>>>> g_mediainfo_lists;
 
-/// -> General.csv
+/// -> List_Of_Parameters/General.csv
 #define MI_QT_GENERAL_COUNT QObject::tr("Count")
 #define MI_QT_GENERAL_STATUS QObject::tr("Status")
 #define MI_QT_GENERAL_STREAMCOUNT QObject::tr("StreamCount")
@@ -353,7 +353,7 @@ extern QList<QPair<QString, QList<QPair<MediaInfoDLL::String, QPair<QString, boo
 #define MI_QT_GENERAL_EPG_POSITIONS_BEGIN QObject::tr("EPG_Positions_Begin")
 #define MI_QT_GENERAL_EPG_POSITIONS_END QObject::tr("EPG_Positions_End")
 
-/// -> Video.csv
+/// -> List_Of_Parameters/Video.csv
 #define MI_QT_VIDEO_COUNT QObject::tr("Count")
 #define MI_QT_VIDEO_STATUS QObject::tr("Status")
 #define MI_QT_VIDEO_STREAMCOUNT QObject::tr("StreamCount")
@@ -732,7 +732,7 @@ extern QList<QPair<QString, QList<QPair<MediaInfoDLL::String, QPair<QString, boo
 #define MI_QT_VIDEO_MAXFALL_ORIGINAL QObject::tr("MaxFALL_Original")
 #define MI_QT_VIDEO_MAXFALL_ORIGINAL_SOURCE QObject::tr("MaxFALL_Original_Source")
 
-/// -> Audio.csv
+/// -> List_Of_Parameters/Audio.csv
 #define MI_QT_AUDIO_COUNT QObject::tr("Count")
 #define MI_QT_AUDIO_STATUS QObject::tr("Status")
 #define MI_QT_AUDIO_STREAMCOUNT QObject::tr("StreamCount")
@@ -1014,7 +1014,7 @@ extern QList<QPair<QString, QList<QPair<MediaInfoDLL::String, QPair<QString, boo
 #define MI_QT_AUDIO_TAGGED_DATE QObject::tr("Tagged_Date")
 #define MI_QT_AUDIO_ENCRYPTION QObject::tr("Encryption")
 
-/// -> Text.csv
+/// -> List_Of_Parameters/Text.csv
 #define MI_QT_TEXT_COUNT QObject::tr("Count")
 #define MI_QT_TEXT_STATUS QObject::tr("Status")
 #define MI_QT_TEXT_STREAMCOUNT QObject::tr("StreamCount")
@@ -1254,7 +1254,7 @@ extern QList<QPair<QString, QList<QPair<MediaInfoDLL::String, QPair<QString, boo
 #define MI_QT_TEXT_TAGGED_DATE QObject::tr("Tagged_Date")
 #define MI_QT_TEXT_ENCRYPTION QObject::tr("Encryption")
 
-/// -> Other.csv
+/// -> List_Of_Parameters/Other.csv
 #define MI_QT_OTHER_COUNT QObject::tr("Count")
 #define MI_QT_OTHER_STATUS QObject::tr("Status")
 #define MI_QT_OTHER_STREAMCOUNT QObject::tr("StreamCount")
@@ -1444,7 +1444,7 @@ extern QList<QPair<QString, QList<QPair<MediaInfoDLL::String, QPair<QString, boo
 #define MI_QT_OTHER_ALTERNATEGROUP QObject::tr("AlternateGroup")
 #define MI_QT_OTHER_ALTERNATEGROUP_STRING QObject::tr("AlternateGroup/String")
 
-/// -> Image.csv
+/// -> List_Of_Parameters/Image.csv
 #define MI_QT_IMAGE_COUNT QObject::tr("Count")
 #define MI_QT_IMAGE_STATUS QObject::tr("Status")
 #define MI_QT_IMAGE_STREAMCOUNT QObject::tr("StreamCount")
@@ -1570,7 +1570,7 @@ extern QList<QPair<QString, QList<QPair<MediaInfoDLL::String, QPair<QString, boo
 #define MI_QT_IMAGE_TRANSFER_CHARACTERISTICS_ORIGINAL QObject::tr("transfer_characteristics_Original")
 #define MI_QT_IMAGE_MATRIX_COEFFICIENTS_ORIGINAL QObject::tr("matrix_coefficients_Original")
 
-/// -> Menu.csv
+/// -> List_Of_Parameters/Menu.csv
 #define MI_QT_MENU_COUNT QObject::tr("Count")
 #define MI_QT_MENU_STATUS QObject::tr("Status")
 #define MI_QT_MENU_STREAMCOUNT QObject::tr("StreamCount")
@@ -1666,7 +1666,7 @@ extern QList<QPair<QString, QList<QPair<MediaInfoDLL::String, QPair<QString, boo
 #define MI_QT_MENU_CHAPTERS_POS_BEGIN QObject::tr("Chapters_Pos_Begin")
 #define MI_QT_MENU_CHAPTERS_POS_END QObject::tr("Chapters_Pos_End")
 
-/// -> Generic.csv
+/// -> List_Of_Parameters/Generic.csv
 #define MI_QT_GENERIC_FORMAT QObject::tr("Format")
 #define MI_QT_GENERIC_FORMAT_STRING QObject::tr("Format/String")
 #define MI_QT_GENERIC_FORMAT_INFO QObject::tr("Format/Info")
