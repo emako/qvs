@@ -235,6 +235,8 @@ def main():
 	add_flag()
 	
 	for filename in input:
+		if os.path.exists('List_Of_Parameters'):
+			filename = 'List_Of_Parameters/' + filename
 		todo(filename)
 	
 	with open(output, 'w') as f:

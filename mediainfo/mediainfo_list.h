@@ -2,7 +2,7 @@
 #define MEDIAINFO_DEFINE_QT_H
 //--------------------------------------------------------------------
 //
-// Header File created by Python3.9.6 2021-08-28T05:47:20
+// Header File created by Python3.9.6 2021-08-28T08:58:38
 // For MediaInfo v18.08 or greater version.
 // The macro definition is derived from the CSV files in Developers/List_Of_Parameters.
 //

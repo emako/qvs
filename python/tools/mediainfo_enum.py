@@ -1,5 +1,4 @@
 import os
-#import requests
 
 #-------------------------------------------------
 #
@@ -13,11 +12,18 @@ output_tmp = output + '.tmp'
 datas = []
 
 def download():
-	#print('requests: {url}'.format(url=enum_list_url))
-	#r = requests.get(enum_list_url)
-	#with open(output_tmp, 'wb') as f:
-	#	f.write(r.content)
-    
+
+	try:
+		import requests
+		print('requests: {url}'.format(url=enum_list_url))
+		r = requests.get(enum_list_url)
+		with open(output_tmp, 'wb') as f:
+			f.write(r.content)
+	except Exception as err:
+		print(err)
+		# Please start https://raw.githubusercontent.com/MediaArea/MediaInfoLib/master/Source/MediaInfo/File__Analyse_Automatic.h
+		print('requests {url} failed!!'.format(url=enum_list_url))
+	
     # Please download the 'File__Analyse_Automatic.h' and rename it to 'mediainfo_enum.h.tmp', and run this script.
     
 	with open(output_tmp) as f:

@@ -2,7 +2,7 @@
 #define MEDIAINFO_DEFINE_H
 //--------------------------------------------------------------------
 //
-// Header File created by Python3.8.2 2021-01-30T18:54:24
+// Header File created by Python3.9.6 2021-08-28T08:58:32
 // For MediaInfo v18.08 or greater version.
 // The macro definition is derived from the CSV files in Developers/List_Of_Parameters.
 //
@@ -190,7 +190,7 @@
 #define MI_RETURN_ELEMENTARY __T("Elementary")
 #define MI_RETURN_OPTION_NOT_KNOWN __T("Option not known")
 
-/// -> General.csv
+/// -> List_Of_Parameters/General.csv
 #define MI_GENERAL_COUNT __T("Count")
 #define MI_GENERAL_STATUS __T("Status")
 #define MI_GENERAL_STREAMCOUNT __T("StreamCount")
@@ -523,7 +523,7 @@
 #define MI_GENERAL_EPG_POSITIONS_BEGIN __T("EPG_Positions_Begin")
 #define MI_GENERAL_EPG_POSITIONS_END __T("EPG_Positions_End")
 
-/// -> Video.csv
+/// -> List_Of_Parameters/Video.csv
 #define MI_VIDEO_COUNT __T("Count")
 #define MI_VIDEO_STATUS __T("Status")
 #define MI_VIDEO_STREAMCOUNT __T("StreamCount")
@@ -902,7 +902,7 @@
 #define MI_VIDEO_MAXFALL_ORIGINAL __T("MaxFALL_Original")
 #define MI_VIDEO_MAXFALL_ORIGINAL_SOURCE __T("MaxFALL_Original_Source")
 
-/// -> Audio.csv
+/// -> List_Of_Parameters/Audio.csv
 #define MI_AUDIO_COUNT __T("Count")
 #define MI_AUDIO_STATUS __T("Status")
 #define MI_AUDIO_STREAMCOUNT __T("StreamCount")
@@ -1184,7 +1184,7 @@
 #define MI_AUDIO_TAGGED_DATE __T("Tagged_Date")
 #define MI_AUDIO_ENCRYPTION __T("Encryption")
 
-/// -> Text.csv
+/// -> List_Of_Parameters/Text.csv
 #define MI_TEXT_COUNT __T("Count")
 #define MI_TEXT_STATUS __T("Status")
 #define MI_TEXT_STREAMCOUNT __T("StreamCount")
@@ -1424,7 +1424,7 @@
 #define MI_TEXT_TAGGED_DATE __T("Tagged_Date")
 #define MI_TEXT_ENCRYPTION __T("Encryption")
 
-/// -> Other.csv
+/// -> List_Of_Parameters/Other.csv
 #define MI_OTHER_COUNT __T("Count")
 #define MI_OTHER_STATUS __T("Status")
 #define MI_OTHER_STREAMCOUNT __T("StreamCount")
@@ -1614,7 +1614,7 @@
 #define MI_OTHER_ALTERNATEGROUP __T("AlternateGroup")
 #define MI_OTHER_ALTERNATEGROUP_STRING __T("AlternateGroup/String")
 
-/// -> Image.csv
+/// -> List_Of_Parameters/Image.csv
 #define MI_IMAGE_COUNT __T("Count")
 #define MI_IMAGE_STATUS __T("Status")
 #define MI_IMAGE_STREAMCOUNT __T("StreamCount")
@@ -1740,7 +1740,7 @@
 #define MI_IMAGE_TRANSFER_CHARACTERISTICS_ORIGINAL __T("transfer_characteristics_Original")
 #define MI_IMAGE_MATRIX_COEFFICIENTS_ORIGINAL __T("matrix_coefficients_Original")
 
-/// -> Menu.csv
+/// -> List_Of_Parameters/Menu.csv
 #define MI_MENU_COUNT __T("Count")
 #define MI_MENU_STATUS __T("Status")
 #define MI_MENU_STREAMCOUNT __T("StreamCount")
@@ -1836,7 +1836,7 @@
 #define MI_MENU_CHAPTERS_POS_BEGIN __T("Chapters_Pos_Begin")
 #define MI_MENU_CHAPTERS_POS_END __T("Chapters_Pos_End")
 
-/// -> Generic.csv
+/// -> List_Of_Parameters/Generic.csv
 #define MI_GENERIC_FORMAT __T("Format")
 #define MI_GENERIC_FORMAT_STRING __T("Format/String")
 #define MI_GENERIC_FORMAT_INFO __T("Format/Info")
