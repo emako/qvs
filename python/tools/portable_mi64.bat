@@ -1,3 +1,4 @@
+@rem https://mediaarea.net/en/MediaInfo/Download/Windows
 @rem copy MediaInfo_DLL_21.03_Windows_x64_WithoutInstaller.7z to here firstly.
 
 rd /s /q .\List_Of_Parameters
@@ -16,7 +17,7 @@ copy .\mi64\MediaInfo.dll qvs
 mkdir List_Of_Parameters
 copy .\mi64\Developers\List_Of_Parameters\* .\List_Of_Parameters\
 
-rem may use python xxx.py when not work
+rem may use python xxx.py when no work
 mediainfo_define.py
 mediainfo_enum.py
 mediainfo_list.py

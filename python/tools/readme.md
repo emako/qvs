@@ -1,3 +1,8 @@
+Usage of portable_*.bat
+---
+To make qvs portable pacakge.  
+Copy the pacakges to here and auto extract it for portable qvs.
+  
 Usage of mediainfo_list.py
 ---
 Copy the MediaInfo_DLL_21.03_Windows_x64_WithoutInstaller\Developers\List_Of_Parameters to here and run script, and then 'mediainfo_list.cpp' and 'mediainfo_list.h' will be created.
