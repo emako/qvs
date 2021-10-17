@@ -6,7 +6,7 @@ A simple program for using VapourSynth/Avisynth Script previewed and encoded.
 
 ## Download
 
-You can download from [releases](https://github.com/emako/qvs/releases) page below.
+You can download from [releases](https://github.com/emako/qvs/releases) page.
 
 See the [changelog.md](https://github.com/emako/qvs/blob/master/changelog.md) page.
 
@@ -99,7 +99,7 @@ See the [changelog.md](https://github.com/emako/qvs/blob/master/changelog.md) pa
 
 - DGIndexNV (x64)
 
-  Tips: Not included but you can copy your `DGIndexNV.exe` for default using.
+  Tips: Not included but you can copy your `DGIndexNV.exe` to `qvs\tools\DGIndexNV\` for default using.
 
 - Caption2Ass (x64)
 
