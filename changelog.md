@@ -1,6 +1,7 @@
-qvs changelog
+# qvs changelog
 
-version alpha1.0
+> version alpha1.0
+
  - init alpha version.
 
 version alpha1.1
@@ -8,15 +9,18 @@ version alpha1.1
  - fixed lsmash filter checker.
  - added using ffmpeg or ffmpeg32 by prefer config.
 
-version alpha1.2
+> version alpha1.2
+
  - cleaned project.
 
-version alpha1.3
+> version alpha1.3
+
  - fixed audio encode output error.
  - added eac3to unknown type ext.
  - added qvs python module.
 
-version alpha1.6
+> version alpha1.6
+
  - fixed custom parameters of gpu-encoder can not be used.
  - fixed script player can not be detected.
  - fixed mediainfo loader any char type supported.
@@ -27,25 +31,31 @@ version alpha1.6
  - added mediainfo define python program.
  - changed installer dialog will not be shown when vs has been installed.
 
-version r1
+> version r1
+
  - updated mediainfo to v18.08.
  - added mediainfo language.
 
-version r2
+> version r2
+
  - fixed audio slider bug.
 
-version r3
+> version r3
+
  - added job cmd log.
  - added language config.
 
-version r4
+> version r4
+
  - added merge tool.
  - fixed bugs.
 
-version r5
+> version r5
+
  - fixed bugs.
 
-version r6
+> version r6
+
  - fixed bugs.
  - fixed warnings.
  - fixed log html format.
@@ -53,14 +63,16 @@ version r6
  - updated qt to 5.11.2.
  - updated mediainfo to v18.08.1.
 
-version r7
+> version r7
+
  - fixed ffmpeg endless waiting when muxing hevc.
  - added python dgnv sharpen and dgnv telecide functions.
  - added mkvmerge delay param in muxer.
  - updated bontsdemux to msvc2017.
  - updated mkvtoolnix to 27.0.0.
 
-version r8
+> version r8
+
  - updated vapoursynth to r45.
  - updated python to 3.7.1.
  - updated qvs.py functions about gamma resize, add logo and overlaymod.
@@ -70,12 +82,14 @@ version r8
  - fixed make portable dialog closing crash.
  - fixed logging properties.
 
-version r9
+> version r9
+
  - added tcas filter support.
  - added framechapter.py.
  - added audio config auto save.
 
-version r10
+> version r10
+
  - updated mediainfo to v18.12.
  - changed tcas filter loaded from vs plugins.
  - changed installer's compiling type from console to gui.
@@ -84,16 +98,19 @@ version r10
  - fixed job moved bug on pausing mode.
  - updated some tools version.
 
-version r11
+> version r11
+
  - fixed crach bug after script player dialog closed.
 
-version r12
+> version r12
+
  - fixed x265 config failure of 12bit.
  - fixed the problem of allowing drops.
  - added Wobbly v4 mod.
  - added about qt dialog for checking the libs version.
 
-version r13
+> version r13
+
  - added editor font size can be changed by ctrl+wheel.
  - added tools splitter.
  - added python func 'AddLogo' fadeio API.
@@ -101,13 +118,15 @@ version r13
  - fixed script creator AddLogo's empty filename.
  - updated preview dialog to QtAV1.2.0.
 
-version r14
+> version r14
+
  - added win taskbar button and jump list.
  - fixed script creator func 'Nnedi3Resize'.
  - fixed crash error on closing child window.
  - updated installer version.
 
-version r15
+> version r15
+
  - added single image video funciton.
  - fixed crash error on closing child window.
  - fixed sometimes config, 'NotAddJobOnSaved' is not saved.
@@ -118,7 +137,8 @@ version r15
  - updated ffmpeg to 4.2.2.
  - updated LAVFilters to 0.74.1
 
-version r16
+> version r16
+
  - added script blockly for creating vapoursynth script (Preview Function).
  - fixed taskbar button shown incorrectly.
  - updated vapoursynth to r52.
