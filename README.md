@@ -1,5 +1,9 @@
 # qvs
 
+![](https://img.shields.io/badge/qvs-r16-green)
+![](https://img.shields.io/github/license/emako/qvs?color=blue)
+![](https://img.shields.io/github/stars/emako/qvs?color=blue)
+
 A simple program for using VapourSynth/Avisynth Script previewed and encoded.
 
 
