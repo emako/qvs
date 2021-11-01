@@ -4,6 +4,7 @@
 ![](https://img.shields.io/github/license/emako/qvs?color=blue)
 ![](https://img.shields.io/github/stars/emako/qvs?color=blue)
 
+<img src="res/images/qvs.png" width = "200" height = "200" alt="" align=center />
 A simple program for using VapourSynth/Avisynth Script previewed and encoded.
 
 
@@ -12,7 +13,7 @@ A simple program for using VapourSynth/Avisynth Script previewed and encoded.
 
 You can download from [releases](https://github.com/emako/qvs/releases) page.
 
-See the [changelog.md](https://github.com/emako/qvs/blob/master/changelog.md) page.
+See the [changelog.md](changelog.md) page.
 
 
 
@@ -20,31 +21,31 @@ See the [changelog.md](https://github.com/emako/qvs/blob/master/changelog.md) pa
 
 - ##### Main UI
 
-![main-encode](https://raw.githubusercontent.com/emako/qvs/master/res/images/screen-shot/main-encode.jpg)  
+![main-encode](res/images/screen-shot/main-encode.jpg)  
 
 - ##### Mediainfo UI
 
-![mediainfo](https://raw.githubusercontent.com/emako/qvs/master/res/images/screen-shot/mediainfo.jpg)  
+![mediainfo](res/images/screen-shot/mediainfo.jpg)  
 
 - ##### Create Script from Add New Job
 
-![add-job](https://raw.githubusercontent.com/emako/qvs/master/res/images/screen-shot/add-job.jpg)  
+![add-job](res/images/screen-shot/add-job.jpg)  
 
 - ##### Create Script from blockly UI
 
-![script_blockly](https://raw.githubusercontent.com/emako/qvs/master/res/images/screen-shot/script-blockly.png)
+![script_blockly](res/images/screen-shot/script-blockly.png)
 
 
 
 - ##### Script Mount UI
 
-![script-mount](https://raw.githubusercontent.com/emako/qvs/master/res/images/screen-shot/script-mount.jpg)
+![script-mount](res/images/screen-shot/script-mount.jpg)
 
 
 
 - ##### Script Preview UI
 
-![script-preview](https://raw.githubusercontent.com/emako/qvs/master/res/images/screen-shot/script-preview.jpg)
+![script-preview](res/images/screen-shot/script-preview.jpg)
 
 
 
