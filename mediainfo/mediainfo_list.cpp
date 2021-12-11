@@ -1,6 +1,6 @@
 //--------------------------------------------------------------------
 //
-// Source File created by Python3.9.6 2021-08-28T08:58:38
+// Source File created by Python3.10.0 2021-12-11T16:00:11
 // For MediaInfo v18.08 or greater version.
 // The macro definition is derived from the CSV files in Developers/List_Of_Parameters.
 // More: https://github.com/MediaArea/MediaInfoLib/blob/master/Source/MediaInfo/File__Analyse_Automatic.h

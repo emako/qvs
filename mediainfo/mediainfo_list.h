@@ -2,7 +2,7 @@
 #define MEDIAINFO_DEFINE_QT_H
 //--------------------------------------------------------------------
 //
-// Header File created by Python3.9.6 2021-08-28T08:58:38
+// Header File created by Python3.10.0 2021-12-11T16:00:11
 // For MediaInfo v18.08 or greater version.
 // The macro definition is derived from the CSV files in Developers/List_Of_Parameters.
 //
@@ -551,6 +551,8 @@ extern QList<QPair<QString, QList<QPair<MediaInfoDLL::String, QPair<QString, boo
 #define MI_QT_VIDEO_FRAMERATE_ORIGINAL_STRING QObject::tr("FrameRate_Original/String")
 #define MI_QT_VIDEO_FRAMERATE_ORIGINAL_NUM QObject::tr("FrameRate_Original_Num")
 #define MI_QT_VIDEO_FRAMERATE_ORIGINAL_DEN QObject::tr("FrameRate_Original_Den")
+#define MI_QT_VIDEO_FRAMERATE_REAL QObject::tr("FrameRate_Real")
+#define MI_QT_VIDEO_FRAMERATE_REAL_STRING QObject::tr("FrameRate_Real/String")
 #define MI_QT_VIDEO_FRAMECOUNT QObject::tr("FrameCount")
 #define MI_QT_VIDEO_SOURCE_FRAMECOUNT QObject::tr("Source_FrameCount")
 #define MI_QT_VIDEO_STANDARD QObject::tr("Standard")

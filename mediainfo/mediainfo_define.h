@@ -2,7 +2,7 @@
 #define MEDIAINFO_DEFINE_H
 //--------------------------------------------------------------------
 //
-// Header File created by Python3.9.6 2021-08-28T08:58:32
+// Header File created by Python3.10.0 2021-12-11T16:00:10
 // For MediaInfo v18.08 or greater version.
 // The macro definition is derived from the CSV files in Developers/List_Of_Parameters.
 //
@@ -721,6 +721,8 @@
 #define MI_VIDEO_FRAMERATE_ORIGINAL_STRING __T("FrameRate_Original/String")
 #define MI_VIDEO_FRAMERATE_ORIGINAL_NUM __T("FrameRate_Original_Num")
 #define MI_VIDEO_FRAMERATE_ORIGINAL_DEN __T("FrameRate_Original_Den")
+#define MI_VIDEO_FRAMERATE_REAL __T("FrameRate_Real")
+#define MI_VIDEO_FRAMERATE_REAL_STRING __T("FrameRate_Real/String")
 #define MI_VIDEO_FRAMECOUNT __T("FrameCount")
 #define MI_VIDEO_SOURCE_FRAMECOUNT __T("Source_FrameCount")
 #define MI_VIDEO_STANDARD __T("Standard")
