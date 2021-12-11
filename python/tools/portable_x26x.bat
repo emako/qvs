@@ -20,7 +20,7 @@ copy x26x\toolset\x64\avs2yuv_x64.exe .\qvs\tools
 
 copy x26x\toolset\x86\x264_x86.exe .\qvs\tools
 copy x26x\toolset\x86\x265_x86.exe .\qvs\tools
-copy x26x\toolset\x86\avs2yuv_x64.exe .\qvs\tools
+copy x26x\toolset\x86\avs2yuv_x86.exe .\qvs\tools
 
 rd /s /q .\x26x
 
