@@ -13,7 +13,6 @@ Copy the pacakges to here and auto extract it for portable qvs.
 | portable_mi64.bat   | MediaInfo `64bit`         | MediaInfo_DLL_21.03_Windows_x64_WithoutInstaller.7z          |
 | portable_mkv64.bat  | mkvtoolnix `64bit`        | mkvtoolnix-64-bit-60.0.0.7z                                  |
 | portable_nv.bat     | NVEncC `32bit` `64bit`    | NVEncC_5.37_Win32.7z<br />NVEncC_5.37_x64.7z                 |
-| portable_mkv64.bat  | NVEncC `64bit`            | NVEncC_5.37_x64.7z                                           |
 | portable_py64.bat   | Python `64bit`            | python-3.9.6-embed-amd64.zip                                 |
 | portable_qacc32.bat | qaac `32bit`              | qaac_2.72.zip                                                |
 | portable_qsv.bat    | QSVEncC `32bit` `64bit`   | QSVEncC_5.06_Win32.7z<br />QSVEncC_5.06_x64.7z               |
