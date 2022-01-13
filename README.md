@@ -12,6 +12,10 @@ A simple program for using VapourSynth/Avisynth Script previewed and encoded.
 
 ## Download
 
+[![GitHub downloads](https://img.shields.io/github/downloads/emako/qvs/total?style=flat-square)](https://github.com/emako/qvs/releases)
+
+[![GitHub downloads](https://img.shields.io/github/downloads/emako/qvs/latest/total?style=flat-square)](https://github.com/emako/qvs/releases)
+
 You can download from [releases](https://github.com/emako/qvs/releases) page.
 
 See the [changelog.md](changelog.md) page.
