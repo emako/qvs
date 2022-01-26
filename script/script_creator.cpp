@@ -428,7 +428,7 @@ inline QString ScriptCreator::createScript(const ScriptCreateFilter &a_filter)
                  "import havsfunc as haf" + QEOL + \
                  "import mvsfunc as mvf" + QEOL + \
                  "import qvs" + QEOL + QEOL + \
-                 "core = vs.get_core()";
+                 "core = vs.core";
         break;
     case ScriptCreateSource:
         script = createScriptSource(static_cast<SourceFilter>(ui->comboBoxSourceFilter->currentIndex()));
