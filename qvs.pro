@@ -116,7 +116,7 @@ LIBS += -L$$PWD/ffmpeg/lib -lavcodec
 S = $${DIR_SEPARATOR}
 
 D = $$DESTDIR
-D = $$replace(D, $$escape_expand(\\), $$S)
+D = $$replace(D, $$escape_expand(\\\\), $$S)
 D = $$replace(D, /, $$S)
 
 E = $$escape_expand(\n\t)
