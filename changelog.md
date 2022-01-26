@@ -154,3 +154,22 @@ version alpha1.1
  - updated VCEEncC to 6.08.
  - updated opusenc to 0.2-3-gf5f571b (using libopus 1.3-26-ge85ed772).
  - updated qaac to 2.71.
+
+> version r17
+
+- changed GPUs encoder's piper (for fixed GPU's encoder can't load vs)
+- updated vapoursynth to r57
+- updated python to 3.9
+- updated mediainfo to 21.09
+- updated LAVFilters to 0.75.1
+- updated NVEnc 5.42
+- updated VCEEnc 6.17
+- updated QSVEnc 6.06
+- updated x265 to 3.5+20
+- updated mkvtoolnix to 63.0.0
+- updated python to 3.9.9
+
+> version r17.1
+
+- updated `qvs.py` for vs new api.
+

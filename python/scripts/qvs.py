@@ -211,7 +211,7 @@ Command Line functions:
 ### 	-> RemoveGrain/Repair
 ##################################################################################################
 def EraseAny(src, lgd, chroma=True, an=0, fadein=0, fadeout=0, start=0, end=None, pos_x=0, pos_y=0, depth=128, d=1, a=2, s=4, h=6, device_type='gpu', device_id=1):
-	core = vs.get_core()
+	core = vs.core
 	
 	def multOfTwo(value):
 		value = int(value)
@@ -244,7 +244,7 @@ def EraseAny(src, lgd, chroma=True, an=0, fadein=0, fadeout=0, start=0, end=None
 
 
 def EraseAnyRel(src, lgd, chroma=True, l=0, t=0, r=0, b=0, fadein=0, fadeout=0, start=0, end=None, pos_x=0, pos_y=0, depth=128, d=1, a=2, s=4, h=6, device_type='gpu', device_id=0):
-	core = vs.get_core()
+	core = vs.core
 	
 	#Fixed bug of delogo plugin when using fadeout parameter
 	if fadeout == 0:	end = Default(end, src.num_frames)
@@ -258,7 +258,7 @@ def EraseAnyRel(src, lgd, chroma=True, l=0, t=0, r=0, b=0, fadein=0, fadeout=0, 
 	return src
 
 def EraseAnyAbs(src, lgd, chroma=True, x=0, y=0, width=0, height=0, fadein=0, fadeout=0, start=0, end=None, pos_x=0, pos_y=0, depth=128, d=1, a=2, s=4, h=6, device_type='gpu', device_id=0):
-	core = vs.get_core()
+	core = vs.core
 	
 	#Fixed bug of delogo plugin when using fadeout parameter
 	if fadeout == 0:	end = Default(end, src.num_frames)
@@ -343,7 +343,7 @@ def EraseAnyAbs(src, lgd, chroma=True, x=0, y=0, width=0, height=0, fadein=0, fa
 ### 	-> RGVS(mt_expand_multi)
 ##################################################################################################
 def LogoNR(dlg, src, chroma=True, l=0, t=0, r=0, b=0, d=1, a=2, s=2, h=3, device_type='gpu', device_id=1):
-	core = vs.get_core()
+	core = vs.core
 
 	if not (isinstance(dlg, vs.VideoNode) and isinstance(src, vs.VideoNode)):
 		raise TypeError('logoNR: This is not a clip')
@@ -572,7 +572,7 @@ def SetWorkingDir(core, path='', isAvs=True):
 ### -> libfillborders.dll
 ##################################################################################################
 def FillMargins(src, l=0, t=0, r=0, b=0):
-	core = vs.get_core()
+	core = vs.core
 	src = core.fb.FillBorders(src, left=l, top=t, right=r, bottom=b, mode='fillmargins')
 	return src
 
@@ -598,7 +598,7 @@ def FillMargins(src, l=0, t=0, r=0, b=0):
 ###    To do FlipHorizontal(-) when True.
 ##################################################################################################
 def AddMargins(clip, l=0, t=0, r=0, b=0, fv=False, fh=False, blur=True, radius=10):
-	core = vs.get_core()
+	core = vs.core
 	h = clip.height
 	w = clip.width
 	c_t = ColorMask(core.std.Crop(clip, left=0, top=0, right=0, bottom=h-t))
@@ -637,7 +637,7 @@ def AddMargins(clip, l=0, t=0, r=0, b=0, fv=False, fh=False, blur=True, radius=1
 ###	Overlay a color mask to your clip with opacity value.
 ##################################################################################################
 def ColorMask(clip, color=None, opacity=0.5):
-	core = vs.get_core()
+	core = vs.core
 	color_dict = {'RGB' : [255, 255, 255], 'YUV' : [255, 128, 128]}
 	if IsRGB(clip):
 		color = Default(color, color_dict.get('RGB'))
@@ -667,7 +667,7 @@ def ColorMask(clip, color=None, opacity=0.5):
 ###		-> ChangeFPS
 ##################################################################################################
 def SpeedGear(src, gear=1, keepfps=True):
-	core = vs.get_core()
+	core = vs.core
 	fpsnum = src.fps_num
 	fpsden = src.fps_den
 	dec = 1000
@@ -689,7 +689,7 @@ def SpeedGear(src, gear=1, keepfps=True):
 ### AssumeFPS overwrites the frame properties _DurationNum and _DurationDen with the frame duration computed from the new frame rate.
 ##################################################################################################
 def ForceFilm(clip):
-	core = vs.get_core()
+	core = vs.core
 	return core.std.AssumeFPS(clip, fpsnum=24000, fpsden=1001)
 
 
@@ -727,7 +727,7 @@ def ForceFilm(clip):
 ###	-> libimwri.dll
 ##################################################################################################
 def ImageSourceMul(path='.', every=30, w=1280, h=720, fps=29.970, filter=None, dslv=True, dslv_f=None):
-	core = vs.get_core()
+	core = vs.core
 	funcName = 'ImageSourceMul'
 	if dslv_f is None:
 		if math.floor(every / 2.5) < math.floor(fps / 2.5):
@@ -792,7 +792,7 @@ def ImageSourceMul(path='.', every=30, w=1280, h=720, fps=29.970, filter=None, d
 ###		-> Overlay
 ##################################################################################################
 def Overlay(clipa, clipb, x=0, y=0, mask=None, opacity=1):
-	core = vs.get_core()
+	core = vs.core
 	return core.std.Merge(clipa, haf.Overlay(clipa, clipb, mask=mask), weight=[opacity, opacity])
 
 
@@ -811,7 +811,7 @@ def Overlay(clipa, clipb, x=0, y=0, mask=None, opacity=1):
 ###		-> Overlaymod
 ##################################################################################################
 def Overlaymod(clipa, clipb, x=0, y=0, alpha=None, opacity=1, aa=False):
-	core = vs.get_core()
+	core = vs.core
 	return core.std.Merge(clipa, xvs.Overlaymod(clipa, clipb, x=x, y=y, alpha=alpha, aa=False), weight=[opacity, opacity])
 
 
@@ -840,7 +840,7 @@ def Overlaymod(clipa, clipb, x=0, y=0, alpha=None, opacity=1, aa=False):
 ###	-> libimwri.dll
 ##################################################################################################
 def AddLogo(src, path, w=None, h=None, an=None, x=0, y=0, opacity=1, aa=False, fadein=0, fadeout=0):
-	core = vs.get_core()
+	core = vs.core
 	funcName = 'AddLogo'
 	if path.split('.')[-1] == 'lgd':
 		return core.delogo.AddLogo(clip=src, logofile=path)
@@ -908,7 +908,7 @@ def Append(last, curt):
 ### -> ffms2.dll
 ##################################################################################################
 def FFImageSource(src, length=1, fps=29.970, width=None, height=None):
-	core = vs.get_core()
+	core = vs.core
 	width = Default(width, -1)
 	height = Default(height, -1)
 	dec = 1000
@@ -1013,7 +1013,7 @@ def FFImageSource(src, length=1, fps=29.970, width=None, height=None):
 ### -> vslsmashsource.dll
 ##################################################################################################
 def LWLSource(path, isCheck=True, threads=0, dr=0, fpsnum=0, fpsden=1, variable=0, format='', decoder='', repeat=0, dominance=0):
-	core = vs.get_core()
+	core = vs.core
 	path = Default(path, GetLibPath(lib='/..') + '/example.mp4')
 	isIsoMedia = False
 	if isCheck:
@@ -1128,7 +1128,7 @@ def LWLSource(path, isCheck=True, threads=0, dr=0, fpsnum=0, fpsden=1, variable=
 ### -> vsavsreader.dll
 ##################################################################################################
 def DirectShowSource(filename, fps=None, seek=True, audio=True, video=True, convertfps=False, seekzero=False, timeout=None, pixel_type=None, framecount=None, logfile=None, logmask=35, debug=False, yv12=False, proxy32=True):
-	core = vs.get_core()
+	core = vs.core
 	def _BintToStr(val):
 		if val:	return 'True'
 		else:	return 'False'
@@ -1181,7 +1181,7 @@ def DirectShowSource(filename, fps=None, seek=True, audio=True, video=True, conv
 ### Release   : 20187.05.28
 ##################################################################################################
 def AvsTest(proxy32=True):
-	core = vs.get_core()
+	core = vs.core
 	cmd = 'Version()'
 	if proxy32:	func = core.avsw.Eval
 	else:		func = core.avsr.Eval
@@ -1420,7 +1420,7 @@ def GammaResize(input, target_width=None, target_height=None, depth=None, transs
 	def y(num):
 		return [None,None,None,1/3,None,None,None,None,None,None,None,None,None][num]
 
-	core = vs.get_core()
+	core = vs.core
 	
 	if not isinstance(input, vs.VideoNode):
 		raise TypeError(funcName + ': This is not a clip!')
@@ -1669,7 +1669,7 @@ def Nnedi3Resize(clip, w, h, cl=False, device=2, list_device=False):
 ### -> NNEDI3CL.dll
 ##################################################################################################
 def Nnedi3aa(a, device=None, list_device=False):
-	core = vs.get_core()
+	core = vs.core
 	funcName = 'Nnedi3aa'
 	
 	if not isinstance(a, vs.VideoNode):
@@ -1715,7 +1715,7 @@ def Depth(input, depth):
 ### Merge clipa and clipb gradually.
 ##################################################################################################
 def GradualMerge(clipa, clipb):
-	core = vs.get_core()
+	core = vs.core
 	length = len(clipa)
 	depth = clipa.format.bits_per_sample
 	mask = core.std.BlankClip(clipa[0], color=[1 / length * (2**depth - 1)] * clipa.format.num_planes)
@@ -1735,7 +1735,7 @@ def GradualMerge(clipa, clipb):
 ### Dissolve is like AlignedSplice, except that the clips are combined with some overlap.
 ##################################################################################################
 def Dissolve(clipa, clipb, overlap, fps=None):
-	core = vs.get_core()
+	core = vs.core
 	if fps is not None:
 		overlap = int(overlap * clipa.fps / fps)
 	clipa_num_frames = clipa.num_frames - 1
@@ -1758,7 +1758,7 @@ def Dissolve(clipa, clipb, overlap, fps=None):
 ### Causes the video stream to fade linearly to black at the start or end.
 ##################################################################################################
 def FadeIn(clip, num_frames, color=[255, 255, 255], fps=None):
-	core = vs.get_core()
+	core = vs.core
 	if fps is not None:
 		num_frames = int(num_frames * clip.fps / fps)
 	clip_fx, clip_nofx = SplitClip(clip, num_frames)
@@ -1767,7 +1767,7 @@ def FadeIn(clip, num_frames, color=[255, 255, 255], fps=None):
 	return GradualMerge(clip_blank, clip_fx) + clip_nofx
 
 def FadeOut(clip, num_frames, color=[255, 255, 255], fps=None):
-	core = vs.get_core()
+	core = vs.core
 	if fps is not None:
 		num_frames = int(num_frames * clip.fps / fps)
 	clip_nofx, clip_fx = SplitClip(clip, clip.num_frames - num_frames)
@@ -1776,7 +1776,7 @@ def FadeOut(clip, num_frames, color=[255, 255, 255], fps=None):
 	return clip_nofx + GradualMerge(clip_fx, clip_blank)
 
 def FadeIO(clip, num_frames, color=[255, 255, 255], fps=None):
-	core = vs.get_core()
+	core = vs.core
 	if fps is not None:
 		num_frames = int(num_frames * clip.fps / fps)
 	last = FadeIn(clip, num_frames, color=color, fps=fps)
@@ -1784,7 +1784,7 @@ def FadeIO(clip, num_frames, color=[255, 255, 255], fps=None):
 	return last
 
 def SplitClip(clip, num_frames):
-	core = vs.get_core()
+	core = vs.core
 	return [core.std.Trim(clip, 0, num_frames), core.std.Trim(clip, num_frames + 1, clip.num_frames - 1)]
 
 
@@ -1799,19 +1799,19 @@ def SplitClip(clip, num_frames):
 ### Turns the frames in a clip ±90,180 degrees.
 ##################################################################################################
 def TurnLeft(clip):
-	core = vs.get_core()
+	core = vs.core
 	last = core.std.Transpose(clip)
 	last = core.std.FlipVertical(last)
 	return last
 
 def TurnRight(clip):
-	core = vs.get_core()
+	core = vs.core
 	last = core.std.Transpose(clip)
 	last = core.std.FlipHorizontal(last)
 	return last
 
 def Turn180(clip):
-	core = vs.get_core()
+	core = vs.core
 	return core.std.Turn180(last)
 
 
@@ -1827,11 +1827,11 @@ def Turn180(clip):
 ###              Merger even and odd frames with core.std.Interleave([clip1,clip2]).
 ##################################################################################################
 def SelectEven(clip):
-	core = vs.get_core()
+	core = vs.core
 	return core.std.SelectEvery(clip=clip, cycle=2, offsets=0)
 
 def SelectOdd(clip):
-	core = vs.get_core()
+	core = vs.core
 	return SelectEvery(clip=clip, cycle=2, offsets=1)
 
 
@@ -1845,7 +1845,7 @@ def SelectOdd(clip):
 ### It drops one in every 2 frames.
 ##################################################################################################
 def SelectHalf(clip):
-	core = vs.get_core()
+	core = vs.core
 	return core.vivtc.VDecimate(clip, cycle=2)
 
 
@@ -1858,7 +1858,7 @@ def SelectHalf(clip):
 ### Display frame type, like 'I', 'P', 'B'.
 ##################################################################################################
 def FrameType(clip):
-	core = vs.get_core()
+	core = vs.core
 	avgclip = core.std.PlaneStats(clip, plane=0)
 	mvsclip = mvf.PlaneStatistics(clip, plane=0)
 	def avg(n, f, clip):
@@ -1925,7 +1925,7 @@ def FrameType(clip):
 ### -> NNEDI3CL.dll
 ##################################################################################################
 def Nnedi3(clip, field, isCL=True, dh=False, dw=None, planes=None, nsize=6, nns=1, qual=1, etype=0, pscrn=2, device=None, list_device=False):
-	core = vs.get_core()
+	core = vs.core
 	try:
 		if isCL is True:
 			dw = Default(dw, False)
@@ -1976,7 +1976,7 @@ def Nnedi3(clip, field, isCL=True, dh=False, dw=None, planes=None, nsize=6, nns=
 ### -> NNEDI3CL.dll
 ##################################################################################################
 def Yadifmod(src, order='tff', mode=0):
-	core = vs.get_core()
+	core = vs.core
 	order = order.lower()
 	if order == 'tff':
 		last = core.yadifmod.Yadifmod(clip=src, edeint=Nnedi3(src, field=1), order=1, field=-1, mode=mode)
@@ -1996,7 +1996,7 @@ def Yadifmod(src, order='tff', mode=0):
 ### View the clip noise.
 ##################################################################################################
 def ViewNoise(clip, t=150, optmode=1):
-	core = vs.get_core()
+	core = vs.core
 	d=clip.format.bits_per_sample
 	clip = core.std.ShufflePlanes(clip, [0], colorfamily=vs.GRAY)
 	if '16' not in clip.format.name:
@@ -2042,7 +2042,7 @@ def Default(value, default_value):
 ###    The alignment parameter takes a number from 1 to 9, corresponding to the positions of the keys on a numpad.
 ##################################################################################################
 def Subtitle(src, text, an=7):
-	core = vs.get_core()
+	core = vs.core
 	src = core.text.Text(src, str(text), alignment=an)
 	return src
 
@@ -2080,7 +2080,7 @@ def Subtitle(src, text, an=7):
 ###	-> tcasFilter.dll (32bit, REQUEST_IN_32BIT_AVS)
 ##################################################################################################
 def TcasSub(clip, file, fps=0, max_frame=0, memory_max=0, avisynth=None, slave=None, log=None):
-	core = vs.get_core()
+	core = vs.core
 	avs_script = 'TcasSub(file="{file}", fps={fps}, max_frame={max_frame}, memory_max={memory_max})'.format(file=file, fps=str(fps), max_frame=str(max_frame), memory_max=str(memory_max))
 	avs_script = 'LoadPlugin("{avsplugins}\\tcasFilter.dll") {avs_script}'.format(avsplugins=GetLibPath(lib='./../avisynth32/plugins'), avs_script=avs_script)
 	return core.avsw.Eval(avs_script, clips=[clip], clip_names=['last'], avisynth=avisynth, slave=slave, slave_log=log)
@@ -2123,7 +2123,7 @@ def MediaInfo(src, path, full=False, an=7):
 ###		-> Overlay
 ##################################################################################################
 def OverlayM(src, w, h, color=[255, 255, 255]):
-	core = vs.get_core()
+	core = vs.core
 	fps = src.fps
 	dec = 1000
 	blank = core.std.BlankClip(length=src.num_frames, width=w, height=h, color=color, fpsnum=int(fps*dec), fpsden=dec, format=vs.RGB24)
@@ -2202,51 +2202,51 @@ def OverlayM(src, w, h, color=[255, 255, 255]):
 ###    COMPATBGR32, COMPATYUY2
 ##################################################################################################
 def ConvertToYV24(clip):
-	core = vs.get_core()
+	core = vs.core
 	return mvf.ToYUV(clip, css='444')
 
 def ConvertToYV16(clip):
-	core = vs.get_core()
+	core = vs.core
 	return mvf.ToYUV(clip, css='422')
 
 def ConvertToYUY2(clip):
-	core = vs.get_core()
+	core = vs.core
 	return core.resize.Bicubic(clip=clip, format=vs.COMPATYUY2)
 
 def ConvertToYV12(clip):
-	core = vs.get_core()
+	core = vs.core
 	return mvf.ToYUV(clip, css='420')
 
 def ConvertToYV411(clip):
-	core = vs.get_core()
+	core = vs.core
 	return core.resize.Bicubic(clip=clip, format=vs.YUV411P8)
 
 def ConvertToY8(clip):
-	core = vs.get_core()
+	core = vs.core
 	return core.std.ShufflePlanes(clips=clips, planes=0, colorfamily=vs.GRAY)
 	
 def ConvertToRGB24(clip, matrix='709'):
-	core = vs.get_core()
+	core = vs.core
 	return core.resize.Bicubic(clip=clip, format=vs.RGB24, matrix_in_s=matrix)
 
 def ConvertToRGB48(clip, matrix='709'):
-	core = vs.get_core()
+	core = vs.core
 	return core.resize.Bicubic(clip=clip, format=vs.RGB48, matrix_in_s=matrix)
 
 def ConvertToRGBS(clip, matrix='709'):
-	core = vs.get_core()
+	core = vs.core
 	return core.resize.Bicubic(clip=clip, format=vs.RGBS, matrix_in_s=matrix)
 
 def ConvertToGrey(clips=[]):
-	core = vs.get_core()
+	core = vs.core
 	return core.std.ShufflePlanes(clips=clips, planes=0, colorfamily=vs.GRAY)
 
 def ConvertToGray(clips=[]):
-	core = vs.get_core()
+	core = vs.core
 	return core.std.ShufflePlanes(clips=clips, planes=0, colorfamily=vs.GRAY)
 
 def ConvertTo(clip, format, matrix=None):
-	core = vs.get_core()
+	core = vs.core
 	return core.resize.Bicubic(clip=clip, format=format, matrix_in_s=matrix)
 
 
@@ -2286,15 +2286,15 @@ def IsYV12(clip):
 ### Copies U or V chroma plane to the Y luma plane.
 ##################################################################################################
 def SwapUV(clip=[]):
-	core = vs.get_core()
+	core = vs.core
 	return core.std.ShufflePlanes(clips=clip, planes=[0, 2, 1], colorfamily=vs.YUV)
 
 def UToY(clip=[]):
-	core = vs.get_core()
+	core = vs.core
 	return core.std.ShufflePlanes(clips=clip, planes=[0, 0, 2], colorfamily=vs.YUV)
 
 def VToY(clip=[]):
-	core = vs.get_core()
+	core = vs.core
 	return core.std.ShufflePlanes(clips=clip, planes=[0, 1, 1], colorfamily=vs.YUV)
 
 
@@ -2335,7 +2335,7 @@ def ChangeFPS(src, fps, dec=None):
 ###    FrameRate.
 ##################################################################################################
 def AssumeFPS(src, fps, dec=None):
-	core = vs.get_core()
+	core = vs.core
 	dec = Default(dec, 1000)
 	return core.std.AssumeFPS(src, fpsnum=int(fps*dec), fpsden=dec)
 
@@ -2359,7 +2359,7 @@ def AssumeFPS(src, fps, dec=None):
 ### -> autocrop.dll
 ##################################################################################################
 def Crop(src, l=0, t=0, r=0, b=0, auto=False, range=1000):
-	core = vs.get_core()
+	core = vs.core
 	if auto:
 		last = core.acrop.AutoCrop(src, range=range)
 	else:
@@ -2377,11 +2377,11 @@ def Crop(src, l=0, t=0, r=0, b=0, auto=False, range=1000):
 ### Stacks all given clips together.
 ##################################################################################################
 def StackVertical(clips=[]):
-	core = vs.get_core()
+	core = vs.core
 	return core.std.StackVertical(clips)
 
 def StackHorizontal(clips=[]):
-	core = vs.get_core()
+	core = vs.core
 	return core.std.StackHorizontal(clips)
 
 
@@ -2575,7 +2575,7 @@ def Diff(src, flt, noise=False, stack=False, power=1.5, chroma=False, mode=2):
 ### -> d2vsource.dll
 ##################################################################################################
 def D2VSource(path, dir=None, index_bin='d2vwitch', audio=True, d2v_out=None, force_index=False, nocrop=True, rff=False, threads=0):
-	core = vs.get_core()
+	core = vs.core
 	bin_path = GetConfig(section='python', options='d2v')
 	dir = Default(dir, bin_path)
 	if index_bin == 'd2vwitch':
@@ -2665,7 +2665,7 @@ def D2VSource(path, dir=None, index_bin='d2vwitch', audio=True, d2v_out=None, fo
 ### -> d2vsource.dll
 ##################################################################################################
 def DGSource(path, dir=None, index_bin='DGIndex', d2v_out=None, force_index=False, nocrop=True, threads=0, field_operation=0, options='', log=False, bad=True):
-	core = vs.get_core()
+	core = vs.core
 	bin_path = GetConfig(section='python', options='dg')
 	dir = Default(dir, bin_path)
 	if index_bin == 'DGIndex':
@@ -2828,7 +2828,7 @@ def DGSource(path, dir=None, index_bin='DGIndex', d2v_out=None, force_index=Fals
 def DGSourceNV(path, dir=None, index_bin='DGIndexNV', audio=True, dgi_out=None, force_index=False, options='', log=False, bad=True,
 				plugin_path='', core=None, i420=False, deinterlace=0, use_top_field=True, use_pf=False, 
 				crop_t=0, crop_b=0, crop_l=0, crop_r=0, resize_w=0, resize_h=0, fieldop=0, show=False, show2='', fulldepth=False):
-	core = Default(core, vs.get_core())
+	core = Default(core, vs.core)
 	bin_path = GetConfig(section='python', options='dgnv')
 	dir = Default(dir, bin_path)
 	#raise TypeError(bin_path)
@@ -2930,7 +2930,7 @@ def DGSourceNV(path, dir=None, index_bin='DGIndexNV', audio=True, dgi_out=None, 
 ##################################################################################################
 def DGSourceIM(path, dir=None, index_bin='DGIndexIM', audio=True, dgi_out=None, force_index=False, options='', log=False, bad=True,
 				core=None, engine=2, debug=False):
-	core = Default(core, vs.get_core())
+	core = Default(core, vs.core)
 	bin_path = GetConfig(section='python', options='dgim')
 	dir = Default(dir, bin_path)
 	if (index_bin == 'DGIndexIM') & (dir != ''):
@@ -3025,7 +3025,7 @@ def VIVTC(clip, order=1):
 ###    -> license.txt
 ##################################################################################################
 def DGIVTC(src, dir=None, core=None, pthresh=3.5, device=255):
-	core = Default(core, vs.get_core())
+	core = Default(core, vs.core)
 	bin_path = GetConfig(section='python', options='dgnv')
 	dir = Default(dir, bin_path)
 	if not core is None:
@@ -3109,7 +3109,7 @@ def DGIVTC(src, dir=None, core=None, pthresh=3.5, device=255):
 ###    -> license.txt
 ##################################################################################################
 def DGTelecide(src, dir=None, core=None, pthresh=0.0, dthresh=10.0, blend=False, map=False, show=False, device=255):
-	core = Default(core, vs.get_core())
+	core = Default(core, vs.core)
 	bin_path = GetConfig(section='python', options='dgnv')
 	dir = Default(dir, bin_path)
 	if not core is None:
@@ -3167,7 +3167,7 @@ def DGTelecide(src, dir=None, core=None, pthresh=0.0, dthresh=10.0, blend=False,
 ###    -> license.txt
 ##################################################################################################
 def DGDenoise(src, dir=None, core=None, strength=0.15, blend=0.1, chroma=True, searchw=5, device=255):
-	core = Default(core, vs.get_core())
+	core = Default(core, vs.core)
 	bin_path = GetConfig(section='python', options='dgnv')
 	dir = Default(dir, bin_path)
 	if not core is None:
@@ -3219,7 +3219,7 @@ def DGDenoise(src, dir=None, core=None, strength=0.15, blend=0.1, chroma=True, s
 ###    -> license.txt
 ##################################################################################################
 def DGDecimate(src, dir=None, core=None, cycle=5, keep=4, device=255, show=False):
-	core = Default(core, vs.get_core())
+	core = Default(core, vs.core)
 	bin_path = GetConfig(section='python', options='dgnv')
 	dir = Default(dir, bin_path)
 	if not core is None:
@@ -3271,7 +3271,7 @@ def DGDecimate(src, dir=None, core=None, cycle=5, keep=4, device=255, show=False
 ###    -> license.txt
 ##################################################################################################
 def DGBob(src, dir=None, core=None, order=-1, mode=0, device=255, pv=False):
-	core = Default(core, vs.get_core())
+	core = Default(core, vs.core)
 	bin_path = GetConfig(section='python', options='dgnv')
 	dir = Default(dir, bin_path)
 	if not core is None:
@@ -3323,7 +3323,7 @@ def DGBob(src, dir=None, core=None, order=-1, mode=0, device=255, pv=False):
 ###    -> license.txt
 ##################################################################################################
 def DGSharpen(src, dir=None, core=None, strength=1.0, device=255):
-	core = Default(core, vs.get_core())
+	core = Default(core, vs.core)
 	bin_path = GetConfig(section='python', options='dgnv')
 	dir = Default(dir, bin_path)
 	if not core is None:
@@ -4363,7 +4363,7 @@ def AudioTrimAVS(path, frame=[], clip=None, fps=None, delay=None, plugin_path='L
 ###    clip = qvs.TrimMul(clip=clip, frame=frame)
 ##################################################################################################
 def TrimMul(clip, frame=[]):
-	core = vs.get_core()
+	core = vs.core
 	for f in frame:
 		start_frame = f[0]
 		end_frame = f[1]
@@ -4440,7 +4440,7 @@ def ConvertToTimecode(frame, fps, delay=0):
 ###    False : check list key from core.std.get_functions().
 ##################################################################################################
 def CheckRegFunc(func_name, avs=True):
-	core = vs.get_core()
+	core = vs.core
 	if avs:
 		func_list = core.avs.get_functions()
 	else:
@@ -4466,7 +4466,7 @@ def CheckRegFunc(func_name, avs=True):
 ### -> ffms2.dll
 ##################################################################################################
 def MplsSource(filename, cachedir=None):
-	core = vs.get_core()
+	core = vs.core
 	cachedir = Default(cachedir, os.environ['tmp'].replace('\\', '/'))
 	mpls = core.mpls.Read(filename)
 	clips = []
@@ -4489,7 +4489,7 @@ def MplsSource(filename, cachedir=None):
 ### -> ReadMpls.dll
 ##################################################################################################
 def MplsEach(filename):
-	core = vs.get_core()
+	core = vs.core
 	mpls = core.mpls.Read(filename)
 	return mpls['clip']
 

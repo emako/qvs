@@ -56,3 +56,10 @@ CppProperties.json
 qvs_resource.rc
 qvs-debug-64bit-msvc_resource.rc
 qvs.vcxproj.filters
+qvs.pro.user.*
+
+# Blockly
+blockly/*.blockly
+
+# testing
+preview/test/*
