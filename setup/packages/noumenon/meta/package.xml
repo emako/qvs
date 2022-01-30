@@ -2,8 +2,8 @@
 <Package>
     <DisplayName>Qvs</DisplayName>
     <Description>Qvs program.</Description>
-    <Version>0.17.0</Version>
-    <ReleaseDate>2021-12-12</ReleaseDate>
+    <Version>0.17.1</Version>
+    <ReleaseDate>2022-01-31</ReleaseDate>
     <Default>true</Default>
     <Script>installscript.qs</Script>
 </Package>
