@@ -1294,6 +1294,9 @@ QProgressBar::chunk {
    <property name="text">
     <string>Wobbly (IVTC Assistant)</string>
    </property>
+   <property name="visible">
+    <bool>false</bool>
+   </property>
   </action>
   <action name="actionWibbly">
    <property name="icon">
@@ -1302,6 +1305,9 @@ QProgressBar::chunk {
    </property>
    <property name="text">
     <string>Wibbly (IVTC Assistant)</string>
+   </property>
+   <property name="visible">
+    <bool>false</bool>
    </property>
   </action>
   <action name="actionScriptBlockly">

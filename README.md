@@ -1,6 +1,6 @@
 # qvs
 
-![](https://img.shields.io/badge/qvs-r17-green)
+![](https://img.shields.io/badge/qvs-r17.1-green)
 ![](https://img.shields.io/github/license/emako/qvs?color=blue)
 ![](https://img.shields.io/github/stars/emako/qvs?color=blue)
 ![](https://img.shields.io/github/forks/emako/qvs?color=blue)
@@ -66,13 +66,11 @@ See the [changelog.md](changelog.md) page.
 
 
 
-
-
 ## Building
 
 qvs is developed based on Qt5.
 
-See [equipment.md](https://github.com/emako/qvs/blob/master/equipment.md) for more details.
+See [build.md](build.md) for more details.
 
 
 
