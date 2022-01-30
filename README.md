@@ -74,6 +74,24 @@ See [build.md](build.md) for more details.
 
 
 
+## Comments
+
+VapourSynth is developing fastly, so API expiration problems are easy to occur.
+
+Any questions are freely [issuse](https://github.com/emako/qvs/issues) published.
+
+
+
+## Future
+
+1. May add `audio track support`, but depending on the update of `vsedit`.
+
+2. About Blockly, Qt support for the web (blockly) is unfriendly, and Qt itself still has a large number of bugs. Consider adopting it in the future .NET technology substitution.
+
+C艹/Qt development is too time-consuming so may use .NET/WPF or .NET/MAUI in the future development.
+
+
+
 ## License
 
 qvs is licensed under the [MIT](https://github.com/emako/qvs/blob/master/LICENSE) License.
