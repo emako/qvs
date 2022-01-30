@@ -5,7 +5,6 @@
 
 - updated `qvs.py` and script creator for vs new api.
 - removed Wobbly/Wibbly embedding.
-- 
 
 > version r17
 
