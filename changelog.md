@@ -1,5 +1,13 @@
 # qvs changelog
 
+> version r17.2
+
+- updated mkvtoolnix to 65.0.0
+- updated vsedit to [r19-mod-5](https://github.com/YomikoR/VapourSynth-Editor/releases/tag/r19-mod-5)
+- updated NVEnc [5.44](https://github.com/rigaya/NVEnc/releases/tag/5.44)
+- updated VCEEnc [6.17](https://github.com/rigaya/VCEEnc/releases/tag/6.17)
+- updated QSVEnc [6.08](https://github.com/rigaya/QSVEnc/releases/tag/6.08)
+
 
 > version r17.1
 

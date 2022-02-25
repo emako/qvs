@@ -1,0 +1,6 @@
+*.7z
+*.exe
+*.txt
+batch/*
+packages/noumenon/data/data.7z
+qvs/*
