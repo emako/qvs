@@ -1,9 +1,11 @@
 # qvs
 
-![](https://img.shields.io/badge/qvs-r17.1-green)
+![](https://img.shields.io/badge/qvs-r17.2-green)
+![](https://img.shields.io/tokei/lines/github/emako/qvs)
 ![](https://img.shields.io/github/license/emako/qvs?color=blue)
 ![](https://img.shields.io/github/stars/emako/qvs?color=blue)
 ![](https://img.shields.io/github/forks/emako/qvs?color=blue)
+
 
 <img src="res/images/qvs.png" width = "200" height = "200" alt="" align=center />
 A simple program for using VapourSynth/Avisynth Script previewed and encoded.
@@ -31,6 +33,7 @@ See the [changelog.md](changelog.md) page.
 - [x] Create single image video.
 - [x] Splite/Merge media file.
 - [x] Show MediaInfo.
+- [ ] Audio Cutter.
 
 
 
@@ -74,11 +77,13 @@ See [build.md](build.md) for more details.
 
 
 
-## Comments
+## Issuse
+
+![GitHub issues](https://img.shields.io/github/issues/emako/qvs) ![GitHub closed issues](https://img.shields.io/github/issues-closed/emako/qvs)
 
 VapourSynth is developing fastly, so API expiration problems are easy to occur.
 
-Any questions are freely [issuse](https://github.com/emako/qvs/issues) published.
+Leave your [issuse](https://github.com/emako/qvs/issues) for any question.
 
 
 
@@ -88,7 +93,7 @@ Any questions are freely [issuse](https://github.com/emako/qvs/issues) published
 
 2. About Blockly, Qt support for the web (blockly) is unfriendly, and Qt itself still has a large number of bugs. Consider adopting it in the future .NET technology substitution.
 
-C艹/Qt development is too time-consuming so may use .NET/WPF or .NET/MAUI in the future development.
+C++/Qt development is too time-consuming so may use .NET/WPF or .NET/MAUI in the future development.
 
 
 
