@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/">
+        <file>vsedit.ico</file>
+        <file>template/template.vpy</file>
+    </qresource>
+</RCC>
