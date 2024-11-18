@@ -1,15 +1,15 @@
 > [!NOTE]
 >
 > Migration: This project is gradually migrating to [VSEnc (keep private now)](https://github.com/lemutec/VSEnc) and progress is currently slow.
+>
+> In addition, I hope someone can take over the maintenance of [VapourSynthViewer.NET](https://github.com/mysteryx93/VapourSynthViewer.NET). I am not that familiar with the new version of vsapi.
 
 # qvs
 
 ![](https://img.shields.io/badge/qvs-r17.2-green)
-![](https://img.shields.io/tokei/lines/github/emako/qvs)
 ![](https://img.shields.io/github/license/emako/qvs?color=blue)
 ![](https://img.shields.io/github/stars/emako/qvs?color=blue)
 ![](https://img.shields.io/github/forks/emako/qvs?color=blue)
-
 
 <img src="res/images/qvs.png" width = "200" height = "200" alt="" align=center />
 A simple program for using VapourSynth/Avisynth Script previewed and encoded.
@@ -37,7 +37,7 @@ See the [changelog.md](changelog.md) page.
 - [x] Create single image video.
 - [x] Splite/Merge media file.
 - [x] Show MediaInfo.
-- [ ] Audio Cutter.
+- [ ] ~~Audio Cutter.~~
 
 
 
