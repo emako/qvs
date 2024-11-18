@@ -1,3 +1,7 @@
+> [!NOTE]
+>
+> Migration: This project is gradually migrating to [VSEnc (keep private now)](https://github.com/lemutec/VSEnc) and progress is currently slow.
+
 # qvs
 
 ![](https://img.shields.io/badge/qvs-r17.2-green)
@@ -93,7 +97,7 @@ Leave your [issuse](https://github.com/emako/qvs/issues) for any question.
 
 2. About Blockly, Qt support for the web (blockly) is unfriendly, and Qt itself still has a large number of bugs. Consider adopting it in the future .NET technology substitution.
 
-C++/Qt development is too time-consuming so may use .NET/WPF or .NET/MAUI in the future development.
+C++/Qt development is too time-consuming so may use .NET/WPF or .NET/Avalonia in the future development.
 
 
 
